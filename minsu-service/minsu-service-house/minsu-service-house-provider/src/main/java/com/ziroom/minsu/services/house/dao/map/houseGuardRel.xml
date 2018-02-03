@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseGuardRelDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseGuardRelEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="emp_push_code" property="empPushCode" jdbcType="VARCHAR" />
+    <result column="emp_push_name" property="empPushName" jdbcType="VARCHAR" />
+    <result column="emp_guard_code" property="empGuardCode" jdbcType="VARCHAR" />
+    <result column="emp_guard_name" property="empGuardName" jdbcType="VARCHAR" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    hgr.id, hgr.fid, hgr.house_fid, hgr.emp_push_code, hgr.emp_push_name, hgr.emp_guard_code, hgr.emp_guard_name, 
+    hgr.create_fid, hgr.create_date, hgr.last_modify_date, hgr.is_del
+  </sql>
+  
+  <select id="findHouseGuardRelByFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_guard_rel hgr
+    WHERE hgr.fid = #{fid,jdbcType=VARCHAR}
+    AND hgr.is_del = 0
+  </select>
+  
+  <select id="findHouseGuardRelByHouseBaseFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_guard_rel hgr
+    WHERE hgr.house_fid = #{houseBaseFid,jdbcType=VARCHAR}
+    AND hgr.is_del = 0
+  </select>
+  
+  <resultMap id="HouseGuardVoMap" type="com.ziroom.minsu.services.house.entity.HouseGuardVo" extends="BaseResultMap">
+    <result column="house_name" property="houseName" jdbcType="VARCHAR" />
+    <result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+    <result column="house_addr" property="houseAddr" jdbcType="VARCHAR" />
+    <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+    <result column="house_status" property="houseStatus" jdbcType="INTEGER" />
+    <result column="nation_code" property="nationCode" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+    <result column="room_sn" property="roomSn" jdbcType="VARCHAR" />
+    <result column="house_channel" property="houseChannel" jdbcType="INTEGER" />
+
+
+  </resultMap>
+  
+  <select id="findHouseGuardVoForPage" resultMap="HouseGuardVoMap" parameterType="map">
+    SELECT 
+    hgr.fid, hgr.emp_push_code, hgr.emp_push_name, hgr.emp_guard_code, hgr.emp_guard_name,
+    hb.fid house_fid, hb.house_sn, hb.house_name, hb.house_addr, hb.landlord_uid, hb.house_status,hb.house_channel,
+    hp.nation_code, hp.province_code, hp.city_code, hp.area_code, IF(hb.rent_way=0,NULL,GROUP_CONCAT(DISTINCT CONCAT_WS('|',hrm.room_sn,hrm.fid,hrm.room_status)) ) room_sn
+    FROM t_house_phy_msg hp 
+    JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid AND hb.is_del = 0 AND hp.is_del = 0
+    LEFT JOIN t_house_guard_rel hgr ON hb.fid = hgr.house_fid AND (hgr.is_del = 0 OR hgr.is_del is null)
+    LEFT JOIN t_house_room_msg hrm ON hrm.house_base_fid = hb.fid AND (hrm.is_del = 0 OR hrm.is_del is null)
+    <where> 
+	    <if test="listZoCode != null and listZoCode.size > 0">
+			AND (hgr.emp_guard_code in
+	        <foreach collection="listZoCode" item="zoCode" index="index" open="(" separator="," close=")">  
+				#{zoCode,jdbcType=VARCHAR}
+	        </foreach>
+	        OR hgr.emp_push_code in
+	        <foreach collection="listZoCode" item="zoCode" index="index" open="(" separator="," close=")">  
+				#{zoCode,jdbcType=VARCHAR}
+	        </foreach>)
+	    </if>
+	    <if test="listLandlordUid != null and listLandlordUid.size > 0">
+			AND hb.landlord_uid in
+	        <foreach collection="listLandlordUid" item="landlordUid" index="index" open="(" separator="," close=")">  
+				#{landlordUid,jdbcType=VARCHAR}
+	        </foreach>
+	    </if>
+	    <if test="listHouseFid != null and listHouseFid.size > 0">
+			AND hb.fid in
+	        <foreach collection="listHouseFid" item="houseFid" index="index" open="(" separator="," close=")">  
+				#{houseFid,jdbcType=VARCHAR}
+	        </foreach>
+	    </if>
+	    <if test="houseName != null and houseName !=''">
+			AND hb.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+	    </if>
+	    <if test="houseSn != null and houseSn !=''">
+	        AND hb.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+	    </if>
+		<if test="houseStatus != null and (rentWay == null or rentWay == 0) ">
+			AND hb.house_status = #{houseStatus,jdbcType=INTEGER}
+	    </if>
+	    <if test="houseStatus != null and rentWay != null and rentWay == 1 ">
+			AND hrm.room_status = #{houseStatus,jdbcType=INTEGER}
+	    </if>
+	    <if test="nationCode != null and nationCode !=''">
+			AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+	    </if>
+	    <if test="provinceCode != null and provinceCode !=''">
+			AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+	    </if>
+		<if test="cityCode != null and cityCode !=''">
+			AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+	    </if>
+		<if test="areaCode != null and areaCode !=''">
+			AND hp.area_code = #{areaCode,jdbcType=VARCHAR}
+	    </if>
+	    <if test="rentWay != null">
+			AND hb.rent_way = #{rentWay,jdbcType=INTEGER}
+	    </if>
+	    <if test="roomSn != null and roomSn !=''">
+			AND hrm.room_sn = #{roomSn,jdbcType=VARCHAR}
+	    </if>
+
+        <if test="houseChannel != null ">
+            AND hb.house_channel = #{houseChannel,jdbcType=INTEGER}
+        </if>
+
+    </where>
+    GROUP BY hb.fid ,hgr.fid 
+    ORDER BY hb.create_date DESC
+  </select>
+  
+  
+  <select id="findHouseGuardByCondition" resultMap="HouseGuardVoMap" parameterType="map">
+    SELECT 
+    hgr.fid, hgr.emp_push_code, hgr.emp_push_name, hgr.emp_guard_code, hgr.emp_guard_name,
+    hb.fid house_fid, hb.house_sn, hb.house_name, hb.house_addr, hb.landlord_uid,
+    hp.nation_code, hp.province_code, hp.city_code, hp.area_code
+    FROM t_house_phy_msg hp 
+    JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid AND hb.is_del = 0 AND hp.is_del = 0
+    INNER JOIN t_house_guard_rel hgr ON hb.fid = hgr.house_fid AND (hgr.is_del = 0 OR hgr.is_del is null)
+    <where> 
+	    <if test="listZoCode != null and listZoCode.size > 0">
+			AND hgr.emp_guard_code in
+	        <foreach collection="listZoCode" item="zoCode" index="index" open="(" separator="," close=")">  
+				#{zoCode,jdbcType=VARCHAR}
+	        </foreach>
+	    </if>
+	    <if test="listLandlordUid != null and listLandlordUid.size > 0">
+			AND hb.landlord_uid in
+	        <foreach collection="listLandlordUid" item="landlordUid" index="index" open="(" separator="," close=")">  
+				#{landlordUid,jdbcType=VARCHAR}
+	        </foreach>
+	    </if>
+	    <if test="houseName != null and houseName !=''">
+			AND hb.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+	    </if>
+	    <if test="houseSn != null and houseSn !=''">
+	        AND hb.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+	    </if>
+	    <if test="nationCode != null and nationCode !=''">
+			AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+	    </if>
+	    <if test="provinceCode != null and provinceCode !=''">
+			AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+	    </if>
+		<if test="cityCode != null and cityCode !=''">
+			AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+	    </if>
+		<if test="areaCode != null and areaCode !=''">
+			AND hp.area_code = #{areaCode,jdbcType=VARCHAR}
+	    </if>
+    </where> 
+    ORDER BY hgr.create_date DESC
+  </select>
+  
+  <select id="findHouseGuardVoByHouseBaseFid" resultMap="HouseGuardVoMap" parameterType="string">
+    SELECT 
+    <include refid="Base_Column_List" />, hb.house_sn, hb.house_name, hb.house_addr, hb.landlord_uid
+    FROM t_house_base_msg hb
+    LEFT JOIN t_house_guard_rel hgr
+    ON hb.fid = hgr.house_fid
+    WHERE hb.fid = #{houseBaseFid,jdbcType=VARCHAR}
+    AND hb.is_del = 0
+    AND (hgr.is_del = 0 OR hgr.is_del IS NULL)
+  </select>
+
+
+    <select id="findHouseGuardRelByCondition" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_house_guard_rel hgr
+        WHERE hgr.is_del = 0
+        <if test="empPushName != null and empPushName!=''" >
+            AND hgr.emp_push_name = #{empPushName,jdbcType=VARCHAR}
+        </if>
+        <if test="empGuardName != null and empGuardName!=''" >
+            AND hgr.emp_guard_name = #{empGuardName,jdbcType=VARCHAR}
+        </if>
+    </select>
+  
+  <insert id="insertHouseGuardRel" parameterType="com.ziroom.minsu.entity.house.HouseGuardRelEntity" >
+    insert into t_house_guard_rel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseFid != null" >
+        house_fid,
+      </if>
+      <if test="empPushCode != null" >
+        emp_push_code,
+      </if>
+      <if test="empPushName != null" >
+        emp_push_name,
+      </if>
+      <if test="empGuardCode != null" >
+        emp_guard_code,
+      </if>
+      <if test="empGuardName != null" >
+        emp_guard_name,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseFid != null" >
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="empPushCode != null" >
+        #{empPushCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empPushName != null" >
+        #{empPushName,jdbcType=VARCHAR},
+      </if>
+      <if test="empGuardCode != null" >
+        #{empGuardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empGuardName != null" >
+        #{empGuardName,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateHouseGuardRelByFid" parameterType="com.ziroom.minsu.entity.house.HouseGuardRelEntity" >
+    update t_house_guard_rel
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseFid != null" >
+        house_fid = #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="empPushCode != null" >
+        emp_push_code = #{empPushCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empPushName != null" >
+        emp_push_name = #{empPushName,jdbcType=VARCHAR},
+      </if>
+      <if test="empGuardCode != null" >
+        emp_guard_code = #{empGuardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empGuardName != null" >
+        emp_guard_name = #{empGuardName,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateHouseGuardRelByHouseFid" parameterType="com.ziroom.minsu.entity.house.HouseGuardRelEntity" >
+    update t_house_guard_rel
+    <set >
+      <if test="houseFid != null" >
+        house_fid = #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="empPushCode != null" >
+        emp_push_code = #{empPushCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empPushName != null" >
+        emp_push_name = #{empPushName,jdbcType=VARCHAR},
+      </if>
+      <if test="empGuardCode != null" >
+        emp_guard_code = #{empGuardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empGuardName != null" >
+        emp_guard_name = #{empGuardName,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where house_fid = #{houseFid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 特殊权限查询房源管家关系维护列表 -->
+  <select id="findSpecialHouseGuardVoForPage" resultMap="HouseGuardVoMap" parameterType="map">
+    SELECT 
+    hgr.fid, hgr.emp_push_code, hgr.emp_push_name, hgr.emp_guard_code, hgr.emp_guard_name,
+    hb.fid house_fid, hb.house_sn, hb.house_name, hb.house_addr, hb.landlord_uid, hb.house_status,
+    hp.nation_code, hp.province_code, hp.city_code, hp.area_code, IF(hb.rent_way=0,NULL,GROUP_CONCAT(DISTINCT CONCAT_WS('|',hrm.room_sn,hrm.fid,hrm.room_status)) ) room_sn
+    FROM t_house_phy_msg hp 
+    JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid AND hb.is_del = 0 AND hp.is_del = 0
+    LEFT JOIN t_house_guard_rel hgr ON hb.fid = hgr.house_fid AND (hgr.is_del = 0 OR hgr.is_del is null)
+    LEFT JOIN t_house_room_msg hrm ON hrm.house_base_fid = hb.fid AND (hrm.is_del = 0 OR hrm.is_del is null)
+    <where> 
+	    <if test="listZoCode != null and listZoCode.size > 0">
+			AND (hgr.emp_guard_code in
+	        <foreach collection="listZoCode" item="zoCode" index="index" open="(" separator="," close=")">  
+				#{zoCode,jdbcType=VARCHAR}
+	        </foreach>
+	        OR hgr.emp_push_code in
+	        <foreach collection="listZoCode" item="zoCode" index="index" open="(" separator="," close=")">  
+				#{zoCode,jdbcType=VARCHAR}
+	        </foreach>)
+	    </if>
+	    <if test="listLandlordUid != null and listLandlordUid.size > 0">
+			AND hb.landlord_uid in
+	        <foreach collection="listLandlordUid" item="landlordUid" index="index" open="(" separator="," close=")">  
+				#{landlordUid,jdbcType=VARCHAR}
+	        </foreach>
+	    </if>
+	    <if test="listHouseFid != null and listHouseFid.size > 0">
+			AND hb.fid in
+	        <foreach collection="listHouseFid" item="houseFid" index="index" open="(" separator="," close=")">  
+				#{houseFid,jdbcType=VARCHAR}
+	        </foreach>
+	    </if>
+	    <if test="houseName != null and houseName !=''">
+			AND hb.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+	    </if>
+	    <if test="houseSn != null and houseSn !=''">
+	        AND hb.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+	    </if>
+		<if test="houseStatus != null and (rentWay == null or rentWay == 0) ">
+			AND hb.house_status = #{houseStatus,jdbcType=INTEGER}
+	    </if>
+	    <if test="houseStatus != null and rentWay != null and rentWay == 1 ">
+			AND hrm.room_status = #{houseStatus,jdbcType=INTEGER}
+	    </if>
+	    <if test="nationCode != null and nationCode !=''">
+			AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+	    </if>
+	    <if test="provinceCode != null and provinceCode !=''">
+			AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+	    </if>
+		<if test="cityCode != null and cityCode !=''">
+			AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+	    </if>
+		<if test="areaCode != null and areaCode !=''">
+			AND hp.area_code = #{areaCode,jdbcType=VARCHAR}
+	    </if>
+	    <if test="rentWay != null">
+			AND hb.rent_way = #{rentWay,jdbcType=INTEGER}
+	    </if>
+	    <if test="roomSn != null and roomSn !=''">
+			AND hrm.room_sn = #{roomSn,jdbcType=VARCHAR}
+	    </if>
+	     <!-- 特殊权限判断 1:数据区域，2：区域，3：数据-->
+	    <if test="roleType==1">
+	    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR} OR
+	    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+		    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+		    	<if test="city.provinceCode!=null">
+		    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+		    	</if>
+		    	<if test="city.cityCode!=null">
+		    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+		    	</if>
+		    	<if test="city.areaCode!=null">
+		    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+		    	</if>
+		    	)
+	    	</foreach>
+	    	)
+	    </if>
+	    <if test="roleType==2">
+	    <if test="userCityList.size() > 0">
+	    	AND (
+	    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+		    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+		    	<if test="city.provinceCode!=null">
+		    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+		    	</if>
+		    	<if test="city.cityCode!=null">
+		    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+		    	</if>
+		    	<if test="city.areaCode!=null">
+		    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+		    	</if>
+		    	)
+	    	</foreach>
+	    	)
+	    </if>	
+	    </if>
+	    <if test="roleType==3">
+	    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR})
+	    </if>
+    </where>
+    GROUP BY hb.fid ,hgr.fid 
+    ORDER BY hb.create_date DESC
+  </select>
+</mapper>

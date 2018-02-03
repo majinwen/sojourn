@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.activityFullDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityFullEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="act_sn" property="actSn" jdbcType="VARCHAR" />
+      <result column="group_sn" property="groupSn" jdbcType="VARCHAR"/>
+      <result column="service_line" property="serviceLine" jdbcType="INTEGER"/>
+      <result column="customer_type" property="customerType" jdbcType="INTEGER"/>
+      <result column="sign_type" property="signType" jdbcType="INTEGER"/>
+      <result column="is_stack" property="isStack" jdbcType="INTEGER"/>
+      <result column="act_cost_type" property="actCostType" jdbcType="INTEGER"/>
+    <result column="act_name" property="actName" jdbcType="VARCHAR" />
+    <result column="act_source" property="actSource" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="act_status" property="actStatus" jdbcType="INTEGER" />
+    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="act_kind" property="actKind" jdbcType="INTEGER" />
+    <result column="act_type" property="actType" jdbcType="INTEGER" />
+    <result column="act_limit" property="actLimit" jdbcType="INTEGER" />
+      <result column="times" property="times" jdbcType="INTEGER"/>
+    <result column="act_max" property="actMax" jdbcType="INTEGER" />
+    <result column="act_cut" property="actCut" jdbcType="INTEGER" />
+    <result column="act_start_time" property="actStartTime" jdbcType="TIMESTAMP" />
+    <result column="act_end_time" property="actEndTime" jdbcType="TIMESTAMP" />
+    <result column="is_check_time" property="isCheckTime" jdbcType="INTEGER" />
+    <result column="check_in_time" property="checkInTime" jdbcType="TIMESTAMP" />
+    <result column="check_out_time" property="checkOutTime" jdbcType="TIMESTAMP" />
+      <result column="group_user_fid" property="groupUserFid" jdbcType="VARCHAR"/>
+      <result column="group_house_fid" property="groupHouseFid" jdbcType="VARCHAR"/>
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="is_coupon" property="isCoupon" jdbcType="INTEGER" />
+    <result column="coupon_name" property="couponName" jdbcType="VARCHAR" />
+    <result column="coupon_num" property="couponNum" jdbcType="INTEGER" />
+    <result column="random_min" property="randomMin" jdbcType="INTEGER" />
+    <result column="random_max" property="randomMax" jdbcType="INTEGER" />
+    <result column="coupon_start_time" property="couponStartTime" jdbcType="TIMESTAMP" />
+    <result column="coupon_end_time" property="couponEndTime" jdbcType="TIMESTAMP" />
+      <result column="coupon_time_type" property="couponTimeType" jdbcType="INTEGER" />
+      <result column="coupon_time_last" property="couponTimeLast" jdbcType="INTEGER" />
+      <result column="is_limit_house" property="isLimitHouse" jdbcType="INTEGER" />
+      <result column="is_warn" property="isWarn" jdbcType="INTEGER" />
+      <result column="warn_times" property="warnTimes" jdbcType="INTEGER" />
+  </resultMap>
+
+
+    <sql id="Base_Column_List" >
+        ac.id,
+        ac.act_sn,
+        ac.group_sn,
+        ac.service_line,
+        ac.customer_type,
+        ac.sign_type,
+        ac.is_stack,
+        ac.act_cost_type,
+        ac.act_name,
+        ac.act_source,
+        ac.act_status,
+        ac.role_code,
+        ac.act_type,
+        ac.act_limit,
+        ac.times,
+        ac.act_max,
+        ac.act_cut,
+        ac.act_start_time,
+        ac.act_end_time,
+        ac.is_check_time,
+        ac.check_in_time,
+        ac.is_coupon,
+        ac.check_out_time,
+        ac.group_user_fid,
+        ac.group_house_fid,
+        ac.create_id,
+        ac.create_time,
+        ac.last_modify_date,
+        ac.is_del,
+        ac.act_kind,
+        ac.is_limit_house,
+        ext.coupon_name,
+        ext.coupon_num,
+        ext.random_min,
+        ext.random_max,
+        ext.coupon_start_time,
+        ext.coupon_end_time,
+        ext.coupon_time_last,
+        ext.coupon_time_type,
+        ext.is_warn,
+        ext.warn_times
+    </sql>
+
+  
+  <!-- 根据活动号查询活动 -->
+  <select id="getActivityFullBySn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+          <include refid="Base_Column_List" />
+      FROM t_activity ac
+      LEFT JOIN t_activity_ext_coupon ext on ac.act_sn = ext.act_sn
+    WHERE ac.act_sn = #{actSn,jdbcType=VARCHAR}
+    AND ac.is_del=0
+  </select>
+<!--根据活动组获取优惠券完整信息-->
+<select id="getActivityFullByGroupSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_activity ac
+    LEFT JOIN t_activity_ext_coupon ext on ac.act_sn = ext.act_sn
+    WHERE ac.group_sn = #{groupSn,jdbcType=VARCHAR}
+    AND ac.is_del=0
+</select>
+
+
+
+
+
+</mapper>

@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="photographer.photographerBookOrderDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.photographer.PhotographerBookOrderEntity" >
+    <id column="id" property="id" jdbcType="TINYINT" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="book_order_sn" property="bookOrderSn" jdbcType="VARCHAR" />
+    <result column="booker_uid" property="bookerUid" jdbcType="VARCHAR" />
+    <result column="booker_name" property="bookerName" jdbcType="VARCHAR" />
+    <result column="booker_mobile" property="bookerMobile" jdbcType="VARCHAR" />
+    <result column="customer_uid" property="customerUid" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="customer_mobile" property="customerMobile" jdbcType="VARCHAR" />
+    <result column="house_name" property="houseName" jdbcType="VARCHAR" />
+    <result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="photographer_uid" property="photographerUid" jdbcType="VARCHAR" />
+    <result column="photographer_mobile" property="photographerMobile" jdbcType="VARCHAR" />
+    <result column="photographer_name" property="photographerName" jdbcType="VARCHAR" />
+    <result column="shot_addr" property="shotAddr" jdbcType="VARCHAR" />
+    <result column="book_order_statu" property="bookOrderStatu" jdbcType="TINYINT" />
+    <result column="book_start_time" property="bookStartTime" jdbcType="TIMESTAMP" />
+    <result column="door_home_time" property="doorHomeTime" jdbcType="TIMESTAMP" />
+    <result column="receive_picture_time" property="receivePictureTime" jdbcType="TIMESTAMP" />
+    <result column="book_end_time" property="bookEndTime" jdbcType="TIMESTAMP" />
+    <result column="book_order_remark" property="bookOrderRemark" jdbcType="VARCHAR" />
+    <result column="book_order_source" property="bookOrderSource" jdbcType="TINYINT" />
+    <result column="business_type" property="businessType" jdbcType="TINYINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="appoint_photog_date" property="appointPhotogDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="listPhotoOrderMap" type="com.ziroom.minsu.services.house.photog.vo.PhotographerBookOrderVo" extends="BaseResultMap">
+    <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, city_code, book_order_sn, booker_uid, booker_name, booker_mobile, customer_uid, customer_name,
+    customer_mobile, house_fid,house_sn,house_name, photographer_uid, photographer_mobile, photographer_name, 
+    shot_addr, book_order_statu, book_start_time, door_home_time,receive_picture_time,book_end_time, book_order_remark, book_order_source,
+    business_type, create_date, last_modify_date,appoint_photog_date
+  </sql>
+
+  <sql id="queryCondition">
+    <if test="houseFid != null and houseFid !=''" >
+      and house_fid = #{houseFid,jdbcType=VARCHAR}
+    </if>
+    <if test="cityCode != null and cityCode !=''" >
+      and city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="bookerUid != null and bookerUid !=''" >
+      and booker_uid = #{bookerUid,jdbcType=VARCHAR}
+    </if>
+    <if test="bookerName != null and bookerName !=''" >
+      and booker_name like CONCAT(#{bookerName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="bookerMobile != null and bookerMobile !=''" >
+      and booker_mobile = #{bookerMobile,jdbcType=VARCHAR}
+    </if>
+    <if test="customerUid != null and customerUid !='' " >
+      and customer_uid = #{customerUid,jdbcType=VARCHAR}
+    </if>
+    <if test="customerName != null and customerName!=''" >
+      and customer_name like CONCAT(#{customerName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="customerMobile != null and customerMobile!=''" >
+      and customer_mobile = #{customerMobile,jdbcType=VARCHAR}
+    </if>
+
+    <if test="bookOrderStatu != null and bookOrderStatu!=''" >
+      and book_order_statu = #{bookOrderStatu,jdbcType=TINYINT}
+    </if>
+    <if test="bookOrderSn != null and bookOrderSn!=''" >
+      and book_order_sn = #{bookOrderSn,jdbcType=VARCHAR}
+    </if>
+    <if test="photographerMobile != null and photographerMobile!=''" >
+      and photographer_mobile = #{photographerMobile,jdbcType=VARCHAR}
+    </if>
+    <if test="photographerName != null and photographerName!=''" >
+      and photographer_name like CONCAT(#{photographerName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="bookStartTimeStr != null and bookStartTimeStr !=''">
+      and book_start_time &gt;=#{bookStartTimeStr,jdbcType=VARCHAR}
+    </if>
+    <if test="bookEndTimeStr != null and bookEndTimeStr !='' ">
+      and book_start_time &lt;=#{bookEndTimeStr,jdbcType=VARCHAR}
+    </if>
+    <if test="doorHomeStartTimeStr != null and doorHomeStartTimeStr !=''">
+      and door_home_time &gt;=#{doorHomeStartTimeStr,jdbcType=VARCHAR}
+    </if>
+    <if test="doorHomeEndTimeStr != null and doorHomeEndTimeStr !='' ">
+      and door_home_time &lt;=#{doorHomeEndTimeStr,jdbcType=VARCHAR}
+    </if>
+
+  </sql>
+
+
+  <select id="queryPhotographerBookOrderByHouseFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_photographer_book_order
+    where house_fid = #{houseFid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_photographer_book_order
+    where id = #{id,jdbcType=TINYINT}
+  </delete>
+  <insert id="savePhotographerBookOrder" parameterType="com.ziroom.minsu.entity.photographer.PhotographerBookOrderEntity" >
+    insert into t_photographer_book_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="bookOrderSn != null" >
+        book_order_sn,
+      </if>
+      <if test="bookerUid != null" >
+        booker_uid,
+      </if>
+      <if test="bookerName != null" >
+        booker_name,
+      </if>
+      <if test="bookerMobile != null" >
+        booker_mobile,
+      </if>
+      <if test="customerUid != null" >
+        customer_uid,
+      </if>
+      <if test="customerName != null" >
+        customer_name,
+      </if>
+      <if test="customerMobile != null" >
+        customer_mobile,
+      </if>
+       <if test="houseFid != null" >
+        house_fid,
+      </if>
+      <if test="houseSn != null" >
+        house_sn,
+      </if>
+       <if test="houseName != null" >
+        house_name,
+      </if>
+      <if test="photographerUid != null" >
+        photographer_uid,
+      </if>
+      <if test="photographerMobile != null" >
+        photographer_mobile,
+      </if>
+      <if test="photographerName != null" >
+        photographer_name,
+      </if>
+      <if test="shotAddr != null" >
+        shot_addr,
+      </if>
+      <if test="bookOrderStatu != null" >
+        book_order_statu,
+      </if>
+      <if test="bookStartTime != null" >
+        book_start_time,
+      </if>
+      <if test="doorHomeTime != null" >
+        door_home_time,
+      </if>
+      <if test="receivePictureTime != null" >
+        receive_picture_time,
+      </if>
+      <if test="bookEndTime != null" >
+        book_end_time,
+      </if>
+      <if test="bookOrderRemark != null" >
+        book_order_remark,
+      </if>
+      <if test="bookOrderSource != null" >
+        book_order_source,
+      </if>
+      <if test="businessType != null" >
+        business_type,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="appointPhotogDate != null" >
+        appoint_photog_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=TINYINT},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bookOrderSn != null" >
+        #{bookOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="bookerUid != null" >
+        #{bookerUid,jdbcType=VARCHAR},
+      </if>
+      <if test="bookerName != null" >
+        #{bookerName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookerMobile != null" >
+        #{bookerMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="customerUid != null" >
+        #{customerUid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerMobile != null" >
+        #{customerMobile,jdbcType=VARCHAR},
+      </if>
+       <if test="houseFid != null" >
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseSn != null" >
+        #{houseSn,jdbcType=VARCHAR},
+      </if>
+       <if test="houseName != null" >
+        #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="photographerUid != null" >
+        #{photographerUid,jdbcType=VARCHAR},
+      </if>
+      <if test="photographerMobile != null" >
+        #{photographerMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="photographerName != null" >
+        #{photographerName,jdbcType=VARCHAR},
+      </if>
+      <if test="shotAddr != null" >
+        #{shotAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="bookOrderStatu != null" >
+        #{bookOrderStatu,jdbcType=TINYINT},
+      </if>
+      <if test="bookStartTime != null" >
+        #{bookStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="doorHomeTime != null" >
+        #{doorHomeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receivePictureTime != null" >
+        #{receivePictureTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bookEndTime != null" >
+        #{bookEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bookOrderRemark != null" >
+        #{bookOrderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="bookOrderSource != null" >
+        #{bookOrderSource,jdbcType=TINYINT},
+      </if>
+      <if test="businessType != null" >
+        #{businessType,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointPhotogDate != null" >
+        #{appointPhotogDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updatePhotographerBookOrderBySn" parameterType="com.ziroom.minsu.entity.photographer.PhotographerBookOrderEntity" >
+    update t_photographer_book_order
+    <set >
+      <if test="photographerUid != null" >
+        photographer_uid = #{photographerUid,jdbcType=VARCHAR},
+      </if>
+      <if test="photographerMobile != null" >
+        photographer_mobile = #{photographerMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="photographerName != null" >
+        photographer_name = #{photographerName,jdbcType=VARCHAR},
+      </if>
+      <if test="shotAddr != null" >
+        shot_addr = #{shotAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="bookOrderStatu != null" >
+        book_order_statu = #{bookOrderStatu,jdbcType=TINYINT},
+      </if>
+      <if test="bookStartTime != null" >
+        book_start_time = #{bookStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="doorHomeTime != null" >
+        door_home_time = #{doorHomeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receivePictureTime != null" >
+        receive_picture_time = #{receivePictureTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bookEndTime != null" >
+        book_end_time = #{bookEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bookOrderRemark != null" >
+        book_order_remark = #{bookOrderRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="appointPhotogDate != null" >
+        appoint_photog_date = #{appointPhotogDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where book_order_sn = #{bookOrderSn,jdbcType=VARCHAR}
+  </update>
+  
+   <select id="queryPhotographerBookOrderBySn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_photographer_book_order
+    where book_order_sn = #{bookOrderSn,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 通过房源fid查询摄影师订单-->
+  <select id="findBookOrderByHouseFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_photographer_book_order
+    where house_fid = #{houseFid,jdbcType=VARCHAR}
+    AND book_order_statu NOT IN (14,15)
+    limit 1 
+  </select>
+
+
+
+  <select id="findPhotographerBookOrder" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.house.dto.BookHousePhotogDto" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_photographer_book_order
+    <where>
+    <if test="houseName != null and houseName!=''" >
+        and house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+        <if test="houseSn != null and houseSn!=''" >
+            and house_sn = #{houseSn,jdbcType=VARCHAR}
+        </if>
+        <if test="bookCreateStartTimeStr != null and bookCreateStartTimeStr !=''">
+            and create_date &gt;=#{bookCreateStartTimeStr,jdbcType=VARCHAR}
+        </if>
+        <if test="bookCreateEndTimeStr != null and bookCreateEndTimeStr !='' ">
+            and create_date &lt;=#{bookCreateEndTimeStr,jdbcType=VARCHAR}
+        </if>
+      <include refid="queryCondition"/>
+    </where>
+      ORDER BY create_date DESC
+  </select>
+
+  <select id="listPhotographerBookOrderByCondition" resultMap="listPhotoOrderMap" parameterType="com.ziroom.minsu.services.house.dto.BookHousePhotogDto">
+    SELECT
+  t1.*,t2.rent_way
+  FROM
+  `t_photographer_book_order` t1
+  LEFT JOIN `t_house_base_msg` t2
+    ON t1.house_fid = t2.fid
+    <where>
+    <if test="houseName != null and houseName!=''" >
+        and t1.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseSn != null and houseSn!=''" >
+        and t1.house_sn = #{houseSn,jdbcType=VARCHAR}
+    </if>
+    <if test="bookCreateStartTimeStr != null and bookCreateStartTimeStr !=''">
+        and t1.create_date &gt;=#{bookCreateStartTimeStr,jdbcType=VARCHAR}
+    </if>
+    <if test="bookCreateEndTimeStr != null and bookCreateEndTimeStr !='' ">
+        and t1.create_date &lt;=#{bookCreateEndTimeStr,jdbcType=VARCHAR}
+    </if>
+      <include refid="queryCondition"/>
+    </where>
+    ORDER BY create_date DESC
+  </select>
+</mapper>
+

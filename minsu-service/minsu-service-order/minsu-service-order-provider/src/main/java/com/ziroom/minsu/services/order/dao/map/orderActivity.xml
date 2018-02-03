@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.activityDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderActivityEntity" >
+    <!--
+              基本map
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="ac_fid" property="acFid" jdbcType="VARCHAR" />
+    <result column="ac_name" property="acName" jdbcType="VARCHAR" />
+    <result column="ac_money" property="acMoney" jdbcType="INTEGER" />
+    <result column="ac_type" property="acType" jdbcType="INTEGER" />
+    <result column="ac_status" property="acStatus" jdbcType="INTEGER" />
+    <result column="is_syns" property="isSyns" jdbcType="INTEGER" />
+    <result column="ac_money_all" property="acMoney" jdbcType="INTEGER" />
+    <result column="preferential_sources" property="preferentialSources" jdbcType="INTEGER" />
+    <result column="preferential_user" property="preferentialUser" jdbcType="INTEGER" />
+    <result column="ac_weight" property="acWeight" jdbcType="INTEGER" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
+  </resultMap>
+
+  <resultMap id="InfoResultMap" type="com.ziroom.minsu.services.finance.entity.OrderActivityInfoVo" extends="BaseResultMap"></resultMap>
+  
+  <sql id="Base_Column_List" >
+    <!--
+     基本列 字段
+    -->
+    a.id, a.order_sn, a.ac_fid, a.ac_name, a.ac_money, a.ac_type, a.ac_status, a.is_syns,a.ac_money_all,a.preferential_sources,a.preferential_user,a.ac_weight
+    ,a.create_time,a.last_modify_date
+  </sql>
+  
+  
+  <select id="selectByCondiction" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    <!--
+      根据条件查询
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_order_activity a
+    where a.order_sn = #{orderSn,jdbcType=VARCHAR} and a.ac_fid = #{acFid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findOrderAcByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!--
+      根据条件查询
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_order_activity a
+    where a.order_sn = #{orderSn,jdbcType=VARCHAR} 
+  </select>
+  
+  
+  <!-- 查询订单使用的优惠券活动 -->
+  <select id="selectCouponByOrderSn" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_order_activity a
+    WHERE a.order_sn = #{orderSn,jdbcType=VARCHAR} 
+    AND a.ac_type = #{acType,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectActByOrderSnAndType" resultMap="InfoResultMap" parameterType="java.util.Map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_order_activity a
+    WHERE a.order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND a.ac_type = #{acType,jdbcType=INTEGER}
+  </select>
+
+  <select id="listOrderActByOrderSnAndType" resultMap="InfoResultMap" parameterType="java.util.Map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_order_activity a
+    WHERE a.order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND a.ac_type IN
+    <foreach collection="list" item="type" index="index" open="(" separator="," close=")">
+      #{type,jdbcType=INTEGER}
+    </foreach>
+  </select>
+
+    <select id="findCouponByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        <!--获取优惠券信息 -->
+        select
+        <include refid="Base_Column_List" />
+        from t_order_activity a
+        where a.order_sn = #{orderSn,jdbcType=VARCHAR} and ac_type = 2
+    </select>
+
+    <!-- 验证当前的优惠券是否被使用 -->
+    <select id="checkCoupon" resultType="java.lang.Long" parameterType="map">
+        SELECT count(id)
+        FROM t_order_activity
+        WHERE ac_fid = #{couponSn,jdbcType=VARCHAR}
+        AND ac_status IN (3,4)
+    </select>
+  
+  <!-- 查询未同步优惠券状态的count -->
+  <select id="getNotSyncCount" resultType="java.lang.Long" parameterType="map">
+  	SELECT count(id)
+	FROM t_order_activity a
+	WHERE ac_type = #{acType,jdbcType=INTEGER}
+	AND is_syns = 0
+  </select>
+  
+  <!-- 查询未同步优惠券状态的list -->
+  <select id="getNotSyncList" resultMap="BaseResultMap" parameterType="map">
+  	SELECT
+  	<include refid="Base_Column_List" />
+	FROM t_order_activity a
+	WHERE ac_type = #{acType,jdbcType=INTEGER}
+	AND is_syns = 0
+	LIMIT #{limit,jdbcType=INTEGER}
+  </select>
+  
+  
+  <insert id="insertActivity" parameterType="com.ziroom.minsu.entity.order.OrderActivityEntity" >
+    <!--
+      新增    订单、优惠活动记录
+    -->
+    insert into t_order_activity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="acFid != null" >
+        ac_fid,
+      </if>
+      <if test="acName != null" >
+        ac_name,
+      </if>
+      <if test="acMoney != null" >
+        ac_money,
+      </if>
+        <if test="acType != null" >
+            ac_type,
+        </if>
+        <if test="acStatus != null" >
+            ac_status,
+        </if>
+        <if test="isSyns != null" >
+            is_syns,
+        </if>
+        <if test="acMoneyAll != null" >
+            ac_money_all,
+        </if>
+        <if test="preferentialSources != null" >
+            preferential_sources,
+        </if>
+        <if test="preferentialUser != null" >
+            preferential_user,
+        </if>
+        <if test="acWeight != null" >
+            ac_weight,
+        </if>
+        
+         <if test="createTime != null" >
+            create_time,
+        </if>
+        <if test="lastModifyDate != null" >
+            last_modify_date,
+        </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="acFid != null" >
+        #{acFid,jdbcType=VARCHAR},
+      </if>
+      <if test="acName != null" >
+        #{acName,jdbcType=VARCHAR},
+      </if>
+      <if test="acMoney != null" >
+        #{acMoney,jdbcType=INTEGER},
+      </if>
+      <if test="acType != null" >
+          #{acType,jdbcType=INTEGER},
+      </if>
+      <if test="acStatus != null" >
+          #{acStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isSyns != null" >
+          #{isSyns,jdbcType=INTEGER},
+      </if>
+      <if test="acMoneyAll != null" >
+        #{acMoneyAll,jdbcType=INTEGER},
+      </if>
+      <if test="preferentialSources != null" >
+        #{preferentialSources,jdbcType=INTEGER},
+      </if>
+      <if test="preferentialUser != null" >
+          #{preferentialUser,jdbcType=INTEGER},
+      </if>
+      <if test="acWeight != null" >
+          #{acWeight,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+          #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+          #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateStatusByCoupon" parameterType="map" >
+    UPDATE t_order_activity
+    SET ac_status = #{acStatus,jdbcType=INTEGER},
+    is_syns = 0
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND ac_type = #{acType,jdbcType=INTEGER}
+  </update>
+
+    <!-- 重新修改当前订单活动的金额 -->
+    <update id="updateAcMoney" parameterType="map" >
+        UPDATE t_order_activity
+        SET ac_money = #{acMoney,jdbcType=INTEGER}
+        WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+        AND ac_fid = #{acCode,jdbcType=VARCHAR}
+    </update>
+
+
+
+  <update id="updateHasSync" parameterType="map" >
+    UPDATE t_order_activity
+    SET is_syns = 1
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND ac_type = #{acType,jdbcType=INTEGER}
+	AND is_syns = 0
+  </update>
+
+    <!--查询当天入住订单 并且使用优惠券的订单-->
+    <select id="listTodayCheckInOrderAndUseCoupon" resultType="com.ziroom.minsu.entity.order.OrderActivityEntity">
+    SELECT
+    t1.`order_sn` as orderSn,t1.`ac_fid` as acFid
+    FROM
+    t_order t
+    LEFT JOIN t_order_activity t1
+    ON t.`order_sn` = t1.`order_sn`
+  WHERE t.`pay_status` = 1
+  AND t.`order_status` > 36
+  AND DATE_FORMAT(t.`start_time`, '%Y-%m-%d') = DATE(NOW())
+  AND t1.`ac_type` = 2
+  </select>
+  
+</mapper>

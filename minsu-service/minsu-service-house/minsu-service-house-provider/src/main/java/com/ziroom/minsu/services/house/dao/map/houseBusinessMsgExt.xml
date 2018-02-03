@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseBusinessMsgExtDao" >
+
+	 <!--
+      房源商机扩展表映射
+    -->
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseBusinessMsgExtEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="business_fid" property="businessFid" jdbcType="VARCHAR" />
+    <result column="dt_guard_code" property="dtGuardCode" jdbcType="VARCHAR" />
+    <result column="dt_guard_name" property="dtGuardName" jdbcType="VARCHAR" />
+    <result column="landlord_name" property="landlordName" jdbcType="VARCHAR" />
+    <result column="landlord_mobile" property="landlordMobile" jdbcType="VARCHAR" />
+    <result column="landlord_nick_name" property="landlordNickName" jdbcType="VARCHAR" />
+    <result column="landlord_qq" property="landlordQq" jdbcType="VARCHAR" />
+    <result column="landlord_wechat" property="landlordWechat" jdbcType="VARCHAR" />
+    <result column="landlord_email" property="landlordEmail" jdbcType="VARCHAR" />
+    <result column="landlord_type" property="landlordType" jdbcType="TINYINT" />
+    <result column="manager_code" property="managerCode" jdbcType="VARCHAR" />
+    <result column="manager_name" property="managerName" jdbcType="VARCHAR" />
+    <result column="wh_guard_code" property="whGuardCode" jdbcType="VARCHAR" />
+    <result column="wh_guard_name" property="whGuardName" jdbcType="VARCHAR" />
+    <result column="is_meet" property="isMeet" jdbcType="TINYINT" />
+    <result column="business_plan" property="businessPlan" jdbcType="TINYINT" />
+    <result column="reject_reason" property="rejectReason" jdbcType="TINYINT" />
+    <result column="follow_content" property="followContent" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!--
+      房源商机扩展表字段
+    -->
+  <sql id="Base_Column_List" >
+    hbe.id, hbe.fid, hbe.business_fid, hbe.dt_guard_code, hbe.dt_guard_name, hbe.landlord_name, hbe.landlord_mobile, 
+    hbe.landlord_nick_name, hbe.landlord_qq, hbe.landlord_wechat, hbe.landlord_email, hbe.landlord_type, 
+    hbe.manager_code, hbe.manager_name, hbe.wh_guard_code, hbe.wh_guard_name, hbe.is_meet, business_plan, 
+    hbe.reject_reason, hbe.follow_content
+  </sql>
+  
+  <!--
+	查询房东对应的地推管家员工号
+    -->
+  <select id="findDtGuardCodeByLandlord" resultType="string" parameterType="map" >
+	SELECT dt_guard_code FROM t_house_business_msg_ext hbe
+	WHERE landlord_mobile=#{landlordMobile,jdbcType=VARCHAR}
+	LIMIT 1
+  </select>
+ 
+ 	<!--
+      插入房源商机扩展表信息
+    -->
+  <insert id="insertBusinessMsgExtEntity" parameterType="com.ziroom.minsu.entity.house.HouseBusinessMsgExtEntity" >
+    insert into t_house_business_msg_ext
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="businessFid != null" >
+        business_fid,
+      </if>
+      <if test="dtGuardCode != null" >
+        dt_guard_code,
+      </if>
+      <if test="dtGuardName != null" >
+        dt_guard_name,
+      </if>
+      <if test="landlordName != null" >
+        landlord_name,
+      </if>
+      <if test="landlordMobile != null" >
+        landlord_mobile,
+      </if>
+      <if test="landlordNickName != null" >
+        landlord_nick_name,
+      </if>
+      <if test="landlordQq != null" >
+        landlord_qq,
+      </if>
+      <if test="landlordWechat != null" >
+        landlord_wechat,
+      </if>
+      <if test="landlordEmail != null" >
+        landlord_email,
+      </if>
+      <if test="landlordType != null" >
+        landlord_type,
+      </if>
+      <if test="managerCode != null" >
+        manager_code,
+      </if>
+      <if test="managerName != null" >
+        manager_name,
+      </if>
+      <if test="whGuardCode != null" >
+        wh_guard_code,
+      </if>
+      <if test="whGuardName != null" >
+        wh_guard_name,
+      </if>
+      <if test="isMeet != null" >
+        is_meet,
+      </if>
+      <if test="businessPlan != null" >
+        business_plan,
+      </if>
+      <if test="rejectReason != null" >
+        reject_reason,
+      </if>
+      <if test="followContent != null" >
+        follow_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="businessFid != null" >
+        #{businessFid,jdbcType=VARCHAR},
+      </if>
+      <if test="dtGuardCode != null" >
+        #{dtGuardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dtGuardName != null" >
+        #{dtGuardName,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordName != null" >
+        #{landlordName,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordMobile != null" >
+        #{landlordMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordNickName != null" >
+        #{landlordNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordQq != null" >
+        #{landlordQq,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordWechat != null" >
+        #{landlordWechat,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordEmail != null" >
+        #{landlordEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordType != null" >
+        #{landlordType,jdbcType=TINYINT},
+      </if>
+      <if test="managerCode != null" >
+        #{managerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="managerName != null" >
+        #{managerName,jdbcType=VARCHAR},
+      </if>
+      <if test="whGuardCode != null" >
+        #{whGuardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="whGuardName != null" >
+        #{whGuardName,jdbcType=VARCHAR},
+      </if>
+      <if test="isMeet != null" >
+        #{isMeet,jdbcType=TINYINT},
+      </if>
+      <if test="businessPlan != null" >
+        #{businessPlan,jdbcType=TINYINT},
+      </if>
+      <if test="rejectReason != null" >
+        #{rejectReason,jdbcType=TINYINT},
+      </if>
+      <if test="followContent != null" >
+        #{followContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+	<!--
+      更新房源商机扩展表
+    -->
+  <update id="updateHouseBusinessMsgExtEntity" parameterType="com.ziroom.minsu.entity.house.HouseBusinessMsgExtEntity" >
+    update t_house_business_msg_ext
+    <set >
+      <if test="dtGuardCode != null" >
+        dt_guard_code = #{dtGuardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dtGuardName != null" >
+        dt_guard_name = #{dtGuardName,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordName != null" >
+        landlord_name = #{landlordName,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordMobile != null" >
+        landlord_mobile = #{landlordMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordNickName != null" >
+        landlord_nick_name = #{landlordNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordQq != null" >
+        landlord_qq = #{landlordQq,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordWechat != null" >
+        landlord_wechat = #{landlordWechat,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordEmail != null" >
+        landlord_email = #{landlordEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordType != null" >
+        landlord_type = #{landlordType,jdbcType=TINYINT},
+      </if>
+      <if test="managerCode != null" >
+        manager_code = #{managerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="managerName != null" >
+        manager_name = #{managerName,jdbcType=VARCHAR},
+      </if>
+      <if test="whGuardCode != null" >
+        wh_guard_code = #{whGuardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="whGuardName != null" >
+        wh_guard_name = #{whGuardName,jdbcType=VARCHAR},
+      </if>
+      <if test="isMeet != null" >
+        is_meet = #{isMeet,jdbcType=TINYINT},
+      </if>
+      <if test="businessPlan != null" >
+        business_plan = #{businessPlan,jdbcType=TINYINT},
+      </if>
+      <if test="rejectReason != null" >
+        reject_reason = #{rejectReason,jdbcType=TINYINT},
+      </if>
+      <if test="followContent != null" >
+        follow_content = #{followContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询房源商机扩展信息 -->
+  <select id="findHouseBusinessMsgExtByBusinessFid"  parameterType="string"  resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"></include>  
+  	FROM t_house_business_msg_ext hbe
+  	WHERE business_fid = #{businessFid,jdbcType=VARCHAR}
+  	LIMIT 1
+  </select>
+  
+  <!-- 条件查询商机扩展信息 -->
+   <select id="findHouseBusExtByCondition"  parameterType="com.ziroom.minsu.services.house.dto.HouseBusinessMsgExtDto"  resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"></include>  
+  	FROM t_house_business_msg_ext hbe
+  	left join t_house_business_msg hb
+  	on hb.fid=hbe.business_fid
+  	WHERE  hb.is_del=0
+	<if test="landlordName != null and landlordName !=''"  >
+      AND landlord_name = #{landlordName,jdbcType=VARCHAR}
+    </if>
+    <if test="landlordMobile != null and landlordMobile !=''" >
+     AND landlord_mobile = #{landlordMobile,jdbcType=VARCHAR}
+    </if>
+    <if test="landlordNickName != null and landlordNickName!=''" >
+     AND landlord_nick_name = #{landlordNickName,jdbcType=VARCHAR}
+    </if>
+  	
+  </select>
+  
+  <!-- 更新房源商机地推管家 -->
+  <update id="updateDtGuard"  parameterType="map">
+  	UPDATE t_house_business_msg_ext SET dt_guard_code=#{dtGuardCode,jdbcType=VARCHAR},dt_guard_name=#{dtGuardName,jdbcType=VARCHAR}
+	WHERE dt_guard_code=#{oldDtGuardCode,jdbcType=VARCHAR}
+	<if test="landlordMobile != null and landlordMobile !=''"  >
+      AND landlord_mobile = #{landlordMobile,jdbcType=VARCHAR}
+    </if>
+  </update>
+</mapper>

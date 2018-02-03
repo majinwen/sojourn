@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.housePhyMsgDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HousePhyMsgEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="nation_code" property="nationCode" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+    <result column="building_code" property="buildingCode" jdbcType="VARCHAR" />
+    <result column="community_name" property="communityName" jdbcType="VARCHAR" />
+    <result column="zo_job_num" jdbcType="VARCHAR" property="zoJobNum" />
+    <result column="zo_name" jdbcType="VARCHAR" property="zoName" />
+    <result column="zo_mobile" jdbcType="VARCHAR" property="zoMobile" />
+    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_uid" property="createUid" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="google_longitude" property="googleLongitude" jdbcType="DOUBLE" />
+    <result column="google_latitude" property="googleLatitude" jdbcType="DOUBLE" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    phy.id, phy.fid, phy.nation_code, phy.province_code, phy.city_code, phy.area_code, phy.building_code, phy.community_name, phy.zo_job_num, 
+    phy.zo_name, phy.zo_mobile, phy.longitude, phy.latitude, phy.google_longitude, phy.google_latitude,phy.create_date, phy.last_modify_date, phy.create_uid, phy.is_del
+  </sql>
+  
+  <select id="findHousePhyMsgByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select <include refid="Base_Column_List" />
+    from t_house_phy_msg phy
+    where phy.fid = #{fid,jdbcType=VARCHAR}
+    and phy.is_del = 0
+    limit 1
+  </select>
+
+  <insert id="insertHousePhyMsg" parameterType="com.ziroom.minsu.entity.house.HousePhyMsgEntity" >
+    insert into t_house_phy_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="nationCode != null" >
+        nation_code,
+      </if>
+      <if test="provinceCode != null" >
+        province_code,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="areaCode != null" >
+        area_code,
+      </if>
+      <if test="buildingCode != null" >
+        building_code,
+      </if>
+      <if test="communityName != null" >
+        community_name,
+      </if>
+      <if test="zoJobNum != null">
+        zo_job_num,
+      </if>
+      <if test="zoName != null">
+        zo_name,
+      </if>
+      <if test="zoMobile != null">
+        zo_mobile,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="createUid != null" >
+        create_uid,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+       <if test="googleLongitude != null" >
+        google_longitude,
+      </if>
+      <if test="googleLatitude != null" >
+        google_latitude,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="nationCode != null" >
+        #{nationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingCode != null" >
+        #{buildingCode,jdbcType=VARCHAR},
+      </if>
+      <if test="communityName != null" >
+        #{communityName,jdbcType=VARCHAR},
+      </if>
+      <if test="zoJobNum != null">
+        #{zoJobNum,jdbcType=VARCHAR},
+      </if>
+      <if test="zoName != null">
+        #{zoName,jdbcType=VARCHAR},
+      </if>
+      <if test="zoMobile != null">
+        #{zoMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+       <if test="googleLongitude != null" >
+        #{googleLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="googleLatitude != null" >
+        #{googleLatitude,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateHousePhyMsgByFid" parameterType="com.ziroom.minsu.entity.house.HousePhyMsgEntity" >
+    update t_house_phy_msg
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="nationCode != null" >
+        nation_code = #{nationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        province_code = #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        area_code = #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingCode != null" >
+        building_code = #{buildingCode,jdbcType=VARCHAR},
+      </if>
+      <if test="communityName != null" >
+        community_name = #{communityName,jdbcType=VARCHAR},
+      </if>
+      <if test="zoJobNum != null">
+        zo_job_num = #{zoJobNum,jdbcType=VARCHAR},
+      </if>
+      <if test="zoName != null">
+        zo_name = #{zoName,jdbcType=VARCHAR},
+      </if>
+      <if test="zoMobile != null">
+        zo_mobile = #{zoMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        create_uid = #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="googleLongitude != null" >
+        google_longitude = #{googleLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="googleLatitude != null" >
+        google_latitude = #{googleLatitude,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+   <!-- 特殊修改，小区名称可以为空 -->
+  <update id="specialUpdateHousePhyMsgByFid" parameterType="com.ziroom.minsu.entity.house.HousePhyMsgEntity" >
+    update t_house_phy_msg
+    <set >
+        community_name = #{communityName,jdbcType=VARCHAR},
+      <if test="nationCode != null" >
+        nation_code = #{nationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        province_code = #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        area_code = #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingCode != null" >
+        building_code = #{buildingCode,jdbcType=VARCHAR},
+      </if>
+      <if test="zoJobNum != null">
+        zo_job_num = #{zoJobNum,jdbcType=VARCHAR},
+      </if>
+      <if test="zoName != null">
+        zo_name = #{zoName,jdbcType=VARCHAR},
+      </if>
+      <if test="zoMobile != null">
+        zo_mobile = #{zoMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        create_uid = #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="googleLongitude != null" >
+        google_longitude = #{googleLongitude,jdbcType=DECIMAL},
+      </if>
+      <if test="googleLatitude != null" >
+        google_latitude = #{googleLatitude,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findHousePhyMsgByCommuNameAndCityCode" resultMap="BaseResultMap" parameterType="map" >
+    SELECT <include refid="Base_Column_List" />
+    FROM t_house_phy_msg phy
+    WHERE phy.community_name = #{communityName,jdbcType=VARCHAR}
+    AND phy.city_code = #{cityCode,jdbcType=VARCHAR}
+    AND phy.is_del = 0
+    LIMIT 1
+  </select>
+  
+  <!-- 条件查询物理楼盘信息列表 -->
+  <select id="findHousePhyMsgListByCondition"  parameterType="com.ziroom.minsu.services.house.dto.HousePhyListDto" resultMap="BaseResultMap">
+	SELECT <include refid="Base_Column_List" /> FROM t_house_phy_msg phy
+	WHERE phy.is_del=0
+	<if test="communityName!=null and communityName!=''">
+	AND phy.community_name like CONCAT(#{communityName,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="zoName!=null and zoName!=''">
+	AND phy.zo_name like CONCAT(#{zoName,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="zoMobile!=null and zoMobile!=''">
+	AND phy.zo_mobile like CONCAT(#{zoMobile,jdbcType=VARCHAR,'%'}
+	</if>
+	<if test="nationCode!=null and nationCode!=''">
+	AND phy.nation_code=#{nationCode,jdbcType=VARCHAR}
+	</if>
+	<if test="provinceCode!=null and provinceCode!=''">
+	AND phy.province_code=#{provinceCode,jdbcType=VARCHAR}
+	</if>
+	<if test="cityCode!=null and cityCode!=''">
+	AND phy.city_code=#{cityCode,jdbcType=VARCHAR}
+	</if>
+	<if test="areaCode!=null and areaCode!=''">
+	AND phy.area_code=#{areaCode,jdbcType=VARCHAR}
+	</if>
+  </select>
+  
+  <!-- 根据房源逻辑id查询房源物理信息 -->
+  <select id="findHousePhyMsgByHouseBaseFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT <include refid="Base_Column_List" />
+    FROM t_house_phy_msg phy,t_house_base_msg hb
+    WHERE hb.fid = #{houseBaseFid,jdbcType=VARCHAR}
+    AND phy.fid = hb.phy_fid
+    AND phy.is_del = 0
+    AND hb.is_del = 0
+    LIMIT 1
+  </select>
+</mapper>

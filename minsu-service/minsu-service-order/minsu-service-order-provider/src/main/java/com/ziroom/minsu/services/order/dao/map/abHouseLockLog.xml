@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.abHouseLockLogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.AbHouseLockLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+    <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
+    <result column="operator_number" property="operatorNumber" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, house_fid, room_fid, rent_way, operator_type, operator_number, create_time, last_modify_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_ab_house_lock_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.order.AbHouseLockLogEntity" >
+    insert into t_ab_house_lock_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="houseFid != null" >
+        house_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="operatorType != null" >
+        operator_type,
+      </if>
+      <if test="operatorNumber != null" >
+        operator_number,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="houseFid != null" >
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="operatorType != null" >
+        #{operatorType,jdbcType=INTEGER},
+      </if>
+      <if test="operatorNumber != null" >
+        #{operatorNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.order.AbHouseLockLogEntity" >
+    update t_ab_house_lock_log
+    <set >
+      <if test="houseFid != null" >
+        house_fid = #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        rent_way = #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="operatorType != null" >
+        operator_type = #{operatorType,jdbcType=INTEGER},
+      </if>
+      <if test="operatorNumber != null" >
+        operator_number = #{operatorNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.order.AbHouseLockLogEntity" >
+    update t_ab_house_lock_log
+    set house_fid = #{houseFid,jdbcType=VARCHAR},
+      room_fid = #{roomFid,jdbcType=VARCHAR},
+      rent_way = #{rentWay,jdbcType=INTEGER},
+      operator_type = #{operatorType,jdbcType=INTEGER},
+      operator_number = #{operatorNumber,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

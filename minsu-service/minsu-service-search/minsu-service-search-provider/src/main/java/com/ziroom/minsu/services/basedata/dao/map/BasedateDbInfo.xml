@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="search.basedateDbInfoDao" >
+
+
+
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.conf.DicItemEntity" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="fid" property="fid" jdbcType="VARCHAR" />
+        <result column="template_fid" property="templateFid" jdbcType="VARCHAR" />
+        <result column="dic_code" property="dicCode" jdbcType="VARCHAR" />
+        <result column="show_name" property="showName" jdbcType="VARCHAR" />
+        <result column="item_value" property="itemValue" jdbcType="VARCHAR" />
+        <result column="item_status" property="itemStatus" jdbcType="INTEGER" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+        <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+        <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List" >
+        <!--  -->
+        id, fid,template_fid, dic_code, show_name, item_value, item_status, create_date, last_modify_date, create_fid,
+        is_del
+    </sql>
+
+
+    <!-- 获取字典值信息 -->
+    <select id="getDicItemListByCodeAndTemplate" resultMap="BaseResultMap" parameterType="map" >
+        <!--  -->
+        select
+        <include refid="Base_Column_List" />
+        from t_conf_dic_item
+        where dic_code = #{code,jdbcType=VARCHAR}  and  template_fid = #{templateFid,jdbcType=VARCHAR}
+    </select>
+    
+    
+    
+    
+    
+   <resultMap id="cityBaseResultMap" type="com.ziroom.minsu.entity.conf.ConfCityEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="show_name" property="showName" jdbcType="VARCHAR" />
+    <result column="hot" property="hot" jdbcType="BIGINT" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="pcode" property="pcode" jdbcType="VARCHAR" />
+    <result column="initial" property="initial" jdbcType="VARCHAR" />
+    <result column="city_status" property="cityStatus" jdbcType="INTEGER" />
+    <result column="city_type" property="cityType" jdbcType="INTEGER" />
+    <result column="radii" property="radii" jdbcType="INTEGER" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="city_Base_Column_List" >
+    <!--
+      基础列数据
+    -->
+    tcc.id, tcc.fid, tcc.show_name, tcc.hot, tcc.code, tcc.level, tcc.pcode, tcc.initial, tcc.city_status, tcc.city_type, tcc.radii, 
+    tcc.longitude, tcc.latitude, tcc.create_date, tcc.last_modify_date, tcc.create_fid, tcc.is_del
+  </sql>
+  
+  <select id="getAllCityList" resultMap="cityBaseResultMap" parameterType="java.lang.String" >
+      <!-- 获取开通的城市列表 -->
+      select
+      <include refid="city_Base_Column_List" />
+      from t_conf_city tcc
+      where tcc.level = 3
+  </select>
+  
+    <!-- 获取开通的城市列表(房客) -->
+  <select id="getOpenCityTenant" resultMap="cityBaseResultMap" parameterType="java.lang.String" >
+      select
+      <include refid="city_Base_Column_List" />
+      from t_conf_city tcc
+      where tcc.level = 3
+      AND (tcc.city_status = 1 OR tcc.city_status = 2)
+  </select>
+   
+  
+   <!-- 获取有效的字典值信息 --> 
+    <select id="getDefaultSelectEnumList" resultMap="BaseResultMap" parameterType="map" >
+        select
+        <include refid="Base_Column_List" />
+        from t_conf_dic_item
+        where dic_code = #{dicCode,jdbcType=VARCHAR}  and  template_fid = #{templateFid,jdbcType=VARCHAR}
+        and is_del = 0
+        <if test="itemStatus != null">
+        and item_status=#{itemStatus,jdbcType=INTEGER}
+    	</if>
+    </select> 
+    
+  <resultMap id="cityHouseTypeMap" type="com.ziroom.minsu.services.basedata.entity.CityFeatureHouseVo" >
+  	<result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+  	<collection column="city_code" property="houseTypes" javaType="ArrayList" select="getCityHouseType"  />  
+  </resultMap>
+  <!-- 查询城市下现有的特色房源的类型列表 -->
+  <select id="getCityHouseType" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select 
+    	distinct( house_type)
+    from t_city_feature_housetype
+    where is_del=0 
+        and city_code = #{cityCode,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询所有的城市下现有的特色房源的类型 -->
+  <select id="getAllCityFeatureHouseTypes" resultMap="cityHouseTypeMap" >
+    select distinct(city_code)
+    from t_city_feature_housetype
+    where is_del=0 and city_code is not null
+  </select>
+  
+  <resultMap id="StaticResourcePicResultMap" type="com.ziroom.minsu.entity.base.StaticResourcePicEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="res_fid" property="resFid" jdbcType="VARCHAR" />
+    <result column="pic_base_url" property="picBaseUrl" jdbcType="VARCHAR" />
+    <result column="pic_suffix" property="picSuffix" jdbcType="VARCHAR" />
+    <result column="pic_server_uuid" property="picServerUuid" jdbcType="VARCHAR" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>  
+   
+  <resultMap id="StaticResourceResultMap" type="com.ziroom.minsu.services.search.vo.StaticResourceVo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />    
+    <result column="res_title" property="resTitle" jdbcType="VARCHAR" />    
+    <result column="res_code" property="resCode" jdbcType="VARCHAR" />    
+    <result column="res_type" property="resType" jdbcType="INTEGER" />    
+    <result column="res_content" property="resContent" jdbcType="VARCHAR" />
+    <result column="res_remark" property="resRemark" jdbcType="VARCHAR" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />   
+    <collection property="staticResourcePicList"  column="{resFid=fid}"   javaType="arrayList"  select="getStaticResourcePicByResFid"></collection>
+  </resultMap> 
+  
+  <!-- 查询静态资源图片 -->
+  <select id="getStaticResourcePicByResFid" resultMap="StaticResourcePicResultMap" >
+     SELECT id,fid,res_fid,pic_base_url,pic_suffix,pic_server_uuid,last_modify_date 
+     FROM t_static_resource_pic 
+     WHERE res_fid = #{resFid,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询静态资源 -->
+  <select id="getStaticResourceByResCode" resultMap="StaticResourceResultMap"  parameterType="map" >
+     SELECT id,fid,res_title,res_code,res_type,res_content,res_remark,create_fid,create_date,last_modify_date,is_del
+     FROM t_static_resource rs 
+     WHERE rs.res_code = #{resCode,jdbcType=VARCHAR} AND rs.is_del='0'
+     ORDER BY last_modify_date DESC LIMIT 1 
+  </select>
+  
+  <!-- 查询标签-->
+  <select id="findByConfTagFidsList" resultType="java.lang.String" parameterType="map" >
+      SELECT tag.`tag_name` FROM `t_conf_tag` tag 
+      WHERE tag.`is_del`='0' 
+      <if test="fids != null and fids.size > 0">
+        AND tag.`fid` in
+        <foreach collection="fids"  item="fid" index="index" open="(" separator="," close=")">
+            #{fid,jdbcType=VARCHAR}
+        </foreach>
+     </if> 
+      ORDER BY tag.last_modify_date ASC
+  </select>
+
+</mapper>

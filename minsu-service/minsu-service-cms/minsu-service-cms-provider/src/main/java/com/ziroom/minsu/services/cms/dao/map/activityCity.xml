@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.activityCityDao" >
+
+
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityCityEntity" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="act_sn" property="actSn" jdbcType="VARCHAR" />
+        <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <!-- 根据活动号查询活动 -->
+    <select id="getActivityCitiesByActSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT
+       id,act_sn,city_code
+        FROM t_activity_city
+        WHERE act_sn = #{actSn,jdbcType=VARCHAR}
+    </select>
+
+
+
+  <insert id="saveActivityCity" parameterType="com.ziroom.minsu.entity.cms.ActivityCityEntity" >
+    insert into t_activity_city
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+
+      <if test="actSn != null" >
+        act_sn,
+      </if>
+      <if test="cityCode != null" >
+          city_code,
+      </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+      <if test="actSn != null" >
+        #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+    <delete id="deleteByActSn" parameterType="java.util.Map">
+        <!--  -->
+        delete from t_activity_city
+        where act_sn = #{actSn,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseSurveyLogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseSurveyLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="survey_fid" property="surveyFid" jdbcType="VARCHAR" />
+    <result column="operate_fid" property="operateFid" jdbcType="VARCHAR" />
+    <result column="pre_survey_result" property="preSurveyResult" jdbcType="TINYINT" />
+    <result column="cur_survey_result" property="curSurveyResult" jdbcType="TINYINT" />
+    <result column="pre_survey_date" property="preSurveyDate" jdbcType="TIMESTAMP" />
+    <result column="cur_survey_date" property="curSurveyDate" jdbcType="TIMESTAMP" />
+    <result column="operate_type" property="operateType" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, fid, survey_fid, operate_fid, pre_survey_result, cur_survey_result, pre_survey_date, 
+    cur_survey_date, operate_type, create_date
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_survey_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <insert id="insertHouseSurveyLog" parameterType="com.ziroom.minsu.entity.house.HouseSurveyLogEntity" >
+    insert into t_house_survey_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="surveyFid != null" >
+        survey_fid,
+      </if>
+      <if test="operateFid != null" >
+        operate_fid,
+      </if>
+      <if test="preSurveyResult != null" >
+        pre_survey_result,
+      </if>
+      <if test="curSurveyResult != null" >
+        cur_survey_result,
+      </if>
+      <if test="preSurveyDate != null" >
+        pre_survey_date,
+      </if>
+      <if test="curSurveyDate != null" >
+        cur_survey_date,
+      </if>
+      <if test="operateType != null" >
+        operate_type,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="surveyFid != null" >
+        #{surveyFid,jdbcType=VARCHAR},
+      </if>
+      <if test="operateFid != null" >
+        #{operateFid,jdbcType=VARCHAR},
+      </if>
+      <if test="preSurveyResult != null" >
+        #{preSurveyResult,jdbcType=TINYINT},
+      </if>
+      <if test="curSurveyResult != null" >
+        #{curSurveyResult,jdbcType=TINYINT},
+      </if>
+      <if test="preSurveyDate != null" >
+        #{preSurveyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="curSurveyDate != null" >
+        #{curSurveyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateType != null" >
+        #{operateType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.house.HouseSurveyLogEntity" >
+    update t_house_survey_log
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="surveyFid != null" >
+        survey_fid = #{surveyFid,jdbcType=VARCHAR},
+      </if>
+      <if test="operateFid != null" >
+        operate_fid = #{operateFid,jdbcType=VARCHAR},
+      </if>
+      <if test="preSurveyResult != null" >
+        pre_survey_result = #{preSurveyResult,jdbcType=TINYINT},
+      </if>
+      <if test="curSurveyResult != null" >
+        cur_survey_result = #{curSurveyResult,jdbcType=TINYINT},
+      </if>
+      <if test="preSurveyDate != null" >
+        pre_survey_date = #{preSurveyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="curSurveyDate != null" >
+        cur_survey_date = #{curSurveyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateType != null" >
+        operate_type = #{operateType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

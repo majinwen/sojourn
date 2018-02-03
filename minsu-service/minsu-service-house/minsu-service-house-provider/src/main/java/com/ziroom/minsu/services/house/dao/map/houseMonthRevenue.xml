@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseMonthRevenueDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseMonthRevenueEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="statistics_date_month" property="statisticsDateMonth" jdbcType="TINYINT" />
+    <result column="statistics_date_year" property="statisticsDateYear" jdbcType="INTEGER" />
+    <result column="month_revenue" property="monthRevenue" jdbcType="INTEGER" />
+    <result column="revenue_type" property="revenueType" jdbcType="TINYINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  
+  <resultMap id="RevenueVoMap" extends="BaseResultMap" type="com.ziroom.minsu.services.house.entity.HouseMonthRevenueVo" >
+    <collection column="fid" property="roomMonthRevenueList" javaType="ArrayList" select="house.roomMonthRevenueDao.findRoomMonthRevenueListByHouseMonthRevenueFid"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    hmr.id, hmr.fid, hmr.house_base_fid, hmr.statistics_date_month, hmr.statistics_date_year, hmr.month_revenue, 
+    hmr.revenue_type, hmr.create_date, hmr.last_modify_date, hmr.is_del
+  </sql>
+  
+  <insert id="insertHouseMonthRevenue" parameterType="com.ziroom.minsu.entity.house.HouseMonthRevenueEntity" >
+    insert into t_house_month_revenue
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="statisticsDateMonth != null" >
+        statistics_date_month,
+      </if>
+      <if test="statisticsDateYear != null" >
+        statistics_date_year,
+      </if>
+      <if test="monthRevenue != null" >
+        month_revenue,
+      </if>
+      <if test="revenueType != null" >
+        revenue_type,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="statisticsDateMonth != null" >
+        #{statisticsDateMonth,jdbcType=TINYINT},
+      </if>
+      <if test="statisticsDateYear != null" >
+        #{statisticsDateYear,jdbcType=INTEGER},
+      </if>
+      <if test="monthRevenue != null" >
+        #{monthRevenue,jdbcType=INTEGER},
+      </if>
+      <if test="revenueType != null" >
+        #{revenueType,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateHouseMonthRevenue" parameterType="com.ziroom.minsu.entity.house.HouseMonthRevenueEntity" >
+    update t_house_month_revenue
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="statisticsDateMonth != null" >
+        statistics_date_month = #{statisticsDateMonth,jdbcType=TINYINT},
+      </if>
+      <if test="statisticsDateYear != null" >
+        statistics_date_year = #{statisticsDateYear,jdbcType=INTEGER},
+      </if>
+      <if test="monthRevenue != null" >
+        month_revenue = #{monthRevenue,jdbcType=INTEGER},
+      </if>
+      <if test="revenueType != null" >
+        revenue_type = #{revenueType,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findMonthRevenueListByHouseBaseFid" resultMap="RevenueVoMap" parameterType="com.ziroom.minsu.services.house.dto.LandlordRevenueDto" >
+    SELECT hmr.fid,hmr.month_revenue,hmr.house_base_fid,hmr.statistics_date_year,hmr.statistics_date_month,hmr.revenue_type
+    FROM t_house_month_revenue hmr
+    WHERE hmr.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+	AND hmr.statistics_date_year = #{statisticsDateYear,jdbcType=TINYINT}
+	AND hmr.is_del=0
+  </select>
+  
+  <!-- 查询房源逻辑id列表 -->
+  <select id="findHouseBaseFidListFromHouseMonthRevenue" parameterType="map" resultType="string">
+  	SELECT hmr.house_base_fid houseBaseFid
+  	FROM t_house_month_revenue hmr
+	WHERE hmr.statistics_date_year = #{statisticsDateYear,jdbcType=TINYINT}
+	AND hmr.statistics_date_month = #{statisticsDateMonth,jdbcType=TINYINT}
+	AND hmr.is_del=0
+	GROUP BY hmr.house_base_fid
+  </select>
+  
+  <select id="findOneHouseMonthRevenue" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.house.dto.LandlordRevenueDto" >
+    SELECT hmr.fid,hmr.month_revenue,hmr.house_base_fid,hmr.statistics_date_year,hmr.statistics_date_month,hmr.revenue_type
+    FROM t_house_month_revenue hmr
+    WHERE hmr.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+	AND hmr.statistics_date_year = #{statisticsDateYear,jdbcType=TINYINT}
+	AND hmr.statistics_date_month = #{statisticsDateMonth,jdbcType=TINYINT}
+	AND hmr.is_del=0
+	LIMIT 1
+  </select>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015. ziroom.
+  -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <dubbo:reference id="house.houseManageService" interface="com.ziroom.minsu.services.house.api.inner.HouseManageService" check="false"/>
+    <dubbo:reference id="house.troyHouseMgtService" interface="com.ziroom.minsu.services.house.api.inner.TroyHouseMgtService" check="false"/>
+    <dubbo:reference id="house.houseIssueService" interface="com.ziroom.minsu.services.house.api.inner.HouseIssueService" check="false"/>
+    <dubbo:reference id="house.tenantHouseService" interface="com.ziroom.minsu.services.house.api.inner.TenantHouseService" check="false"/>
+    <dubbo:reference id="house.houseJobService" interface="com.ziroom.minsu.services.house.api.inner.HouseJobService" check="false"/>
+    <dubbo:reference id="house.houseBusinessService" interface="com.ziroom.minsu.services.house.api.inner.HouseBusinessService" check="false"/>
+    <dubbo:reference id="house.houseGuardService" interface="com.ziroom.minsu.services.house.api.inner.HouseGuardService" check="false"/>
+	<dubbo:reference id="house.housePCService" interface="com.ziroom.minsu.services.house.api.inner.HousePCService" check="false"/>
+	<dubbo:reference id="house.houseIssuePcService" interface="com.ziroom.minsu.services.house.api.inner.HouseIssuePcService" check="false"/>
+	<dubbo:reference id="photographer.troyPhotogBookService" interface="com.ziroom.minsu.services.house.api.inner.TroyPhotogBookService" check="false"/>
+	<dubbo:reference id="photog.photogMgtService" interface="com.ziroom.minsu.services.house.api.inner.PhotogMgtService" check="false"/>
+	<dubbo:reference id="house.houseSurveyService" interface="com.ziroom.minsu.services.house.api.inner.HouseSurveyService" check="false"/>
+	<dubbo:reference id="house.houseFollowService" interface="com.ziroom.minsu.services.house.api.inner.HouseFollowService" check="false"/>
+	<dubbo:reference id="house.houseTopService" interface="com.ziroom.minsu.services.house.api.inner.HouseTopService" check="false"/>
+    <dubbo:reference id="house.abHouseService" interface="com.ziroom.minsu.services.house.api.inner.AbHouseService" check="false"/>
+    <dubbo:reference id="house.houseTonightDiscountService" interface="com.ziroom.minsu.services.house.api.inner.HouseTonightDiscountService" check="false"/>
+    <dubbo:reference id="house.houseIssueAppService" interface="com.ziroom.minsu.services.house.api.inner.HouseIssueAppService" check="false"/>
+    <dubbo:reference id="house.houseUpdateHistoryLogService" interface="com.ziroom.minsu.services.house.api.inner.HouseUpdateHistoryLogService" check="false"/>
+</beans>

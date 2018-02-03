@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="message.msgBaseOfflineDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.message.MsgBaseOfflineEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="tenant_uid" property="tenantUid" jdbcType="VARCHAR" />
+    <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+    <result column="msg_real_content" property="msgRealContent" jdbcType="VARCHAR" />
+    <result column="msg_content_ext" property="msgContentExt" jdbcType="VARCHAR" />
+    <result column="msg_sender_type" property="msgSenderType" jdbcType="INTEGER" />
+    <result column="huanxin_msg_id" property="huanxinMsgId" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="url" property="url" jdbcType="VARCHAR"/>
+    <result column="secret" property="secret" jdbcType="VARCHAR"/>
+    <result column="filename" property="filename" jdbcType="VARCHAR"/>
+    <result column="file_length" property="fileLength" jdbcType="INTEGER"/>
+    <result column="type" property="type" jdbcType="VARCHAR"/>
+    <result column="size" property="size" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, tenant_uid, landlord_uid, house_fid, rent_way, msg_real_content, msg_content_ext, 
+    msg_sender_type, huanxin_msg_id, is_del, create_time,url,
+    secret,filename,file_length,type,size
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_msg_base_offline
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_msg_base_offline
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.message.MsgBaseOfflineEntity" >
+    insert into t_msg_base_offline
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="tenantUid != null" >
+        tenant_uid,
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid,
+      </if>
+      <if test="houseFid != null" >
+        house_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="msgRealContent != null" >
+        msg_real_content,
+      </if>
+      <if test="msgContentExt != null" >
+        msg_content_ext,
+      </if>
+      <if test="msgSenderType != null" >
+        msg_sender_type,
+      </if>
+      <if test="huanxinMsgId != null" >
+        huanxin_msg_id,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="url != null">
+         url,
+      </if>
+	    <if test="secret != null">
+	        secret,
+	    </if>
+	    <if test="filename != null">
+	        filename,
+	    </if>
+	    <if test="fileLength != null">
+	        file_length,
+	    </if>
+	    <if test="type != null">
+	        type,
+	    </if>
+	     <if test="size != null">
+	        size,
+	    </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantUid != null" >
+        #{tenantUid,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordUid != null" >
+        #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseFid != null" >
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="msgRealContent != null" >
+        #{msgRealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="msgContentExt != null" >
+        #{msgContentExt,jdbcType=VARCHAR},
+      </if>
+      <if test="msgSenderType != null" >
+        #{msgSenderType,jdbcType=INTEGER},
+      </if>
+      <if test="huanxinMsgId != null" >
+        #{huanxinMsgId,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+       <if test="url != null">
+          #{url,jdbcType=VARCHAR},
+      </if>
+       <if test="secret != null">
+          #{secret,jdbcType=VARCHAR},
+      </if>
+       <if test="filename != null">
+          #{filename,jdbcType=VARCHAR},
+      </if>
+       <if test="fileLength != null">
+          #{fileLength,jdbcType=INTEGER},
+      </if>
+       <if test="type != null">
+          #{type,jdbcType=VARCHAR},
+      </if>
+        <if test="size != null">
+          #{size,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.message.MsgBaseOfflineEntity" >
+    update t_msg_base_offline
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantUid != null" >
+        tenant_uid = #{tenantUid,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid = #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseFid != null" >
+        house_fid = #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        rent_way = #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="msgRealContent != null" >
+        msg_real_content = #{msgRealContent,jdbcType=VARCHAR},
+      </if>
+      <if test="msgContentExt != null" >
+        msg_content_ext = #{msgContentExt,jdbcType=VARCHAR},
+      </if>
+      <if test="msgSenderType != null" >
+        msg_sender_type = #{msgSenderType,jdbcType=INTEGER},
+      </if>
+      <if test="huanxinMsgId != null" >
+        huanxin_msg_id = #{huanxinMsgId,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="url != null">
+          url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="secret != null">
+          secret = #{secret,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null">
+          filename = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="fileLength != null">
+          file_length = #{fileLength,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+          type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+          size = #{size,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

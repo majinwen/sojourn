@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="message.huanxinImGroupMemberDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.message.HuanxinImGroupMemberEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+    <result column="member" property="member" jdbcType="VARCHAR" />
+    <result column="member_role" property="memberRole" jdbcType="INTEGER" />
+    <result column="member_statu" property="memberStatu" jdbcType="INTEGER" />
+    <result column="op_fid" property="opFid" jdbcType="VARCHAR" />
+    <result column="op_type" property="opType" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="recovery_gag_time" property="recoveryGagTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  
+  <resultMap id="ImMembersVoMap" type="com.ziroom.minsu.services.message.dto.GroupMembersVo" extends="BaseResultMap" >
+    <result column="memberRoleShow" property="memberRoleShow" jdbcType="VARCHAR" />
+    <result column="memberNickName" property="memberNickName" jdbcType="VARCHAR" />
+    <result column="memberMobile" property="memberMobile" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, fid, group_id, member, member_role, op_fid, op_type, remark, is_del, create_date, member_statu,recovery_gag_time,
+    last_modify_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_huanxin_im_group_member
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_huanxin_im_group_member
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.message.HuanxinImGroupMemberEntity" >
+    insert into t_huanxin_im_group_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="member != null" >
+        member,
+      </if>
+      
+      <if test="memberRole != null" >
+        member_role,
+      </if>
+       <if test="memberStatu != null" >
+        member_statu,
+      </if>
+      <if test="opFid != null" >
+        op_fid,
+      </if>
+      <if test="opType != null" >
+        op_type,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="recoveryGagTime != null" >
+        recovery_gag_time,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="member != null" >
+        #{member,jdbcType=VARCHAR},
+      </if>
+      <if test="memberRole != null" >
+        #{memberRole,jdbcType=INTEGER},
+      </if>
+      <if test="memberStatu != null" >
+        #{memberStatu,jdbcType=INTEGER},
+      </if>
+      <if test="opFid != null" >
+        #{opFid,jdbcType=VARCHAR},
+      </if>
+      <if test="opType != null" >
+        #{opType,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="recoveryGagTime != null" >
+        #{recoveryGagTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateHuanxinImGroupMember" parameterType="com.ziroom.minsu.entity.message.HuanxinImGroupMemberEntity" >
+    update t_huanxin_im_group_member
+    <set >
+      <if test="member != null" >
+        member = #{member,jdbcType=VARCHAR},
+      </if>
+      <if test="memberRole != null" >
+        member_role = #{memberRole,jdbcType=INTEGER},
+      </if>
+      <if test="memberStatu != null" >
+        member_statu = #{memberStatu,jdbcType=INTEGER},
+      </if>
+      <if test="opFid != null" >
+        op_fid = #{opFid,jdbcType=VARCHAR},
+      </if>
+      <if test="opType != null" >
+        op_type = #{opType,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recoveryGagTime != null" >
+        recovery_gag_time = #{recoveryGagTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    WHERE  group_id = #{groupId,jdbcType=VARCHAR}
+    AND    member = #{member,jdbcType=VARCHAR}
+    AND    is_del=0
+  </update>
+ 
+ 
+   <update id="updateHuanxinImGroupMemberByCon" parameterType="com.ziroom.minsu.services.message.dto.GagMemberDto" >
+    update t_huanxin_im_group_member
+    <set >
+      <if test="opFid != null" >
+        op_fid = #{opFid,jdbcType=VARCHAR},
+      </if>
+      <if test="opType != null" >
+        op_type = #{opType,jdbcType=INTEGER},
+      </if>
+       <if test="memberStatu != null" >
+        member_statu = #{memberStatu,jdbcType=INTEGER},
+      </if>
+      <if test="recoveryGagTime != null" >
+        recovery_gag_time = #{recoveryGagTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE  group_id = #{groupId,jdbcType=VARCHAR}
+      AND member in
+     <foreach collection="members"  item="member" index="index" open="(" separator="," close=")">
+         #{member,jdbcType=VARCHAR}
+     </foreach>
+  </update>
+  
+   <select id="queryGroupMemberByPage" resultMap="ImMembersVoMap" parameterType="com.ziroom.minsu.services.message.dto.GroupMemberPageInfoDto" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_huanxin_im_group_member
+    where 1=1
+    AND is_del = 0
+     <if test="members != null and members.size > 0">
+        AND member in
+        <foreach collection="members"  item="member" index="index" open="(" separator="," close=")">
+            #{member,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="groupId != null and groupId != ''">
+     AND group_id = #{groupId,jdbcType=VARCHAR}
+    </if>
+     <if test="opFid != null  and opFid != ''" >
+       AND op_fid = #{opFid,jdbcType=VARCHAR}
+     </if>
+     <if test="memberRole != null" >
+       AND member_role = #{memberRole,jdbcType=INTEGER}
+     </if>
+      <if test="memberStatu != null" >
+	      <if test="memberStatu == 1">
+	      AND  recovery_gag_time > now()
+	      </if>
+	      AND member_statu = #{memberStatu,jdbcType=INTEGER}
+     </if>
+  </select>
+  
+  
+  <select id="queryGroupIdsByMember" resultType="java.lang.String" parameterType="map" >
+    select mem.`group_id` from `t_huanxin_im_group_member` mem 
+	left join `t_zry_project_group` zry on zry.`group_id` = mem.`group_id`
+	where 1 = 1
+	and mem.is_del = 0
+	and zry.is_del = 0
+   <if test="member != null and member!=''" >
+     	and mem.`member` =  #{member,jdbcType=VARCHAR}
+   </if>
+
+  <if test="projectBid != null and projectBid!=''" >
+      and zry.`project_bid` = #{projectBid,jdbcType=VARCHAR}
+  </if>
+  </select>
+
+   <!-- 查询当前用户  入群时间 -->  
+   <select id="queryGroupInfoByMember" resultMap="BaseResultMap" parameterType="java.lang.String" >
+      SELECT t.`group_id`,t.`create_date` FROM `t_huanxin_im_group_member` t  
+      WHERE  t.`member`  =  #{member,jdbcType=VARCHAR}
+      AND t.`is_del` =0  GROUP BY t.`group_id`,t.`create_date` ORDER BY t.`create_date` DESC
+  </select>
+  
+  <select id="queryGagMemberByUid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+     SELECT   <include refid="Base_Column_List" /> FROM `t_huanxin_im_group_member` t 
+       WHERE  t.`member` =  #{uid,jdbcType=VARCHAR}
+       AND t.`member_statu` = 1 
+       AND t.`recovery_gag_time` >NOW() ORDER BY t.`create_date` LIMIT 1
+ </select>
+ 
+   <select id="queryMeberByGroupAndMember" resultMap="BaseResultMap" parameterType="map" >
+     SELECT   <include refid="Base_Column_List" /> FROM `t_huanxin_im_group_member` t 
+       WHERE t.`group_id` = #{groupId,jdbcType=VARCHAR}
+        <if test="member != null and member !=''" >
+          AND t.`member` =  #{member,jdbcType=VARCHAR}
+        </if>
+        <if test="memberRole != null" >
+     	AND t.`member_role` =  #{memberRole,jdbcType=INTEGER}
+       </if>
+       AND t.`is_del` = 0
+       LIMIT 1
+ </select>
+</mapper>

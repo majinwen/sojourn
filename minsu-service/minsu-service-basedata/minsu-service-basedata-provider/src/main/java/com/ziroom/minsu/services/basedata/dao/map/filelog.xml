@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.fileLogDao">
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.file.FileLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="log_type" property="logType" jdbcType="INTEGER" />
+    <result column="operator_fid" property="operatorFid" jdbcType="VARCHAR" />
+    <result column="operator_date" property="operatorDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, log_type, operator_fid, operator_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_file_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_file_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <!-- 查询员工姓名-->
+  <select id="getEmpNameByCityCode" resultType="string" parameterType="string" >
+    SELECT tse.emp_name FROM `t_file_log` tfl
+    LEFT JOIN `t_sys_currentuser` syc ON tfl.operator_fid = syc.fid
+    LEFT JOIN `t_sys_employee` tse ON syc.employee_fid = tse.fid
+    WHERE tfl.city_code= #{code,jdbcType=VARCHAR}
+    ORDER BY tfl.operator_date DESC
+    LIMIT 1
+  </select>
+
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.file.FileLogEntity" >
+    insert into t_file_log (id, fid, log_type,
+    operator_fid, operator_date)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{logType,jdbcType=INTEGER},
+    #{operatorFid,jdbcType=VARCHAR}, #{operatorDate,jdbcType=TIMESTAMP})
+  </insert>
+
+  <!-- 插入一条日志记录-->
+  <insert id="saveOperatelog" parameterType="com.ziroom.minsu.entity.file.FileLogEntity" >
+    insert into t_file_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="logType != null" >
+        log_type,
+      </if>
+      <if test="typeFid != null" >
+        type_fid,
+      </if>
+      <if test="operatorFid != null" >
+        operator_fid,
+      </if>
+      <if test="operatorDate != null" >
+        operator_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null" >
+        #{logType,jdbcType=INTEGER},
+      </if>
+      <if test="typeFid != null" >
+        #{typeFid,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorFid != null" >
+        #{operatorFid,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorDate != null" >
+        #{operatorDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.file.FileLogEntity" >
+    update t_file_log
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null" >
+        log_type = #{logType,jdbcType=INTEGER},
+      </if>
+      <if test="operatorFid != null" >
+        operator_fid = #{operatorFid,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorDate != null" >
+        operator_date = #{operatorDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.file.FileLogEntity" >
+    update t_file_log
+    set fid = #{fid,jdbcType=VARCHAR},
+    log_type = #{logType,jdbcType=INTEGER},
+    operator_fid = #{operatorFid,jdbcType=VARCHAR},
+    operator_date = #{operatorDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

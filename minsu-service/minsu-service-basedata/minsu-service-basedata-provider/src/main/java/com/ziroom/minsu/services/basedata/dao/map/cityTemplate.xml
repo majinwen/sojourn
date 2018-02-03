@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.cityTemplateDao" >
+
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.conf.CityTemplateEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="template_fid" property="templateFid" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+  <resultMap id="BaseResultExtMap" type="com.ziroom.minsu.services.basedata.entity.CityTemplateVo" extends="BaseResultMap" >
+    <result column="show_name" property="cityName" jdbcType="INTEGER" />
+    <result column="template_name" property="templateName" jdbcType="INTEGER" />
+
+  </resultMap>
+
+
+  <!-- 通过城市获取信息 -->
+  <select id="getCityTemplateInfoList" resultMap="BaseResultExtMap" parameterType="java.lang.String" >
+   SELECT tcc.id,tmp.city_code, tmp.template_fid, tcc.show_name,t.template_name
+    FROM t_conf_city tcc
+    INNER JOIN t_conf_city_template tmp ON tcc.code = tmp.city_code
+    INNER JOIN t_conf_template t ON tmp.template_fid = t.fid
+  </select>
+
+
+
+
+  <!-- 通过城市获取信息 -->
+  <select id="getCityTemplateByCityCode" resultMap="BaseResultExtMap" parameterType="java.lang.String" >
+    SELECT tcc.id,tmp.city_code, tmp.template_fid, tcc.show_name,t.template_name
+    FROM t_conf_city tcc
+    INNER JOIN t_conf_city_template tmp ON tcc.code = tmp.city_code
+    INNER JOIN t_conf_template t ON tmp.template_fid = t.fid
+    where tmp.city_code = #{cityCode,jdbcType=VARCHAR}
+  </select>
+
+
+
+
+
+  <delete id="deleteByCityCode" parameterType="java.lang.String" >
+    <!--  -->
+    delete from t_conf_city_template
+    where city_code = #{cityCode,jdbcType=VARCHAR}
+  </delete>
+
+
+  <insert id="insertCityTemplate" parameterType="com.ziroom.minsu.entity.conf.CityTemplateEntity" >
+    insert into t_conf_city_template
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="templateFid != null" >
+        template_fid,
+      </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="templateFid != null" >
+        #{templateFid,jdbcType=VARCHAR},
+      </if>
+
+    </trim>
+  </insert>
+
+</mapper>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="customer.landlordStaticsDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.customer.LandlordStatisticsEntity" >
+    <!--
+      基本map
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+    <result column="reply_people_num" property="replyPeopleNum" jdbcType="INTEGER" />
+    <result column="im_reply_sum_time" property="imReplySumTime" jdbcType="INTEGER" />
+    <result column="order_sum_num" property="orderSumNum" jdbcType="INTEGER" />
+    <result column="reply_order_num" property="replyOrderNum" jdbcType="INTEGER" />
+    <result column="lan_refuse_order_num" property="lanRefuseOrderNum" jdbcType="INTEGER" />
+    <result column="sys_refuse_order_num" property="sysRefuseOrderNum" jdbcType="INTEGER" />
+    <result column="order_reply_sum_time" property="orderReplySumTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+   <!--
+      基本列
+    -->
+    id, fid, landlord_uid, reply_people_num, im_reply_sum_time, order_sum_num,reply_order_num, lan_refuse_order_num, 
+    sys_refuse_order_num, order_reply_sum_time, create_time, last_modify_date, is_del
+  </sql>
+  <select id="getByLandlordUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+     <!-- 获取当前用户的有效角色 -->
+     select
+     <include refid="Base_Column_List" />
+     FROM
+     t_landlord_statistics
+     WHERE landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+     AND is_del = 0
+ </select>
+ 
+  <insert id="staticsInsertLanActAssociation" parameterType="com.ziroom.minsu.entity.customer.LandlordStatisticsEntity" >
+    <!--
+     新增数据
+    -->
+    insert into t_landlord_statistics
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid,
+      </if>
+      <if test="replyPeopleNum != null" >
+        reply_people_num,
+      </if>
+      <if test="imReplySumTime != null" >
+        im_reply_sum_time,
+      </if>
+      <if test="orderSumNum != null" >
+        order_sum_num,
+      </if>
+      
+      <if test="replyOrderNum != null" >
+        reply_order_num,
+      </if>
+      <if test="lanRefuseOrderNum != null" >
+        lan_refuse_order_num,
+      </if>
+      <if test="sysRefuseOrderNum != null" >
+        sys_refuse_order_num,
+      </if>
+      <if test="orderReplySumTime != null" >
+        order_reply_sum_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordUid != null" >
+        #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="replyPeopleNum != null" >
+        #{replyPeopleNum,jdbcType=INTEGER},
+      </if>
+      <if test="imReplySumTime != null" >
+        #{imReplySumTime,jdbcType=INTEGER},
+      </if>
+      
+      <if test="orderSumNum != null" >
+        #{orderSumNum,jdbcType=INTEGER},
+      </if>
+      <if test="replyOrderNum != null" >
+        #{replyOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="lanRefuseOrderNum != null" >
+        #{lanRefuseOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="sysRefuseOrderNum != null" >
+        #{sysRefuseOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="orderReplySumTime != null" >
+        #{orderReplySumTime,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  
+<!-- <update id="staticsUpdateLanActAssociation" parameterType="com.ziroom.minsu.entity.customer.LandlordStatisticsEntity">
+#更新房东响应的数据 
+UPDATE t_landlord_statistics 
+SET reply_order_num = reply_order_num <![CDATA[ + ]]> #{replyOrderNum,jdbcType=INTEGER},
+lan_refuse_order_num = lan_refuse_order_num <![CDATA[ + ]]> #{lanRefuseOrderNum,jdbcType=INTEGER},
+sys_refuse_order_num = sys_refuse_order_num <![CDATA[ + ]]> #{sysRefuseOrderNum,jdbcType=INTEGER},
+order_reply_sum_time = order_reply_sum_time <![CDATA[ + ]]> #{orderReplySumTime,jdbcType=INTEGER},
+reply_people_num = reply_people_num <![CDATA[ + ]]> #{replyPeopleNum,jdbcType=INTEGER},
+im_reply_sum_time = im_reply_sum_time <![CDATA[ + ]]> #{imReplySumTime,jdbcType=INTEGER}
+WHERE landlord_uid = #{landlordUid,jdbcType=VARCHAR};
+</update> -->
+
+<update id="staticsUpdateLanActAssociation" parameterType="com.ziroom.minsu.entity.customer.LandlordStatisticsEntity">
+<!--#更新房东响应的数据  -->
+UPDATE t_landlord_statistics 
+SET reply_order_num=#{replyOrderNum,jdbcType=INTEGER},
+lan_refuse_order_num=#{lanRefuseOrderNum,jdbcType=INTEGER},
+sys_refuse_order_num=#{sysRefuseOrderNum,jdbcType=INTEGER},
+order_reply_sum_time=#{orderReplySumTime,jdbcType=INTEGER},
+reply_people_num=#{replyPeopleNum,jdbcType=INTEGER},
+im_reply_sum_time=#{imReplySumTime,jdbcType=INTEGER},
+order_sum_num=#{orderSumNum,jdbcType=INTEGER}
+WHERE landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+AND is_del=0
+</update>
+  
+</mapper>

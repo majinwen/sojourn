@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.activityGiftDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityGiftEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="gift_name" property="giftName" jdbcType="VARCHAR" />
+    <result column="gift_value" property="giftValue" jdbcType="VARCHAR" />
+    <result column="gift_unit" property="giftUnit" jdbcType="VARCHAR" />
+    <result column="gift_type" property="giftType" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, gift_name, gift_value, gift_unit, gift_type, remark, create_id, create_time, 
+    last_modify_date, is_del
+  </sql>
+
+  <!-- 获取当前房东参加的免佣金的活动 -->
+  <select id="getLanFreeCommAc" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select g.id, g.fid, g.gift_name, g.gift_value, g.gift_unit, g.gift_type, g.remark, g.create_id, g.create_time,
+    g.last_modify_date, g.is_del
+    from t_activity_gift  g
+	inner join t_activity_record re on g.fid = re.gift_fid
+	where  g.gift_type = 1
+	 AND re.user_uid = #{landUid,jdbcType=VARCHAR}
+	 AND re.start_time is not null
+	 AND re.end_time is not null
+	 AND re.start_time <![CDATA[ <= ]]> NOW()
+    AND re.end_time >= NOW()
+  </select>
+
+  <!-- 获取当前的礼品 -->
+  <select id="getGiftByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_activity_gift
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_activity_gift
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_activity_gift
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.cms.ActivityGiftEntity" >
+    insert into t_activity_gift (id, fid, gift_name, 
+      gift_value, gift_unit, gift_type, 
+      remark, create_id, create_time, 
+      last_modify_date, is_del)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{giftName,jdbcType=VARCHAR}, 
+      #{giftValue,jdbcType=VARCHAR}, #{giftUnit,jdbcType=VARCHAR}, #{giftType,jdbcType=TINYINT}, 
+      #{remark,jdbcType=VARCHAR}, #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{isDel,jdbcType=TINYINT})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.cms.ActivityGiftEntity" >
+    insert into t_activity_gift
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="giftName != null" >
+        gift_name,
+      </if>
+      <if test="giftValue != null" >
+        gift_value,
+      </if>
+      <if test="giftUnit != null" >
+        gift_unit,
+      </if>
+      <if test="giftType != null" >
+        gift_type,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="giftName != null" >
+        #{giftName,jdbcType=VARCHAR},
+      </if>
+      <if test="giftValue != null" >
+        #{giftValue,jdbcType=VARCHAR},
+      </if>
+      <if test="giftUnit != null" >
+        #{giftUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="giftType != null" >
+        #{giftType,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateActivityGiftEntityByFid" parameterType="com.ziroom.minsu.entity.cms.ActivityGiftEntity" >
+    update t_activity_gift
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="giftName != null" >
+        gift_name = #{giftName,jdbcType=VARCHAR},
+      </if>
+      <if test="giftValue != null" >
+        gift_value = #{giftValue,jdbcType=VARCHAR},
+      </if>
+      <if test="giftUnit != null" >
+        gift_unit = #{giftUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="giftType != null" >
+        gift_type = #{giftType,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.cms.ActivityGiftEntity" >
+    update t_activity_gift
+    set fid = #{fid,jdbcType=VARCHAR},
+      gift_name = #{giftName,jdbcType=VARCHAR},
+      gift_value = #{giftValue,jdbcType=VARCHAR},
+      gift_unit = #{giftUnit,jdbcType=VARCHAR},
+      gift_type = #{giftType,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_id = #{createId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <select id="queryActivityGifyByCon" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.cms.dto.ActivityGiftRequest" >
+    <!-- 条件查询礼物 -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_activity_gift
+    where 1=1
+    <if test="giftName != null and giftName !=''">
+     AND  gift_name like CONCAT(#{giftName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="giftValue !=null and giftValue != ''">
+     AND gift_value = #{giftValue,jdbcType=VARCHAR}
+    </if>
+    <if test="giftType != null">
+     AND  gift_type = #{giftType,jdbcType=TINYINT}
+    </if>
+    <if test="isDel != null">
+     AND  is_del = #{isDel,jdbcType=TINYINT}
+    </if>
+  </select>
+</mapper>

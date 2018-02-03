@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseTopColumnDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseTopColumnEntity" >
+   
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_top_fid" property="houseTopFid" jdbcType="VARCHAR" />
+    <result column="column_type" property="columnType" jdbcType="INTEGER" />
+    <result column="column_style" property="columnStyle" jdbcType="INTEGER" />
+    <result column="column_sort" property="columnSort" jdbcType="INTEGER" />
+    <result column="pic_base_url" property="picBaseUrl" jdbcType="VARCHAR" />
+    <result column="column_content" property="columnContent" jdbcType="VARCHAR" />
+    <result column="pic_suffix" property="picSuffix" jdbcType="VARCHAR" />
+    <result column="pic_server_uuid" property="picServerUuid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+    <result column="width" property="width" jdbcType="INTEGER" />
+    <result column="hight" property="hight" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+   
+    id, fid, house_top_fid, column_type, column_style, column_sort, column_content,pic_base_url, pic_suffix, 
+    pic_server_uuid, create_date, last_modify_date, is_del,width,hight
+  </sql>
+
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+   
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_top_column
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+ 
+ 
+  <select id="findHouseTopColumnByHouseTopFid" resultMap="BaseResultMap" parameterType="string" >
+   
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_top_column
+    where house_top_fid = #{houseTopFid,jdbcType=VARCHAR} and is_del=0 ORDER BY  `column_sort`,`create_date` DESC
+  </select>
+  
+  <!-- 排除头图、亮点、亮点文本 -->
+  <select id="findHouseTopColumnByHouseTopFidS" resultMap="BaseResultMap" parameterType="string" >
+   
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_top_column
+    where house_top_fid = #{houseTopFid,jdbcType=VARCHAR} and column_type not in(101,201,302) and is_del=0 ORDER BY  `column_sort`,`create_date` DESC
+  </select>
+  
+  <!-- 类型查询唯一条目 -->
+  <select id="findHouseTopColumnByType"  resultMap="BaseResultMap"  parameterType="map">
+  	select 
+    <include refid="Base_Column_List" />
+    from t_house_top_column
+    where house_top_fid = #{houseTopFid,jdbcType=VARCHAR} and column_type=#{columnType,jdbcType=INTEGER} and is_del=0
+    order by `create_date` desc
+    limit 1
+  </select>
+ 
+ <!-- 插入top房源条目 -->
+  <insert id="insertHouseTopColumn" parameterType="com.ziroom.minsu.entity.house.HouseTopColumnEntity" >
+   
+    insert into t_house_top_column
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseTopFid != null" >
+        house_top_fid,
+      </if>
+      <if test="columnType != null" >
+        column_type,
+      </if>
+      <if test="columnStyle != null" >
+        column_style,
+      </if>
+      <if test="columnSort != null" >
+        column_sort,
+      </if>
+      <if test="picBaseUrl != null" >
+        pic_base_url,
+      </if>
+      <if test="picSuffix != null" >
+        pic_suffix,
+      </if>
+      <if test="picServerUuid != null" >
+        pic_server_uuid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="columnContent != null" >
+        column_content,
+      </if>
+       <if test="width != null" >
+        width,
+      </if>
+      <if test="hight != null" >
+      	hight,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseTopFid != null" >
+        #{houseTopFid,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null" >
+        #{columnType,jdbcType=INTEGER},
+      </if>
+      <if test="columnStyle != null" >
+        #{columnStyle,jdbcType=INTEGER},
+      </if>
+      <if test="columnSort != null" >
+        #{columnSort,jdbcType=INTEGER},
+      </if>
+      <if test="picBaseUrl != null" >
+        #{picBaseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="picSuffix != null" >
+        #{picSuffix,jdbcType=VARCHAR},
+      </if>
+      <if test="picServerUuid != null" >
+        #{picServerUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="columnContent != null" >
+        #{columnContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="width != null" >
+        #{width,jdbcType=INTEGER},
+      </if>
+      <if test="hight != null" >
+        #{hight,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <!-- 更新top房源条目 -->
+  <update id="updateHouseTopColumn" parameterType="com.ziroom.minsu.entity.house.HouseTopColumnEntity" >
+    update t_house_top_column
+    <set >
+      <if test="houseTopFid != null" >
+        house_top_fid = #{houseTopFid,jdbcType=VARCHAR},
+      </if>
+      <if test="columnType != null" >
+        column_type = #{columnType,jdbcType=INTEGER},
+      </if>
+      <if test="columnStyle != null" >
+        column_style = #{columnStyle,jdbcType=INTEGER},
+      </if>
+      <if test="columnSort != null" >
+        column_sort = #{columnSort,jdbcType=INTEGER},
+      </if>
+      <if test="picBaseUrl != null" >
+        pic_base_url = #{picBaseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="picSuffix != null" >
+        pic_suffix = #{picSuffix,jdbcType=VARCHAR},
+      </if>
+      <if test="picServerUuid != null" >
+        pic_server_uuid = #{picServerUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="columnContent != null" >
+        column_content = #{columnContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="width != null" >
+        width = #{width,jdbcType=INTEGER},
+      </if>
+      <if test="hight != null" >
+        hight = #{hight,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+</mapper>

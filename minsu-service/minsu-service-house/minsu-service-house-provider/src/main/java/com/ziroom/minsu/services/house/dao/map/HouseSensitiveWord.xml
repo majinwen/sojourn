@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseSensitiveWordDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseSensitiveWord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+    <result column="house_desc_sensitive_word" property="houseDescSensitiveWord" jdbcType="VARCHAR" />
+    <result column="around_desc_sensitive_word" property="aroundDescSensitiveWord" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_uid" property="createUid" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="house_rules_sensitive_word" property="houseRulesSensitiveWord" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, house_base_fid, room_fid, rent_way, house_desc_sensitive_word, around_desc_sensitive_word, 
+    create_date, last_modify_date, create_uid, is_del, house_rules_sensitive_word
+  </sql>
+  <select id="selectByFid" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_sensitive_word
+    where fid = #{fid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_house_sensitive_word
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.house.HouseSensitiveWord" >
+    insert into t_house_sensitive_word (id, fid, house_base_fid, 
+      room_fid, rent_way, house_desc_sensitive_word, 
+      around_desc_sensitive_word, create_date, 
+      last_modify_date, create_uid, is_del, 
+      house_rules_sensitive_word)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{houseBaseFid,jdbcType=VARCHAR}, 
+      #{roomFid,jdbcType=VARCHAR}, #{rentWay,jdbcType=INTEGER}, #{houseDescSensitiveWord,jdbcType=VARCHAR}, 
+      #{aroundDescSensitiveWord,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{createUid,jdbcType=VARCHAR}, #{isDel,jdbcType=INTEGER}, 
+      #{houseRulesSensitiveWord,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.house.HouseSensitiveWord" >
+    insert into t_house_sensitive_word
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="houseDescSensitiveWord != null" >
+        house_desc_sensitive_word,
+      </if>
+      <if test="aroundDescSensitiveWord != null" >
+        around_desc_sensitive_word,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="createUid != null" >
+        create_uid,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="houseRulesSensitiveWord != null" >
+        house_rules_sensitive_word,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="houseDescSensitiveWord != null" >
+        #{houseDescSensitiveWord,jdbcType=VARCHAR},
+      </if>
+      <if test="aroundDescSensitiveWord != null" >
+        #{aroundDescSensitiveWord,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="houseRulesSensitiveWord != null" >
+        #{houseRulesSensitiveWord,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.house.HouseSensitiveWord" >
+    update t_house_sensitive_word
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        rent_way = #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="houseDescSensitiveWord != null" >
+        house_desc_sensitive_word = #{houseDescSensitiveWord,jdbcType=VARCHAR},
+      </if>
+      <if test="aroundDescSensitiveWord != null" >
+        around_desc_sensitive_word = #{aroundDescSensitiveWord,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        create_uid = #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="houseRulesSensitiveWord != null" >
+        house_rules_sensitive_word = #{houseRulesSensitiveWord,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.house.HouseSensitiveWord" >
+    update t_house_sensitive_word
+    set fid = #{fid,jdbcType=VARCHAR},
+      house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      room_fid = #{roomFid,jdbcType=VARCHAR},
+      rent_way = #{rentWay,jdbcType=INTEGER},
+      house_desc_sensitive_word = #{houseDescSensitiveWord,jdbcType=VARCHAR},
+      around_desc_sensitive_word = #{aroundDescSensitiveWord,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      create_uid = #{createUid,jdbcType=VARCHAR},
+      is_del = #{isDel,jdbcType=INTEGER},
+      house_rules_sensitive_word = #{houseRulesSensitiveWord,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!--   获取所有已经上架，但未校验敏感词的房源或房间信息 -->
+  <select id="getAllHaveShelvesHouse">
+    
+  </select>
+</mapper>

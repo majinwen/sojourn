@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="search.evaluateDbDao" >
+
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.services.search.vo.EvaluateDbInfoVo" >
+        <!-- 基础map -->
+        <result column="house_clean_ava" property="houseCleanAva" jdbcType="DOUBLE" />
+        <result column="des_match_ava" property="desMatchAva" jdbcType="DOUBLE" />
+        <result column="safe_degree_ava" property="safeDegreeAva" jdbcType="DOUBLE" />
+        <result column="traf_pos_ava" property="trafPosAva" jdbcType="DOUBLE" />
+        <result column="cost_perfor_ava" property="costPerforAva" jdbcType="DOUBLE" />
+        <result column="eva_total" property="evaTotal" jdbcType="INTEGER" />
+
+    </resultMap>
+
+
+
+    <!-- 获取数据库的信息 -->
+    <select id="getEvaluateByHouse" resultMap="BaseResultMap"  parameterType="java.lang.String">
+      SELECT
+        house_clean_ava,
+        des_match_ava,
+        safe_degree_ava,
+        traf_pos_ava,
+        cost_perfor_ava,
+        eva_total
+      FROM  t_stats_house_eva
+      WHERE house_fid = #{houseFid,jdbcType=VARCHAR}
+      AND rent_way = 0
+      limit 1
+    </select>
+
+
+    <!-- 获取数据库的信息 -->
+    <select id="getEvaluateByRoom" resultMap="BaseResultMap"  parameterType="java.lang.String">
+        SELECT
+            house_clean_ava,
+            des_match_ava,
+            safe_degree_ava,
+            traf_pos_ava,
+            cost_perfor_ava,
+            eva_total
+        FROM  t_stats_house_eva
+        WHERE room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND rent_way = 1
+        limit 1
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.cityRegionRelDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.conf.CityRegionRelEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="region_fid" property="regionFid" jdbcType="VARCHAR" />
+    <result column="country_code" property="countryCode" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, region_fid, province_code, create_date, is_del
+  </sql>
+
+  <select id="findCityRegionRelList" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.entity.conf.CityRegionRelEntity">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_city_region_rel
+    WHERE is_del = 0
+    <if test="fid != null" >
+      AND fid = #{fid,jdbcType=VARCHAR}
+    </if>
+    <if test="regionFid != null and regionFid !=''" >
+      AND region_fid = #{regionFid,jdbcType=VARCHAR}
+    </if>
+    <if test="countryCode != null and countryCode !=''">
+      AND country_code = #{countryCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''" >
+      AND province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.conf.CityRegionRelEntity" >
+    insert into t_city_region_rel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="regionFid != null" >
+        region_fid,
+      </if>
+      <if test="countryCode != null" >
+        country_code,
+      </if>
+      <if test="provinceCode != null" >
+        province_code,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="regionFid != null" >
+        #{regionFid,jdbcType=VARCHAR},
+      </if>
+      <if test="countryCode != null" >
+        #{countryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByFid" parameterType="com.ziroom.minsu.entity.conf.CityRegionRelEntity" >
+    update t_city_region_rel
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="regionFid != null" >
+        region_fid = #{regionFid,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        province_code = #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where 1= 1
+    <if test="fid != null">
+      AND fid = #{fid,jdbcType=VARCHAR}
+    </if>
+    <if test="regionFid != null">
+      AND region_fid = #{regionFid,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null">
+      AND province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+  </update>
+
+</mapper>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseDescDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseDescEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="house_desc" property="houseDesc" jdbcType="VARCHAR" />
+    <result column="house_around_desc" property="houseAroundDesc" jdbcType="VARCHAR" />
+    <result column="house_rules" property="houseRules" jdbcType="VARCHAR" />
+    <result column="addtional_info" property="addtionalInfo" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_uid" property="createUid" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    hd.id, hd.fid, hd.house_base_fid, hd.create_date, hd.last_modify_date, hd.create_uid, hd.is_del,
+    hd.house_desc, hd.house_around_desc, hd.house_rules, hd.addtional_info
+  </sql>
+  
+  <!-- 根据房源fid删除房源描述信息-->
+  <update id="deleteHouseDescByHouseFid" parameterType="map" >
+  	update t_house_desc hd set hd.is_del = 1
+  	where hd.house_base_fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findHouseDescByHouseBaseFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_desc hd
+    WHERE hd.house_base_fid = #{house_base_fid,jdbcType=VARCHAR}
+    AND hd.is_del = 0
+    LIMIT 1
+  </select>
+  
+  <insert id="insertHouseDesc" parameterType="com.ziroom.minsu.entity.house.HouseDescEntity" >
+    insert into t_house_desc
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="createUid != null" >
+        create_uid,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="houseDesc != null" >
+        house_desc,
+      </if>
+      <if test="houseAroundDesc != null" >
+        house_around_desc,
+      </if>
+      <if test="houseRules != null" >
+        house_rules,
+      </if>
+      <if test="addtionalInfo != null" >
+        addtional_info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="houseDesc != null" >
+        #{houseDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="houseAroundDesc != null" >
+        #{houseAroundDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="houseRules != null">
+      	#{houseRules,jdbcType=VARCHAR}
+      </if>
+      <if test="addtionalInfo != null">
+      	#{addtionalInfo,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateHouseDescByFid" parameterType="com.ziroom.minsu.entity.house.HouseDescEntity" >
+    update t_house_desc
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        create_uid = #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="houseDesc != null" >
+        house_desc = #{houseDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="houseAroundDesc != null" >
+        house_around_desc = #{houseAroundDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="houseRules != null" >
+        house_rules = #{houseRules,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="addtionalInfo != null" >
+        addtional_info = #{addtionalInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <resultMap id="HouseDescDtoMap" extends="BaseResultMap" type="com.ziroom.minsu.services.house.dto.HouseDescDto" >
+    <result column="house_ext_fid" property="houseExtFid" jdbcType="VARCHAR" />
+    <result column="building_num" property="buildingNum" jdbcType="VARCHAR" />
+    <result column="unit_num" property="unitNum" jdbcType="VARCHAR" />
+    <result column="floor_num" property="floorNum" jdbcType="VARCHAR" />
+    <result column="house_num" property="houseNum" jdbcType="VARCHAR" />
+    <result column="min_day" property="minDay" jdbcType="INTEGER" />
+    <result column="check_in_time" property="checkInTime" jdbcType="VARCHAR" />
+    <result column="check_out_time" property="checkOutTime" jdbcType="VARCHAR" />
+    <result column="sheets_replace_rules" property="sheetsReplaceRules" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <select id="findHouseDescDtoByHouseBaseFid" resultMap="HouseDescDtoMap" parameterType="string" >
+    SELECT <include refid="Base_Column_List" />,
+    hbe.fid house_ext_fid, hbe.building_num, hbe.unit_num, hbe.floor_num, hbe.house_num, 
+    hbe.min_day, hbe.check_in_time, hbe.check_out_time, hbe.sheets_replace_rules
+    FROM t_house_base_ext hbe
+    LEFT JOIN t_house_desc hd
+    ON hd.house_base_fid = hbe.house_base_fid
+    WHERE hbe.house_base_fid = #{house_base_fid,jdbcType=VARCHAR}
+    LIMIT 1
+  </select>
+  
+ 
+  
+  <!--根据房源fid更新房源描述信息  -->
+  <update id="updateHouseDescByHouseBaseFid" parameterType="com.ziroom.minsu.entity.house.HouseDescEntity" >
+    update t_house_desc
+    <set >
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        create_uid = #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="houseDesc != null" >
+        house_desc = #{houseDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="houseAroundDesc != null" >
+        house_around_desc = #{houseAroundDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="houseRules != null" >
+        house_rules = #{houseRules,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="addtionalInfo != null" >
+        addtional_info = #{addtionalInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+  </update>
+</mapper>

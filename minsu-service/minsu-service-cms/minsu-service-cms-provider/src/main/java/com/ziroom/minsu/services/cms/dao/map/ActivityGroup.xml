@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.activityGroupDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityGroupEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="group_type" property="groupType" jdbcType="TINYINT"/>
+    <result column="group_sn" property="groupSn" jdbcType="VARCHAR" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="is_repeat" property="isRepeat" jdbcType="TINYINT"/>
+    <result column="group_limit_num" property="groupLimitNum" jdbcType="INTEGER"/>
+    <result column="is_valid" property="isValid" jdbcType="TINYINT"/>
+    <result column="is_valid_limit" property="isValidLimit" jdbcType="TINYINT"/>
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid,group_type, group_sn, group_name,is_repeat, remark,group_limit_num,is_valid,is_valid_limit, create_id, create_time, last_modify_date,
+    is_del
+  </sql>
+
+  <!-- 获取当前的所有的组 -->
+  <select id="getAllGroup" resultMap="BaseResultMap"  parameterType="map">
+    select
+    <include refid="Base_Column_List" />
+    from t_activity_group
+    where is_del = 0
+  </select>
+
+  <!-- 分页查询组信息 -->
+  <select id="getGroupByPage" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from t_activity_group
+    where is_del = 0
+      <if test="groupSn != null and groupSn != '' ">
+          AND group_sn=#{groupSn,jdbcType=VARCHAR}
+      </if>
+
+      <if test="groupName != null and groupName != ''">
+          AND group_name like CONCAT(#{groupName,jdbcType=VARCHAR},'%')
+      </if>
+  </select>
+
+  <!-- 获取当前的所有的组 -->
+  <select id="getGroupBySN" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from t_activity_group
+    where group_sn = #{groupSn,jdbcType=VARCHAR}
+    AND is_del = 0
+      limit 1
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_activity_group
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_activity_group
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.cms.ActivityGroupEntity" >
+    insert into t_activity_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="groupType != null" >
+        group_type,
+      </if>
+      <if test="groupSn != null" >
+        group_sn,
+      </if>
+      <if test="groupName != null" >
+        group_name,
+      </if>
+      <if test="isRepeat != null" >
+        is_repeat,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="groupLimitNum != null" >
+        group_limit_num,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="isValidLimit != null" >
+        is_valid_limit,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="groupType != null" >
+        #{groupType,jdbcType=TINYINT},
+      </if>
+      <if test="groupSn != null" >
+        #{groupSn,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null" >
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="isRepeat != null" >
+        #{isRepeat,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="groupLimitNum != null" >
+        #{groupLimitNum,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=TINYINT},
+      </if>
+      <if test="isValidLimit != null" >
+        #{isValidLimit,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateActivityGiftEntityByFid" parameterType="com.ziroom.minsu.entity.cms.ActivityGroupEntity" >
+    update t_activity_group
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="groupType != null" >
+        group_type = #{groupType,jdbcType=TINYINT},
+      </if>
+      <if test="groupSn != null" >
+        group_sn = #{groupSn,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null" >
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="isRepeat != null" >
+        is_repeat = #{isRepeat,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="groupLimitNum != null" >
+        group_limit_num = #{groupLimitNum,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=TINYINT},
+      </if>
+      <if test="isValidLimit != null" >
+        is_valid_limit = #{isValidLimit,jdbcType=TINYINT},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+</mapper>

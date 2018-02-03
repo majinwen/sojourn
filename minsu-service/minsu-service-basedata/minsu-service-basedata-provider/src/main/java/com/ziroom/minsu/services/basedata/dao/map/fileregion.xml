@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.fileRegionDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.file.FileRegionEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="hot_region_fid" property="hotRegionFid" jdbcType="VARCHAR" />
+    <result column="hot_region_brief" property="hotRegionBrief" jdbcType="VARCHAR" />
+    <result column="hot_region_content" property="hotRegionContent" jdbcType="LONGVARCHAR" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+
+  <!-- 用于查询城市景点商圈-->
+  <resultMap id="HotRegionMap" type="com.ziroom.minsu.services.basedata.entity.CityArchivesVo" >
+    <result column="fid" property="hotRegionFid" jdbcType="VARCHAR" />
+    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!-- 用于查询景点商圈及下辖推荐项-->
+  <resultMap id="RegionItemsMap" type="com.ziroom.minsu.services.basedata.entity.CityArchivesVo" >
+    <result column="fid" property="itemFid" jdbcType="VARCHAR" />
+    <result column="hot_region_fid" property="hotRegionFid" jdbcType="VARCHAR" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!-- 用于查询景点商圈内容-->
+  <resultMap id="RegionMap" type="com.ziroom.minsu.services.basedata.entity.CityArchivesVo" >
+    <result column="fid" property="hotRegionFid" jdbcType="VARCHAR" />
+    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+    <result column="hot_region_brief" property="hotRegionBrief" jdbcType="VARCHAR" />
+    <result column="hot_region_content" property="hotRegionContent" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, fid, hot_region_fid, hot_region_brief,hot_region_content, create_fid, create_date, last_modify_date,
+    is_del
+  </sql>
+
+  <!-- 查询region记录-->
+  <select id="getRegion" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.entity.file.FileRegionEntity" >
+    select
+    <include refid="Base_Column_List" />
+    from t_file_region
+    where is_del = '0'
+    <if test="hotRegionFid != null and hotRegionFid !=''">
+      AND hot_region_fid = #{hotRegionFid,jdbcType=VARCHAR}
+    </if>
+    <if test="fid != null and fid !=''">
+      AND fid = #{fid,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <!-- 查询城市景点商圈(可包含是否有城市档案)-->
+  <select id="getRegionList" resultMap="HotRegionMap" parameterType="com.ziroom.minsu.services.basedata.dto.CityArchivesRequest" >
+    SELECT  fid,region_name FROM `t_conf_hot_region` WHERE is_del = '0'
+    <if test="cityCode != null and cityCode !=''">
+      AND city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="isFile != null">
+      AND is_file = #{isFile,jdbcType=TINYINT}
+    </if>
+    ORDER BY CONVERT(LTRIM(region_name) USING gbk) COLLATE gbk_chinese_ci ASC
+  </select>
+
+  <!-- 查询景点商圈及下辖推荐项-->
+  <select id="getRegionItems" resultMap="RegionItemsMap" parameterType="com.ziroom.minsu.services.basedata.dto.CityArchivesRequest" >
+    SELECT tfri.item_name,tfri.fid,tfr.hot_region_fid FROM `t_file_region` tfr
+     LEFT JOIN `t_conf_hot_region` tchr ON tfr.hot_region_fid = tchr.fid
+     LEFT JOIN `t_file_region_items` tfri ON tchr.fid = tfri.hot_region_fid
+     WHERE tfr.is_del = '0'
+    <if test="cityCode != null and cityCode !=''">
+      AND tchr.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+<!-- 插入一条region记录-->
+  <insert id="saveRegion" parameterType="com.ziroom.minsu.entity.file.FileRegionEntity" >
+    insert into t_file_region
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="hotRegionFid != null" >
+        hot_region_fid,
+      </if>
+      <if test="hotRegionBrief != null" >
+        hot_region_brief,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="hotRegionContent != null" >
+        hot_region_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="hotRegionFid != null" >
+        #{hotRegionFid,jdbcType=VARCHAR},
+      </if>
+      <if test="hotRegionBrief != null" >
+        #{hotRegionBrief,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="hotRegionContent != null" >
+        #{hotRegionContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!-- 更新商圈景点内容记录-->
+  <update id="upRegion" parameterType="com.ziroom.minsu.entity.file.FileRegionEntity" >
+    update t_file_region
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="hotRegionFid != null" >
+        hot_region_fid = #{hotRegionFid,jdbcType=VARCHAR},
+      </if>
+      <if test="hotRegionBrief != null" >
+        hot_region_brief = #{hotRegionBrief,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="hotRegionContent != null" >
+        hot_region_content = #{hotRegionContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+</mapper>

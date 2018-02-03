@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.payDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderPayEntity" >
+    <!--
+      基本列
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="pay_sn" property="paySn" jdbcType="VARCHAR" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="pay_uid" property="payUid" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="TINYINT" />
+    <result column="pay_money" property="payMoney" jdbcType="INTEGER" />
+    <result column="need_money" property="needMoney" jdbcType="INTEGER" />
+    <result column="pay_status" property="payStatus" jdbcType="TINYINT" />
+    <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
+     <result column="pay_code" property="payCode" jdbcType="VARCHAR" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    <!--
+      基本列字段
+    -->
+    pe.id, pe.fid, pe.pay_sn, pe.order_sn,pe.city_code, pe.pay_uid, pe.pay_type, pe.pay_money,pe.need_money, pe.pay_status, pe.trade_no, pe.pay_code, pe.create_fid, pe.create_time, 
+    pe.last_modify_date, pe.is_del
+  </sql>
+  
+  
+  <select id="selectByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_order_pay pe
+    WHERE pe.is_del = 0
+   	AND pe.order_sn = #{orderSn,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <select id="selectByCondiction" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!--
+      根据条件查询
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_order_pay pe
+    where pe.is_del = 0
+    <if test="orderSn!=null">
+      AND pe.order_sn = #{orderSn,jdbcType=VARCHAR}
+    </if>
+    <if test="fid!=null">
+      AND pe.fid = #{fid,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <insert id="insertPay" parameterType="com.ziroom.minsu.entity.order.OrderPayEntity" >
+    <!--
+     添加收款单
+    -->
+    insert into t_order_pay
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+     
+     <if test="paySn != null" >
+        pay_sn,
+      </if>
+      
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      
+      <if test="payUid != null" >
+        pay_uid,
+      </if>
+      
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="payMoney != null" >
+        pay_money,
+      </if>
+      
+      <if test="needMoney != null" >
+        need_money,
+      </if>
+      
+      <if test="payStatus != null" >
+        pay_status,
+      </if>
+      <if test="tradeNo != null" >
+        trade_no,
+      </if>
+      <if test="payCode != null" >
+        pay_code,
+      </if>
+      
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="paySn != null" >
+        #{paySn,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="payUid != null" >
+        #{payUid,jdbcType=TINYINT},
+      </if>
+      
+      <if test="payType != null" >
+        #{payType,jdbcType=TINYINT},
+      </if>
+      
+      <if test="payMoney != null" >
+        #{payMoney,jdbcType=INTEGER},
+      </if>
+      
+      <if test="needMoney != null" >
+      #{needMoney,jdbcType=INTEGER},
+      </if>
+      
+      <if test="payStatus != null" >
+        #{payStatus,jdbcType=TINYINT},
+      </if>
+      
+      <if test="tradeNo != null" >
+        #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="payCode != null" >
+        #{payCode,jdbcType=TINYINT},
+      </if>
+
+      
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  
+  <update id="updateByOrderSnAndPayType" parameterType="com.ziroom.minsu.entity.order.OrderPayEntity" >
+    <!--
+      根据条件更新
+    -->
+    update t_order_pay
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="paySn != null" >
+        pay_sn = #{paySn,jdbcType=VARCHAR},
+      </if>
+       
+      <if test="orderSn != null" >
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="payUid != null" >
+        pay_uid = #{payUid,jdbcType=TINYINT},
+      </if>
+      
+      <if test="payCode != null" >
+        pay_code = #{payCode,jdbcType=TINYINT},
+      </if>
+      
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=TINYINT},
+      </if>
+      <if test="payMoney != null" >
+        pay_money = #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=TINYINT},
+      </if>
+      <if test="tradeNo != null" >
+        trade_no = #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>  
+     where  pay_sn = #{orderSn,jdbcType=VARCHAR} and pay_type = #{payType,jdbcType=VARCHAR} 
+  </update>
+  
+  <!-- 查询单位时间内房源(房间)的交易量(已支付订单数量) -->
+  <resultMap id="HouseStatsMap" type="com.ziroom.minsu.services.common.vo.HouseStatsVo" >
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+    <result column="trade_num" property="statsNum" jdbcType="INTEGER" />
+  </resultMap>
+  <select id="queryTradeNumByHouseFid" resultMap="HouseStatsMap" parameterType="map" >
+    SELECT
+	 CASE WHEN t2.rent_way = 0 THEN COUNT(t2.house_fid) WHEN t2.rent_way = 1 THEN COUNT(t2.room_fid) ELSE COUNT(t2.bed_fid) END AS trade_num,
+	 CASE WHEN t2.rent_way = 0 THEN t2.house_fid WHEN t2.rent_way = 1 THEN t2.room_fid ELSE t2.bed_fid END AS house_fid,
+	 t2.rent_way
+	FROM t_order_pay t1,t_order_house_snapshot t2
+	WHERE t1.order_sn = t2.order_sn
+	AND t1.is_del = 0
+	AND t1.pay_status = 1
+	AND t1.create_time &gt;= #{startTime,jdbcType=TIMESTAMP}
+	AND t1.create_time &lt; #{endTime,jdbcType=TIMESTAMP}
+	GROUP BY
+		t2.house_fid,
+		t2.room_fid,
+		t2.bed_fid,
+		t2.rent_way
+  </select>
+</mapper>

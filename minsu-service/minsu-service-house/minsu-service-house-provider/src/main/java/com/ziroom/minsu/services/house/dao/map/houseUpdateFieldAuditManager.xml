@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseUpdateFieldAuditManagerDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseUpdateFieldAuditManagerEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="field_path" property="fieldPath" jdbcType="VARCHAR" />
+    <result column="field_desc" property="fieldDesc" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="creater_fid" property="createrFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, field_path, field_desc, type, creater_fid, create_date, last_modify_date, is_del
+  </sql>
+  <select id="findHouseUpdateFieldAuditManagerByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_update_field_audit_manager
+    where fid = #{fid,jdbcType=VARCHAR}
+    AND is_del = 0
+  </select>
+
+
+  <select id="findAllHouseUpdateFieldAuditManager" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from t_house_update_field_audit_manager
+    where is_del = 0
+  </select>
+
+  <select id="findHouseUpdateFieldAuditManagerByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from t_house_update_field_audit_manager
+    where is_del = 0
+    AND (type = #{type,jdbcType=INTEGER} OR type = 2)
+  </select>
+
+  <select id="findHouseUpdateFieldAuditManagerByFidAndType" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.entity.house.HouseUpdateFieldAuditManagerEntity">
+    select
+    <include refid="Base_Column_List" />
+    from t_house_update_field_audit_manager
+    where is_del = 0
+    AND fid = #{fid,jdbcType=VARCHAR}
+    AND (type = #{type,jdbcType=INTEGER} OR type = 2)
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_house_update_field_audit_manager
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+ 
+  <insert id="saveHouseUpdateFieldAuditManager" parameterType="com.ziroom.minsu.entity.house.HouseUpdateFieldAuditManagerEntity" >
+    insert into t_house_update_field_audit_manager
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="fieldPath != null" >
+        field_path,
+      </if>
+      <if test="fieldDesc != null" >
+        field_desc,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="createrFid != null" >
+        creater_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldPath != null" >
+        #{fieldPath,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldDesc != null" >
+        #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="createrFid != null" >
+        #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.house.HouseUpdateFieldAuditManagerEntity" >
+    update t_house_update_field_audit_manager
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldPath != null" >
+        field_path = #{fieldPath,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldDesc != null" >
+        field_desc = #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="createrFid != null" >
+        creater_fid = #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

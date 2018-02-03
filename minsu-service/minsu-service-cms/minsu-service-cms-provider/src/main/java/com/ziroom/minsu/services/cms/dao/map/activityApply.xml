@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.activityApplyDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityApplyEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="customer_moblie" property="customerMoblie" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="is_zlan" property="isZlan" jdbcType="INTEGER" />
+    <result column="role_code" property="roleCode" jdbcType="INTEGER" />
+    <result column="apply_status" property="applyStatus" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+    <result column="house_score" property="houseScore" jdbcType="VARCHAR" />
+    <result column="house_num" property="houseNum" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="gift_address" property="giftAddress" jdbcType="VARCHAR" />
+  </resultMap>
+  
+   <resultMap id="ResultMapWithBLOBs" type="com.ziroom.minsu.services.cms.entity.ActivityApplyVo" extends="BaseResultMap" >
+    <result column="customer_introduce" property="customerIntroduce" jdbcType="VARCHAR" />
+    <result column="house_story" property="houseStory" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="ExtBaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityApplyExtEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="apply_fid" property="applyFid" jdbcType="VARCHAR" />
+    <result column="ext_type" property="extType" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="activityApplyVo" type="com.ziroom.minsu.services.cms.entity.ActivityApplyVo" extends="BaseResultMap">
+    <collection column="fid" property="extList" javaType="ArrayList" select="findExtEntity" />
+  </resultMap>
+  
+   <resultMap id="activityApplyVoWithBLOBs" type="com.ziroom.minsu.services.cms.entity.ActivityApplyVo" extends="ResultMapWithBLOBs">
+    <collection column="fid" property="extList" javaType="ArrayList" select="findExtEntity" />
+  </resultMap>
+  
+  <sql id="Ext_Base_Column_List" >
+    id, fid, apply_fid, ext_type, content, create_time, last_modify_date, is_del
+  </sql> 
+  
+  <sql id="Base_Column_List" >
+    id, fid, uid, customer_moblie, customer_name, is_zlan, role_code, apply_status, city_code, 
+    area_code, house_score, house_num, remark, create_time, last_modify_date, is_del,gift_address
+  </sql>
+  
+  <sql id="Blob_Column_List" >
+    customer_introduce, house_story
+  </sql>
+  
+  <select id="findExtEntity" resultMap="ExtBaseResultMap" parameterType="string" >
+    SELECT 
+     <include refid="Ext_Base_Column_List" />
+    FROM t_activity_apply_ext 
+    WHERE apply_fid = #{fid,jdbcType=VARCHAR}
+    AND is_del = 0
+  </select>
+  
+  <select id="findApplayExtVo" resultMap="activityApplyVo" parameterType="com.ziroom.minsu.services.cms.dto.LanApplayRequest" >
+    SELECT 
+     <include refid="Base_Column_List" />
+    FROM t_activity_apply
+    WHERE is_del = 0
+    	<if test="customerMoblie != null and customerMoblie != ''" >
+        	AND customer_moblie = #{customerMoblie,jdbcType=VARCHAR}
+        </if>
+        <if test="customerName != null and customerName != ''" >
+        	AND customer_name = #{customerName,jdbcType=VARCHAR}
+        </if>
+    	<if test="createTimeStart != null and createTimeStart != ''">
+        	AND create_time &gt;=#{createTimeStart,jdbcType=VARCHAR}
+    	</if>
+    	<if test="createTimeEnd != null and createTimeEnd != ''">
+        	AND create_time &lt;=#{createTimeEnd,jdbcType=VARCHAR}
+    	</if>    
+    ORDER BY last_modify_date DESC
+  </select>
+
+<select id="selectByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_activity_apply
+    WHERE fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  
+ 
+  <select id="selectByMoblie" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" /> 
+    FROM t_activity_apply
+    WHERE customer_moblie = #{customerMoblie,jdbcType=VARCHAR}
+    LIMIT 1
+  </select>
+  
+  <insert id="save" parameterType="com.ziroom.minsu.entity.cms.ActivityApplyEntity" >
+    INSERT INTO t_activity_apply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="customerMoblie != null" >
+        customer_moblie,
+      </if>
+      <if test="customerName != null" >
+        customer_name,
+      </if>
+      <if test="isZlan != null" >
+        is_zlan,
+      </if>
+      <if test="roleCode != null" >
+        role_code,
+      </if>
+      <if test="applyStatus != null" >
+        apply_status,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="areaCode != null" >
+        area_code,
+      </if>
+      <if test="houseScore != null" >
+        house_score,
+      </if>
+      <if test="houseNum != null" >
+        house_num,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="giftAddress != null" >
+        gift_address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerMoblie != null" >
+        #{customerMoblie,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="isZlan != null" >
+        #{isZlan,jdbcType=INTEGER},
+      </if>
+      <if test="roleCode != null" >
+        #{roleCode,jdbcType=INTEGER},
+      </if>
+      <if test="applyStatus != null" >
+        #{applyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="houseScore != null" >
+        #{houseScore,jdbcType=VARCHAR},
+      </if>
+      <if test="houseNum != null" >
+        #{houseNum,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="giftAddress != null" >
+        #{giftAddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByFid" parameterType="com.ziroom.minsu.entity.cms.ActivityApplyEntity" >
+    UPDATE t_activity_apply
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerMoblie != null" >
+        customer_moblie = #{customerMoblie,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="isZlan != null" >
+        is_zlan = #{isZlan,jdbcType=INTEGER},
+      </if>
+      <if test="roleCode != null" >
+        role_code = #{roleCode,jdbcType=INTEGER},
+      </if>
+      <if test="applyStatus != null" >
+        apply_status = #{applyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        area_code = #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="houseScore != null" >
+        house_score = #{houseScore,jdbcType=VARCHAR},
+      </if>
+      <if test="houseNum != null" >
+        house_num = #{houseNum,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="giftAddress != null" >
+        gift_address = #{giftAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="getApplyDetailWithBLOBs" resultMap="activityApplyVoWithBLOBs" parameterType="java.lang.String" >
+    SELECT 
+     ab.id, ab.fid, ab.uid, ab.customer_moblie, ab.customer_name, ab.is_zlan, ab.role_code, ab.apply_status, ab.city_code, 
+    ab.area_code, ab.house_score, ab.house_num, remark, ab.create_time, ab.last_modify_date, ab.is_del,ab.gift_address,
+     abds.customer_introduce, abds.house_story
+    FROM t_activity_apply ab 
+    	LEFT JOIN t_activity_apply_desc abds 
+    	ON ab.fid = abds.activity_apply_fid 
+    WHERE ab.fid = #{applyFid,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

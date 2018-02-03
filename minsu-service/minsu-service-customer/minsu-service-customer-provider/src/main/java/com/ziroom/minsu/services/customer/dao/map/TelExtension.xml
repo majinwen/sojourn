@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="customer.telExtensionDao" >
+
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.customer.TelExtensionEntity" >
+    <!--  -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+      <result column="ext_status" property="extStatus" jdbcType="INTEGER" />
+      <result column="error_code" property="errorCode" jdbcType="INTEGER" />
+    <result column="ziroom_phone" property="ziroomPhone" jdbcType="VARCHAR" />
+    <result column="create_uid" property="createUid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+
+    <resultMap id="mapExt" type="com.ziroom.minsu.services.customer.entity.TelExtensionVo" extends="BaseResultMap" >
+        <result column="real_name" property="landName" jdbcType="VARCHAR" />
+        <result column="customer_mobile" property="landPhone" jdbcType="VARCHAR" />
+    </resultMap>
+
+  <sql id="Base_Column_List" >
+    <!-- 基础map -->
+    id, fid, uid,ext_status,ziroom_phone, create_uid, create_date, last_modify_date, is_del,error_code
+  </sql>
+
+    <!-- 调用绑定失败 -->
+    <update id="updateStatus" parameterType="map" >
+        update t_tel_extension
+        <set >
+            ext_status = #{extStatus,jdbcType=INTEGER},
+            <if test="errorCode != null" >
+                error_code = #{errorCode,jdbcType=INTEGER},
+            </if>
+            <if test="createUid != null" >
+                create_uid = #{createUid,jdbcType=INTEGER},
+            </if>
+        </set>
+        where uid = #{uid,jdbcType=VARCHAR}
+    </update>
+
+
+
+    <!-- 通过uid获取当前电话的绑定情况 -->
+    <select id="getExtensionVoByUid" resultMap="mapExt" parameterType="java.lang.String" >
+        SELECT
+          ext.id,
+          ext.fid,
+          base.uid,
+          ext.ext_status,
+          ext.ziroom_phone,
+          ext.create_uid,
+          ext.create_date,
+          ext.last_modify_date,
+          ext.is_del,
+          ext.error_code,
+          base.real_name,
+          base.customer_mobile
+        FROM
+          t_tel_extension ext
+          INNER JOIN t_customer_base_msg base ON base.uid = ext.uid
+        WHERE ext.is_del  = 0
+            AND ext.uid = #{uid,jdbcType=VARCHAR}
+    </select>
+
+
+    <!-- 通过uid获取当前电话的绑定情况 -->
+    <select id="getExtensionVOByPage" resultMap="mapExt" parameterType="com.ziroom.minsu.services.customer.dto.TelExtensionDto" >
+        SELECT
+          ext.id,
+          ext.fid,
+          base.uid,
+          ext.ext_status,
+          ext.ziroom_phone,
+          ext.create_uid,
+          ext.create_date,
+          ext.last_modify_date,
+          ext.is_del,
+          ext.error_code,
+          base.real_name,
+          base.customer_mobile
+        FROM
+          t_tel_extension ext
+          RIGHT JOIN t_customer_base_msg base ON base.uid = ext.uid
+        WHERE 1= 1
+        AND base.`is_landlord` = 1
+        <if test="uid != null and uid != ''" >
+            AND ext.uid = #{uid,jdbcType=VARCHAR}
+        </if>
+        <if test="landName != null and landName != ''" >
+            AND base.real_name = #{landName,jdbcType=VARCHAR}
+        </if>
+        <if test="landPhone != null and landPhone != ''" >
+            AND base.customer_mobile = #{landPhone,jdbcType=VARCHAR}
+        </if>
+        <if test="extStatus != null and extStatus != '1' " >
+            AND ext.ext_status = #{extStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="extStatus != null and extStatus == '1' " >
+            AND ext.ext_status is NULL
+        </if>
+        <if test="ziroomPhone != null and ziroomPhone != ''" >
+            AND ext.ziroom_phone = #{ziroomPhone,jdbcType=VARCHAR}
+        </if>
+
+    </select>
+
+
+
+    <!-- 通过uid获取当前电话的绑定情况 -->
+    <select id="getMaxZiroomPhone" resultType="java.lang.Long" parameterType="java.lang.String" >
+        SELECT
+                 MAX(ziroom_phone)
+        FROM t_tel_extension
+    </select>
+
+
+    <!-- 通过uid获取当前电话的绑定情况 -->
+    <select id="getExtensionByUid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_tel_extension
+        WHERE uid = #{uid,jdbcType=VARCHAR}
+    </select>
+    
+    
+    <!-- 通过uid获取唯一绑定成功的电话 -->
+    <select id="getHaveExtensionByUid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_tel_extension
+        WHERE is_del = 0
+        AND ext_status = 1
+        AND uid = #{uid,jdbcType=VARCHAR}
+        limit 1
+    </select>
+
+
+   <!-- 绑定分机号 -->
+  <insert id="insertExtension" parameterType="com.ziroom.minsu.entity.customer.TelExtensionEntity" useGeneratedKeys="true" keyProperty="id">
+    insert into t_tel_extension
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+        <if test="extStatus != null" >
+            ext_status,
+        </if>
+        ziroom_phone,
+      <if test="createUid != null" >
+          create_uid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+        <if test="errorCode != null" >
+            error_code,
+        </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+        <if test="uid != null" >
+            #{uid,jdbcType=VARCHAR},
+        </if>
+        <if test="extStatus != null" >
+            #{extStatus,jdbcType=INTEGER},
+        </if>
+        (SELECT
+        CASE
+        WHEN  MAX(tmp.ziroom_phone) IS NULL THEN 50000
+        ELSE MAX(tmp.ziroom_phone) + 1 END
+        FROM t_tel_extension tmp),
+        <if test="createUid != null" >
+            #{createUid,jdbcType=VARCHAR},
+        </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+        <if test="errorCode != null" >
+            #{errorCode,jdbcType=INTEGER},
+        </if>
+    </trim>
+  </insert>
+  
+
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.staticResourcePicDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.base.StaticResourcePicEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="res_fid" property="resFid" jdbcType="VARCHAR" />
+    <result column="pic_base_url" property="picBaseUrl" jdbcType="VARCHAR" />
+    <result column="pic_suffix" property="picSuffix" jdbcType="VARCHAR" />
+    <result column="pic_server_uuid" property="picServerUuid" jdbcType="VARCHAR" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, fid, res_fid, pic_base_url, pic_suffix, pic_server_uuid, last_modify_date
+  </sql>
+  
+  <select id="findStaticResourcePicByResFid" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_static_resource_pic
+    where res_fid = #{resFid,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="insertStaticResourcePic" parameterType="com.ziroom.minsu.entity.base.StaticResourcePicEntity" >
+    insert into t_static_resource_pic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="resFid != null" >
+        res_fid,
+      </if>
+      <if test="picBaseUrl != null" >
+        pic_base_url,
+      </if>
+      <if test="picSuffix != null" >
+        pic_suffix,
+      </if>
+      <if test="picServerUuid != null" >
+        pic_server_uuid,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="resFid != null" >
+        #{resFid,jdbcType=VARCHAR},
+      </if>
+      <if test="picBaseUrl != null" >
+        #{picBaseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="picSuffix != null" >
+        #{picSuffix,jdbcType=VARCHAR},
+      </if>
+      <if test="picServerUuid != null" >
+        #{picServerUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateStaticResourcePicByResFid" parameterType="com.ziroom.minsu.entity.base.StaticResourcePicEntity" >
+    update t_static_resource_pic
+    <set >
+      <if test="resFid != null" >
+        res_fid = #{resFid,jdbcType=VARCHAR},
+      </if>
+      <if test="picBaseUrl != null" >
+        pic_base_url = #{picBaseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="picSuffix != null" >
+        pic_suffix = #{picSuffix,jdbcType=VARCHAR},
+      </if>
+      <if test="picServerUuid != null" >
+        pic_server_uuid = #{picServerUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where res_fid = #{resFid,jdbcType=VARCHAR}
+  </update>
+</mapper>

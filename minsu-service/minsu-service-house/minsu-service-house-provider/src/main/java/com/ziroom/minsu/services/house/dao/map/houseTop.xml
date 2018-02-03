@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseTopDao" >
+  
+  <!-- 基础map -->
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseTopEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+    <result column="top_status" property="topStatus" jdbcType="TINYINT" />
+    <result column="top_sort" property="topSort" jdbcType="INTEGER" />
+    <result column="top_share_title" property="topShareTitle" jdbcType="VARCHAR" />
+    <result column="top_title_pic" property="topTitlePic" jdbcType="VARCHAR" />
+    <result column="top_middle_pic" property="topMiddlePic" jdbcType="VARCHAR" />
+    <result column="top_title" property="topTitle" jdbcType="VARCHAR" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+
+  
+	<!--查询 top房源信息 -->
+	<resultMap id="houseTopInfoVoMap" type="com.ziroom.minsu.services.house.entity.HouseTopVo" >
+	    <result column="top_share_title" property="topShareTitle" jdbcType="VARCHAR" />
+	    <result column="top_title_pic" property="topTitlePic" jdbcType="VARCHAR" />
+	    <result column="top_middle_pic" property="topMiddlePic" jdbcType="VARCHAR" />
+	    <result column="top_title" property="topTitle" jdbcType="VARCHAR" />
+	    <result column="fid" property="houseTopFid" jdbcType="VARCHAR" />
+	    <collection column="fid" property="houseTopColumnList"   javaType="ArrayList" select="house.houseTopColumnDao.findHouseTopColumnByHouseTopFid" />
+	</resultMap>
+
+  <!-- top房源列表map -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.HouseTopListVo" id="houseTopListMap">
+  	<result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+  	<result column="house_name" property="houseName" jdbcType="VARCHAR" />
+  	<result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+  	<result column="fid" property="fid" jdbcType="VARCHAR" />
+  	<result column="create_date" property="createDate" jdbcType="VARCHAR" />
+  	<result column="top_status" property="topStatus" jdbcType="VARCHAR" />
+  	<result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+  	<result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+  	<association column="fid" property="empName"   javaType="string" select="house.houseTopLogDao.getLastOperateName" />
+  </resultMap>
+  
+  <!-- top房源详情map -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.HouseTopDetail" id="houseTopDetailMap" extends="BaseResultMap">
+  	<collection column="fid" property="topColumnList"   javaType="ArrayList" select="house.houseTopColumnDao.findHouseTopColumnByHouseTopFidS" />
+  </resultMap>
+  
+
+
+  <!-- 基础字段 -->
+  <sql id="Base_Column_List" >
+    id, fid, house_base_fid, room_fid, rent_way, top_status, top_sort, top_share_title, 
+    top_title_pic, top_middle_pic, top_title, create_fid, create_date, last_modify_date, 
+    is_del
+  </sql>
+  
+  <!-- fid查询 -->
+  <select id="findHouseTopEntityByfid" resultMap="BaseResultMap" parameterType="string" >
+   
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_top
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <select id="findHouseTopVoByHouse" parameterType="map" resultMap="houseTopInfoVoMap">
+    SELECT  fid,  top_share_title,  top_title_pic, top_middle_pic, top_title 
+    FROM `t_house_top`  ho 
+    WHERE 1=1 
+    <if test="rentWay !=null">
+       AND ho.`rent_way` =  #{rentWay,jdbcType=INTEGER}
+    </if>
+    <if test="houseBaseFid !=null and houseBaseFid !=''">
+      AND   ho.`house_base_fid` =  #{houseBaseFid,jdbcType=VARCHAR}
+    </if>
+    <if test="roomFid !=null and roomFid !=''">
+      AND ho.`room_fid` =  #{roomFid,jdbcType=VARCHAR}
+    </if>
+    <if test="topStatus !=null">
+      AND ho.`top_status` =  #{topStatus,jdbcType=INTEGER}
+    </if>
+    LIMIT 1
+  </select>
+
+    <!-- 根据排序编号更新排序编号 -->
+    <update id="updateHouseTopByTopSort" parameterType="map" >
+        update t_house_top  set top_sort=#{oldSortTop,jdbcType=INTEGER}
+        where top_sort=#{newTopSort,jdbcType=INTEGER}
+    </update>
+
+    <!-- 根据排序编号进行上浮操作(排在前面的顺序要换到后面) -->
+    <update id="updateHouseTopSortFloat" parameterType="map" >
+        UPDATE `t_house_top` SET top_sort=top_sort-1
+        WHERE top_sort &lt;= #{newTopSort,jdbcType=INTEGER}  AND top_sort  &gt; #{oldSortTop,jdbcType=INTEGER}
+    </update>
+
+    <!-- 根据排序编号进行下沉操作(排在后面的顺序要换到前面) -->
+    <update id="updateHouseTopSortSink" parameterType="map" >
+        update t_house_top  set top_sort=top_sort+1
+        where top_sort &gt;= #{newTopSort,jdbcType=INTEGER} AND top_sort &lt; #{oldSortTop,jdbcType=INTEGER}
+    </update>
+
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.house.HouseTopEntity" >
+   
+    insert IGNORE into t_house_top
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="topStatus != null" >
+        top_status,
+      </if>
+      <if test="topSort != null" >
+        top_sort,
+      </if>
+      <if test="topShareTitle != null" >
+        top_share_title,
+      </if>
+      <if test="topTitlePic != null" >
+        top_title_pic,
+      </if>
+      <if test="topMiddlePic != null" >
+        top_middle_pic,
+      </if>
+      <if test="topTitle != null" >
+        top_title,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="topStatus != null" >
+        #{topStatus,jdbcType=TINYINT},
+      </if>
+      <if test="topSort != null" >
+        #{topSort,jdbcType=INTEGER},
+      </if>
+      <if test="topShareTitle != null" >
+        #{topShareTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="topTitlePic != null" >
+        #{topTitlePic,jdbcType=VARCHAR},
+      </if>
+      <if test="topMiddlePic != null" >
+        #{topMiddlePic,jdbcType=VARCHAR},
+      </if>
+      <if test="topTitle != null" >
+        #{topTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+
+  <update id="updateHouseTopByfid" parameterType="com.ziroom.minsu.entity.house.HouseTopEntity" >
+   
+    update t_house_top
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        rent_way = #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="topStatus != null" >
+        top_status = #{topStatus,jdbcType=TINYINT},
+      </if>
+      <if test="topSort != null" >
+        top_sort = #{topSort,jdbcType=INTEGER},
+      </if>
+      <if test="topShareTitle != null" >
+        top_share_title = #{topShareTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="topTitlePic != null" >
+        top_title_pic = #{topTitlePic,jdbcType=VARCHAR},
+      </if>
+      <if test="topMiddlePic != null" >
+        top_middle_pic = #{topMiddlePic,jdbcType=VARCHAR},
+      </if>
+      <if test="topTitle != null" >
+        top_title = #{topTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+   
+  <!-- 查询top房源列表 -->
+  <select id="findTopHouseListPage"  resultMap="houseTopListMap"  parameterType="com.ziroom.minsu.services.house.dto.HouseTopDto">
+	SELECT topHouse.`house_sn`,topHouse.`house_name`,topHouse.`city_code`,topHouse.`fid`,topHouse.`create_date`,topHouse.`top_status`,topHouse.house_base_fid,topHouse.rent_way FROM 
+	(SELECT thbm.`house_sn`,thbm.`house_name`,thpm.`city_code`,thbm.`create_date` house_create_date,tht.`fid`,tht.`create_date`,tht.`top_status`,tht.`top_sort`, 
+	thbm.`fid` house_base_fid,thbm.`rent_way` FROM `t_house_base_msg` thbm
+	LEFT JOIN `t_house_phy_msg` thpm ON thpm.`fid`=thbm.`phy_fid`
+	LEFT JOIN `t_house_base_ext` thbe ON thbm.`fid`=thbe.`house_base_fid`
+	LEFT JOIN `t_house_top` tht ON thbm.`fid`=tht.`house_base_fid`
+	WHERE thbm.`rent_way`=0 AND thbe.`house_quality_grade`="TOP" AND thbm.`house_status`=40 AND (tht.`is_del`=0 OR tht.`is_del` IS NULL)
+	UNION ALL
+	SELECT thrm.room_sn house_sn,thrm.room_name house_name,thpm.`city_code`,thrm.create_date house_create_date,tht.`fid`,tht.`create_date`,tht.`top_status`,tht.`top_sort`, 
+	CONCAT(thrm.house_base_fid, ',' , thrm.fid) house_base_fid,thbm.`rent_way` FROM 
+	(SELECT tm.fid,tm.`room_name`,tm.`house_base_fid`,tm.`create_date`,tm.`room_sn`,tm.`room_status` FROM 
+	(SELECT MAX(fid) fid,house_base_fid FROM `t_house_room_msg` WHERE room_status=40 GROUP BY house_base_fid) rm
+	LEFT JOIN `t_house_room_msg` tm ON rm .fid=tm.`fid`) thrm
+	LEFT JOIN `t_house_base_msg` thbm ON thbm.`fid`=thrm.house_base_fid
+	LEFT JOIN `t_house_phy_msg` thpm ON thpm.`fid`=thbm.`phy_fid`
+	LEFT JOIN `t_house_base_ext` thbe ON thbm.`fid`=thbe.`house_base_fid`
+	LEFT JOIN `t_house_top` tht ON tht.`room_fid`=thrm.fid
+	WHERE thbm.`rent_way`=1 AND thbe.`house_quality_grade`="TOP" AND thrm.`room_status`=40 AND (tht.`is_del`=0 OR tht.`is_del` IS NULL)) topHouse
+	WHERE 1=1
+	<if test="houseName != null and houseName !=''" >
+		AND topHouse.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="cityCode != null and cityCode !=''" >
+		AND topHouse.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if>
+    <if test="houseSn != null and houseSn !=''" >
+		AND topHouse.house_sn = #{houseSn,jdbcType=VARCHAR}
+	</if>
+	<if test="topStatus != null " >
+		<if test="topStatus==0">
+			AND (topHouse.top_status = #{topStatus,jdbcType=INTEGER} or topHouse.top_status is null)
+		</if>
+		<if test="topStatus!=0">
+			AND topHouse.top_status = #{topStatus,jdbcType=INTEGER}
+		</if>
+	</if>
+	<if test="startDate != null and startDate !=''" >
+		AND topHouse.`create_date` >=#{startDate,jdbcType=VARCHAR}
+	</if>
+	<if test="endDate != null and endDate !=''" >
+		AND topHouse.`create_date` <![CDATA[ <=]]>#{endDate,jdbcType=VARCHAR}
+	</if>
+	ORDER BY topHouse.top_sort ,topHouse.house_create_date DESC
+  </select>
+  
+  <!-- fid查询top房源详情 -->
+  <select id="findHouseTopDetail"  parameterType="string" resultMap="houseTopDetailMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from t_house_top
+    where fid = #{fid,jdbcType=VARCHAR}
+    and is_del=0
+  </select>
+</mapper>

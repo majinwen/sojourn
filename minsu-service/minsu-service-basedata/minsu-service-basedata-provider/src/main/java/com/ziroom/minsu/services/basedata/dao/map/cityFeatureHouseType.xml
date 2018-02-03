@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.cityFeatureHouseTypeDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.conf.CityFeatureHousetypeEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="country_code" property="countryCode" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="house_type" property="houseType" jdbcType="INTEGER" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+    <result column="foreign_fid" property="foreignFid" jdbcType="VARCHAR" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, country_code, province_code, city_code, house_type, create_fid, create_date, 
+    last_modify_date, is_del,foreign_fid,is_valid
+  </sql>
+  <select id="selectByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_city_feature_housetype
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByFid" parameterType="java.lang.String" >
+    delete from t_city_feature_housetype
+    where fid = #{fid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.conf.CityFeatureHousetypeEntity" >
+    insert into t_city_feature_housetype (id, fid, country_code, 
+      province_code, city_code, house_type, 
+      create_fid, create_date, last_modify_date, 
+      is_del,foreign_fid,is_valid)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{countryCode,jdbcType=VARCHAR}, 
+      #{provinceCode,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, #{houseType,jdbcType=INTEGER}, 
+      #{createFid,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{lastModifyDate,jdbcType=TIMESTAMP}, 
+      #{isDel,jdbcType=TINYINT}, #{foreignFid,jdbcType=VARCHAR}, #{isValid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.conf.CityFeatureHousetypeEntity" >
+    insert into t_city_feature_housetype
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="countryCode != null" >
+        country_code,
+      </if>
+      <if test="provinceCode != null" >
+        province_code,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="houseType != null" >
+        house_type,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="foreignFid != null" >
+        foreign_fid,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="countryCode != null" >
+        #{countryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="houseType != null" >
+        #{houseType,jdbcType=INTEGER},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="foreignFid != null" >
+         #{foreignFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateSelectiveByFid" parameterType="com.ziroom.minsu.entity.conf.CityFeatureHousetypeEntity" >
+    update t_city_feature_housetype
+    <set > 
+      <if test="countryCode != null" >
+        country_code = #{countryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        province_code = #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="houseType != null" >
+        house_type = #{houseType,jdbcType=INTEGER},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="foreignFid != null" >
+        foreign_fid = #{foreignFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByFid" parameterType="com.ziroom.minsu.entity.conf.CityFeatureHousetypeEntity" >
+    update t_city_feature_housetype
+    set country_code = #{countryCode,jdbcType=VARCHAR},
+      province_code = #{provinceCode,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      house_type = #{houseType,jdbcType=INTEGER},
+      create_fid = #{createFid,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=TINYINT},
+      foreign_fid = #{foreignFid,jdbcType=VARCHAR},
+      is_valid = #{isValid,jdbcType=TINYINT},
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="getCityFeatureHouseTypes" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_city_feature_housetype
+    where is_del=0
+      <if test="countryCode != null and countryCode !='' " >
+        and country_code = #{countryCode,jdbcType=VARCHAR}
+      </if>
+      <if test="provinceCode != null and provinceCode !='' " >
+        and province_code = #{provinceCode,jdbcType=VARCHAR}
+      </if>
+      <if test="cityCode != null and cityCode !='' " >
+        and city_code = #{cityCode,jdbcType=VARCHAR}
+      </if>
+  </select>
+  
+  <resultMap id="cityHouseTypeMap" type="com.ziroom.minsu.services.basedata.entity.CityFeatureHouseVo" >
+  	<result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+  	<collection column="city_code" property="houseTypes" javaType="ArrayList" select="getCityHouseType"  />  
+  </resultMap>
+  <!-- 查询城市下现有的特色房源的类型列表 -->
+  <select id="getCityHouseType" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select 
+    	distinct( house_type)
+    from t_city_feature_housetype
+    where is_del=0 
+        and city_code = #{cityCode,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询所有的城市下现有的特色房源的类型 -->
+  <select id="getAllCityFeatureHouseTypes" resultMap="cityHouseTypeMap" >
+    select distinct(city_code)
+    from t_city_feature_housetype
+    where is_del=0
+  </select>
+  
+  <!-- 根据有效状态查询所有的特色标识列表  -->
+  <select id="getAllFeatureTags" resultType="com.ziroom.minsu.services.basedata.entity.FeatureTagsVo" parameterType="java.util.Map" >
+     
+     
+      (
+		  SELECT fths.`fid` fid ,fths.`is_valid` isValid, dicm.`fid` foreignFid,dicm.`show_name` tagName,dic.`show_name` tagTypeName  
+		  	FROM `t_conf_dic_item` dicm 
+		  		LEFT JOIN `t_conf_dic` dic ON dicm.`dic_code` = dic.`dic_code` 
+		  		LEFT JOIN `t_city_feature_housetype` fths  ON fths.`foreign_fid` = dicm.`fid`  
+		  		WHERE dicm.`item_status` =1 AND dicm.`dic_code`='ProductRulesEnum001' AND dicm.`template_fid`= #{templateFid,jdbcType=VARCHAR} 
+		  			AND dic.`is_del` = 0 
+		  			AND (fths.`is_del`=0 OR fths.`is_del` IS NULL)
+		  			<if test="isValid != null" >
+        				AND fths.`is_valid` = #{isValid,jdbcType=TINYINT}
+      				</if> 
+	  )UNION(
+		  SELECT fths.`fid` fid ,fths.`is_valid` isValid, tag.`fid` foreignFid, tag.`tag_name` tagName,dicm.`show_name` tagTypeName  
+		  	FROM `t_conf_tag` tag left join `t_conf_dic_item` dicm on tag.`tag_type` = dicm.`item_value` 
+		  		LEFT JOIN `t_city_feature_housetype` fths ON fths.`foreign_fid` = tag.`fid` 
+		  		WHERE tag.`is_del`=0 AND tag.`is_valid` = 1  
+		  			AND dicm.`dic_code`='ProductRulesEnum0022' AND dicm.`is_del` = 0 
+		  			AND (fths.`is_del`=0 OR fths.`is_del` IS NULL)
+		  			<if test="isValid != null" >
+        				AND fths.`is_valid` = #{isValid,jdbcType=TINYINT}
+      				</if>  
+	  )      
+     
+  </select>
+  
+  
+</mapper>

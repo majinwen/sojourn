@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseDayRevenueDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseDayRevenueEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="statistics_date_day" property="statisticsDateDay" jdbcType="DATE" />
+    <result column="statistics_date_month" property="statisticsDateMonth" jdbcType="TINYINT" />
+    <result column="statistics_date_year" property="statisticsDateYear" jdbcType="TINYINT" />
+    <result column="day_revenue" property="dayRevenue" jdbcType="INTEGER" />
+    <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="bed_fid" property="bedFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    hdr.id, hdr.fid, hdr.statistics_date_day, hdr.statistics_date_month, hdr.day_revenue, hdr.landlord_uid, hdr.house_base_fid, 
+    hdr.room_fid, hdr.bed_fid,rent_way, hdr.create_date, hdr.last_modify_date, hdr.is_del
+  </sql>
+  
+  <insert id="insertHouseDayRevenue" parameterType="com.ziroom.minsu.entity.house.HouseDayRevenueEntity" >
+    insert into t_house_day_revenue
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="statisticsDateDay != null" >
+        statistics_date_day,
+      </if>
+      <if test="statisticsDateMonth != null" >
+        statistics_date_month,
+      </if>
+      <if test="statisticsDateYear != null" >
+        statistics_date_year,
+      </if>
+      <if test="dayRevenue != null" >
+        day_revenue,
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="bedFid != null" >
+        bed_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="statisticsDateDay != null" >
+        #{statisticsDateDay,jdbcType=DATE},
+      </if>
+      <if test="statisticsDateMonth != null" >
+        #{statisticsDateMonth,jdbcType=TINYINT},
+      </if>
+      <if test="statisticsDateYear != null" >
+        #{statisticsDateYear,jdbcType=TINYINT},
+      </if>
+      <if test="dayRevenue != null" >
+        #{dayRevenue,jdbcType=INTEGER},
+      </if>
+      <if test="landlordUid != null" >
+        #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null" >
+        #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateHouseDayRevenue" parameterType="com.ziroom.minsu.entity.house.HouseDayRevenueEntity" >
+    update t_house_day_revenue
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="statisticsDateDay != null" >
+        statistics_date_day = #{statisticsDateDay,jdbcType=DATE},
+      </if>
+      <if test="statisticsDateMonth != null" >
+        statistics_date_month = #{statisticsDateMonth,jdbcType=TINYINT},
+      </if>
+      <if test="dayRevenue != null" >
+        day_revenue = #{dayRevenue,jdbcType=INTEGER},
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid = #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null" >
+        bed_fid = #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay!= null" >
+        rent_way = #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询房东收益 -->
+  <select id="getSumRevenueByLandlordUid"  parameterType="map"  resultType="int">
+  	SELECT SUM(hdr.day_revenue) FROM t_house_day_revenue hdr
+	WHERE hdr.landlord_uid=#{landlordUid,jdbcType=VARCHAR}
+	<if test="firstDayOfWeek!=null">
+		<![CDATA[ 
+		AND hdr.statistics_date_day >= #{firstDayOfWeek,jdbcType=VARCHAR}
+		]]>
+	</if>
+	<if test="lastDayOfWeek">
+		<![CDATA[ 
+		AND hdr.statistics_date_day <= #{lastDayOfWeek,jdbcType=VARCHAR}
+		]]>
+	</if>
+	<if test="statisticsDateDay!=null">
+		AND hdr.statistics_date_day = #{statisticsDateDay,jdbcType=VARCHAR}
+	</if>
+	<if test="statisticsDateMonth!=null">
+		AND hdr.statistics_date_month = #{statisticsDateMonth,jdbcType=TINYINT}
+	</if>
+	AND hdr.is_del=0
+  </select>
+  
+  <!-- 查询房东月收益列表-->
+  <select id="getMonthRevenueListByLandlordUid" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.LandlordRevenueVo">
+  	SELECT SUM(hdr.day_revenue) monthRevenue, CONCAT(hdr.statistics_date_year,'-',hdr.statistics_date_month) revenueName 
+  	FROM t_house_day_revenue hdr
+	WHERE hdr.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+	AND hdr.statistics_date_year = #{statisticsDateYear,jdbcType=TINYINT}
+	AND hdr.is_del=0
+	GROUP BY hdr.statistics_date_month
+  </select>
+  
+  <!-- 查询房东房源月收益列表 -->
+  <select id="findHouseRevenueListByLandlordUid" parameterType="com.ziroom.minsu.services.house.dto.LandlordRevenueDto" resultType="com.ziroom.minsu.services.house.entity.LandlordRevenueVo">
+  	SELECT SUM(hdr.day_revenue) monthRevenue, hdr.house_base_fid houseBaseFid, hb.house_name revenueName
+  	FROM t_house_day_revenue hdr
+  	LEFT JOIN t_house_base_msg hb
+  	ON hdr.house_base_fid = hb.fid
+	WHERE hdr.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+	AND hdr.statistics_date_year = #{statisticsDateYear,jdbcType=TINYINT}
+	<if test="statisticsDateMonth!=null">
+		AND hdr.statistics_date_month = #{statisticsDateMonth,jdbcType=TINYINT}
+	</if>
+	AND hdr.is_del=0
+	GROUP BY hdr.house_base_fid
+  </select>
+  
+  <!-- 查询房源月收益-->
+  <select id="findHouseMonthRevenueByHouseBaseFid" parameterType="com.ziroom.minsu.services.house.dto.LandlordRevenueDto" resultMap="house.houseMonthRevenueDao.BaseResultMap">
+  	SELECT SUM(hdr.day_revenue) month_revenue,hdr.house_base_fid,hdr.statistics_date_year,hdr.statistics_date_month
+  	FROM t_house_day_revenue hdr
+	WHERE hdr.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+	AND hdr.statistics_date_year = #{statisticsDateYear,jdbcType=TINYINT}
+	AND hdr.statistics_date_month = #{statisticsDateMonth,jdbcType=TINYINT}
+	AND hdr.rent_way = 0
+	AND hdr.is_del=0
+	GROUP BY hdr.statistics_date_month
+  </select>
+  
+  <!-- 查询房间月收益列表-->
+  <select id="findRoomMonthRevenueListByHouseBaseFid" parameterType="com.ziroom.minsu.services.house.dto.LandlordRevenueDto" resultMap="house.roomMonthRevenueDao.BaseResultMap">
+  	SELECT SUM(hdr.day_revenue) room_month_revenue,hdr.room_fid
+  	FROM t_house_day_revenue hdr
+	WHERE hdr.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+	AND hdr.statistics_date_year = #{statisticsDateYear,jdbcType=TINYINT}
+	AND hdr.statistics_date_month = #{statisticsDateMonth,jdbcType=TINYINT}
+	AND hdr.rent_way = 1
+	AND hdr.is_del=0
+	GROUP BY hdr.statistics_date_month,hdr.room_fid
+  </select>
+  
+  <!-- 查询房源逻辑id列表 -->
+  <select id="findHouseBaseFidListFromHouseDayRevenue" parameterType="map" resultType="string">
+  	SELECT hdr.house_base_fid houseBaseFid
+  	FROM t_house_day_revenue hdr
+	WHERE hdr.statistics_date_year = #{statisticsDateYear,jdbcType=TINYINT}
+	AND hdr.statistics_date_month = #{statisticsDateMonth,jdbcType=TINYINT}
+	AND hdr.is_del=0
+	GROUP BY hdr.house_base_fid
+  </select>
+</mapper>

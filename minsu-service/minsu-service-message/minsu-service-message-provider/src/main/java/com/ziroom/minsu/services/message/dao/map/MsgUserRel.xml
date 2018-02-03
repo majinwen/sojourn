@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="message.msgUserRelDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.message.MsgUserRelEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="from_uid" property="fromUid" jdbcType="VARCHAR" />
+    <result column="to_uid" property="toUid" jdbcType="VARCHAR" />
+    <result column="rel_status" property="relStatus" jdbcType="INTEGER" />
+    <result column="source_type" property="sourceType" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="ziroom_flag" property="ziroomFlag" jdbcType="VARCHAR" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="creater_type" property="createrType" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, from_uid, to_uid, rel_status, source_type, remark, ziroom_flag, create_fid, 
+    creater_type, create_time, last_modify_date, is_del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_msg_user_rel
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_msg_user_rel
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.message.MsgUserRelEntity" >
+    insert into t_msg_user_rel (id, fid, from_uid, 
+      to_uid, rel_status, source_type, 
+      remark, ziroom_flag, create_fid, 
+      creater_type, create_time, last_modify_date, 
+      is_del)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{fromUid,jdbcType=VARCHAR}, 
+      #{toUid,jdbcType=VARCHAR}, #{relStatus,jdbcType=INTEGER}, #{sourceType,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{ziroomFlag,jdbcType=VARCHAR}, #{createFid,jdbcType=VARCHAR}, 
+      #{createrType,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{lastModifyDate,jdbcType=TIMESTAMP}, 
+      #{isDel,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.message.MsgUserRelEntity" >
+    insert ignore into t_msg_user_rel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="fromUid != null" >
+        from_uid,
+      </if>
+      <if test="toUid != null" >
+        to_uid,
+      </if>
+      <if test="relStatus != null" >
+        rel_status,
+      </if>
+      <if test="sourceType != null" >
+        source_type,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="ziroomFlag != null" >
+        ziroom_flag,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createrType != null" >
+        creater_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="fromUid != null" >
+        #{fromUid,jdbcType=VARCHAR},
+      </if>
+      <if test="toUid != null" >
+        #{toUid,jdbcType=VARCHAR},
+      </if>
+      <if test="relStatus != null" >
+        #{relStatus,jdbcType=INTEGER},
+      </if>
+      <if test="sourceType != null" >
+        #{sourceType,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="ziroomFlag != null" >
+        #{ziroomFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        #{createrType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByFid" parameterType="com.ziroom.minsu.entity.message.MsgUserRelEntity" >
+    update t_msg_user_rel
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="fromUid != null" >
+        from_uid = #{fromUid,jdbcType=VARCHAR},
+      </if>
+      <if test="toUid != null" >
+        to_uid = #{toUid,jdbcType=VARCHAR},
+      </if>
+      <if test="relStatus != null" >
+        rel_status = #{relStatus,jdbcType=INTEGER},
+      </if>
+      <if test="sourceType != null" >
+        source_type = #{sourceType,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="ziroomFlag != null" >
+        ziroom_flag = #{ziroomFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        creater_type = #{createrType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.message.MsgUserRelEntity" >
+    update t_msg_user_rel
+    set fid = #{fid,jdbcType=VARCHAR},
+      from_uid = #{fromUid,jdbcType=VARCHAR},
+      to_uid = #{toUid,jdbcType=VARCHAR},
+      rel_status = #{relStatus,jdbcType=INTEGER},
+      source_type = #{sourceType,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      ziroom_flag = #{ziroomFlag,jdbcType=VARCHAR},
+      create_fid = #{createFid,jdbcType=VARCHAR},
+      creater_type = #{createrType,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+    <select id="selectByFid" resultMap="BaseResultMap" parameterType="string" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from t_msg_user_rel
+	    where is_del = 0 
+	    and fid = #{fid,jdbcType=VARCHAR}
+   </select>
+   
+   <select id="selectByParam" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.entity.message.MsgUserRelEntity">
+        select 
+	    <include refid="Base_Column_List" />
+	    from t_msg_user_rel
+	    where  from_uid = #{fromUid,jdbcType=VARCHAR}
+	    and to_uid = #{toUid,jdbcType=VARCHAR}
+	    and ziroom_flag = #{ziroomFlag,jdbcType=VARCHAR}
+	    <if test="sourceType != null" >
+            and source_type = #{sourceType,jdbcType=INTEGER}
+        </if>
+	    and is_del = 0 limit 1
+   </select>
+</mapper>

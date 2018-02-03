@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.subwayStationDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.conf.SubwayStationEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="line_fid" property="lineFid" jdbcType="VARCHAR" />
+    <result column="station_name" property="stationName" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+    <result column="google_longitude" property="googleLongitude" jdbcType="DOUBLE" />
+    <result column="google_latitude" property="googleLatitude" jdbcType="DOUBLE" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, fid, line_fid, station_name, longitude, latitude,google_longitude,google_latitude, sort, create_fid, create_time, 
+    last_modify_date, is_del
+  </sql>
+  
+  <select id="findSubwayStationByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_biz_subway_station ss
+    where ss.fid = #{fid,jdbcType=VARCHAR}
+    and ss.is_del = 0
+    limit 1
+  </select>
+  
+  <select id="findSubwayStation" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.entity.conf.SubwayStationEntity" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_biz_subway_station ss
+    where ss.is_del = 0
+    <if test="fid != null and fid != ''">
+      and ss.fid = #{fid,jdbcType=VARCHAR}
+    </if>
+    <if test="lineFid != null and lineFid != ''">
+      and ss.line_fid = #{lineFid,jdbcType=VARCHAR}
+    </if>
+    <if test="stationName != null and stationName != ''">
+      and ss.station_name = #{stationName,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <insert id="insertSubwayStation" parameterType="com.ziroom.minsu.entity.conf.SubwayStationEntity" >
+    insert into t_biz_subway_station
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="lineFid != null" >
+        line_fid,
+      </if>
+      <if test="stationName != null" >
+        station_name,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+       <if test="googleLongitude != null" >
+        google_longitude,
+      </if>
+      <if test="googleLatitude != null" >
+        google_latitude,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="lineFid != null" >
+        #{lineFid,jdbcType=VARCHAR},
+      </if>
+      <if test="stationName != null" >
+        #{stationName,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+       <if test="googleLongitude != null" >
+        #{googleLongitude,jdbcType=DOUBLE},
+      </if>
+      <if test="googleLatitude != null" >
+        #{googleLatitude,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateSubwayStationByFid" parameterType="com.ziroom.minsu.entity.conf.SubwayStationEntity" >
+    update t_biz_subway_station
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="lineFid != null" >
+        line_fid = #{lineFid,jdbcType=VARCHAR},
+      </if>
+      <if test="stationName != null" >
+        station_name = #{stationName,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+       <if test="googleLongitude != null" >
+        google_longitude = #{googleLongitude,jdbcType=DOUBLE},
+      </if>
+      <if test="googleLatitude != null" >
+        google_latitude = #{googleLatitude,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+
+</mapper>

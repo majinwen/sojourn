@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.activityChristmasApplyDao">
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityChristmasApplyEntity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="fid" property="fid" jdbcType="VARCHAR"/>
+        <result column="moblie" property="moblie" jdbcType="VARCHAR"/>
+        <result column="house_sn" property="houseSn" jdbcType="VARCHAR"/>
+        <result column="house_name" property="houseName" jdbcType="VARCHAR"/>
+        <result column="activity_date" property="activityDate" jdbcType="TIMESTAMP"/>
+        <result column="apply_reason" property="applyReason" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP"/>
+        <result column="is_del" property="isDel" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, fid, moblie, house_sn, house_name, activity_date, apply_reason, remark, create_time,
+        last_modify_date, is_del
+    </sql>
+
+    <select id="selectByCondition" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_activity_christmas_apply
+        WHERE moblie = #{moblie,jdbcType=VARCHAR}
+        AND activity_date = #{activityDate,jdbcType=TIMESTAMP}
+        LIMIT 1
+    </select>
+
+
+    <insert id="save" parameterType="com.ziroom.minsu.entity.cms.ActivityChristmasApplyEntity">
+        insert into t_activity_christmas_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="moblie != null">
+                moblie,
+            </if>
+            <if test="houseSn != null">
+                house_sn,
+            </if>
+            <if test="houseName != null">
+                house_name,
+            </if>
+            <if test="activityDate != null">
+                activity_date,
+            </if>
+            <if test="applyReason != null">
+                apply_reason,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="lastModifyDate != null">
+                last_modify_date,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fid != null">
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="moblie != null">
+                #{moblie,jdbcType=VARCHAR},
+            </if>
+            <if test="houseSn != null">
+                #{houseSn,jdbcType=VARCHAR},
+            </if>
+            <if test="houseName != null">
+                #{houseName,jdbcType=VARCHAR},
+            </if>
+            <if test="activityDate != null">
+                #{activityDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyReason != null">
+                #{applyReason,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null">
+                #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.cms.ActivityChristmasApplyEntity">
+        update t_activity_christmas_apply
+        <set>
+            <if test="fid != null">
+                fid = #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="moblie != null">
+                moblie = #{moblie,jdbcType=VARCHAR},
+            </if>
+            <if test="houseSn != null">
+                house_sn = #{houseSn,jdbcType=VARCHAR},
+            </if>
+            <if test="houseName != null">
+                house_name = #{houseName,jdbcType=VARCHAR},
+            </if>
+            <if test="activityDate != null">
+                activity_date = #{activityDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyReason != null">
+                apply_reason = #{applyReason,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null">
+                last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=INTEGER},
+            </if>
+        </set>
+        where fid = #{fid,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

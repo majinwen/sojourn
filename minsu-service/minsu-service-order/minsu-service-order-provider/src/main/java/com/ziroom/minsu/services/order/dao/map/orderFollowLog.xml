@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderFollowLogDao" >
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderFollowLogEntity" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="fid" property="fid" jdbcType="VARCHAR" />
+        <result column="follow_fid" property="followFid" jdbcType="VARCHAR" />
+        <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+        <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+        <result column="follow_status" property="followStatus" jdbcType="INTEGER" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+        <result column="create_name" property="createName" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List" >
+        id, fid, follow_fid, order_sn, order_status, follow_status, content, create_fid,
+        create_name, create_time, is_del
+    </sql>
+
+
+    <select id="getOrderFollowLogListByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from t_order_follow_log
+        where order_sn = #{orderSn,jdbcType=VARCHAR}
+        AND is_del = 0
+    </select>
+
+
+    <insert id="saveOrderFollowLog" parameterType="com.ziroom.minsu.entity.order.OrderFollowLogEntity" >
+        insert into t_order_follow_log
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+
+            <if test="fid != null" >
+                fid,
+            </if>
+            <if test="followFid != null" >
+                follow_fid,
+            </if>
+            <if test="orderSn != null" >
+                order_sn,
+            </if>
+            <if test="orderStatus != null" >
+                order_status,
+            </if>
+            <if test="followStatus != null" >
+                follow_status,
+            </if>
+            <if test="content != null" >
+                content,
+            </if>
+            <if test="createFid != null" >
+                create_fid,
+            </if>
+            <if test="createName != null" >
+                create_name,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="isDel != null" >
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+            <if test="fid != null" >
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="followFid != null" >
+                #{followFid,jdbcType=VARCHAR},
+            </if>
+            <if test="orderSn != null" >
+                #{orderSn,jdbcType=VARCHAR},
+            </if>
+            <if test="orderStatus != null" >
+                #{orderStatus,jdbcType=INTEGER},
+            </if>
+            <if test="followStatus != null" >
+                #{followStatus,jdbcType=INTEGER},
+            </if>
+            <if test="content != null" >
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="createFid != null" >
+                #{createFid,jdbcType=VARCHAR},
+            </if>
+            <if test="createName != null" >
+                #{createName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null" >
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateOrderFollowLog" parameterType="com.ziroom.minsu.entity.order.OrderFollowLogEntity" >
+        update t_order_follow_log
+        <set >
+            <if test="fid != null" >
+                fid = #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="followFid != null" >
+                follow_fid = #{followFid,jdbcType=VARCHAR},
+            </if>
+            <if test="orderSn != null" >
+                order_sn = #{orderSn,jdbcType=VARCHAR},
+            </if>
+            <if test="orderStatus != null" >
+                order_status = #{orderStatus,jdbcType=INTEGER},
+            </if>
+            <if test="followStatus != null" >
+                follow_status = #{followStatus,jdbcType=INTEGER},
+            </if>
+            <if test="content != null" >
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="createFid != null" >
+                create_fid = #{createFid,jdbcType=VARCHAR},
+            </if>
+            <if test="createName != null" >
+                create_name = #{createName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null" >
+                is_del = #{isDel,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

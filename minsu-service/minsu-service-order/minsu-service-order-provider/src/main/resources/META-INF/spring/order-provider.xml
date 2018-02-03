@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2011 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	<dubbo:provider filter="catFilter"></dubbo:provider>
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderUserService" ref="order.orderUserServiceProxy">
+        <dubbo:method name="findHouseSnapshotByOrderSn" timeout="3000" retries="0"/>
+    	<dubbo:method name="lockHouse" timeout="3000" retries="0"/>
+    	<dubbo:method name="getHouseLockInfo" timeout="3000" retries="3"/>
+    	<dubbo:method name="getOrderPrices" timeout="3000" retries="3"/>
+        <dubbo:method name="initCancleOrder" timeout="3000" retries="3"/>
+        <dubbo:method name="cancleOrder" timeout="8000" retries="0"/>
+        <dubbo:method name="initCheckOutOrder" timeout="3000" retries="3"/>
+        <dubbo:method name="checkOutOrder" timeout="8000" retries="0"/>
+        <dubbo:method name="createOrder" timeout="6000" retries="0"/>
+        <dubbo:method name="getNeedPayFee" timeout="6000" retries="3"/>
+        <dubbo:method name="needPay" timeout="6000" retries="3"/>
+        <dubbo:method name="confirmOtherMoney" timeout="3000" retries="0"/>
+        <dubbo:method name="unlockHouse" timeout="3000" retries="0"/>
+        <dubbo:method name="lockHouseForPC" timeout="3000" retries="0"/>
+        <dubbo:method name="unlockHouseForPC" timeout="3000" retries="0"/>
+        <dubbo:method name="needPayForLan" timeout="6000" retries="3"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderTaskOrderService" ref="order.orderTaskOrderProxy">
+    	<dubbo:method name="taskRefusedOrder" timeout="30000" retries="0"/>
+		<dubbo:method name="cancelOrderAndUnlockHouse" timeout="30000" retries="0"/>
+		<dubbo:method name="updateOrderStatus" timeout="30000" retries="0"/>
+		<!-- <dubbo:method name="sendWeatherMsgForTomorrowOrder" timeout="30000" retries="0"/> -->
+		<dubbo:method name="taskCheckOut" timeout="3000" retries="0"/>
+		<dubbo:method name="taskConfirmOtherFeeLandlord" timeout="30000" retries="0"/>
+		<dubbo:method name="taskConfirmOtherUser" timeout="30000" retries="0"/>
+		<dubbo:method name="taskWatiConfimOrder" timeout="30000" retries="0"/>
+		<dubbo:method name="taskCheckOutRemind" timeout="30000" retries="0"/>
+		<dubbo:method name="checkInPreNoticeTenant" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderTaskAccountService" ref="order.orderTaskAccountServiceProxy">
+    	<dubbo:method name="repeatAccountFillFailed" timeout="6000" retries="0"/>
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderTaskFinanceService" ref="order.orderTaskFinanceServiceProxy">
+		<dubbo:method name="taskCreateFinance" timeout="3000" retries="0"/>
+        <dubbo:method name="taskRunFinance" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderTaskSyncService" ref="order.orderTaskSyncServiceProxy">
+        <dubbo:method name="syncIncomeData" timeout="180000" retries="0"/>
+        <dubbo:method name="syncPaymentData" timeout="180000" retries="0" async="true" return="false"/>
+        <dubbo:method name="getNotSyncActivityCount" timeout="3000" retries="3"/>
+        <dubbo:method name="getNotSyncActivityList" timeout="3000" retries="3"/>
+        <dubbo:method name="updateActivityHasSync" timeout="180000" retries="0"/>
+        <dubbo:method name="fillLanlordCashOrder" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.CancelOrderService" ref="order.cancelOrderServiceProxy">
+        <dubbo:method name="cancelOrderNegotiate" timeout="3000" retries="0"/>
+        <dubbo:method name="showCancelOrderInfo" timeout="3000" retries="3"/>
+        <dubbo:method name="updateOrderConfValue" timeout="3000" retries="0"/>
+        <dubbo:method name="updateOrderCsrCancle" timeout="3000" retries="0"/>
+        <dubbo:method name="getCountInTimes" timeout="3000" retries="3"/>
+        <dubbo:method name="getOrderConfigListByOrderSn" timeout="3000" retries="3"/>
+        <dubbo:method name="getFinancePenaltyByOrderSn" timeout="3000" retries="3"/>
+        <dubbo:method name="getIsDoneAllPunish" timeout="3000" retries="3"/>
+         <dubbo:method name="getDoFailLandQXOrderPunish" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderCommonService" ref="order.orderCommonServiceProxy">
+        <dubbo:method name="getOrderListByCondiction" timeout="3000" retries="0"/>
+        <dubbo:method name="getOrderLast" timeout="3000" retries="3"/>
+        <dubbo:method name="getOrderList" timeout="3000" retries="3"/>
+        <dubbo:method name="getOrderEavlList" timeout="3000" retries="3"/>
+        <dubbo:method name="getOrderCount4User" timeout="3000" retries="3"/>
+        <dubbo:method name="queryOrderInfoBySn" timeout="3000" retries="3"/>
+        <dubbo:method name="getOrderAllBySn" timeout="3000" retries="3"/>
+        <dubbo:method name="queryOrderByCondition" timeout="3000" retries="3"/>
+        <dubbo:method name="updateEvaStatuByOrderSn" timeout="3000" retries="0"/>
+        <dubbo:method name="updateStatuByOrderSn" timeout="30000" retries="0"/>
+        <dubbo:method name="saveUsualContact" timeout="3000" retries="0"/>
+        <dubbo:method name="findOrderContactsByOrderSn" timeout="3000" retries="3"/>
+        <dubbo:method name="findUsualContactsByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="findUsualContactsByContion" timeout="3000" retries="3"/>
+        <dubbo:method name="getBookerContact" timeout="3000" retries="3"/>
+        <dubbo:method name="updateBookerContact" timeout="3000" retries="0"/>
+        <dubbo:method name="getOrderByOrderSn" timeout="3000" retries="3"/>
+        <dubbo:method name="getOrderInfoByOrderSn" timeout="3000" retries="3"/>
+        <dubbo:method name="findHouseSnapshotByOrderSn" timeout="3000" retries="3"/>
+        <dubbo:method name="updateOrderBaseByOrderSn" timeout="3000" retries="0"/>
+        <dubbo:method name="updateByFid" timeout="3000" retries="0"/>
+        <dubbo:method name="updateLogicDelete" timeout="3000" retries="0"/>
+        <dubbo:method name="deleteContact" timeout="3000" retries="0"/>
+        <dubbo:method name="findHouseSnapshotByOrder" timeout="3000" retries="3"/>
+        <dubbo:method name="getCheckOutStrategyByOrderSn" timeout="3000" retries="3"/>
+        <dubbo:method name="cancelUnPayOrder" timeout="3000" retries="0"/>
+        <dubbo:method name="getLandAcceptOrderRateIn60Days" timeout="3000" retries="3"/>
+        <dubbo:method name="getBeInviterStatusInfo" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderFinanceService" ref="order.orderFinanceServiceProxy">
+    	<dubbo:method name="getPunishList" timeout="3000" retries="3"/>
+    	<dubbo:method name="landlordDayRevenueList" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+   <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.CommissionerOrderService" ref="order.commissionerOrderServiceProxy">
+       <dubbo:method name="compulsoryCancellOrderByLandlord" timeout="3000" retries="0"/>
+       <dubbo:method name="recoveryCancelOrde" timeout="3000" retries="0"/>
+       <dubbo:method name="agreeCancelOrde" timeout="3000" retries="0"/>
+       <dubbo:method name="queryOrderRelanionByPage" timeout="3000" retries="3"/>
+       <dubbo:method name="saveOrderRelation" timeout="3000" retries="0"/>
+       <dubbo:method name="updateOrderRelationByCondition" timeout="3000" retries="0"/>
+       <dubbo:method name="getMoneyLast" timeout="3000" retries="3"/>
+       <dubbo:method name="queryByCondition" timeout="3000" retries="3"/>
+       <dubbo:method name="findCancleOrderVo" timeout="3000" retries="3"/>
+   </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderLoadlordService" ref="order.orderLandlordServiceProxy">
+        <dubbo:method name="acceptOrder" timeout="3000" retries="0"/>
+        <dubbo:method name="refusedOrder" timeout="3000" retries="0"/>
+        <dubbo:method name="saveOtherMoney" timeout="3000" retries="0"/>
+        <dubbo:method name="getOtherMoneyLimit" timeout="3000" retries="3"/>
+        <dubbo:method name="queryOrderList" timeout="3000" retries="3"/>
+        <dubbo:method name="queryProfitOrderList" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderPayService" ref="order.orderPayServiceProxy">
+    	<dubbo:method name="checkToPay" timeout="3000" retries="0"/>
+    	<dubbo:method name="payCallBack" timeout="10000" retries="0"/>
+    	<dubbo:method name="getAccountBalance" timeout="6000" retries="0"/>
+    	<dubbo:method name="queryTradeNumByHouseFid" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+
+    <dubbo:service interface="com.ziroom.minsu.services.finance.api.inner.BillManageService" ref="order.billManageServiceProxy">
+        <dubbo:method name="queryPaymentVoByPage" timeout="3000" retries="3"/>
+        <dubbo:method name="getPaymentVoById" timeout="3000" retries="3"/>
+        <dubbo:method name="queryFinanceIncomeByPage" timeout="3000" retries="3"/>
+        <dubbo:method name="getFinanceIncomeDetail" timeout="3000" retries="3"/>
+        <dubbo:method name="queryFinancePayVosByPage" timeout="3000" retries="3"/>
+        <dubbo:method name="getPayVouchersDetail" timeout="3000" retries="3"/>
+        <dubbo:method name="countReCreatePvs" timeout="3000" retries="3"/>
+        <dubbo:method name="reCreatePvs" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.FinanceCallBackServiceService" ref="order.financeCallBackServiceProxy">
+    	<dubbo:method name="sendPayVouchersCallBack" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.LogTestService" ref="order.logTestServiceProxy">
+        <dubbo:method name="test" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderRemarkService" ref="order.orderRemarkServiceProxy">
+    	<dubbo:method name="getRemarkCount" timeout="3000" retries="3"/>
+		<dubbo:method name="getRemarkList" timeout="3000" retries="3"/>
+		<dubbo:method name="insertRemarkRes" timeout="3000" retries="0"/>
+		<dubbo:method name="delRemark" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderSmartLockService" ref="order.orderSmartLockServiceProxy">
+         <dubbo:method name="findOrderSmartLockByFid" timeout="3000" retries="3"/>
+         <dubbo:method name="findOrderSmartLockByOrderSn" timeout="3000" retries="3"/>
+         <dubbo:method name="updateOrderSmartLockByServiceId" timeout="3000" retries="0"/>
+         <dubbo:method name="updateOrderSmartLockByFid" timeout="3000" retries="0"/>
+         <dubbo:method name="updateOrderSmartLockByOrderSn" timeout="3000" retries="0"/>
+         <dubbo:method name="closeSmartlockPswd" timeout="8000" retries="0"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.ProfitService" ref="order.profitServiceProxy">
+         <dubbo:method name="getHouseMonthProfit" timeout="4000" retries="3"/>
+         <dubbo:method name="getUserAllHouseMonthProfit" timeout="4000" retries="3"/>
+         <dubbo:method name="getUserHouseList" timeout="6000" retries="3"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.StaticsService" ref="order.staticsServiceProxy">
+         <dubbo:method name="getStaticsCountLanOrderNum" timeout="6000" retries="3"/>
+         <dubbo:method name="getStaticsCountLanReplyOrderNum" timeout="6000" retries="3"/>
+         <dubbo:method name="getStaticsCountLanRefuseOrderNum" timeout="6000" retries="3"/>
+         <dubbo:method name="getStaticsCountSysRefuseOrderNum" timeout="6000" retries="3"/>
+         <dubbo:method name="getStaticsCountLanReplyOrderTime" timeout="6000" retries="3"/>
+         <dubbo:method name="taskStaticsCountInfo" timeout="30000" retries="3"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.CustomerServeService" ref="order.customerServeProxy">
+         <dubbo:method name="getRemindOrderList" timeout="3000" retries="3"/>
+         <dubbo:method name="getRefuseOrderList" timeout="3000" retries="3"/>
+         <dubbo:method name="getAdvisoryOrderInfo" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.FinanceCashbackService" ref="order.financeCashbackServiceProxy">
+         <dubbo:method name="getOrderCashbackList" timeout="3000" retries="3"/>
+         <dubbo:method name="saveCashback" timeout="3000" retries="0"/>
+         <dubbo:method name="getAuditCashbackList" timeout="3000" retries="3"/>
+         <dubbo:method name="getAuditCashbackSumFee" timeout="3000" retries="3"/>
+         <dubbo:method name="getLogByCashbackSn" timeout="3000" retries="3"/>
+         <dubbo:method name="auditCashback" timeout="5000" retries="0" async="true" return="false"/>
+         <dubbo:method name="rejectCashback" timeout="3000" retries="0"/>
+         <dubbo:method name="getHasCashBackNum" timeout="3000" retries="3"/>
+         <dubbo:method name="saveCashbackBatch" timeout="8000" retries="0"/>
+    </dubbo:service>
+    
+    
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderToPayService" ref="order.orderToPayServiceProxy">
+        <dubbo:method name="saveOrderToPay" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+     <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.HouseCommonService" ref="order.houseCommonServiceProxy">
+         <dubbo:method name="findPriorityDate" timeout="3000" retries="3"/>
+         <dubbo:method name="saveHouseLockLog" timeout="3000" retries="0"/>
+         <dubbo:method name="syncAirHouseLock" timeout="5000" retries="0"/>
+         <dubbo:method name="getEffectiveOfJYTJInfo" timeout="3000" retries="3"/>
+         <dubbo:method name="getLockFidByLockTime" timeout="3000" retries="3"/>
+         <dubbo:method name="isHousePayLockCurrentDay" timeout="3000" retries="3"/>
+         <dubbo:method name="isNewUserByOrder" timeout="3000" retries="3"/>
+         <dubbo:method name="isNewUserByOrderForFirstPage" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderFollowService" ref="order.orderFollowServiceProxy">
+        <dubbo:method name="saveOrderFollow" timeout="3000" retries="0"/>
+        <dubbo:method name="getOrderFollowListByOrderSn" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.order.api.inner.OrderPenaltyService" ref="order.orderPenaltyServiceProxy">
+        <dubbo:method name="cancelPenalty" timeout="3000" retries="0"/>
+        <dubbo:method name="listPenaltyPageByCondition" timeout="3000" retries="3"/>
+        <dubbo:method name="listPenaltyPayAndIncomeRel" timeout="3000" retries="3"/>
+    </dubbo:service>
+</beans>

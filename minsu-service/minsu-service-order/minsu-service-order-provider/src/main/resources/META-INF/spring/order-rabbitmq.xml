@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="rabbitConnectionFactory" class="com.asura.framework.rabbitmq.connection.RabbitConnectionFactory"
+          init-method="init" destroy-method="closeConnection"/>
+
+    <bean id="house.queueName" class="com.asura.framework.rabbitmq.entity.QueueName">
+        <constructor-arg index="0" value="${fresh.search.system}"/>
+        <constructor-arg index="1" value="${fresh.search.module}"/>
+        <constructor-arg index="2" value="${fresh.search.function}"/>
+    </bean>
+
+    <bean id="behavior.queueName" class="com.asura.framework.rabbitmq.entity.QueueName">
+        <constructor-arg index="0" value="${customer.behavior.system}"/>
+        <constructor-arg index="1" value="${customer.behavior.module}"/>
+        <constructor-arg index="2" value="${customer.behavior.function}"/>
+    </bean>
+
+    <bean id="house.rabbitSendClient" class="com.asura.framework.rabbitmq.send.RabbitMqSendClient"
+          destroy-method="closeChannel">
+        <property name="rabbitConnectionFactory" ref="rabbitConnectionFactory"/>
+    </bean>
+
+
+    <bean id="lock.queueName" class="com.asura.framework.rabbitmq.entity.QueueName">
+        <constructor-arg index="0" value="${order.lock.system}"/>
+        <constructor-arg index="1" value="${order.lock.module}"/>
+        <constructor-arg index="2" value="${order.lock.function}"/>
+    </bean>
+
+    <bean id="syncLockListener" class="com.ziroom.minsu.services.order.mq.listener.SyncLockListener"/>
+
+    <bean id="order.freshReceiver" class="com.asura.framework.rabbitmq.receive.queue.RabbitMqQueueReceiver"
+          init-method="receiveMessage">
+        <constructor-arg index="0">
+            <ref bean="rabbitConnectionFactory"/>
+        </constructor-arg>
+        <constructor-arg index="1">
+            <list>
+                <ref bean="syncLockListener"/>
+            </list>
+        </constructor-arg>
+        <constructor-arg index="2">
+            <ref bean="lock.queueName"/>
+        </constructor-arg>
+    </bean>
+</beans>

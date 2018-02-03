@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.npsDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.NpsEntiy">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="nps_code" property="npsCode" jdbcType="VARCHAR"/>
+        <result column="nps_name" property="npsName" jdbcType="VARCHAR"/>
+        <result column="nps_content" property="npsContent" jdbcType="VARCHAR"/>
+        <result column="nps_status" property="npsStatus" jdbcType="VARCHAR"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="create_id" property="createId" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP"/>
+        <result column="is_del" property="isDel" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, nps_code, nps_name, nps_content, start_time, end_time, create_id, create_time,
+        last_modify_date, is_del
+    </sql>
+
+    <select id="getNps" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_nps
+        where <![CDATA[CURRENT_TIMESTAMP()>start_time AND CURRENT_TIMESTAMP()<end_time AND nps_status<2 ]]>
+        limit 1
+    </select>
+
+    <insert id="save" parameterType="com.ziroom.minsu.entity.cms.NpsEntiy">
+        insert into t_nps
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="npsCode != null">
+                nps_code,
+            </if>
+            <if test="npsName != null">
+                nps_name,
+            </if>
+            <if test="npsContent != null">
+                nps_content,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="createId != null">
+                create_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="lastModifyDate != null">
+                last_modify_date,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="npsCode != null">
+                #{npsCode,jdbcType=VARCHAR},
+            </if>
+            <if test="npsName != null">
+                #{npsName,jdbcType=VARCHAR},
+            </if>
+            <if test="npsContent != null">
+                #{npsContent,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createId != null">
+                #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null">
+                #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateNps" parameterType="com.ziroom.minsu.entity.cms.NpsEntiy">
+        update t_nps
+        <set>
+            <if test="npsCode != null">
+                nps_code = #{npsCode,jdbcType=VARCHAR},
+            </if>
+            <if test="npsName != null">
+                nps_name = #{npsName,jdbcType=VARCHAR},
+            </if>
+            <if test="npsContent != null">
+                nps_content = #{npsContent,jdbcType=VARCHAR},
+            </if>
+            <if test="npsStatus != null">
+                nps_status = #{npsStatus,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createId != null">
+                create_id = #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null">
+                last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=INTEGER},
+            </if>
+        </set>
+        where nps_code = #{npsCode,jdbcType=VARCHAR}
+    </update>
+
+    <resultMap id="CalculateNPSMap" type="com.ziroom.minsu.services.cms.dto.NpsQuantumVo">
+        <result column="npsValue" property="npsValue" jdbcType="DOUBLE"/>
+        <result column="commendPercent" property="commendPercent" jdbcType="DOUBLE"/>
+        <result column="criticismPercent" property="criticismPercent" jdbcType="DOUBLE"/>
+    </resultMap>
+
+    <select id="getCalculateNPS" resultMap="CalculateNPSMap" parameterType="com.ziroom.minsu.services.cms.dto.NpsGetCondiRequest">
+        SELECT tt.commendCount/tt.sumCount AS commendPercent, tt.criticismCount/tt.sumCount AS criticismPercent, tt.commendCount/tt.sumCount-tt.criticismCount/tt.sumCount  AS npsValue
+        FROM
+          ( SELECT
+            SUM( CASE WHEN t.`score` >= 9 THEN 1 ELSE 0 END ) AS commendCount,
+            SUM( CASE WHEN t.`score` &lt;= 6 THEN 1 ELSE 0 END ) AS criticismCount,
+            COUNT(t.id)  AS sumCount
+            FROM
+            `t_nps_attend` t
+            WHERE t.`nps_code` = #{npsCode,jdbcType=VARCHAR}
+            AND t.`is_del` = 0
+            <if test="npsStartTime != null and npsStartTime != ''">
+                AND t.`create_time`  <![CDATA[ >= ]]> #{npsStartTime,jdbcType=VARCHAR}
+            </if>
+            <if test="npsEndTime != null and npsEndTime != ''">
+                AND t.`create_time`  <![CDATA[ < ]]> #{npsEndTime,jdbcType=VARCHAR}
+            </if> ) tt
+    </select>
+
+    <select id="getNpsNameList" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from t_nps
+        where is_del = 0
+    </select>
+
+</mapper>

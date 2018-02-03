@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderCsrCancleDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderCsrCancleEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="cancle_type" property="cancleType" jdbcType="INTEGER" />
+    <result column="cancle_reason" property="cancleReason" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="emp_code" property="empCode" jdbcType="VARCHAR" />
+    <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+    <result column="punish_statu" property="punishStatu" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, order_sn, cancle_type, cancle_reason, remark, emp_code, emp_name, punish_statu, 
+    create_time, last_modify_date, is_del
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_order_csr_cancle
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.order.OrderCsrCancleEntity" >
+    insert into t_order_csr_cancle
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="cancleType != null" >
+        cancle_type,
+      </if>
+      <if test="cancleReason != null" >
+        cancle_reason,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="empCode != null" >
+        emp_code,
+      </if>
+      <if test="empName != null" >
+        emp_name,
+      </if>
+      <if test="punishStatu != null" >
+        punish_statu,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="cancleType != null" >
+        #{cancleType,jdbcType=INTEGER},
+      </if>
+      <if test="cancleReason != null" >
+        #{cancleReason,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="empCode != null" >
+        #{empCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empName != null" >
+        #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="punishStatu != null" >
+        #{punishStatu,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.order.OrderCsrCancleEntity" >
+    update t_order_csr_cancle
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null" >
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="cancleType != null" >
+        cancle_type = #{cancleType,jdbcType=INTEGER},
+      </if>
+      <if test="cancleReason != null" >
+        cancle_reason = #{cancleReason,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="empCode != null" >
+        emp_code = #{empCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empName != null" >
+        emp_name = #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="punishStatu != null" >
+        punish_statu = #{punishStatu,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.order.OrderCsrCancleEntity" >
+    update t_order_csr_cancle
+    set fid = #{fid,jdbcType=VARCHAR},
+      order_sn = #{orderSn,jdbcType=VARCHAR},
+      cancle_type = #{cancleType,jdbcType=INTEGER},
+      cancle_reason = #{cancleReason,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      emp_code = #{empCode,jdbcType=VARCHAR},
+      emp_name = #{empName,jdbcType=VARCHAR},
+      punish_statu = #{punishStatu,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getCountInTimes" parameterType="map" resultType="long">
+        select count(osc.fid) as withinSixmonths from t_order_csr_cancle osc  
+		inner join t_order o 
+		on osc.order_sn = o.order_sn
+		<where> 
+		     o.landlord_uid = #{landlordUid}
+		      <if test="beginTime != null and beginTime != ''">
+		        AND osc.create_time <![CDATA[ >= ]]> #{beginTime}
+		    </if>
+		    <if test="endTime != null and endTime != ''">
+		        AND osc.create_time <![CDATA[ < ]]> #{endTime}
+		    </if>
+			 and o.is_del = 0
+			 and osc.is_del = 0
+		</where>
+  </select>
+  
+  
+  <update id="updateOrderCsrCancle" parameterType="map">
+	  update t_order_csr_cancle set punish_statu = #{punishStatu}
+	  where order_sn=#{orderSn}
+  </update>
+  
+  <select id="getDoFailLandQXOrderPunish" parameterType="map" resultMap="BaseResultMap">
+     select 
+     <include refid="Base_Column_List"/>
+     from t_order_csr_cancle
+	 <where>
+	       <if test="cancleType != null and cancleType != ''">
+		        cancle_type=#{cancleType}
+		   </if>
+		   <if test="cancleReasonCode != null and cancleReasonCode != ''">
+		        AND cancle_reason=#{cancleReasonCode}
+		   </if>
+		   <if test="punishStatu != null and punishStatu != ''">
+		        AND punish_statu=#{punishStatu}
+		   </if>
+		   AND is_del=0  
+	 </where> 
+  </select>
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderSpecialPriceDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderSpecialPriceEntity" >
+    <!-- 基础map -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="price_date" property="priceDate" jdbcType="VARCHAR" />
+    <result column="price_value" property="priceValue" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    <!--  基础列集合 -->
+    id, order_sn, price_date, price_value
+  </sql>
+
+  <select id="getOrderSpecialPriceList" resultMap="BaseResultMap"  >
+    <!--  -->
+    select
+    <include refid="Base_Column_List" />
+    from t_order_special_price
+  </select>
+
+  <select id="getOrderSpecialPriceByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!-- 获取当前订单的特殊价格表 -->
+    select
+    <include refid="Base_Column_List" />
+    from t_order_special_price
+    where order_sn = #{orderSn,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <insert id="insertOrderSpecialPrice" parameterType="com.ziroom.minsu.entity.order.OrderSpecialPriceEntity" >
+    <!-- 保存订单的特殊价格 -->
+    insert into t_order_special_price
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="priceDate != null" >
+        price_date,
+      </if>
+      <if test="priceValue != null" >
+        price_value,
+      </if>
+     
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="priceDate != null" >
+        #{priceDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="priceValue != null" >
+        #{priceValue,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+</mapper>

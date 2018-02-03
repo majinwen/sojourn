@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.housePicMsgDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HousePicMsgEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="bed_fid" property="bedFid" jdbcType="VARCHAR" />
+    <result column="operate_type" property="operateType" jdbcType="INTEGER" />
+    <result column="pic_name" property="picName" jdbcType="VARCHAR" />
+    <result column="pic_Type" property="picType" jdbcType="INTEGER" />
+    <result column="pic_base_url" property="picBaseUrl" jdbcType="VARCHAR" />
+    <result column="pic_suffix" property="picSuffix" jdbcType="VARCHAR" />
+    <result column="pic_server_uuid" property="picServerUuid" jdbcType="VARCHAR" />
+    <result column="audit_status" property="auditStatus" jdbcType="INTEGER" />
+    <result column="replace_fid" property="replaceFid" jdbcType="VARCHAR" />
+    <result column="is_default" property="isDefault" jdbcType="INTEGER" />
+    <result column="pic_sort" property="picSort" jdbcType="INTEGER" />
+    <result column="width_pixel" property="widthPixel" jdbcType="INTEGER" />
+    <result column="height_pixel" property="heightPixel" jdbcType="INTEGER" />
+    <result column="width_dpi" property="widthDpi" jdbcType="INTEGER" />
+    <result column="height_dpi" property="heightDpi" jdbcType="INTEGER" />
+    <result column="pic_size" property="picSize" jdbcType="DECIMAL" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap id="HouseDefaultPicInfoMap" type="com.ziroom.minsu.services.house.entity.HouseDefaultPicInfoVo" >
+    <result column="houseFid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="roomFid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="houseOrRoomName" property="houseOrRoomName" jdbcType="VARCHAR" />
+    <result column="defaultPicFid" property="defaultPicFid" jdbcType="VARCHAR" />
+    <result column="picBaseUrl" property="picBaseUrl" jdbcType="VARCHAR" />
+    <result column="picSuffix" property="picSuffix" jdbcType="VARCHAR" />
+    <result column="picType" property="picType" jdbcType="INTEGER" />
+ </resultMap>
+  
+  <sql id="Base_Column_List" >
+    hpm.id, hpm.fid, hpm.house_base_fid, hpm.room_fid, hpm.bed_fid, hpm.operate_type, hpm.pic_name, hpm.pic_type, hpm.pic_base_url, 
+    hpm.pic_suffix, hpm.pic_server_uuid, hpm.audit_status, hpm.replace_fid, hpm.is_default, hpm.create_fid, hpm.create_date, 
+    hpm.last_modify_date, hpm.is_del, hpm.width_pixel, hpm.height_pixel, hpm.width_dpi, hpm.height_dpi, hpm.pic_size
+  </sql>
+
+  <sql id="Base_Column_List_Common" >
+    id, fid, house_base_fid, room_fid, bed_fid, operate_type,pic_name,pic_type,pic_base_url, 
+    pic_suffix,pic_server_uuid,audit_status,replace_fid,is_default,create_fid,create_date, 
+    last_modify_date,is_del,width_pixel,height_pixel, width_dpi, height_dpi,pic_size
+  </sql>
+  <insert id="insertHousePicMsg" parameterType="com.ziroom.minsu.entity.house.HousePicMsgEntity" >
+    insert into t_house_pic_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="bedFid != null" >
+        bed_fid,
+      </if>
+      <if test="operateType != null" >
+        operate_type,
+      </if>
+      <if test="picName != null" >
+        pic_name,
+      </if>
+      <if test="picType != null" >
+        pic_type,
+      </if>
+      <if test="picBaseUrl != null" >
+        pic_base_url,
+      </if>
+      <if test="picSuffix != null" >
+        pic_suffix,
+      </if>
+      <if test="picServerUuid != null" >
+        pic_server_uuid,
+      </if>
+      <if test="auditStatus != null" >
+        audit_status,
+      </if>
+      <if test="replaceFid != null" >
+        replace_fid,
+      </if>
+      <if test="isDefault != null" >
+        is_default,
+      </if>
+      <if test="picSort != null" >
+        pic_sort,
+      </if>
+      <if test="widthPixel != null" >
+        width_pixel,
+      </if>
+      <if test="heightPixel != null" >
+        height_pixel,
+      </if>
+      <if test="widthDpi != null" >
+        width_dpi,
+      </if>
+      <if test="heightDpi != null" >
+        height_dpi,
+      </if>
+      <if test="picSize != null" >
+        pic_size,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null" >
+        #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="operateType != null" >
+        #{operateType,jdbcType=INTEGER},
+      </if>
+      <if test="picName != null" >
+        #{picName,jdbcType=VARCHAR},
+      </if>
+      <if test="picType != null" >
+        #{picType,jdbcType=INTEGER},
+      </if>
+      <if test="picBaseUrl != null" >
+        #{picBaseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="picSuffix != null" >
+        #{picSuffix,jdbcType=VARCHAR},
+      </if>
+      <if test="picServerUuid != null" >
+        #{picServerUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null" >
+        #{auditStatus,jdbcType=INTEGER},
+      </if>
+      <if test="replaceFid != null" >
+        #{replaceFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null" >
+        #{isDefault,jdbcType=INTEGER},
+      </if>
+      <if test="picSort != null" >
+      	#{picSort,jdbcType=INTEGER},
+      </if>
+      <if test="widthPixel != null" >
+        #{widthPixel,jdbcType=INTEGER},
+      </if>
+      <if test="heightPixel != null" >
+        #{heightPixel,jdbcType=INTEGER},
+      </if>
+      <if test="widthDpi != null" >
+        #{widthDpi,jdbcType=INTEGER},
+      </if>
+      <if test="heightDpi != null" >
+        #{heightDpi,jdbcType=INTEGER},
+      </if>
+      <if test="picSize != null" >
+        #{picSize,jdbcType=DECIMAL},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateHousePicMsgByFid" parameterType="com.ziroom.minsu.entity.house.HousePicMsgEntity" >
+    update t_house_pic_msg
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null" >
+        bed_fid = #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="operateType != null" >
+        operate_type = #{operateType,jdbcType=INTEGER},
+      </if>
+      <if test="picName != null" >
+        pic_name = #{picName,jdbcType=VARCHAR},
+      </if>
+      <if test="picBaseUrl != null" >
+        pic_base_url = #{picBaseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="picSuffix != null" >
+        pic_suffix = #{picSuffix,jdbcType=VARCHAR},
+      </if>
+      <if test="picServerUuid != null" >
+        pic_server_uuid = #{picServerUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null" >
+        audit_status = #{auditStatus,jdbcType=INTEGER},
+      </if>
+      <if test="replaceFid != null" >
+        replace_fid = #{replaceFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null" >
+        is_default = #{isDefault,jdbcType=INTEGER},
+      </if>
+      <if test="picSort != null" >
+      	pic_sort = #{picSort,jdbcType=INTEGER},
+      </if>
+      <if test="widthPixel != null" >
+        width_pixel = #{widthPixel,jdbcType=INTEGER},
+      </if>
+      <if test="heightPixel != null" >
+        height_pixel = #{heightPixel,jdbcType=INTEGER},
+      </if>
+      <if test="widthDpi != null" >
+        width_dpi = #{widthDpi,jdbcType=INTEGER},
+      </if>
+      <if test="heightDpi != null" >
+        height_dpi = #{heightDpi,jdbcType=INTEGER},
+      </if>
+      <if test="picSize != null" >
+        pic_size = #{picSize,jdbcType=DECIMAL},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="picType != null" >
+        pic_type = #{picType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据房源图片逻辑id逻辑删除图片信息 -->
+  <update id="deleteHousePicMsgByFid" parameterType="map" >
+  	update t_house_pic_msg hpm set hpm.is_del = 1
+  	where hpm.fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据房源图片逻辑id集合逻辑删除所有图片 -->
+  <update id="delAllHousePicMsgByFid" parameterType="list" >
+  	update t_house_pic_msg hpm set hpm.is_del = 1
+  	where
+  	 hpm.fid in
+  	 <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+  	 #{item,jdbcType=VARCHAR}   
+     </foreach>
+  </update>
+  
+   <!-- 根据房源房间逻辑fid，删除房源所有图片 -->
+  <update id="deleteHousePicMsgByRoomFid" parameterType="map" >
+  	update t_house_pic_msg hpm set hpm.is_del = 1
+  	where hpm.room_fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据房源逻辑fid，删除房源所有图片 -->
+  <update id="deleteHousePicMsgByHouseFid" parameterType="map" >
+  	update t_house_pic_msg hpm set hpm.is_del = 1
+  	where hpm.house_base_fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据房源图片逻辑id逻辑删除图片信息 -->
+  <select id="findHousePicMsgByFid" parameterType="string" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"/>
+  	from t_house_pic_msg hpm
+  	where hpm.fid = #{fid,jdbcType=VARCHAR}
+  	and hpm.is_del = 0
+  	limit 1
+  </select>
+  
+  <!-- 房源逻辑id查询图片列表 -->
+  <select id="findHousePicListByHouseBaseFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_pic_msg hpm
+    WHERE hpm.house_base_fid = #{fid,jdbcType=VARCHAR}
+	AND hpm.is_del = 0
+  </select>
+  
+  <!-- 房间逻辑id查询房间以及公共图片 -->
+  <select id="findHousePicListByRoomFid" resultMap="BaseResultMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_pic_msg hpm
+    WHERE hpm.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+    AND (hpm.room_fid = #{roomFid,jdbcType=VARCHAR} or hpm.room_fid = '' or hpm.room_fid is null)
+	AND hpm.is_del = 0
+  </select>
+  
+  <!-- 房间逻辑id查询房间图片列表 -->
+  <select id="findHousePicListByRoomFidSingle" resultMap="BaseResultMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_pic_msg hpm
+    WHERE hpm.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+    AND hpm.room_fid = #{roomFid,jdbcType=VARCHAR}
+	AND hpm.is_del = 0
+	AND hpm.pic_type=0
+	ORDER BY hpm.is_default DESC
+  </select>
+  
+  <!-- 根据类型查询图片数量 -->
+  <select id="getHousePicCountByPicType" parameterType="map" resultType="int">
+  	SELECT COUNT(id) FROM t_house_pic_msg
+	WHERE house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+	AND pic_type=#{picType,jdbcType=INTEGER}
+	AND is_del=0
+	<if test="roomFid!=null">
+	AND room_fid=#{roomFid,jdbcType=VARCHAR}
+	</if>
+  </select>
+
+<!-- 根据类型查询图片集合 -->
+    <select id="getHousePicListByPicType" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_house_pic_msg hpm
+        WHERE hpm.house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+        AND hpm.pic_type=#{picType,jdbcType=INTEGER}
+        AND hpm.is_del=0
+        <if test="roomFid!=null">
+            AND hpm.room_fid=#{roomFid,jdbcType=VARCHAR}
+        </if>
+    </select>
+  
+  <!--房源id和图片类型查询图片集合 -->
+  <select id="getHousePicByType" parameterType="map" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> FROM t_house_pic_msg hpm
+	WHERE hpm.house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+	AND hpm.pic_type=#{picType,jdbcType=INTEGER}
+	AND hpm.is_del=0
+	ORDER BY hpm.is_default DESC
+  </select>
+  
+  <!--查询上架房源未审核通过照片集合 -->
+  <select id="findHouseUnapproveedPicList" parameterType="string" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM t_house_pic_msg hpm,t_house_base_msg hb
+	WHERE hpm.house_base_fid = hb.fid
+	AND hpm.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+	AND hb.house_status = 40
+	AND hpm.audit_status = 0
+	AND hb.is_del = 0
+	AND hpm.is_del = 0
+  </select>
+  
+  <!--查询上架房间未审核通过照片集合 -->
+  <select id="findRoomUnapproveedPicList" parameterType="string" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM t_house_pic_msg hpm,t_house_room_msg hr
+	WHERE hpm.room_fid = hr.fid
+	AND hpm.room_fid = #{roomFid,jdbcType=VARCHAR}
+	AND hr.room_status = 40
+	AND hpm.audit_status = 0
+	AND hr.is_del = 0
+	AND hpm.is_del = 0
+  </select>
+  
+  <!--图片类型查询默认图片 -->
+  <select id="findDefaultPicByType" parameterType="map" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM t_house_pic_msg hpm
+	WHERE hpm.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+	AND hpm.pic_type = #{picType,jdbcType=INTEGER}
+	<if test="roomFid != null and roomFid != ''">
+		AND hpm.room_fid = #{roomFid,jdbcType=VARCHAR}
+	</if>
+	AND hpm.is_default = 1
+	AND hpm.is_del = 0
+	LIMIT 1
+  </select>
+  
+  <!--查询房源照片集合 -->
+  <select id="findHousePicList" parameterType="string" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM t_house_pic_msg hpm
+	WHERE hpm.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+	AND hpm.is_del = 0
+  </select>
+  
+  <!--查询房间照片集合 -->
+  <select id="findRoomPicList" parameterType="string" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM t_house_pic_msg hpm
+	WHERE hpm.room_fid = #{houseRoomFid,jdbcType=VARCHAR}
+	AND hpm.pic_type = 0
+	AND hpm.is_del = 0
+  </select>
+  
+  <!--查询房间默认图片 -->
+  <select id="findRoomDefaultPic" parameterType="string" resultMap="BaseResultMap">
+	SELECT <include refid="Base_Column_List" /> FROM t_house_room_msg hr
+	LEFT JOIN t_house_pic_msg hpm
+	ON hr.default_pic_fid=hpm.fid
+	WHERE hr.fid = #{roomFid,jdbcType=VARCHAR}
+	AND hpm.is_del=0
+	AND hpm.audit_status=1
+	LIMIT 1
+  </select>
+  
+   <!--查询房间旧默认图片 -->
+  <select id="findOldRoomDefaultPic" parameterType="string" resultMap="BaseResultMap">
+	SELECT <include refid="Base_Column_List" /> FROM t_house_room_msg hr
+	LEFT JOIN t_house_pic_msg hpm
+	ON hr.old_default_pic_fid=hpm.fid
+	WHERE hr.fid = #{roomFid,jdbcType=VARCHAR}
+	LIMIT 1
+  </select>
+  
+  <!--查询房间默认图片 -->
+  <select id="findLandlordRoomDefaultPic" parameterType="string" resultMap="BaseResultMap">
+	SELECT <include refid="Base_Column_List" /> FROM t_house_room_msg hr
+	LEFT JOIN t_house_pic_msg hpm
+	ON hr.default_pic_fid=hpm.fid
+	WHERE hr.fid = #{roomFid,jdbcType=VARCHAR}
+	AND hpm.is_del=0
+	LIMIT 1
+  </select>
+  
+  <!--查询图片集合 -->
+  <select id="findHousePicMsgList" parameterType="map" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM t_house_pic_msg hpm
+	WHERE hpm.is_del=0
+	<if test="houseBaseFid != null and houseBaseFid != ''">
+		AND hpm.house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+	</if>
+	<if test="houseRoomFid != null and houseRoomFid != ''">
+		AND (hpm.room_fid = #{houseRoomFid,jdbcType=VARCHAR} or hpm.room_fid = '' or hpm.room_fid is null)
+	</if>
+	<if test="picType != null">
+		AND hpm.pic_type=#{picType,jdbcType=INTEGER}
+	</if>
+  </select>
+  
+  <!--查询房源详情图片集合 -->
+  <select id="findHouseDetailPicMsgList" parameterType="map" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM t_house_pic_msg hpm 
+	WHERE hpm.is_del=0 AND hpm.audit_status=1
+	<if test="houseBaseFid != null and houseBaseFid != ''">
+		AND hpm.house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+	</if>
+	<if test="houseRoomFid != null and houseRoomFid != ''">
+		AND hpm.room_fid=#{houseRoomFid,jdbcType=VARCHAR}
+	</if>
+	<if test="picType != null">
+		AND hpm.pic_type=#{picType,jdbcType=INTEGER}
+	</if>
+    ORDER BY hpm.pic_type ASC
+  </select>
+  
+  <!--查询房源默认图片 -->
+  <select id="findHouseDefaultPic" parameterType="string" resultMap="BaseResultMap">
+	SELECT <include refid="Base_Column_List" /> FROM t_house_base_ext hbe
+	LEFT JOIN t_house_pic_msg hpm
+	ON hbe.default_pic_fid=hpm.fid
+	WHERE hpm.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+	AND hpm.is_del=0
+	AND hpm.audit_status=1
+	LIMIT 1
+  </select>
+  
+  <!-- 查询房源旧默认图片 --> 
+  <select id="findOldHouseDefaultPic" parameterType="string" resultMap="BaseResultMap">
+	SELECT <include refid="Base_Column_List" /> FROM t_house_base_ext hbe
+	LEFT JOIN t_house_pic_msg hpm
+	ON hbe.old_default_pic_fid=hpm.fid
+	WHERE hpm.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+	LIMIT 1
+  </select>
+  
+    <!--查询房源默认图片 -->
+  <select id="findLandlordHouseDefaultPic" parameterType="string" resultMap="BaseResultMap">
+	SELECT <include refid="Base_Column_List" /> FROM t_house_base_ext hbe
+	LEFT JOIN t_house_pic_msg hpm
+	ON hbe.default_pic_fid=hpm.fid
+	WHERE hpm.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+	AND hpm.is_del=0
+	LIMIT 1
+  </select>
+  
+  <!-- 设置房源默认 整租 图片 -->
+  <update id="updateDefaultPic" parameterType="map" >
+  	update t_house_pic_msg hpm set hpm.is_default = #{isDefault,jdbcType=INTEGER}
+  	where 1=1
+  	<if test="houseBaseFid != null and houseBaseFid != ''">
+		AND hpm.house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+	</if>
+	<if test="houseRoomFid != null and houseRoomFid != ''">
+		AND hpm.room_fid=#{houseRoomFid,jdbcType=VARCHAR}
+	</if>
+	<if test="picType != null">
+		AND hpm.pic_type=#{picType,jdbcType=INTEGER}
+	</if>
+	<if test="housePicFid != null and housePicFid != ''">
+		AND hpm.fid=#{housePicFid,jdbcType=VARCHAR}
+	</if>
+  </update>
+  
+  <!-- 更新房源图片第一条设置为默认图片 -->
+   <update id="updateDefaultPicLimit"  parameterType="map" >
+   		UPDATE t_house_pic_msg SET is_default=1 WHERE 
+   		house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+   		AND pic_type=#{picType,jdbcType=INTEGER}
+   		<if test="houseRoomFid != null and houseRoomFid != ''">
+			AND room_fid=#{houseRoomFid,jdbcType=VARCHAR}
+		</if>
+		AND is_del = 0
+   		LIMIT 1;
+   </update>
+   
+   <!-- fid查询默认图片 -->
+   <select id="getDefaultPicByFid"   parameterType="string"  resultType="int">
+   		SELECT COUNT(id) FROM t_house_pic_msg WHERE fid=#{fid,jdbcType=VARCHAR}
+   		AND is_default = 1
+   		AND is_del = 0
+   </select>
+   
+  <!-- 房间逻辑id查询房间详情以及公共图片 -->
+  <select id="findHouseDetailPicListByRoomFid" resultMap="BaseResultMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_pic_msg hpm
+    WHERE hpm.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR} 
+    AND (hpm.room_fid = #{roomFid,jdbcType=VARCHAR} or hpm.room_fid = '' or hpm.room_fid is null)
+	AND hpm.is_del = 0
+	AND hpm.audit_status=1
+    ORDER BY hpm.pic_type ASC
+  </select>
+  
+  <!-- 查询房源下未审核图片-->
+   <select id="findNoAuditHousePicList" resultMap="BaseResultMap"  parameterType="map">
+   	 	SELECT 
+    	<include refid="Base_Column_List" />
+	    FROM t_house_pic_msg hpm
+	    WHERE hpm.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR} 
+	    <if test="roomFid!=null  and roomFid!= ''">
+	    	AND (hpm.room_fid = #{roomFid,jdbcType=VARCHAR} or hpm.room_fid = '' or hpm.room_fid is null)
+	    </if>
+		AND hpm.is_del = 0
+		AND (hpm.audit_status=0 OR hpm.audit_status=3)
+   </select>
+   
+   <!-- 查询图片对象，不判断是否删除 -->
+   <select id="findHousePicByFid"  resultMap="BaseResultMap" parameterType="string">
+   	  	select <include refid="Base_Column_List"/>
+  		from t_house_pic_msg hpm
+  		where hpm.fid = #{fid,jdbcType=VARCHAR}
+   </select>
+   
+   <!-- 根据房源房间fid和图片类型 查询图片集合 -->
+   <select id="findHousePicByTypeAndFid" resultMap="BaseResultMap" parameterType="map">
+   		SELECT <include refid="Base_Column_List" /> 
+	  	FROM t_house_pic_msg hpm 
+		WHERE 1=1
+		<if test="houseFid != null and houseFid != ''">
+			AND hpm.house_base_fid=#{houseFid,jdbcType=VARCHAR}
+		</if>
+		<if test="roomFid != null and roomFid != ''">
+			AND hpm.room_fid=#{roomFid,jdbcType=VARCHAR}
+		</if>
+		<if test="picTypes != null and picTypes.size > 0">
+            AND hpm.pic_type in
+           <foreach collection="picTypes"  item="type" open="(" separator="," close=")">
+               #{type,jdbcType=INTEGER}
+           </foreach>
+		</if>
+		AND hpm.is_del=0
+		ORDER BY pic_sort ASC
+   </select>
+   
+    <!-- 当前房源 无默认照片 查询卧室、客厅、室外三个区域中第一张上传的照片 -->
+   <select id="findHousePicFirstByHouseFid" resultMap="BaseResultMap"  parameterType="map">
+		select <include refid="Base_Column_List_Common" />  from (
+			select <include refid="Base_Column_List_Common" />  from `t_house_pic_msg` t where  
+			t.`house_base_fid` =#{houseFid,jdbcType=VARCHAR}
+			and t.`is_del` = 0 
+			<if test="rentWay == 0">
+			and t.`pic_type` in(0,1,4)
+			</if>
+		    <if test="rentWay == 1">
+			and t.`pic_type` in(1,4)
+			union 
+			select <include refid="Base_Column_List_Common" />  from `t_house_pic_msg` t where  
+			
+			t.`room_fid` =#{roomFid,jdbcType=VARCHAR}
+			and t.`pic_type` = 0
+			and t.`is_del` = 0 
+			</if>
+			
+			) as temp  order by temp.create_date  limit 1;
+   </select>
+
+    <!-- 整租时查询房源默认图片相关信息 -->
+   <select id="findDefaultPicListInfoByHouseFid" resultMap="HouseDefaultPicInfoMap"  parameterType="string">
+        SELECT
+        thbm.`fid` AS houseFid,
+        thbm.`house_name` AS houseOrRoomName,
+        thbe.`default_pic_fid` AS defaultPicFid,
+        thpm.`pic_base_url` AS picBaseUrl,
+        thpm.`pic_suffix` AS picSuffix,
+        thpm.`pic_type` AS picType
+
+        FROM `t_house_base_msg` thbm
+        LEFT JOIN `t_house_base_ext` thbe
+        ON thbm.`fid` = thbe.`house_base_fid`
+        LEFT JOIN `t_house_pic_msg` thpm
+        ON thbe.`default_pic_fid` = thpm.`fid`
+        WHERE thbm.`fid` = #{houseFid,jdbcType=VARCHAR}
+        LIMIT 1
+   </select>
+
+    <!-- 分租时查询房源默认图片相关信息 -->
+   <select id="findDefaultPicListInfoByRoomFid" resultMap="HouseDefaultPicInfoMap"  parameterType="string">
+        SELECT thrm.house_base_fid AS houseFid,
+        thrm.fid AS roomFid,
+        thrm.`room_name` AS houseOrRoomName,
+        thrm.`default_pic_fid` AS defaultPicFid,
+        thpm.`pic_base_url` AS picBaseUrl,
+        thpm.`pic_suffix` AS picSuffix,
+        thpm.`pic_type` AS picType
+
+        FROM `t_house_room_msg` thrm
+        LEFT JOIN `t_house_pic_msg` thpm
+        ON thrm.`default_pic_fid` = thpm.`fid`
+        WHERE thrm.`fid` = #{roomFid,jdbcType=VARCHAR}
+        LIMIT 1
+   </select>
+
+    <!-- 根据houseFid 查询对应的roomFid -->
+   <select id="findRoomfidByHouseFid" resultType="string"  parameterType="string">
+        SELECT fid FROM t_house_room_msg
+        WHERE house_base_fid = #{houseFid,jdbcType=VARCHAR}
+        AND is_del = 0
+   </select>
+   
+     
+  <!--根据状态查询图片列表-->
+   <select id="findPicByAuditStatus" resultMap="BaseResultMap"  parameterType="map">
+   	 	SELECT 
+    	<include refid="Base_Column_List" />
+	    FROM t_house_pic_msg hpm
+	    WHERE hpm.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR} 
+	    <if test="roomFid!=null  and roomFid!= ''">
+	    	AND (hpm.room_fid = #{roomFid,jdbcType=VARCHAR} or hpm.room_fid = '' or hpm.room_fid is null)
+	    </if>
+		AND hpm.is_del = 0
+		AND hpm.audit_status=#{auditStatus,jdbcType=INTEGER}
+   </select>
+   
+   <!-- 更新新增图片状态为未审核 -->
+   <update id="updatePicAuditStatusToNo"  parameterType="map">
+    	UPDATE `t_house_pic_msg` SET audit_status=0 WHERE audit_status=3
+    	AND house_base_fid = #{houseBaseFid,jdbcType=VARCHAR} 
+        <if test="roomFid!=null  and roomFid!= ''">
+	    	AND (room_fid = #{roomFid,jdbcType=VARCHAR} or room_fid = '' or room_fid is null)
+	    </if>
+   </update>
+   </mapper>

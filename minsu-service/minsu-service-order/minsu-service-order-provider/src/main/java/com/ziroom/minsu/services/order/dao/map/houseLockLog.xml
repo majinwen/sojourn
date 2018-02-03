@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.houseLockLogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.HouseLockLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="bed_fid" property="bedFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+    <result column="start_lock_time" property="startLockTime" jdbcType="TIMESTAMP" />
+    <result column="end_lock_time" property="endLockTime" jdbcType="TIMESTAMP" />
+    <result column="lock_type" property="lockType" jdbcType="INTEGER" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, house_fid, room_fid, bed_fid, rent_way, start_lock_time, end_lock_time, lock_type, 
+    create_fid, create_name, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_base_house_lock_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_base_house_lock_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.order.HouseLockLogEntity" >
+    insert into t_base_house_lock_log (id, house_fid, room_fid, 
+      bed_fid, rent_way, start_lock_time, 
+      end_lock_time, lock_type, create_fid, 
+      create_name, create_time)
+    values (#{id,jdbcType=INTEGER}, #{houseFid,jdbcType=VARCHAR}, #{roomFid,jdbcType=VARCHAR}, 
+      #{bedFid,jdbcType=VARCHAR}, #{rentWay,jdbcType=INTEGER}, #{startLockTime,jdbcType=TIMESTAMP}, 
+      #{endLockTime,jdbcType=TIMESTAMP}, #{lockType,jdbcType=INTEGER}, #{createFid,jdbcType=VARCHAR}, 
+      #{createName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.order.HouseLockLogEntity" >
+    insert into t_base_house_lock_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="houseFid != null" >
+        house_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="bedFid != null" >
+        bed_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="startLockTime != null" >
+        start_lock_time,
+      </if>
+      <if test="endLockTime != null" >
+        end_lock_time,
+      </if>
+      <if test="lockType != null" >
+        lock_type,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createName != null" >
+        create_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="houseFid != null" >
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null" >
+        #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="startLockTime != null" >
+        #{startLockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endLockTime != null" >
+        #{endLockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lockType != null" >
+        #{lockType,jdbcType=INTEGER},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createName != null" >
+        #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.order.HouseLockLogEntity" >
+    update t_base_house_lock_log
+    <set >
+      <if test="houseFid != null" >
+        house_fid = #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null" >
+        bed_fid = #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        rent_way = #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="startLockTime != null" >
+        start_lock_time = #{startLockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endLockTime != null" >
+        end_lock_time = #{endLockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lockType != null" >
+        lock_type = #{lockType,jdbcType=INTEGER},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createName != null" >
+        create_name = #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.order.HouseLockLogEntity" >
+    update t_base_house_lock_log
+    set house_fid = #{houseFid,jdbcType=VARCHAR},
+      room_fid = #{roomFid,jdbcType=VARCHAR},
+      bed_fid = #{bedFid,jdbcType=VARCHAR},
+      rent_way = #{rentWay,jdbcType=INTEGER},
+      start_lock_time = #{startLockTime,jdbcType=TIMESTAMP},
+      end_lock_time = #{endLockTime,jdbcType=TIMESTAMP},
+      lock_type = #{lockType,jdbcType=INTEGER},
+      create_fid = #{createFid,jdbcType=VARCHAR},
+      create_name = #{createName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

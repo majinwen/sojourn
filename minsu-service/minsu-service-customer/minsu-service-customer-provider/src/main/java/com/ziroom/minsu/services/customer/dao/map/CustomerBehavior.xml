@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="customer.customerBehaviorDao">
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.customer.CustomerBehaviorEntity" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="fid" property="fid" jdbcType="VARCHAR" />
+        <result column="prove_fid" property="proveFid" jdbcType="VARCHAR" />
+        <result column="prove_param" property="proveParam" jdbcType="VARCHAR" />
+        <result column="attribute" property="attribute" jdbcType="INTEGER" />
+        <result column="role" property="role" jdbcType="INTEGER" />
+        <result column="uid" property="uid" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+        <result column="score" property="score" jdbcType="DOUBLE" />
+        <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+        <result column="create_type" property="createType" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+        <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!-- 用户行为VO -->
+    <resultMap id="CustomerBehaviorVoMap" type="com.ziroom.minsu.services.customer.entity.CustomerBehaviorVo" extends="BaseResultMap">
+        <result column="operated" property="operated" jdbcType="INTEGER" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, fid, prove_fid, prove_param, attribute, role, uid, type, score, create_fid, create_type,
+        remark, create_date, last_modify_date, is_del
+    </sql>
+
+    <insert id="insertCustomerBehavior" parameterType="com.ziroom.minsu.entity.customer.CustomerBehaviorEntity" >
+        insert into t_customer_behavior
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="fid != null" >
+                fid,
+            </if>
+            <if test="proveFid != null" >
+                prove_fid,
+            </if>
+            <if test="proveParam != null" >
+                prove_param,
+            </if>
+            <if test="attribute != null" >
+                attribute,
+            </if>
+            <if test="role != null" >
+                role,
+            </if>
+            <if test="uid != null" >
+                uid,
+            </if>
+            <if test="type != null" >
+                type,
+            </if>
+            <if test="score != null" >
+                score,
+            </if>
+            <if test="createFid != null" >
+                create_fid,
+            </if>
+            <if test="createType != null" >
+                create_type,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="createDate != null" >
+                create_date,
+            </if>
+            <if test="lastModifyDate != null" >
+                last_modify_date,
+            </if>
+            <if test="isDel != null" >
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="fid != null" >
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="proveFid != null" >
+                #{proveFid,jdbcType=VARCHAR},
+            </if>
+            <if test="proveParam != null" >
+                #{proveParam,jdbcType=VARCHAR},
+            </if>
+            <if test="attribute != null" >
+                #{attribute,jdbcType=INTEGER},
+            </if>
+            <if test="role != null" >
+                #{role,jdbcType=INTEGER},
+            </if>
+            <if test="uid != null" >
+                #{uid,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="score != null" >
+                #{score,jdbcType=DOUBLE},
+            </if>
+            <if test="createFid != null" >
+                #{createFid,jdbcType=VARCHAR},
+            </if>
+            <if test="createType != null" >
+                #{createType,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null" >
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null" >
+                #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null" >
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 查询昨天生成的行为，用来定时任务检漏 -->
+    <select id="queryCustomerBehaviorProveFidsForJob" resultType="String" >
+        SELECT
+        prove_fid
+        FROM t_customer_behavior
+        WHERE 1=1
+        <if test="type != null" >
+            AND type = #{type,jdbcType=INTEGER}
+        </if>
+        <if test="startTime != null" >
+            AND create_date &gt;= #{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime != null" >
+            AND create_date &lt; #{endTime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+    <!-- 根据uid查询用户行为 -->
+    <select id="getCustomerBehaviorList" resultMap="CustomerBehaviorVoMap" parameterType="com.ziroom.minsu.services.customer.dto.CustomerBehaviorRequest">
+        SELECT
+        tcb.*,
+        CASE
+        WHEN tol.id IS NULL THEN
+        0
+        ELSE
+        1
+        END AS operated
+        FROM t_customer_behavior tcb
+        LEFT JOIN t_customer_behavior_operation_log tol ON tol.behavior_fid = tcb.fid
+		WHERE tcb.uid = #{uid,jdbcType=VARCHAR}
+		AND tcb.is_del=0
+        ORDER BY tcb.create_date DESC
+    </select>
+
+    <!-- 查询单个行为 -->
+    <select id="getOneCustomerBehavior" resultMap="CustomerBehaviorVoMap" parameterType="com.ziroom.minsu.entity.customer.CustomerBehaviorEntity">
+        SELECT
+        tcb.*,
+        CASE
+        WHEN tol.id IS NULL THEN
+        0
+        ELSE
+        1
+        END AS operated
+        FROM t_customer_behavior tcb
+        LEFT JOIN t_customer_behavior_operation_log tol ON tol.behavior_fid = tcb.fid
+        WHERE tcb.fid = #{fid,jdbcType=VARCHAR}
+        LIMIT 1
+    </select>
+
+    <!-- 更新用户行为 -->
+    <update id="updateCustomerBehaviorAttr" parameterType="com.ziroom.minsu.entity.customer.CustomerBehaviorEntity" >
+        UPDATE t_customer_behavior
+        SET
+        attribute = #{attribute,jdbcType=INTEGER},
+        score = #{score,jdbcType=DOUBLE}
+        WHERE fid = #{fid,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 保存日志 -->
+    <insert id="insertCustomerBehaviorLog" parameterType="com.ziroom.minsu.entity.customer.CustomerBehaviorOperationLogEntity" >
+        insert into t_customer_behavior_operation_log
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="fid != null" >
+                fid,
+            </if>
+            <if test="behaviorFid != null" >
+                behavior_fid,
+            </if>
+            <if test="fromAttribute != null" >
+                from_attribute,
+            </if>
+            <if test="toAttribute != null" >
+                to_attribute,
+            </if>
+            <if test="empCode != null" >
+                emp_code,
+            </if>
+            <if test="empName != null" >
+                emp_name,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="createDate != null" >
+                create_date,
+            </if>
+            <if test="isDel != null" >
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="fid != null" >
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="behaviorFid != null" >
+                #{behaviorFid,jdbcType=VARCHAR},
+            </if>
+            <if test="fromAttribute != null" >
+                #{fromAttribute,jdbcType=INTEGER},
+            </if>
+            <if test="toAttribute != null" >
+                #{toAttribute,jdbcType=INTEGER},
+            </if>
+            <if test="empCode != null" >
+                #{empCode,jdbcType=VARCHAR},
+            </if>
+            <if test="empName != null" >
+                #{empName,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null" >
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null" >
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

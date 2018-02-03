@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="photographer.photographerBookLogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.photographer.PhotographerBookLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="book_order_sn" property="bookOrderSn" jdbcType="VARCHAR" />
+    <result column="from_statu" property="fromStatu" jdbcType="TINYINT" />
+    <result column="to_statu" property="toStatu" jdbcType="TINYINT" />
+    <result column="creater_fid" property="createrFid" jdbcType="VARCHAR" />
+    <result column="creater_type" property="createrType" jdbcType="TINYINT" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, book_order_sn, from_statu, to_statu, creater_fid, creater_type, is_del, 
+    create_date, last_modify_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_photographer_book_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 查找日志记录-->
+  <select id="findLogs" resultMap="BaseResultMap" parameterType="string" >
+    select
+    <include refid="Base_Column_List" />
+    from t_photographer_book_log
+    where book_order_sn = #{bookOrderSn,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_photographer_book_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="savePhotographerBookLog" parameterType="com.ziroom.minsu.entity.photographer.PhotographerBookLogEntity" >
+    insert into t_photographer_book_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="bookOrderSn != null" >
+        book_order_sn,
+      </if>
+      <if test="fromStatu != null" >
+        from_statu,
+      </if>
+      <if test="toStatu != null" >
+        to_statu,
+      </if>
+      <if test="createrFid != null" >
+        creater_fid,
+      </if>
+      <if test="createrType != null" >
+        creater_type,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="bookOrderSn != null" >
+        #{bookOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="fromStatu != null" >
+        #{fromStatu,jdbcType=TINYINT},
+      </if>
+      <if test="toStatu != null" >
+        #{toStatu,jdbcType=TINYINT},
+      </if>
+      <if test="createrFid != null" >
+        #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        #{createrType,jdbcType=TINYINT},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.photographer.PhotographerBookLogEntity" >
+    update t_photographer_book_log
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="bookOrderSn != null" >
+        book_order_sn = #{bookOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="fromStatu != null" >
+        from_statu = #{fromStatu,jdbcType=TINYINT},
+      </if>
+      <if test="toStatu != null" >
+        to_statu = #{toStatu,jdbcType=TINYINT},
+      </if>
+      <if test="createrFid != null" >
+        creater_fid = #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        creater_type = #{createrType,jdbcType=TINYINT},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+ 
+</mapper>

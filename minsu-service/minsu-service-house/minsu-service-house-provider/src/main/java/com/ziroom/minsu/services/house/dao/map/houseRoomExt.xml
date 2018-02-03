@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseRoomExtDao" >
+   <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseRoomExtEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="INTEGER" />
+    <result column="check_out_rules_code" property="checkOutRulesCode" jdbcType="VARCHAR" />
+    <result column="deposit_rules_code" property="depositRulesCode" jdbcType="VARCHAR" />
+    <result column="room_rules" property="roomRules" jdbcType="VARCHAR" />
+    <result column="min_day" property="minDay" jdbcType="INTEGER" />
+    <result column="check_in_time" property="checkInTime" jdbcType="VARCHAR" />
+    <result column="check_out_time" property="checkOutTime" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, room_fid, order_type, check_out_rules_code, deposit_rules_code, room_rules, 
+    min_day, check_in_time, check_out_time, create_date, last_modify_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_room_ext
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_house_room_ext
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+ <insert id="insert" parameterType="com.ziroom.minsu.entity.house.HouseRoomExtEntity" >
+    insert into t_house_room_ext (id, fid, room_fid, 
+      order_type, check_out_rules_code, deposit_rules_code, 
+      room_rules, min_day, check_in_time, 
+      check_out_time, create_date, last_modify_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{roomFid,jdbcType=VARCHAR}, 
+      #{orderType,jdbcType=INTEGER}, #{checkOutRulesCode,jdbcType=VARCHAR}, #{depositRulesCode,jdbcType=VARCHAR}, 
+      #{roomRules,jdbcType=VARCHAR}, #{minDay,jdbcType=INTEGER}, #{checkInTime,jdbcType=VARCHAR}, 
+      #{checkOutTime,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{lastModifyDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.house.HouseRoomExtEntity" >
+    insert into t_house_room_ext
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="checkOutRulesCode != null" >
+        check_out_rules_code,
+      </if>
+      <if test="depositRulesCode != null" >
+        deposit_rules_code,
+      </if>
+      <if test="roomRules != null" >
+        room_rules,
+      </if>
+      <if test="minDay != null" >
+        min_day,
+      </if>
+      <if test="checkInTime != null" >
+        check_in_time,
+      </if>
+      <if test="checkOutTime != null" >
+        check_out_time,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="checkOutRulesCode != null" >
+        #{checkOutRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="depositRulesCode != null" >
+        #{depositRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roomRules != null" >
+        #{roomRules,jdbcType=VARCHAR},
+      </if>
+      <if test="minDay != null" >
+        #{minDay,jdbcType=INTEGER},
+      </if>
+      <if test="checkInTime != null" >
+        #{checkInTime,jdbcType=VARCHAR},
+      </if>
+      <if test="checkOutTime != null" >
+        #{checkOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.house.HouseRoomExtEntity" >
+    update t_house_room_ext
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="checkOutRulesCode != null" >
+        check_out_rules_code = #{checkOutRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="depositRulesCode != null" >
+        deposit_rules_code = #{depositRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roomRules != null" >
+        room_rules = #{roomRules,jdbcType=VARCHAR},
+      </if>
+      <if test="minDay != null" >
+        min_day = #{minDay,jdbcType=INTEGER},
+      </if>
+      <if test="checkInTime != null" >
+        check_in_time = #{checkInTime,jdbcType=VARCHAR},
+      </if>
+      <if test="checkOutTime != null" >
+        check_out_time = #{checkOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.house.HouseRoomExtEntity" >
+    update t_house_room_ext
+    set fid = #{fid,jdbcType=VARCHAR},
+      room_fid = #{roomFid,jdbcType=VARCHAR},
+      order_type = #{orderType,jdbcType=INTEGER},
+      check_out_rules_code = #{checkOutRulesCode,jdbcType=VARCHAR},
+      deposit_rules_code = #{depositRulesCode,jdbcType=VARCHAR},
+      room_rules = #{roomRules,jdbcType=VARCHAR},
+      min_day = #{minDay,jdbcType=INTEGER},
+      check_in_time = #{checkInTime,jdbcType=VARCHAR},
+      check_out_time = #{checkOutTime,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据roomfid获取房间扩展实体 -->
+  <select id="getByRoomfid" parameterType="string" resultMap="BaseResultMap"> 
+     SELECT 
+     <include refid="Base_Column_List"/>
+     FROM `minsu_house_db`.`t_house_room_ext` 
+     WHERE room_fid = #{roomFid,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据roomfid更新房间扩展实体 -->
+  <update id="updateByRoomfid" parameterType="com.ziroom.minsu.entity.house.HouseRoomExtEntity" >
+    update t_house_room_ext
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="checkOutRulesCode != null" >
+        check_out_rules_code = #{checkOutRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="depositRulesCode != null" >
+        deposit_rules_code = #{depositRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roomRules != null" >
+        room_rules = #{roomRules,jdbcType=VARCHAR},
+      </if>
+      <if test="minDay != null" >
+        min_day = #{minDay,jdbcType=INTEGER},
+      </if>
+      <if test="checkInTime != null" >
+        check_in_time = #{checkInTime,jdbcType=VARCHAR},
+      </if>
+      <if test="checkOutTime != null" >
+        check_out_time = #{checkOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where room_fid = #{roomFid,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateCheckInMsgByHouseFid" parameterType="map" >
+    UPDATE
+    t_house_room_ext t
+    LEFT JOIN t_house_room_msg t1
+    ON t.`room_fid` = t1.`fid` SET t.`min_day` = #{minDay,jdbcType=INTEGER},
+    t.`check_in_time` = #{checkInTime,jdbcType=VARCHAR},
+    t.`check_out_time` = #{checkOutTime,jdbcType=VARCHAR}
+    WHERE t1.`house_base_fid` = #{houseFid,jdbcType=VARCHAR}
+  </update>
+</mapper>

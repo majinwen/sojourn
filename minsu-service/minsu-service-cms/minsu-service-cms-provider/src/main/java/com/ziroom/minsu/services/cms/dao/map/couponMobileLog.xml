@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.couponMobileLogDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.CouponMobileLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="coupon_sn" property="couponSn" jdbcType="VARCHAR" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="act_sn" property="actSn" jdbcType="VARCHAR" />
+    <result column="group_sn" property="groupSn" jdbcType="VARCHAR" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="customer_mobile" property="customerMobile" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="source_type" property="sourceType" jdbcType="INTEGER" />
+  </resultMap>
+
+
+
+  <sql id="Base_Column_List" >
+    id, coupon_sn,  customer_mobile,create_time, act_sn,group_sn,source_type,fid,order_sn
+  </sql>
+
+  <sql id="Coupon_Column_List" >
+    a.id, a.coupon_sn, a.customer_mobile, a.create_time, a.act_sn, a.group_sn, a.source_type, a.fid,a.order_sn
+  </sql>
+
+
+  <select id="countMobileAc" resultType="java.lang.Long" parameterType="map">
+    SELECT count(1) FROM t_coupon_mobile_log
+    WHERE customer_mobile = #{customerMobile,jdbcType=VARCHAR}
+    AND act_sn = #{actSn,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="getNoExchangeCountByGroupSn" resultType="java.lang.Long" parameterType="map">
+    SELECT count(1) FROM t_coupon_mobile_log
+    WHERE  group_sn = #{groupSn,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <select id="countMobileGroup" resultType="java.lang.Long" parameterType="map">
+    SELECT count(1) FROM t_coupon_mobile_log
+    WHERE customer_mobile = #{customerMobile,jdbcType=VARCHAR}
+    AND group_sn = #{groupSn,jdbcType=VARCHAR}
+  </select>
+
+  <select id="countMobileGroupSns" resultType="java.lang.Long" parameterType="map">
+    SELECT count(1) FROM t_coupon_mobile_log
+    WHERE customer_mobile = #{customerMobile,jdbcType=VARCHAR}
+    AND group_sn IN
+    <foreach collection="groupSns"  item="groupSn" open="(" separator="," close=")">
+      #{groupSn,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+
+  <!--查找组内活动已绑定的活动号-->
+  <select id="listActSnByGroup" resultType="string" parameterType="map">
+    SELECT DISTINCT
+    act_sn
+    FROM
+    t_coupon_mobile_log
+    WHERE group_sn = #{groupSn,jdbcType=VARCHAR}
+    AND customer_mobile = #{customerMobile,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getCouponMobileLogByFid" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT <include refid="Base_Column_List" />
+    FROM t_coupon_mobile_log
+    WHERE fid = #{fid,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <select id="getNotBindCouponMobile" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT
+    <include refid="Coupon_Column_List" />
+    FROM t_coupon_mobile_log a
+    LEFT JOIN t_user_coupon b
+    ON a.customer_mobile = b.customer_mobile AND a.coupon_sn = b.coupon_sn
+    WHERE a.customer_mobile = #{customerMobile,jdbcType=VARCHAR} AND b.id IS NULL
+  </select>
+
+  
+  <insert id="saveMobileCoupon" parameterType="com.ziroom.minsu.entity.cms.CouponMobileLogEntity" >
+    insert into t_coupon_mobile_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="couponSn != null" >
+        coupon_sn,
+      </if>
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="actSn != null" >
+        act_sn,
+      </if>
+
+      <if test="groupSn != null" >
+        group_sn,
+      </if>
+
+      <if test="customerMobile != null" >
+        customer_mobile,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="sourceType != null" >
+        source_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="couponSn != null" >
+        #{couponSn,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="actSn != null" >
+        #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="groupSn != null" >
+        #{groupSn,jdbcType=VARCHAR},
+      </if>
+
+      <if test="customerMobile != null" >
+        #{customerMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sourceType != null" >
+        #{sourceType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+</mapper>

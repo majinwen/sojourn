@@ -1,0 +1,1260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderDao" >
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.services.order.entity.OrderInfoVo" >
+        <!-- 基础map -->
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="fid" jdbcType="VARCHAR" property="fid" />
+        <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+        <result column="nation_code" jdbcType="VARCHAR" property="nationCode" />
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+        <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="check_type" jdbcType="TINYINT" property="checkType" />
+        <result column="order_source" jdbcType="TINYINT" property="orderSource" />
+        <result column="order_status" jdbcType="TINYINT" property="orderStatus" />
+        <result column="accounts_status" jdbcType="TINYINT" property="accountsStatus" />
+        <result column="pay_status" jdbcType="TINYINT" property="payStatus" />
+        <result column="eva_status" jdbcType="TINYINT" property="evaStatus" />
+        <result column="landlord_uid" jdbcType="VARCHAR" property="landlordUid" />
+        <result column="landlord_tel" jdbcType="VARCHAR" property="landlordTel" />
+        <result column="landlord_tel_code" jdbcType="VARCHAR" property="landlordTelCode" />
+        <result column="landlord_name" jdbcType="VARCHAR" property="landlordName" />
+        <result column="user_uid" jdbcType="VARCHAR" property="userUid" />
+        <result column="user_tel" jdbcType="VARCHAR" property="userTel" />
+        <result column="user_tel_code" jdbcType="VARCHAR" property="userTelCode" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="people_num" jdbcType="INTEGER" property="peopleNum" />
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+        <result column="real_end_time" jdbcType="TIMESTAMP" property="realEndTime" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+        <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
+        <result column="is_del" jdbcType="TINYINT" property="isDel" />
+        <result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+        <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+        <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+        <result column="bed_fid" property="bedFid" jdbcType="VARCHAR" />
+        <result column="house_name" property="houseName" jdbcType="VARCHAR" />
+        <result column="room_name" property="roomName" jdbcType="VARCHAR" />
+        <result column="bed_sn" property="bedSn" jdbcType="VARCHAR" />
+        <result column="house_addr" property="houseAddr" jdbcType="VARCHAR" />
+        <result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
+        <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+        <result column="order_type" property="orderType" jdbcType="TINYINT" />
+        <result column="price" property="price" jdbcType="INTEGER" />
+        <result column="discount_rules_code" property="discountRulesCode" jdbcType="VARCHAR" />
+        <result column="deposit_rules_code" property="depositRulesCode" jdbcType="VARCHAR" />
+        <result column="check_out_rules_code" property="checkOutRulesCode" jdbcType="VARCHAR" />
+        <result column="check_in_time" property="checkInTime" jdbcType="VARCHAR" />
+        <result column="check_out_time" property="checkOutTime" jdbcType="VARCHAR" />
+        <result column="is_lock" property="isLock" jdbcType="INTEGER" />
+        <result column="sum_money" property="sumMoney" jdbcType="INTEGER" />
+        <result column="coupon_money" property="couponMoney" jdbcType="INTEGER" />
+        <result column="act_money" property="actMoney" jdbcType="INTEGER" />
+        <result column="act_money_all" property="actMoneyAll" jdbcType="INTEGER" />
+        <result column="deposit_money" property="depositMoney" jdbcType="INTEGER" />
+        <result column="coupon_money_all" property="couponMoneyAll" jdbcType="INTEGER" />
+        <result column="deposit_money_all" property="depositMoneyAll" jdbcType="INTEGER" />
+        <result column="rental_money_all" property="rentalMoneyAll" jdbcType="INTEGER" />
+        <result column="clean_money" property="cleanMoney" jdbcType="INTEGER" />
+        <result column="insurance_money" property="insuranceMoney" jdbcType="INTEGER" />
+        <result column="insurance_type" property="insuranceType" jdbcType="VARCHAR" />
+        <result column="discount_money" property="discountMoney" jdbcType="INTEGER" />
+        <result column="need_pay" property="needPay" jdbcType="INTEGER" />
+        <result column="real_money" property="realMoney" jdbcType="INTEGER" />
+        <result column="pay_money" property="payMoney" jdbcType="INTEGER" />
+        <result column="other_money" property="otherMoney" jdbcType="INTEGER" />
+        <result column="penalty_money" property="penaltyMoney" jdbcType="INTEGER" />
+        <result column="rental_money" property="rentalMoney" jdbcType="INTEGER" />
+        <result column="refund_money" property="refundMoney" jdbcType="INTEGER" />
+        <result column="lan_comm_money" property="lanCommMoney" jdbcType="INTEGER" />
+        <result column="user_comm_money" property="userCommMoney" jdbcType="INTEGER" />
+        <result column="real_lan_money" property="realLanMoney" jdbcType="INTEGER" />
+        <result column="real_user_money" property="realUserMoney" jdbcType="INTEGER" />
+        <result column="punish_money" property="punishMoney" jdbcType="INTEGER" />
+        <result column="trip_purpose" property="tripPurpose" jdbcType="VARCHAR" />
+      </resultMap>
+
+    <resultMap id="OrderEntityMap" type="com.ziroom.minsu.entity.order.OrderEntity" >
+        <!-- 基础map -->
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="fid" jdbcType="VARCHAR" property="fid" />
+        <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+        <result column="nation_code" jdbcType="VARCHAR" property="nationCode" />
+        <!--  <result column="province_code" jdbcType="VARCHAR" property="provinceCode" /> -->
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+        <!--  <result column="area_code" jdbcType="VARCHAR" property="areaCode" /> -->
+        <result column="order_source" jdbcType="TINYINT" property="orderSource" />
+        <result column="order_status" jdbcType="TINYINT" property="orderStatus" />
+        <result column="accounts_status" jdbcType="TINYINT" property="accountsStatus" />
+        <result column="pay_status" jdbcType="TINYINT" property="payStatus" />
+       <!--  <result column="eva_status" jdbcType="TINYINT" property="evaStatus" /> -->
+        <result column="landlord_uid" jdbcType="VARCHAR" property="landlordUid" />
+        <result column="landlord_tel" jdbcType="VARCHAR" property="landlordTel" />
+        <result column="landlord_name" jdbcType="VARCHAR" property="landlordName" />
+        <result column="user_uid" jdbcType="VARCHAR" property="userUid" />
+        <result column="user_tel" jdbcType="VARCHAR" property="userTel" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="people_num" jdbcType="INTEGER" property="peopleNum" />
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+        <result column="real_end_time" jdbcType="TIMESTAMP" property="realEndTime" />
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
+        <result column="is_del" jdbcType="INTEGER" property="isDel" />
+        <result column="trip_purpose" property="tripPurpose" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <resultMap id="OrderCashbackVoMap" type="com.ziroom.minsu.services.order.entity.OrderCashbackVo" >
+        <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+        <result column="order_status" jdbcType="INTEGER" property="orderStatus" />
+        <result column="create_order_time" jdbcType="TIMESTAMP" property="createOrderTime" />
+        <result column="landlord_uid" jdbcType="VARCHAR" property="landlordUid" />
+        <result column="landlord_name" jdbcType="VARCHAR" property="landlordName" />
+        <result column="landlord_tel" jdbcType="VARCHAR" property="landlordTel" />
+        <result column="user_uid" jdbcType="VARCHAR" property="userUid" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="user_tel" jdbcType="VARCHAR" property="userTel" />
+        <result column="house_name" jdbcType="VARCHAR" property="houseName" />
+        <result column="house_fid" jdbcType="VARCHAR" property="houseFid" />
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+        <result column="pay_money" jdbcType="INTEGER" property="payMoney" />
+    </resultMap>
+
+    <resultMap id="OrderInviteVoMap" type="com.ziroom.minsu.services.order.entity.OrderInviteVo">
+        <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+        <result column="user_uid" jdbcType="VARCHAR" property="userUid" />
+        <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
+    </resultMap>
+
+      <sql id="Base_Colum_List">
+         id,fid,order_sn,nation_code,province_code,city_code,area_code,check_type,order_source,order_status,accounts_status,pay_status,
+         landlord_uid,landlord_tel,eva_status,landlord_name,user_uid,user_tel,user_name,people_num,start_time,end_time,real_end_time,pay_time,create_time,
+         last_modify_date,is_del,trip_purpose
+      </sql>
+      <sql id="Multi_Column_List" >
+        <!--  列表显示基本列  -->
+          t.id,
+          t.fid,
+          t.order_sn,
+          t.nation_code,
+          t.city_code,
+          t.check_type,
+          t.order_source,
+          t.order_status,
+          t.accounts_status,
+          t.pay_status,
+          t.eva_status,
+          t.landlord_uid,
+          t.landlord_tel,
+          t.landlord_tel_code,
+          t.landlord_name,
+          t.user_uid,
+          t.user_tel,
+          t.user_tel_code,
+          t.user_name,
+          t.people_num,
+          t.start_time,
+          t.end_time,
+          t.real_end_time,
+          t.create_time,
+          t.pay_time,
+          t.last_modify_date,
+          t.trip_purpose,
+          hs.house_sn,
+          hs.house_fid,
+          hs.room_fid,
+          hs.bed_fid,
+          hs.house_name,
+          hs.room_name,
+          hs.bed_sn,
+          hs.house_addr,
+          hs.pic_url,
+          hs.rent_way,
+          hs.order_type,
+          hs.price,
+          hs.discount_rules_code,
+          hs.deposit_rules_code,
+          hs.check_out_rules_code,
+          hs.check_in_time,
+          hs.check_out_time,
+          hs.is_lock,
+          m.sum_money,
+          m.coupon_money,
+          m.deposit_money,
+          m.clean_money,
+          m.insurance_money,
+          m.insurance_type,
+          m.discount_money,
+          m.need_pay,
+          m.real_money,
+          m.pay_money,
+          m.other_money,
+          m.penalty_money,
+          m.rental_money,
+          m.refund_money,
+          m.real_lan_money,
+          m.real_user_money,
+          m.lan_comm_money,
+          m.user_comm_money,
+          m.punish_money,
+          m.coupon_money_all,
+          m.rental_money_all,
+          m.deposit_money_all,
+          m.act_money,
+          m.act_money_all
+      </sql>
+
+	
+	<sql id="OrderCashbackVo_Colum">
+		a.order_sn, a.order_status, a.create_time create_order_time, a.landlord_uid, a.landlord_name, a.landlord_tel, a.user_uid, a.user_tel, a.user_name, 
+		b.house_name, b.house_fid, c.create_time pay_time, c.pay_money 
+	</sql>
+
+
+    <!-- 通过订单号 查询 与房源快照相关 -->
+    <select id="getOrderInfoByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT
+          <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE t.order_sn=#{orderSn,jdbcType=VARCHAR}
+        limit 1
+    </select>
+
+    <select id="queryOrderByCondition" resultMap="OrderEntityMap" parameterType="map">
+       SELECT
+          <include refid="Base_Colum_List"  />
+        FROM
+        t_order
+        WHERE 1=1
+        <if test="listOrderSn != null">
+            <if test="listOrderSn.size > 0">
+                  AND order_sn in
+                <foreach collection="listOrderSn"  item="orderSn" open="(" separator="," close=")">
+                    #{orderSn,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </if>
+
+  </select>
+
+    <select id="getOrderInfoListByCondiction" resultMap="BaseResultMap"  parameterType="map">
+        <!--  查询 与房源快照相关 -->
+        select
+
+          <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+       where exists 
+		(
+		        select t1.order_sn,oa1.ac_type FROM
+		        `minsu_order_db`.t_order t1
+		        LEFT JOIN `minsu_order_db`.t_order_house_snapshot hs1
+		        ON t1.order_sn = hs1.order_sn
+		        LEFT JOIN `minsu_order_db`.t_order_money m1  
+		        ON t1.order_sn = m1.order_sn
+		        LEFT JOIN `minsu_order_db`.t_order_activity oa1
+		        ON t1.`order_sn`=oa1.`order_sn`
+		        where t.order_sn= t1.order_sn 
+		        and  t1.is_del = 0
+		        <!-- 支持用户查看  一个用户 的所有订单 -->
+		        <if test="orderActityType!=null">
+		           AND oa1.ac_type = #{orderActityType,jdbcType=INTEGER}
+		        </if>
+		        <if test="userUid != null and userUid != ''">
+		            AND t1.user_uid=#{userUid,jdbcType=VARCHAR}
+		        </if>
+		        <if test="landlordUid != null and landlordUid != ''">
+		            AND t1.landlord_uid=#{landlordUid,jdbcType=VARCHAR}
+		        </if>
+		         <!-- 订单状态 -->
+		        <if test="orderStatus != null and orderStatus != ''">
+		            AND t1.order_status=#{orderStatus,jdbcType=INTEGER}
+		        </if>
+		         <!-- 订单编号    -->
+		        <if test="orderSn != null and orderSn != ''">
+		            AND t1.order_sn=#{orderSn,jdbcType=VARCHAR}
+		        </if>
+		        <if test="payStatus != null and payStatus != ''">
+		            AND t1.pay_status=#{payStatus,jdbcType=INTEGER}
+		        </if>
+		        <if test="accountsStatus != null and accountsStatus != ''">
+		            AND t1.accounts_status=#{accountsStatus,jdbcType=INTEGER}
+		        </if>
+		        <!-- 创建时间 -->
+		        <if test="createTimeStart != null and createTimeStart != ''">
+		            AND t1.create_time &gt;=#{createTimeStart,jdbcType=VARCHAR}
+		        </if>
+		         <if test="createTimeEnd != null and createTimeEnd != ''">
+		            AND t.create_time &lt;=#{createTimeEnd,jdbcType=VARCHAR}
+		        </if>
+		        <!-- 支持房东查看  一个房东+一个房源  的所有订单 -->
+		        <if test="houseFid != null and houseFid != ''">
+		            AND hs1.house_fid=#{houseFid,jdbcType=VARCHAR}
+		        </if>
+		        <!-- 支持房东查看  一个房东+一个房屋 的所有订单 -->
+		        <if test="roomFid != null and roomFid != ''">
+		            AND hs1.room_fid=#{roomFid,jdbcType=VARCHAR}
+		        </if>
+		        <!-- 用户姓名 -->
+		        <if test="userName != null and userName != ''">
+		            AND t.user_name=#{userName,jdbcType=VARCHAR}
+		        </if>
+		        <!-- 预订人手机号 -->
+		        <if test="userTel != null and userTel != ''">
+		            AND t.user_tel=#{userTel,jdbcType=VARCHAR}
+		        </if>
+		        <!-- 房东手机号 -->
+		        <if test="landlordTel != null and landlordTel != ''">
+		            AND t.landlord_tel=#{landlordTel,jdbcType=VARCHAR}
+		        </if>
+		        <!-- 房东姓名 -->
+		        <if test="landlordName != null and landlordName != ''">
+		            AND t.landlord_name=#{landlordName,jdbcType=VARCHAR}
+		        </if>
+		        <!-- 国家code -->
+		        <if test="nationCode != null and nationCode != ''">
+		            AND t.nation_code=#{nationCode,jdbcType=VARCHAR}
+		        </if>
+		        <!-- 省code -->
+		          <if test="provinceCode != null and provinceCode != ''">
+		            AND t.province_code=#{provinceCode,jdbcType=VARCHAR}
+		        </if>
+		        <!-- 城市code -->
+		        <if test="cityCode != null and cityCode != ''">
+		            AND t.city_code=#{cityCode,jdbcType=VARCHAR}
+		        </if>
+		          <!-- 区code -->
+		        <if test="areaCode != null and areaCode != ''">
+		            AND t.area_code=#{areaCode,jdbcType=VARCHAR}
+		        </if>
+		        <!-- 房源别名 -->
+		        <if test="houseName != null and houseName != ''">
+		            AND hs1.house_name=#{houseName,jdbcType=VARCHAR}
+		        </if>
+		        <!-- 房源编号 -->
+		        <if test="houseSn != null and houseSn != ''">
+		            AND hs1.house_sn=#{houseSn,jdbcType=VARCHAR}
+		        </if>
+		        <!--预订类型-->
+		        <if test="orderType != null and orderType != ''">
+		            AND hs1.order_type=#{orderType,jdbcType=VARCHAR}
+		        </if>
+		
+		        <!-- 订单状态 -->
+		        <if test="listOrderStatus != null">
+		            <if test="listOrderStatus.size > 0">
+		                  AND t1.order_status in
+		                <foreach collection="listOrderStatus"  item="_orderStatus" open="(" separator="," close=")">
+		                    #{_orderStatus,jdbcType=INTEGER}
+		                </foreach>
+		            </if>
+		        </if>
+		        
+		        <!-- 评价状态 一个参数 -->
+		        <if test="evaStatus != null">
+		            AND t1.eva_status=#{evaStatus,jdbcType=INTEGER}
+		        </if>
+		        
+		        <!-- 评价状态 集合参数 -->
+		        <if test="listEvaStatus != null and listEvaStatus.size > 0">
+		            AND t1.eva_status in
+		            <foreach collection="listEvaStatus"  item="_evaStatus" open="(" separator="," close=")">
+		                #{_evaStatus,jdbcType=INTEGER}
+		            </foreach>
+		        </if>
+		
+		        <if test="houseFids != null and houseFids.size > 0">
+		            AND hs1.house_fid in
+		            <foreach collection="houseFids" item="houseFid" open="(" separator="," close=")">
+		                #{houseFid,jdbcType=VARCHAR}
+		            </foreach>
+		        </if>
+		        
+		        <!-- 入住时间 -->
+		        <if test="checkInTimeStart != null and checkInTimeStart != ''">
+		            AND t1.start_time &gt;=#{checkInTimeStart,jdbcType=VARCHAR}
+		        </if>
+		        <if test="checkInTimeEnd != null and checkInTimeEnd != ''">
+		            AND t1.start_time &lt;=#{checkInTimeEnd,jdbcType=VARCHAR}
+		        </if>
+
+                <!-- 退房时间 -->
+                <if test="checkOutTimeStart != null and checkOutTimeStart != ''">
+                    AND t1.end_time &gt;=#{checkOutTimeStart,jdbcType=VARCHAR}
+                </if>
+                <if test="checkOutTimeEnd != null and checkOutTimeEnd != ''">
+                    AND t1.end_time &lt;=#{checkOutTimeEnd,jdbcType=VARCHAR}
+                </if>
+
+                <!-- 退房时间 -->
+		        <if test="realEndTimeStart != null and realEndTimeStart != ''">
+		            AND t1.real_end_time &gt;=#{realEndTimeStart,jdbcType=VARCHAR}
+		        </if>
+		        <if test="realEndTimeEnd != null and realEndTimeEnd != ''">
+		            AND t1.real_end_time &lt;=#{realEndTimeEnd,jdbcType=VARCHAR}
+		        </if>
+		        <if test="orderType !=null">
+		            AND hs1.order_type  =#{orderType,jdbcType=INTEGER}
+		        </if>
+		            
+		) 
+		ORDER BY t.create_time DESC
+  </select>
+
+
+    <!-- 房客端 智能锁列表-->
+    <select id="getTenantOrderLockList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m
+        ON t.order_sn = m.order_sn
+        WHERE  t.user_uid = #{userUid,jdbcType=VARCHAR}
+        AND  t.order_status IN(20,40,41)
+        AND t.pay_status = 1
+        AND hs.is_lock = 1
+        AND t.is_del = 0
+        ORDER BY t.last_modify_date DESC
+    </select>
+
+
+    <!-- 房客端 当前有效的智能锁数量-->
+    <select id="countOrderLock" resultType="java.lang.Long"  parameterType="java.lang.String">
+        SELECT
+            COUNT(1)
+        FROM t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m
+        ON t.order_sn = m.order_sn
+        WHERE  t.user_uid = #{userUid,jdbcType=VARCHAR}
+        AND  t.order_status IN(20,40,41)
+        AND t.pay_status = 1
+        AND hs.is_lock = 1
+        AND t.is_del = 0
+        ORDER BY t.last_modify_date DESC
+    </select>
+
+
+
+
+<!-- 房客端 进行中 订单-->
+ <select id="getTenantOrderDoingList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+   SELECT 
+    <include refid="Multi_Column_List" />
+   FROM t_order t
+   LEFT JOIN t_order_house_snapshot hs
+    ON t.order_sn = hs.order_sn
+   LEFT JOIN t_order_money m
+    ON t.order_sn = m.order_sn
+   WHERE t.user_uid = #{userUid,jdbcType=VARCHAR}
+    AND (
+		t.order_status IN(10,20,40,41,50,51,60,61)
+		OR( (t.order_status = 32 or t.order_status = 37 or t.order_status = 38) AND t.accounts_status = 1)
+		OR (
+            (t.order_status = 70 OR t.order_status = 71 OR t.order_status = 72 OR t.order_status = 73 ) AND t.accounts_status = 1
+       	   )
+     )
+     AND t.is_del = 0
+    ORDER BY t.start_time ASC
+  </select>
+
+
+    <!-- 获取当前用户申请中的订单数量 -->
+    <select id="countUserApplyNum" resultType="java.lang.Long"  parameterType="map">
+        <!-- 待入住的订单数量 -->
+        SELECT COUNT(1)  FROM t_order
+        WHERE user_uid = #{userUid,jdbcType=VARCHAR}
+        AND order_status = 10
+    </select>
+
+
+
+    <!-- 获取当前用户待支付的订单数量 -->
+    <select id="countUserWaitPayNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1)  FROM t_order
+        WHERE user_uid = #{userUid,jdbcType=VARCHAR}
+        AND order_status = 20
+        AND pay_status = 0
+    </select>
+
+
+
+    <!-- 获取当前用户待入住的订单数量 -->
+    <select id="countUserWaitCheckInNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1)  FROM t_order
+        WHERE user_uid = #{userUid,jdbcType=VARCHAR}
+        AND order_status = 20
+        AND pay_status = 1
+    </select>
+
+    <!-- 获取当前用户待评价的订单数量 -->
+    <select id="countUserWaitEvaNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1)  FROM t_order
+        WHERE user_uid = #{userUid,jdbcType=VARCHAR}
+        AND eva_status = 100
+    </select>
+    
+    <!-- 待房东评价订单总数-->
+    <select id="countWaitLandlordEvaNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1) FROM t_order o 
+        	WHERE o.eva_status IN ('100','101')
+        		AND o.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+        		AND o.is_del=0 
+    </select>
+    
+    <!-- 房东订单总数-->
+    <select id="countLanOrderNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1) FROM t_order o 
+        	WHERE o.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+        	AND o.is_del=0 
+    </select>
+    
+    <!-- 待房客评价订单总数-->
+    <select id="countWaitTenantEvaNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1) FROM t_order o 
+        	WHERE o.eva_status IN ('100','110')
+        		AND o.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+        		AND o.is_del=0 
+    </select>
+    
+    <!-- 房东可评价订单总数 -->
+    <select id="countCanEvaNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1) FROM t_order o 
+        	WHERE o.eva_status IN ('100','101','110','111')
+        		AND o.landlord_uid = #{landlordUid,jdbcType=VARCHAR} 
+        		AND o.is_del = 0 
+    </select>
+    
+    <!-- 房客已评价订单数-->
+    <select id="countTenantEvaedNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1) FROM t_order o 
+        	WHERE o.eva_status IN ('101','111')
+        		AND o.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+        		AND o.is_del = 0
+    </select>
+    
+    <!-- 房东已评价订单数-->
+    <select id="countLandlordEvaedNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1) FROM t_order o 
+        	WHERE o.eva_status IN ('110','111')
+        		AND o.landlord_uid = #{landlordUid,jdbcType=VARCHAR} 
+        		AND o.is_del = 0 
+    </select>
+    
+     <!-- 房东已接受订单数-->
+    <select id="acceptOrderNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1) FROM t_order o 
+        	WHERE o.order_status IN (20,38,40,41,50,51,60,61,70,71,72,73)  
+        		AND o.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+        		AND o.is_del = 0 
+    </select>
+    
+     <!-- 房东拒绝的订单数-->
+    <select id="countLanRefuseOrderNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1) FROM t_order o 
+        	WHERE o.order_status =31  
+        		AND o.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+        		AND o.is_del = 0 
+    </select>
+    
+    <!-- 系统拒绝的订单数-->
+    <select id="countSysRefuseOrderNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1) FROM t_order o 
+        	WHERE o.order_status IN ('33','35')  
+        		AND o.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+        		AND o.is_del = 0 
+    </select>
+
+
+
+
+
+
+
+
+    <!-- 房客端 申请中 订单-->
+    <select id="getTenantOrderApplyList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.user_uid = #{userUid,jdbcType=VARCHAR}
+        AND t.order_status = 10
+        ORDER BY t.last_modify_date DESC
+    </select>
+
+
+    <!-- 房客端 已经确认待支付 订单-->
+    <select id="getTenantOrderWaitPayList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.user_uid = #{userUid,jdbcType=VARCHAR}
+        AND t.order_status = 20
+        AND t.pay_status = 0
+        ORDER BY t.last_modify_date DESC
+    </select>
+
+
+
+    <!-- 房客端 已支付待入住的最新的一条 订单-->
+    <select id="getOrderLastByUid" resultMap="BaseResultMap"  parameterType="java.lang.String">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.user_uid = #{userUid,jdbcType=VARCHAR}
+        AND t.order_status = 20
+        AND t.pay_status = 1
+        ORDER BY t.start_time ASC
+        limit 1
+    </select>
+
+
+
+    <!-- 房客端 已支付待入住 订单-->
+    <select id="getTenantOrderWaitCheckInList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+        SELECT
+          <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.user_uid = #{userUid,jdbcType=VARCHAR}
+        AND t.order_status = 20
+        AND t.pay_status = 1
+        ORDER BY t.start_time ASC
+    </select>
+
+
+    <!-- 房客端 待评价 订单-->
+    <select id="getTenantOrderWaitEvaList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.user_uid = #{userUid,jdbcType=VARCHAR}
+        AND t.eva_status IN (100,110)
+        AND t.pay_status = 1
+        ORDER BY t.last_modify_date DESC
+    </select>
+
+    <!-- 房客端 待入住+已入住 订单(for自如app，我的旅行)-->
+    <select id="getTenantOrderWaitCheckOutList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.user_uid = #{userUid,jdbcType=VARCHAR}
+        AND t.order_status IN (20, 40, 41)
+        AND t.pay_status = 1
+        ORDER BY t.start_time ASC
+    </select>
+    
+    <!-- 2017-05-18 房客端 待入住+已入住+已经退房且未评价 订单(for自如app，我的旅行)-->
+    <select id="getTenantActiveList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.user_uid = #{userUid,jdbcType=VARCHAR}
+        AND ( t.order_status IN (20,40,41,50,51,60,61,70,71,72) OR t.eva_status IN (100,110))
+        AND DATE_SUB(CURDATE(), INTERVAL 100 DAY) <![CDATA[  <= ]]> t.create_time
+        AND t.pay_status = 1
+        ORDER BY t.start_time ASC
+    </select>
+    
+
+
+  <!-- 房客端 已完成 订单-->
+ <select id="getTenantOrderDoneList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+     SELECT 
+     <include refid="Multi_Column_List" />
+     FROM
+     t_order t
+     LEFT JOIN t_order_house_snapshot hs
+     ON t.order_sn = hs.order_sn
+     LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+     WHERE  t.is_del = 0
+     AND t.user_uid = #{userUid,jdbcType=VARCHAR}
+	 AND (
+			t.order_status IN (30,31,33,35,36)
+			
+		OR ( (t.order_status = 32 or t.order_status = 37 or t.order_status = 38) AND (t.accounts_status = 2 OR t.pay_status = 0))
+		OR 
+			(
+              (t.order_status = 70 OR t.order_status = 71 OR t.order_status = 72 OR t.order_status = 73 ) AND t.accounts_status=2
+			)
+	      )
+	 ORDER BY t.last_modify_date DESC
+  </select>
+
+
+
+
+
+
+
+    <!-- 房客端 待评价-->
+    <select id="getTenantOrderEavlWaitingList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderEvalRequest">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.user_uid = #{uid,jdbcType=VARCHAR}
+        AND t.eva_status in (100,110) 
+        AND (
+            (t.order_status in (40,41) )
+            or
+            (t.order_status &gt;= 50 and  t.order_status <![CDATA[< ]]> 73  and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(real_end_time)) &lt; 24*60*60* #{limitDay,jdbcType=INTEGER} )
+        )
+        ORDER BY t.last_modify_date DESC
+    </select>
+
+    <!-- 房客端 已评价-->
+    <select id="getTenantOrderEavlHasList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderEvalRequest">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.user_uid = #{uid,jdbcType=VARCHAR}
+        AND (
+            (t.eva_status in (111,101))
+            or
+            (t.order_status  &gt;= 50 and  t.order_status <![CDATA[< ]]> 73  and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(real_end_time)) &gt;= 24*60*60* #{limitDay,jdbcType=INTEGER} )
+        )
+        
+        ORDER BY t.last_modify_date DESC
+    </select>
+
+
+
+
+	<!--   房东端开始 -->
+    <!-- 房东端，评价列表页 -->
+    <select id="getLandOrderEavlList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderEvalRequest">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.landlord_uid = #{uid,jdbcType=VARCHAR}
+        AND (
+        t.order_status &gt;= 50 
+        AND   t.order_status <![CDATA[< ]]> 72
+        <!-- and TO_DAYS(NOW())-TO_DAYS(real_end_time) >= #{limitDay,jdbcType=INTEGER} -->
+        )
+        ORDER BY t.real_end_time DESC
+    </select>
+    
+     <!-- 房东端，待评价列表页 -->
+    <select id="getLandOrderEavlWaitingList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderEvalRequest">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.landlord_uid = #{uid,jdbcType=VARCHAR}
+        AND t.eva_status in (100,101,110)
+        AND t.order_status &gt;= 50 and t.order_status <![CDATA[< ]]> 73  and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(real_end_time)) &lt; 24*60*60* #{limitDay,jdbcType=INTEGER}
+        ORDER BY t.start_time DESC
+    </select>
+    
+    <!-- 房东端，已经评价列表页 -->
+    <select id="getLandOrderEavlHasList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderEvalRequest">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.landlord_uid = #{uid,jdbcType=VARCHAR}
+        AND (
+            (t.eva_status in (111,110))
+            or
+            (t.order_status &gt;= 50 and t.order_status <![CDATA[< ]]> 73 and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(real_end_time)) &gt;= 24*60*60* #{limitDay,jdbcType=INTEGER} )
+        ) 
+        ORDER BY t.real_end_time DESC
+    </select>
+    
+     <!-- 房东端未评价列表页 -->
+    <select id="getLandUnEvalList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderEvalRequest">
+        SELECT
+        <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        LEFT JOIN t_order_house_snapshot hs
+        ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+        WHERE  t.is_del = 0
+        AND t.landlord_uid = #{uid,jdbcType=VARCHAR}
+        AND t.eva_status in (100,101)
+        AND t.order_status &gt;= 50 and t.order_status <![CDATA[< ]]> 73  and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(real_end_time)) &lt; 24*60*60* #{limitDay,jdbcType=INTEGER}
+        ORDER BY t.start_time DESC
+    </select>
+
+  <!-- 房东端待处理 -->
+<select id="getLanlordOrderWaitingList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+ SELECT 
+    <include refid="Multi_Column_List" />
+    FROM
+    t_order t
+    LEFT JOIN t_order_house_snapshot hs
+    ON t.order_sn = hs.order_sn
+    LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+    WHERE  t.is_del = 0
+    AND t.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+    AND t.order_status IN (10,50,51)
+    ORDER BY t.start_time ASC
+</select>
+  
+ <!--  房东端进行中 -->
+ <select id="getLanlordOrderDoingList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+  SELECT 
+    <include refid="Multi_Column_List" />
+    FROM
+    t_order t
+    LEFT JOIN t_order_house_snapshot hs
+    ON t.order_sn = hs.order_sn
+    LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+    WHERE  t.is_del = 0
+    AND t.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+    AND (
+		t.order_status IN (40,41,60,61,20)
+		OR t.accounts_status = 1
+        <!--OR t.eva_status = 100 OR t.eva_status=101-->
+)
+ORDER BY t.start_time ASC
+</select>
+
+<!-- 房东端已结束 -->
+ <select id="getLanlordOrderDoneList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+ SELECT 
+    <include refid="Multi_Column_List" />
+    FROM
+    t_order t
+    LEFT JOIN t_order_house_snapshot hs
+    ON t.order_sn = hs.order_sn
+    LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+    WHERE  t.is_del = 0
+    AND t.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+    AND (
+		t.order_status IN (30,31,33,35,36)
+		OR ( (t.order_status = 32 or t.order_status = 37 or t.order_status = 38 ) AND (t.accounts_status = 2 OR t.pay_status = 0))
+		OR ((t.order_status = 70 OR t.order_status = 71 OR t.order_status = 72 OR t.order_status = 73 ) <!--AND (t.eva_status = 110 OR t.eva_status=111)--> AND t.accounts_status=2)
+		) 
+	ORDER BY t.end_time DESC
+</select>
+
+ <!-- 		房东端已结束 			-->
+ 
+ <select id="getLanlordOrderComingList" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.order.dto.OrderRequest">
+      SELECT 
+    <include refid="Multi_Column_List" />
+    FROM
+    t_order t
+    LEFT JOIN t_order_house_snapshot hs
+    ON t.order_sn = hs.order_sn
+    LEFT JOIN t_order_money m  ON t.order_sn = m.order_sn
+    WHERE  t.landlord_uid = #{landlordUid,jdbcType=VARCHAR} 
+    AND t.order_status IN (20,40,41) 
+    <if test="startTime != null and startTime != ''">
+            AND t.start_time &gt;=#{startTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null and endTime != ''">
+            AND t.start_time &lt;=#{endTime,jdbcType=VARCHAR}
+     </if>
+     AND t.pay_status = 1
+     AND t.is_del = 0
+     ORDER BY t.order_status DESC, t.start_time, t.create_time DESC
+ </select>
+ 
+ 
+ <update id="deleteOrderByOrderSn" parameterType="java.lang.String" >
+    <!-- 直-->
+    update t_order
+    set is_del = 1
+    where order_sn = #{orderSn,jdbcType=VARCHAR}
+  </update>
+
+
+
+
+
+
+
+    <!-- 评价修改订单的评价状态 -->
+ <update id="updateEvaStatuByOrderSn"  parameterType="map">
+      UPDATE t_order 
+        SET   
+        eva_status = #{evaStatus,jdbcType=INTEGER}
+        WHERE 1=1
+      <!-- 订单状态 -->
+        <if test="listOrderSn != null">
+            <if test="listOrderSn.size > 0">
+                  AND order_sn in
+                <foreach collection="listOrderSn"  item="orderSn" open="(" separator="," close=")">
+                    #{orderSn,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </if>
+    </update>
+    
+    <update id="updateOrderStatuByOrderSn" parameterType="map">
+    	UPDATE t_order 
+        SET order_status = #{orderStatusNew,jdbcType=INTEGER}
+        where order_sn = #{orderSn,jdbcType=VARCHAR}
+        and order_status = #{orderStatusOld,jdbcType=INTEGER}
+    </update>
+    
+    
+    <update id="updateAccountStatusByOrderSn" parameterType="map">
+    	UPDATE t_order 
+        SET accounts_status = 2
+        where order_sn = #{orderSn,jdbcType=VARCHAR}
+    </update>
+    
+    
+
+    
+	<select id="monthRealProfitOrderList" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.order.dto.OrderProfitRequest">
+	<!--获取 一个房源 一个月 已经实际收益 所有的订单列表-->
+	SELECT 
+	<include refid="Multi_Column_List" />
+	FROM t_order t
+	LEFT JOIN  t_order_house_snapshot hs
+	ON t.order_sn = hs.order_sn
+	LEFT JOIN t_order_money m 
+	ON t.order_sn = m.order_sn
+	WHERE hs.house_fid = #{houseFid,jdbcType=VARCHAR}
+	<if test="roomFid != null">
+	    AND hs.room_fid=#{roomFid,jdbcType=VARCHAR}
+	</if>
+	AND t.pay_status = 1
+	AND hs.rent_way = #{rentWay,jdbcType=INTEGER}
+	AND t.order_status IN(32,37,70,71,72,73)
+    AND t.accounts_status = 2
+	AND t.start_time <![CDATA[ >= ]]> #{beginTime,jdbcType=TIMESTAMP}
+	AND t.start_time <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP}
+	</select>
+	
+	<select id="monthPredictProfitOrderList" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.order.dto.OrderProfitRequest">
+	<!-- 获取 一个房源 一个月 预计收益 所有的订单列表-->
+	SELECT 
+	<include refid="Multi_Column_List" />
+	FROM t_order t
+	LEFT JOIN  t_order_house_snapshot hs
+	ON t.order_sn = hs.order_sn
+	LEFT JOIN t_order_money m 
+	ON t.order_sn = m.order_sn
+	WHERE hs.house_fid = #{houseFid,jdbcType=VARCHAR}
+	<if test="roomFid != null">
+	    AND hs.room_fid=#{roomFid,jdbcType=VARCHAR}
+	</if>
+	AND t.pay_status = 1
+	AND hs.rent_way = #{rentWay,jdbcType=INTEGER}
+    AND t.accounts_status != 2
+	AND t.start_time <![CDATA[ >= ]]> #{beginTime,jdbcType=TIMESTAMP}
+	AND t.start_time <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP}
+	</select>
+	
+	<select id="countOrderNum" resultType="java.lang.Long"  parameterType="map">
+	<!-- 计算房源、房间订单数量-->
+	SELECT COUNT(t.order_sn)
+	FROM t_order t
+	LEFT JOIN  t_order_house_snapshot hs
+	ON t.order_sn = hs.order_sn
+	WHERE hs.house_fid = #{houseFid,jdbcType=VARCHAR}
+	<if test="roomFid != null">
+	    AND hs.room_fid=#{roomFid,jdbcType=VARCHAR}
+	</if>
+	AND t.pay_status = 1
+	AND hs.rent_way = #{rentWay,jdbcType=INTEGER}
+	AND t.start_time <![CDATA[ >= ]]> #{beginTime,jdbcType=TIMESTAMP}
+	AND t.start_time <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP}
+	</select>
+	
+	
+	<select id="staticsCountLanOrderNum" resultType="java.lang.Long"  parameterType="map">
+	<!-- #1 房东的订单总数量-->
+	SELECT COUNT(*) 
+	FROM t_order t
+	WHERE t.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+	AND t.create_time<![CDATA[ > ]]> #{limitTime,jdbcType=TIMESTAMP}
+	AND t.is_del=0
+	<!--取2小时之前到现在的数据，这里两小时可配置-->  
+	</select>
+	
+	<select id="staticsCountLanReplyOrderNum" resultType="java.lang.Long"  parameterType="map">
+	<!--#房东X分钟内响应的订单数量-->
+	SELECT COUNT(*) FROM t_order t
+	LEFT JOIN t_order_log tg
+	ON t.order_sn = tg.order_sn
+	WHERE t.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+	AND t.create_time <![CDATA[ > ]]> #{limitTime,jdbcType=TIMESTAMP}<!--取2小时之前到现在的数据，这里两小时可配置-->  
+	AND tg.from_status = 10
+	AND tg.to_status IN (20,35)
+	AND tg.create_date-t.create_time <![CDATA[ < ]]> #{sumTime,jdbcType=INTEGER}
+	</select>
+	
+	<select id="staticsCountLanRefuseOrderNum" resultType="java.lang.Long"  parameterType="map">
+	<!--#拒绝的订单数量-->
+	SELECT COUNT(*) FROM t_order t
+	LEFT JOIN t_order_log tg
+	ON t.order_sn = tg.order_sn
+	WHERE t.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+	AND t.create_time <![CDATA[ > ]]> #{limitTime,jdbcType=TIMESTAMP} <!--#取2小时之前到现在的数据，这里两小时可配置--> 
+	AND tg.from_status = 10
+	AND tg.to_status = 35
+	AND tg.create_date-t.create_time <![CDATA[ < ]]> #{sumTime,jdbcType=INTEGER}
+	</select>
+	
+	<select id="staticsCountSysRefuseOrderNum" resultType="java.lang.Long"  parameterType="map">
+	<!--#超时系统拒绝的订单数量-->
+	SELECT COUNT(*) FROM t_order t
+	LEFT JOIN t_order_log tg
+	ON t.order_sn = tg.order_sn
+	WHERE t.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+	AND t.create_time <![CDATA[ > ]]> #{limitTime,jdbcType=TIMESTAMP} 
+	AND tg.from_status = 10
+	AND tg.to_status = 31 
+	</select>
+	
+	<select id="staticsCountLanReplyOrderTime" resultType="java.lang.Long"  parameterType="map">
+	<!--#房东响应时间总和-->
+	
+	SELECT COALESCE(SUM(if(tg.create_date-t.create_time <![CDATA[ < ]]> 0,0,tg.create_date-t.create_time)),0) FROM t_order t
+	LEFT JOIN t_order_log tg
+	ON t.order_sn = tg.order_sn
+	WHERE t.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+	AND t.create_time <![CDATA[ > ]]> #{limitTime,jdbcType=TIMESTAMP} <!-- #取2小时之前到现在的数据，这里两小时可配置 -->
+	AND tg.from_status = 10
+	AND tg.to_status IN (20,35)
+	AND tg.create_date-t.create_time <![CDATA[ < ]]> #{sumTime,jdbcType=INTEGER} <!-- #时间可配置，需作为参数传进来 -->
+	</select>
+
+
+	<!-- troy查询返现申请列表 -->
+	<select id="getOrderCashbackList" resultMap="OrderCashbackVoMap"  parameterType="map">
+		SELECT
+		<include refid="OrderCashbackVo_Colum" />
+		FROM t_order a, t_order_house_snapshot b, t_order_pay c
+		WHERE a.order_sn=b.order_sn AND a.order_sn=c.order_sn
+		<if test="houseFid != null and houseFid != ''">
+            AND b.house_fid=#{houseFid,jdbcType=VARCHAR}
+        </if>
+		<if test="orderSn != null and orderSn != ''">
+            AND a.order_sn=#{orderSn,jdbcType=VARCHAR}
+        </if>
+		<if test="orderStatus != null and orderStatus != ''">
+            AND a.order_status=#{orderStatus,jdbcType=INTEGER}
+        </if>
+		<if test="payStatus != null and payStatus != ''">
+            AND c.pay_status=#{payStatus,jdbcType=VARCHAR}
+        </if>
+		<if test="payDateStart != null and payDateStart != ''">
+            AND c.create_time <![CDATA[ >= ]]> #{payDateStart,jdbcType=VARCHAR}
+        </if>
+		<if test="payDateEnd != null and payDateEnd != ''">
+            AND c.create_time <![CDATA[ <= ]]> #{payDateEnd,jdbcType=VARCHAR}
+        </if>
+		<if test="createOrderDateStart != null and createOrderDateStart != ''">
+            AND c.create_time <![CDATA[ >= ]]> #{createOrderDateStart,jdbcType=VARCHAR}
+        </if>
+		<if test="createOrderDateEnd != null and createOrderDateEnd != ''">
+            AND c.create_time <![CDATA[ <= ]]> #{createOrderDateEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="houseFids != null and houseFids.size > 0">
+            AND b.house_fid in
+            <foreach collection="houseFids" item="houseFid" open="(" separator="," close=")">
+                #{houseFid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+		ORDER BY a.id DESC
+	</select>
+
+
+   <!-- 插叙首单立减用户：  1. 用户存在 有效订单且发生过入住  2. 用户存在有效订单且未发生过入住且违约金大于0-->
+    <select id="queryNewUserByOrder" resultType="java.lang.Long"  parameterType="java.lang.String">
+       select count(1) from (
+		select t1.order_sn from `t_order` t1 
+		
+		inner join `t_order_money` mo on mo.`order_sn` = t1.`order_sn`
+		where t1.`user_uid` = #{uid,jdbcType=VARCHAR}
+		and t1.`pay_status` = 1
+		and (t1.`order_status` != 38 OR(t1.`order_status` = 73 AND mo.`real_money`>0))
+		and  exists(
+		   select lo.id from `t_base_house_lock` lo 
+		   where lo.`order_sn` = t1.`order_sn` 
+		   and lo.`lock_type` = 1
+		   and lo.`is_del` = 0
+		)
+		
+		union all
+		
+		select t2.order_sn from `t_order` t2
+		
+		inner join `t_order_money` mo on mo.`order_sn` = t2.`order_sn`
+		where t2.`user_uid` = #{uid,jdbcType=VARCHAR}
+		and ((t2.`pay_status` = 1 AND mo.`penalty_money` > 0) OR (t2.`pay_status` = 0  AND (t2.`order_status` = 20 OR t2.`order_status` = 10)))
+		and not exists(
+		   select lo.id from `t_base_house_lock` lo 
+		   where lo.`order_sn` = t2.`order_sn`
+		   and lo.`lock_type` = 1
+		   and lo.`is_del` = 0
+		)
+
+		)
+		as tem;
+    </select>
+    
+    <select id="queryOrderCountByUid" resultType="java.lang.Long"  parameterType="java.lang.String">
+      SELECT  COUNT(1) FROM `minsu_order_db`.`t_order` t WHERE t.`user_uid` = #{uid,jdbcType=VARCHAR} AND t.`is_del` = 0 
+    </select>
+
+	<select id="queryCashbackOrderVo" resultType="com.ziroom.minsu.services.order.entity.CashbackOrderVo" parameterType="map">
+		
+		select  MAX(t.`order_sn`) as orderSn,t.`landlord_uid` as landlordUid ,MAX(t.`create_time`) as createTime ,count(1) as num from `t_order` t
+		 where t.`order_status` in(70,71)
+		 and t.`pay_time`<![CDATA[ >= ]]>'2017-09-01 00:00:00' and t.`pay_time`<![CDATA[ <= ]]>'2017-10-31 12:00:00'
+		 and t.`real_end_time` <![CDATA[ >= ]]>'2017-09-01 00:00:00'  and t.`real_end_time`<![CDATA[ <= ]]>'2017-12-31 12:00:00'
+		
+		GROUP BY landlordUid   
+
+
+	</select>
+	
+	<select id="queryOrderByPage" resultMap="OrderEntityMap" parameterType="map">
+       SELECT
+          <include refid="Base_Colum_List"  />
+        FROM
+        t_order t1
+        WHERE 1=1
+         <!-- 订单状态 -->
+        <if test="listOrderStatus != null">
+            <if test="listOrderStatus.size > 0">
+                  AND t1.order_status in
+                <foreach collection="listOrderStatus"  item="_orderStatus" open="(" separator="," close=")">
+                    #{_orderStatus,jdbcType=INTEGER}
+                </foreach>
+            </if>
+        </if>
+          <!-- 入住时间 -->
+        <if test="checkInTimeStart != null and checkInTimeStart != ''">
+            AND t1.start_time &gt;=#{checkInTimeStart,jdbcType=VARCHAR}
+        </if>
+        <if test="checkInTimeEnd != null and checkInTimeEnd != ''">
+            AND t1.start_time &lt;=#{checkInTimeEnd,jdbcType=VARCHAR}
+        </if>
+          <!-- 订单状态 -->
+        <if test="orderStatus != null and orderStatus != ''">
+            AND t1.order_status=#{orderStatus,jdbcType=INTEGER}
+        </if>
+         <!-- 订单编号    -->
+        <if test="orderSn != null and orderSn != ''">
+            AND t1.order_sn=#{orderSn,jdbcType=VARCHAR}
+        </if>
+        <if test="payStatus != null and payStatus != ''">
+            AND t1.pay_status=#{payStatus,jdbcType=INTEGER}
+        </if>
+  </select>
+
+    <!-- 查询昨天遗漏的订单行为(房东行为成长体系定时任务) -->
+    <select id="queryOrderForCustomerBehaviorJob" resultMap="OrderEntityMap" parameterType="map">
+        SELECT
+        <include refid="Base_Colum_List"  />
+        FROM
+        t_order
+        WHERE order_status = #{orderStatus,jdbcType=INTEGER}
+        AND last_modify_date &gt;= #{startTime,jdbcType=VARCHAR}
+        AND last_modify_date &lt; #{endTime,jdbcType=VARCHAR}
+        <if test="listOrderSn != null and listOrderSn.size > 0">
+            AND order_sn NOT IN
+            <foreach collection="listOrderSn"  item="orderSn" open="(" separator="," close=")">
+                #{orderSn,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+    
+     <!--询房东近60天内的，通过“申请类型”的订单数量 -->
+    <select id="countAcceptApplyOrder" resultType="int"  parameterType="map">
+        SELECT COUNT(1) FROM `t_order` od LEFT JOIN `t_order_house_snapshot` odsp ON od.`order_sn` = odsp.`order_sn` 
+		WHERE od.`landlord_uid`=#{uid,jdbcType=VARCHAR} AND  DATE_SUB(CURDATE(), INTERVAL 60 DAY ) &lt;= od.`create_time`
+		AND odsp.`order_type` ='2' AND od.`order_status` IN('40','41','50','51','60','61','70','71')     	
+    	AND od.`is_del`='0' 
+    </select>
+    
+    <!--询房东近60天内的，通过“申请类型”的订单数量 -->
+    <select id="countAllApplyOrder" resultType="int"  parameterType="map">
+        SELECT COUNT(1) FROM `t_order` od LEFT JOIN `t_order_house_snapshot` odsp ON od.`order_sn` = odsp.`order_sn` 
+		WHERE od.`landlord_uid`=#{uid,jdbcType=VARCHAR} AND DATE_SUB(CURDATE(), INTERVAL 60 DAY ) &lt;= od.`create_time` 
+		AND odsp.`order_type` ='2'
+    	AND od.`is_del`='0'
+    </select>
+
+    <!--查询当前时间4个小时内的已结算的订单的uid和orderSn-->
+    <select id="queryOrder4Hour" resultMap="OrderInviteVoMap" >
+        SELECT 	t.user_uid userUid,t.order_sn orderSn,t.last_modify_date lastModifyDate
+        FROM t_order t
+        WHERE order_status >= 40
+        AND t.pay_status=1
+        AND t.last_modify_date >= (NOW() - INTERVAL 4 HOUR)
+    </select>
+</mapper>

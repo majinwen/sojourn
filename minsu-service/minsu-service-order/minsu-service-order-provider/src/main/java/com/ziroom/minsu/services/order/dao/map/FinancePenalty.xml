@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.financePenaltyDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.FinancePenaltyEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="penalty_sn" property="penaltySn" jdbcType="VARCHAR" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="penalty_uid" property="penaltyUid" jdbcType="VARCHAR" />
+    <result column="penalty_user_type" property="penaltyUserType" jdbcType="INTEGER" />
+    <result column="penalty_fee" property="penaltyFee" jdbcType="INTEGER" />
+    <result column="penalty_last_fee" property="penaltyLastFee" jdbcType="INTEGER" />
+    <result column="penalty_status" property="penaltyStatus" jdbcType="INTEGER" />
+    <result column="penalty_type" property="penaltyType" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+
+ <!-- 罚款单列表展示后台-->
+  <resultMap id="PenaltyResultMap" type="com.ziroom.minsu.services.order.entity.PenaltyVo" extends="BaseResultMap">
+    <result column="landlord_name" property="landlordName" jdbcType="VARCHAR" />
+    <result column="landlord_tel" property="landlordTel" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!--罚款单对应关系-->
+  <resultMap id="penaltyResultRelMap" type="com.ziroom.minsu.services.order.entity.PenaltyRelVo">
+    <result column="penalty_sn" property="penaltySn" jdbcType="VARCHAR" />
+    <result column="parent_pv_sn" property="parentPvSn" jdbcType="VARCHAR" />
+    <result column="pv_sn" property="pvSn" jdbcType="VARCHAR" />
+    <result column="pv_order_sn" property="pvOrderSn" jdbcType="VARCHAR" />
+    <result column="offset_fee" property="totalFee" jdbcType="INTEGER" />
+    <result column="income_sn" property="incomeSn" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, penalty_sn, order_sn, penalty_uid, penalty_user_type, penalty_fee, penalty_last_fee, 
+    penalty_status, penalty_type, remark, create_time, last_modify_date, is_del
+  </sql>
+
+  <sql id="Penalty_Column_List" >
+    fp.`penalty_sn`,fp.`order_sn`,fp.`penalty_status`,fp.`penalty_fee`,fp.`penalty_last_fee`,fp.`create_time`,fp.`last_modify_date`,
+    o.`landlord_name`,o.`landlord_tel`
+  </sql>
+
+  <sql id="PenaltyRel_Column_List" >
+    t.`penalty_sn`,t.pv_order_sn,t1.`parent_pv_sn`,t1.`pv_sn`,t.`offset_fee`,t2.`income_sn`,t.`create_time`
+  </sql>
+
+  <!--查询有效的罚款单列表-->
+  <select id="listAvaliableFinancePenaltyByUid" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_finance_penalty
+    where penalty_uid = #{uid,jdbcType=VARCHAR}
+    AND (penalty_status = 0 OR penalty_status = 10)
+    AND penalty_last_fee != 0
+    ORDER BY create_time ASC
+  </select>
+
+
+  <!--查询付款单-->
+  <select id="findPenaltyByPenaltySn" resultMap="BaseResultMap" parameterType="string" >
+    select
+    <include refid="Base_Column_List" />
+    from t_finance_penalty
+    where penalty_sn = #{penaltySn,jdbcType=VARCHAR}
+  </select>
+
+  <!--查询有效罚款单数量-->
+  <select id="countAvaliableFinancePenaltyByUid" resultType="long"  parameterType="string" >
+    select count(id)
+    from t_finance_penalty
+    where penalty_uid = #{uid,jdbcType=VARCHAR}
+    AND (penalty_status = 0 OR penalty_status = 10)
+    AND penalty_last_fee != 0
+  </select>
+
+  <!--根据条件查罚款单-->
+  <select id="listPenaltyByCondition" resultMap="PenaltyResultMap" parameterType="com.ziroom.minsu.services.order.dto.PenaltyRequest">
+    SELECT
+    <include refid="Penalty_Column_List" />
+    FROM
+      t_finance_penalty fp
+      INNER JOIN t_order o
+        ON fp.`order_sn` = o.`order_sn`
+        <where>
+          <if test="penaltySn != null and penaltySn != ''">
+            AND fp.penalty_sn=#{penaltySn,jdbcType=VARCHAR}
+          </if>
+          <if test="orderSn != null and orderSn != ''">
+            AND fp.order_sn=#{orderSn,jdbcType=VARCHAR}
+          </if>
+          <if test="penaltyStatus != null">
+            AND fp.penalty_status=#{penaltyStatus,jdbcType=INTEGER}
+          </if>
+          <if test="landlordName != null and landlordName!=''">
+            AND o.landlord_name=#{landlordName,jdbcType=VARCHAR}
+          </if>
+          <if test="landlordTel != null and landlordTel!=''">
+            AND o.landlord_tel=#{landlordTel,jdbcType=VARCHAR}
+          </if>
+          <if test="createDateStart != null and createDateStart !=''">
+            AND fp.create_time > #{penaltyStatus,jdbcType=TIMESTAMP}
+          </if>
+          <if test="createDateEnd != null and createDateEnd!=''">
+            AND o.create_time <![CDATA[ <= ]]> #{createDateEnd,jdbcType=TIMESTAMP}
+          </if>
+          <if test="modifyDateStart != null and modifyDateStart !=''">
+            AND fp.last_modify_date > #{modifyDateStart,jdbcType=TIMESTAMP}
+          </if>
+          <if test="modifyDateEnd != null and modifyDateEnd!=''">
+            AND o.last_modify_date <![CDATA[ <= ]]> #{modifyDateEnd,jdbcType=TIMESTAMP}
+          </if>
+        </where>
+        ORDER BY fp.last_modify_date DESC
+  </select>
+
+  <!--更新罚款单-->
+  <update id="updateFinancePenaltyByOrderSn" parameterType="com.ziroom.minsu.entity.order.FinancePenaltyEntity">
+    UPDATE t_finance_penalty
+    <set>
+      <if test="penaltyLastFee != null" >
+      penalty_last_fee = #{penaltyLastFee,jdbcType=INTEGER},
+    </if>
+    <if test="penaltyStatus != null" >
+      penalty_status = #{penaltyStatus,jdbcType=INTEGER},
+    </if>
+    </set>
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+  </update>
+  <!--根据罚款单编号和状态更新罚款单状态-->
+  <update id="updatePenaltyByPenaltySnAndStatus" parameterType="com.ziroom.minsu.entity.order.FinancePenaltyEntity">
+    UPDATE t_finance_penalty
+      SET penalty_status = #{penaltyStatus,jdbcType=INTEGER}
+    WHERE penalty_sn = #{penaltySn,jdbcType=VARCHAR}
+    AND penalty_status = #{oldPenaltyStatus,jdbcType=INTEGER}
+  </update>
+
+<!--查询罚款单与付款单和收入关系-->
+  <select id="listPenaltyPayAndIncomeRel" resultMap="penaltyResultRelMap"  parameterType="string">
+    SELECT
+    <include refid="PenaltyRel_Column_List" />
+    FROM
+    t_finance_penalty_pay_rel t
+    INNER JOIN t_finance_pay_vouchers t1
+    ON t.`pv_sn` = t1.`pv_sn`
+    INNER JOIN t_finance_pay_income_rel t2  ON t1.`pv_sn` = t2.`pv_sn`
+    WHERE t.`penalty_sn` = #{penaltySn,jdbcType=VARCHAR}
+  </select>
+
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.order.FinancePenaltyEntity" >
+    insert into t_finance_penalty
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="penaltySn != null" >
+        penalty_sn,
+      </if>
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="penaltyUid != null" >
+        penalty_uid,
+      </if>
+      <if test="penaltyUserType != null" >
+        penalty_user_type,
+      </if>
+      <if test="penaltyFee != null" >
+        penalty_fee,
+      </if>
+      <if test="penaltyLastFee != null" >
+        penalty_last_fee,
+      </if>
+      <if test="penaltyStatus != null" >
+        penalty_status,
+      </if>
+      <if test="penaltyType != null" >
+        penalty_type,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="penaltySn != null" >
+        #{penaltySn,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="penaltyUid != null" >
+        #{penaltyUid,jdbcType=VARCHAR},
+      </if>
+      <if test="penaltyUserType != null" >
+        #{penaltyUserType,jdbcType=INTEGER},
+      </if>
+      <if test="penaltyFee != null" >
+        #{penaltyFee,jdbcType=INTEGER},
+      </if>
+      <if test="penaltyLastFee != null" >
+        #{penaltyLastFee,jdbcType=INTEGER},
+      </if>
+      <if test="penaltyStatus != null" >
+        #{penaltyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="penaltyType != null" >
+        #{penaltyType,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.order.FinancePenaltyEntity" >
+    update t_finance_penalty
+    <set >
+      <if test="penaltySn != null" >
+        penalty_sn = #{penaltySn,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null" >
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="penaltyUid != null" >
+        penalty_uid = #{penaltyUid,jdbcType=VARCHAR},
+      </if>
+      <if test="penaltyUserType != null" >
+        penalty_user_type = #{penaltyUserType,jdbcType=INTEGER},
+      </if>
+      <if test="penaltyFee != null" >
+        penalty_fee = #{penaltyFee,jdbcType=INTEGER},
+      </if>
+      <if test="penaltyLastFee != null" >
+        penalty_last_fee = #{penaltyLastFee,jdbcType=INTEGER},
+      </if>
+      <if test="penaltyStatus != null" >
+        penalty_status = #{penaltyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="penaltyType != null" >
+        penalty_type = #{penaltyType,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.order.FinancePenaltyEntity" >
+    update t_finance_penalty
+    set penalty_sn = #{penaltySn,jdbcType=VARCHAR},
+      order_sn = #{orderSn,jdbcType=VARCHAR},
+      penalty_uid = #{penaltyUid,jdbcType=VARCHAR},
+      penalty_user_type = #{penaltyUserType,jdbcType=INTEGER},
+      penalty_fee = #{penaltyFee,jdbcType=INTEGER},
+      penalty_last_fee = #{penaltyLastFee,jdbcType=INTEGER},
+      penalty_status = #{penaltyStatus,jdbcType=INTEGER},
+      penalty_type = #{penaltyType,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!--根据OrderSn查询实体对象-->
+  <select id="getPenaltyEntityByOrderSn" parameterType="string" resultMap="BaseResultMap">
+        select 
+	    <include refid="Base_Column_List" />
+	    from t_finance_penalty
+	    where order_sn = #{orderSn,jdbcType=VARCHAR}
+	    and is_del=0
+  </select>
+
+
+    <!--查询有效的罚款单列表-->
+  <select id="findLanFinancePenaltyByOrderSn" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_finance_penalty
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND penalty_user_type = 1
+  </select>
+</mapper>

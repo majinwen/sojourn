@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2011 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	
+	<dubbo:provider filter="catFilter"></dubbo:provider>
+	<dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.UserPermissionService" ref="basedata.userPermissionServiceProxy">
+    	<!-- id查询自如服务区域-->
+        <dubbo:method name="searchCurrentuserList" timeout="3000" retries="3"/>
+        <dubbo:method name="saveUserInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="initSaveUserInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="employeePageList" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.ResourceService" ref="basedata.resourceServiceProxy">
+    	<!-- id查询自如服务区域-->
+        <dubbo:method name="updateMenuByFid" timeout="3000" retries="0"/>
+        <dubbo:method name="searchMenuResList" timeout="3000" retries="3"/>
+        <dubbo:method name="insertMenuResource" timeout="3000" retries="0"/>
+        <dubbo:method name="searchAllMenuChildResList" timeout="3000" retries="3"/>
+        <dubbo:method name="menuTreeVo" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.OpLogService" ref="basedata.opLogProxy">
+        <!-- id查询自如服务区域-->
+        <dubbo:method name="saveOpLogInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="findOpLogList" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.PermissionOperateService" ref="basedata.permissionOperateServiceProxy">
+    	<!-- id查询自如服务区域-->
+        <dubbo:method name="searchCurrentuserList" timeout="3000" retries="3"/>
+        <dubbo:method name="searchRoles" timeout="3000" retries="3"/>
+        <dubbo:method name="saveUserInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="initSaveUserInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="employeePageList" timeout="3000" retries="3"/>
+        <dubbo:method name="searchRoleByFid" timeout="3000" retries="3"/>
+        <dubbo:method name="editRoleStatus" timeout="3000" retries="0"/>
+        <dubbo:method name="insertCurrentuser" timeout="3000" retries="0"/>
+        <dubbo:method name="searchRoleResources" timeout="3000" retries="3"/>
+        <dubbo:method name="updateRoleResources" timeout="3000" retries="0"/>
+        <dubbo:method name="addRoleResources" timeout="30000" retries="0"/>
+        <dubbo:method name="searchCurrentuserByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="editUserStatus" timeout="3000" retries="0"/>
+        <dubbo:method name="insertCurrentuserCity" timeout="3000" retries="0"/>
+        <dubbo:method name="delCurrentuserCity" timeout="3000" retries="0"/>
+        <dubbo:method name="getCurrentuserCity" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+     <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.LoginService" ref="basedata.loginServiceProxy">
+        <!--登录相关接口-->
+        <dubbo:method name="getCurrentuserInfo" timeout="3000" retries="3"/>
+        <dubbo:method name="currentuserReslist" timeout="3000" retries="3"/>
+        <dubbo:method name="checkAuthMenuByResurl" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.ConfCityService" ref="basedata.confCityServiceProxy">
+        <dubbo:method name="getOpenCityAndHot" timeout="3000" retries="3"/>
+        <dubbo:method name="getOpenCity" timeout="3000" retries="3"/>
+        <dubbo:method name="getOpenCityMap" timeout="3000" retries="3"/>
+        <dubbo:method name="insertConfCityRes" timeout="3000" retries="0"/>
+        <dubbo:method name="updateConfCityByFid" timeout="10000" retries="0"/>
+        <dubbo:method name="confCityTreeVo" timeout="10000" retries="3"/>
+        <dubbo:method name="confCityOnlyTreeVo" timeout="10000" retries="3"/>
+        <dubbo:method name="findConfCityByFid" timeout="3000" retries="3"/>
+        <dubbo:method name="searchNodeListByFid" timeout="3000" retries="3"/>
+        <dubbo:method name="getConfCitySelect" timeout="5000" retries="3"/>
+        <dubbo:method name="getConfCitySelectForLandlord" timeout="5000" retries="3"/>
+        <dubbo:method name="getConfCitySelectForTenant" timeout="5000" retries="3"/>
+        <dubbo:method name="getConfCitySelectForAll" timeout="10000" retries="3"/>
+        <dubbo:method name="getCityNameByCode" timeout="3000" retries="3"/>
+        <dubbo:method name="getOpenCityWithFile" timeout="3000" retries="3"/>
+        <dubbo:method name="getOpenNationLandlord" timeout="3000" retries="3"/>
+        <dubbo:method name="getOpenCityLandlord4Nation" timeout="3000" retries="3"/>
+        <dubbo:method name="findNationCodeList" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <!-- 城市档案-->
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.CityArchiveService" ref="basedata.cityArchiveServiceProxy">
+        <dubbo:method name="getCityArchiveList" timeout="3000" retries="3"/>
+        <dubbo:method name="getRegionList" timeout="3000" retries="3"/>
+        <dubbo:method name="getRegion" timeout="3000" retries="3"/>
+        <dubbo:method name="getRegionItem" timeout="3000" retries="3"/>
+        <dubbo:method name="getRegionItems" timeout="3000" retries="3"/>
+        <dubbo:method name="getArchive" timeout="3000" retries="3"/>
+        <dubbo:method name="getItemsByHotRegionFid" timeout="3000" retries="3"/>
+        <dubbo:method name="saveOrUpRegion" timeout="3000" retries="0"/>
+        <dubbo:method name="saveOrUpItem" timeout="3000" retries="0"/>
+        <dubbo:method name="saveOrUpArchive" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <!-- 热门区域管理 -->
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.HotRegionService" ref="basedata.hotRegionServiceProxy">
+        <dubbo:method name="searchHotRegions" timeout="3000" retries="3"/>
+        <dubbo:method name="saveHotRegion" timeout="3000" retries="0"/>
+        <dubbo:method name="updateHotRegion" timeout="3000" retries="0"/>
+        <dubbo:method name="searchHotRegionByFid" timeout="3000" retries="3"/>
+        <dubbo:method name="getRegionExtVoByRegionFid" timeout="3000" retries="3"/>
+        <dubbo:method name="editHotRegionStatus" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.CityTemplateService" ref="basedata.cityTemplateProxy">
+    	<dubbo:method name="getTemplateListByPage" timeout="5000" retries="3"/>
+        <dubbo:method name="getDicTree" timeout="5000" retries="3"/>
+        <dubbo:method name="getConfDicByPfid" timeout="5000" retries="3"/>
+        <dubbo:method name="getConfDicByFid" timeout="5000" retries="3"/>
+        <dubbo:method name="getCityTemplateByCityCode" timeout="5000" retries="3"/>
+        <dubbo:method name="insertCityTemplate" timeout="5000" retries="0"/>
+        <dubbo:method name="updateConfDicByFid" timeout="5000" retries="0"/>
+        <dubbo:method name="insertConfDic" timeout="5000" retries="0"/>
+        <dubbo:method name="getDicItemListByCodeAndTemplate" timeout="5000" retries="3"/>
+        <dubbo:method name="insertDicItem" timeout="5000" retries="0"/>
+        <dubbo:method name="updateDicItem" timeout="5000" retries="0"/>
+        <dubbo:method name="insertTemplate" timeout="5000" retries="0"/>
+        <dubbo:method name="getSelectEnum" timeout="5000" retries="3"/>
+        <dubbo:method name="getEffectiveSelectEnum" timeout="5000" retries="3"/>
+        <dubbo:method name="countItemNumList" timeout="5000" retries="3"/>
+        <dubbo:method name="getTextValue" timeout="5000" retries="3"/>
+        <dubbo:method name="getTextListByLikeCodes" timeout="5000" retries="3"/>
+        <dubbo:method name="getTextListByCodes" timeout="5000" retries="3"/>
+        <dubbo:method name="getConfigForceVo" timeout="5000" retries="3"/>
+        <dubbo:method name="getSelectSubDic" timeout="5000" retries="3"/>
+        <dubbo:method name="getPicValidParams" timeout="5000" retries="3"/>
+        <dubbo:method name="updateDicItemList" timeout="5000" retries="0"/>
+        <dubbo:method name="getTextValueForCommon" timeout="3000" retries="3"/>
+        <dubbo:method name="listTextValueForCommon" timeout="3000" retries="3"/>
+        <dubbo:method name="listZrpPayStyle" timeout="3000" retries="5"/>
+    </dubbo:service>
+
+    <!-- 短信模板管理 -->
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.SmsTemplateService" ref="basedata.smsTemplateProxy">
+        <dubbo:method name="getTemplateByCode" timeout="3000" retries="3"/>
+        <dubbo:method name="findEntityByCondition" timeout="3000" retries="3"/>
+        <dubbo:method name="findEntityById" timeout="3000" retries="0"/>
+        <dubbo:method name="deleteEntityById" timeout="3000" retries="0"/>
+        <dubbo:method name="findEntityByFid" timeout="3000" retries="3"/>
+        <dubbo:method name="deleteEntityByFid" timeout="3000" retries="0"/>
+        <dubbo:method name="updateEntityById" timeout="3000" retries="0"/>
+        <dubbo:method name="updateEntityByFid" timeout="3000" retries="0"/>
+        <dubbo:method name="saveEntity" timeout="3000" retries="0"/>
+        <dubbo:method name="findEntityBySmsCode" timeout="3000" retries="3"/>
+        <dubbo:method name="sendSmsByCode" timeout="3000" retries="3"/>
+        <dubbo:method name="jpushByCode" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <!-- 地铁配置管理 -->
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.SubwayLineService" ref="basedata.subwayLineProxy">
+        <dubbo:method name="findSubwayLinePage" timeout="3000" retries="3"/>
+        <dubbo:method name="findSubwayInfo" timeout="3000" retries="3"/>
+        <dubbo:method name="saveSubwayLine" timeout="3000" retries="0"/>
+        <dubbo:method name="updateSubwayLine" timeout="3000" retries="0"/>
+    </dubbo:service>
+	
+	<!-- ehr员工数据同步 -->
+	<dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.EhrAccountSyncService" ref="basedata.ehrAccountSyncServiceProxy">
+        <dubbo:method name="syncEmployeeTask" timeout="3000" retries="0"/>
+        <dubbo:method name="syncSingleEmployee" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+	<!-- 天气接口 -->
+	<!-- <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.WeatherDayService" ref="basedata.weatherDayProxy">
+        <dubbo:method name="selectByCityAndDate" timeout="3000" retries="3"/>
+    </dubbo:service> -->
+    
+    <!-- 区域管家接口 -->
+	<dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.GuardAreaService" ref="basedata.guardAreaServiceProxy">
+        <dubbo:method name="saveGuardArea" timeout="3000" retries="0"/>
+        <dubbo:method name="updateGuardAreaByFid" timeout="3000" retries="0"/>
+        <dubbo:method name="findGaurdAreaByPage" timeout="3000" retries="3"/>
+        <dubbo:method name="findGaurdAreaByCondition" timeout="3000" retries="3"/>
+        <dubbo:method name="findGuardAreaByCode" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+    <!-- 员工操作接口 -->
+	<dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.EmployeeService" ref="basedata.employeeServiceProxy">
+        <dubbo:method name="findEmployeeByEmpCode" timeout="3000" retries="3"/>
+        <dubbo:method name="findEmployeeByCondition" timeout="3000" retries="3"/>
+        <dubbo:method name="findEmployeByEmpFid" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <!-- zk操作 -->
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.ZkSysService" ref="basedata.zkSysServiceProxy">
+        <dubbo:method name="getZkSysValue" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+   <!-- 标签 -->
+   <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.ConfTagService" ref="basedata.confTagServiceProxy">
+        <dubbo:method name="findByConfTagRequest" timeout="3000" retries="3"/>
+        <dubbo:method name="findByConfTagRequestList" timeout="3000" retries="3"/>
+        <dubbo:method name="addConfTag" timeout="3000" retries="0"/>
+        <dubbo:method name="modifyTagName" timeout="3000" retries="0"/>
+        <dubbo:method name="modifyTagStatus" timeout="3000" retries="0"/>
+   </dubbo:service>
+
+    <!--大区管理操作-->
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.CityRegionService" ref="basedata.cityRegionServiceProxy">
+        <dubbo:method name="insertCityRegion" timeout="3000" retries="0"/>
+        <dubbo:method name="insertCityRegionRel" timeout="3000" retries="0"/>
+        <dubbo:method name="updateCityRegion" timeout="3000" retries="0"/>
+        <dubbo:method name="updateCityRegionRel" timeout="3000" retries="0"/>
+        <dubbo:method name="delCityRegion" timeout="3000" retries="0"/>
+        <dubbo:method name="fillAllRegion" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <!--静态资源操作-->
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.StaticResourceService" ref="basedata.staticResourceServiceProxy">
+        <dubbo:method name="findStaticResourceListByPage" timeout="3000" retries="3"/>
+        <dubbo:method name="findStaticResListByResCode" timeout="3000" retries="3"/>
+        <dubbo:method name="saveStaticEntity" timeout="3000" retries="0"/>
+        <dubbo:method name="findStaticResourceByCode" timeout="3000" retries="3"/>
+        <dubbo:method name="getTipsMsgHasSubTitleByCode" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <!--代理ip相关接口-->
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.NetProxyIpPortService" ref="basedata.netProxyIpPortServiceProxy">
+        <dubbo:method name="listNetProxyIp" timeout="3000" retries="3"/>
+        <dubbo:method name="saveNetProxyIp" timeout="3000" retries="0"/>
+        <dubbo:method name="updateNetProxyIp" timeout="3000" retries="0"/>
+        <dubbo:method name="updateCountByProxyIp" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.basedata.api.inner.AuthIdentifyService" ref="basedata.authIdentifyServiceProxy">
+          <dubbo:method name="getAuthIdentifyByCode" timeout="3000" retries="3"></dubbo:method>
+    </dubbo:service>
+</beans>

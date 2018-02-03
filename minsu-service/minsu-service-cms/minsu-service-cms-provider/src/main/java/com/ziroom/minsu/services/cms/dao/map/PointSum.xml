@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.pointSumDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.PointSumEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="points_source" property="pointsSource" jdbcType="TINYINT" />
+    <result column="sum_points" property="sumPoints" jdbcType="INTEGER" />
+    <result column="sum_person" property="sumPerson" jdbcType="INTEGER" />
+    <result column="has_exchange_points" property="hasExchangePoints" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, uid, points_source, sum_points, sum_person, has_exchange_points, create_date, last_modify_date, 
+    is_del
+  </sql>
+  <select id="selectByParam" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.entity.cms.PointSumEntity" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_point_sum
+    where uid = #{uid,jdbcType=VARCHAR}
+    and points_source = #{pointsSource,jdbcType=TINYINT}
+    and is_del=0;
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_point_sum
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.cms.PointSumEntity" >
+    insert into t_point_sum (id, uid, points_source, sum_points, 
+      sum_person, has_exchange_points, create_date, 
+      last_modify_date, is_del)
+    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=VARCHAR}, #{pointsSource,jdbcType=TINYINT}, #{sumPoints,jdbcType=INTEGER}, 
+      #{sumPerson,jdbcType=INTEGER}, #{hasExchangePoints,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{isDel,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertPointSum" parameterType="com.ziroom.minsu.entity.cms.PointSumEntity" >
+    insert into t_point_sum
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="pointsSource != null" >
+        points_source,
+      </if>
+      <if test="sumPoints != null" >
+        sum_points,
+      </if>
+      <if test="sumPerson != null" >
+        sum_person,
+      </if>
+      <if test="hasExchangePoints != null" >
+        has_exchange_points,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="pointsSource != null" >
+        #{pointsSource,jdbcType=INTEGER},
+      </if>
+      <if test="sumPoints != null" >
+        #{sumPoints,jdbcType=INTEGER},
+      </if>
+      <if test="sumPerson != null" >
+        #{sumPerson,jdbcType=INTEGER},
+      </if>
+      <if test="hasExchangePoints != null" >
+        #{hasExchangePoints,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByParam" parameterType="com.ziroom.minsu.entity.cms.PointSumEntity" >
+    update t_point_sum
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="pointsSource != null" >
+        points_source = #{pointsSource,jdbcType=INTEGER},
+      </if>
+      <if test="sumPoints != null" >
+        sum_points = #{sumPoints,jdbcType=INTEGER},
+      </if>
+      <if test="sumPerson != null" >
+        sum_person = #{sumPerson,jdbcType=INTEGER},
+      </if>
+      <if test="hasExchangePoints != null" >
+        has_exchange_points = #{hasExchangePoints,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where  uid = #{uid,jdbcType=VARCHAR}
+    <if test="pointsSource != null" >
+      AND points_source = #{pointsSource,jdbcType=INTEGER}
+    </if>
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.cms.PointSumEntity" >
+    update t_point_sum
+    set uid = #{uid,jdbcType=VARCHAR},
+      points_source = #{pointsSource,jdbcType=TINYINT},
+      sum_points = #{sumPoints,jdbcType=INTEGER},
+      sum_person = #{sumPerson,jdbcType=INTEGER},
+      has_exchange_points = #{hasExchangePoints,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="getPointSumByUidSource" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    FROM t_point_sum
+    WHERE uid = #{uid,jdbcType=VARCHAR}
+    and points_source=#{pointsSource,jdbcType=INTEGER}
+    and is_del=0;
+  </select>
+</mapper>

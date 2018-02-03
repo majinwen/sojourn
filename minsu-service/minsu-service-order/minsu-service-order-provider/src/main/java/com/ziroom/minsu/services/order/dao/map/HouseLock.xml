@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.houseLockDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.HouseLockEntity" >
+    <!-- 基础map -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="fid" jdbcType="VARCHAR" property="fid" />
+    <result column="house_fid" jdbcType="VARCHAR" property="houseFid" />
+    <result column="room_fid" jdbcType="VARCHAR" property="roomFid" />
+    <result column="bed_fid" jdbcType="VARCHAR" property="bedFid" />
+    <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+    <result column="rent_way" jdbcType="TINYINT" property="rentWay" />
+    <result column="lock_time" jdbcType="TIMESTAMP" property="lockTime" />
+    <result column="lock_type" jdbcType="TINYINT" property="lockType" />
+    <result column="pay_status" jdbcType="TINYINT" property="payStatus" />
+    <result column="lock_source" jdbcType="TINYINT" property="lockSource" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
+    <result column="is_del" jdbcType="TINYINT" property="isDel" />
+  </resultMap>
+  
+  <resultMap id="CalendarResultMap" type="com.ziroom.minsu.services.common.entity.CalendarDataVo" >
+    <!-- 日历map -->
+    <result column="start_time" jdbcType="TIMESTAMP" property="startDate" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="summary" jdbcType="VARCHAR" property="summary" />
+    <result column="calendar_type" jdbcType="TINYINT" property="calendarType" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    <!--  基础列集合 -->
+    id, fid, house_fid, room_fid, bed_fid, order_sn, rent_way, lock_time, lock_type,pay_status,lock_source,
+    create_time, last_modify_date, is_del
+  </sql>
+
+
+    <select id="getHouseLockByRoomFidBefore" resultMap="BaseResultMap"  >
+        <!--  -->
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_base_house_lock
+        WHERE room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND lock_time  <![CDATA[ < ]]> #{startTime,jdbcType=VARCHAR}
+        AND is_del = 0
+        AND
+        (
+        lock_type = 2
+        OR
+        (
+        lock_type = 1 AND pay_status = 1
+        )
+        )
+        ORDER  BY lock_time DESC
+        limit 1
+    </select>
+
+
+    <select id="getHouseLockByHouseFidBefore" resultMap="BaseResultMap"  >
+        <!--  -->
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_base_house_lock
+        WHERE house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND lock_time  <![CDATA[ < ]]> #{startTime,jdbcType=VARCHAR}
+        AND is_del = 0
+        AND
+        (
+        lock_type = 2
+        OR
+            (
+              lock_type = 1 AND pay_status = 1
+            )
+        )
+        ORDER  BY lock_time DESC
+        limit 1
+    </select>
+
+
+    <select id="getHouseLockByHouseFidEnd" resultMap="BaseResultMap"  >
+        <!--  -->
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_base_house_lock
+        WHERE house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND lock_time  <![CDATA[ > ]]> #{endTime,jdbcType=VARCHAR}
+        AND is_del = 0
+        AND
+        (
+        lock_type = 2
+        OR
+        (
+        lock_type = 1 AND pay_status = 1
+        )
+        )
+        ORDER  BY lock_time ASC
+        limit 1
+    </select>
+
+
+
+
+    <select id="getHouseLockByRoomFidEnd" resultMap="BaseResultMap"  >
+        <!--  -->
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_base_house_lock
+        WHERE room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND lock_time  <![CDATA[ > ]]> #{endTime,jdbcType=VARCHAR}
+        AND is_del = 0
+        AND
+        (
+        lock_type = 2
+        OR
+        (
+        lock_type = 1 AND pay_status = 1
+        )
+        )
+        ORDER  BY lock_time ASC
+        limit 1
+    </select>
+
+
+    <!-- 校验当前的时间是否有占有 -->
+    <select id="countHouseLock" resultType="java.lang.Long" parameterType="map" >
+        SELECT
+          COUNT(id)
+        FROM  t_base_house_lock
+        WHERE house_fid = #{houseFid,jdbcType=VARCHAR}
+          AND lock_time in
+        <foreach collection="dateList" item="item" index="index"
+                               open="(" separator="," close=")">#{item,jdbcType=TIMESTAMP}</foreach>
+          AND is_del = 0
+    </select>
+
+    <!-- 校验当前的时间是否有占有 -->
+    <select id="countRoomLock" resultType="java.lang.Long" parameterType="map" >
+        SELECT
+        COUNT(id)
+        FROM  t_base_house_lock
+        WHERE room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND lock_time in
+        <foreach collection="dateList" item="item" index="index"
+                 open="(" separator="," close=")">#{item,jdbcType=TIMESTAMP}</foreach>
+        AND is_del = 0
+    </select>
+
+    <!-- 校验当前的时间是否有占有 -->
+    <select id="countBedLock" resultType="java.lang.Long" parameterType="map" >
+        SELECT
+        COUNT(id)
+        FROM  t_base_house_lock
+        WHERE bed_fid = #{bedFid,jdbcType=VARCHAR}
+        AND lock_time in
+        <foreach collection="dateList" item="item" index="index"
+                 open="(" separator="," close=")">#{item,jdbcType=TIMESTAMP}</foreach>
+        AND is_del = 0
+    </select>
+    
+    
+    
+    
+    <!-- 校验当前的时间是否有占有,返回订单号 -->
+    <select id="getHouseLockOrderSn" resultType="java.lang.String" parameterType="map" >
+        SELECT
+        DISTINCT(order_sn)
+        FROM  t_base_house_lock
+        WHERE house_fid = #{houseFid,jdbcType=VARCHAR}
+          AND lock_time in
+        <foreach collection="dateList" item="item" index="index" open="(" separator="," close=")">#{item,jdbcType=TIMESTAMP}</foreach>
+          AND is_del = 0
+    </select>
+
+    <!-- 校验当前的时间是否有占有,返回订单号 -->
+    <select id="getRoomLockOrderSn" resultType="java.lang.String" parameterType="map" >
+        SELECT
+        DISTINCT(order_sn)
+        FROM  t_base_house_lock
+        WHERE room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND lock_time in
+        <foreach collection="dateList" item="item" index="index" open="(" separator="," close=")">#{item,jdbcType=TIMESTAMP}</foreach>
+        AND is_del = 0
+    </select>
+
+    <!-- 校验当前的时间是否有占有,返回订单号 -->
+    <select id="getBedLockOrderSn" resultType="java.lang.String" parameterType="map" >
+        SELECT
+        DISTINCT(order_sn)
+        FROM  t_base_house_lock
+        WHERE bed_fid = #{bedFid,jdbcType=VARCHAR}
+        AND lock_time in
+        <foreach collection="dateList" item="item" index="index" open="(" separator="," close=")">#{item,jdbcType=TIMESTAMP}</foreach>
+        AND is_del = 0
+    </select>
+    
+    
+    
+    
+    
+
+    <select id="getHouseLockByHouseFidList" resultMap="BaseResultMap"  parameterType="map">
+        <!--  -->
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_base_house_lock
+        WHERE house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND lock_time in
+        <foreach collection="dateList" item="item" index="index"
+                 open="(" separator="," close=")">#{item,jdbcType=TIMESTAMP}</foreach>
+        AND is_del = 0
+    </select>
+
+
+    <select id="getHouseLockByRoomFidList" resultMap="BaseResultMap"  >
+        <!--  -->
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_base_house_lock
+        WHERE
+        ( (room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND rent_way = 1)
+        OR
+        (house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND rent_way = 0) )
+        AND lock_time in
+        <foreach collection="dateList" item="item" index="index"
+                 open="(" separator="," close=")">#{item,jdbcType=TIMESTAMP}</foreach>
+        and is_del = 0
+    </select>
+
+    <!-- 根据锁定时间和房源房间fid查询房源锁 -->
+	<select id="getHouseLockByFidAndSetTime" resultMap="BaseResultMap"  >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_base_house_lock
+        WHERE house_fid = #{houseFid,jdbcType=VARCHAR}
+        <if test="roomFid != null and roomFid != ''">
+        AND room_fid = #{roomFid,jdbcType=VARCHAR}
+        </if>
+        AND rent_way = #{rentWay,jdbcType=INTEGER}
+        AND lock_time = #{lockTime,jdbcType=TIMESTAMP}
+        AND is_del = 0
+    </select>
+
+  <select id="getHouseLockByHouseFid" resultMap="BaseResultMap"  >
+    <!--  -->
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_base_house_lock
+    WHERE house_fid = #{houseFid,jdbcType=VARCHAR}
+      <if test="startTime != null and endTime != null">
+          <![CDATA[
+            AND lock_time  >= #{startTime,jdbcType=VARCHAR}
+          AND lock_time <= #{endTime,jdbcType=VARCHAR}
+          ]]>
+      </if>
+      <if test="startTime != null and endTime == null">
+          <![CDATA[
+            AND lock_time  = #{startTime,jdbcType=VARCHAR}
+          ]]>
+      </if>
+      AND is_del = 0
+    </select>
+
+
+    <select id="getHouseLockByRoomFid" resultMap="BaseResultMap"  >
+        <!--  -->
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_base_house_lock
+        WHERE
+        ( (room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND rent_way = 1)
+        OR
+        (house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND rent_way = 0) )
+        <if test="startTime != null and endTime != null">
+            <![CDATA[
+            AND lock_time  >= #{startTime,jdbcType=VARCHAR}
+          AND lock_time <= #{endTime,jdbcType=VARCHAR}
+          ]]>
+        </if>
+        <if test="startTime != null and endTime == null">
+            <![CDATA[
+            AND lock_time  = #{startTime,jdbcType=VARCHAR}
+          ]]>
+        </if>
+        and is_del = 0
+    </select>
+
+    <select id="getHouseLockByBedFid" resultMap="BaseResultMap"  >
+        <!--  -->
+        select
+        <include refid="Base_Column_List" />
+        from t_base_house_lock
+        where bed_fid = #{bedFid,jdbcType=VARCHAR}
+        <if test="startTime != null and endTime != null">
+            <![CDATA[
+            AND lock_time  >= #{startTime,jdbcType=VARCHAR}
+          AND lock_time <= #{endTime,jdbcType=VARCHAR}
+          ]]>
+        </if>
+        <if test="startTime != null and endTime == null">
+            <![CDATA[
+            AND lock_time  = #{startTime,jdbcType=VARCHAR}
+          ]]>
+        </if>
+        and is_del = 0
+    </select>
+
+    <!-- 直接物理删除表信息 -->
+    <delete id="delLockByOrderSn" parameterType="map">
+        delete from t_base_house_lock
+        where order_sn=#{orderSn,jdbcType=VARCHAR}
+        <if test="limitDate != null">
+            AND lock_time > #{limitDate,jdbcType=TIMESTAMP}
+        </if>
+    </delete>
+
+    <!-- 直接物理删除表信息 -->
+    <delete id="delHouseLockByFid" parameterType="map">
+        delete from t_base_house_lock
+        where fid=#{fid,jdbcType=VARCHAR}
+    </delete>
+
+
+    <!-- 將当前的支付状态变更为已支付 -->
+    <update id="payLockHouseByOrderSn" parameterType="map">
+        update t_base_house_lock
+        set pay_status = 1
+        where order_sn=#{orderSn,jdbcType=VARCHAR}
+        AND pay_status = 0
+    </update>
+
+
+	<update id="unLockByOrderSn" parameterType="map">
+	update t_base_house_lock 
+	set is_del = 1
+	where order_sn=#{orderSn,jdbcType=VARCHAR}
+        <if test="limitDate != null">
+            AND lock_time > #{limitDate,jdbcType=TIMESTAMP}
+        </if>
+	</update>
+
+	
+  <!--<update id="unLockByHouseId" parameterType="map">-->
+    <!--&lt;!&ndash; 通过订单对当前的房源解锁 &ndash;&gt;-->
+    <!--update t_base_house_lock-->
+    <!--set id = #{record.id,jdbcType=INTEGER},-->
+    <!--fid = #{record.fid,jdbcType=VARCHAR},-->
+    <!--house_fid = #{record.houseFid,jdbcType=VARCHAR},-->
+    <!--room_fid = #{record.roomFid,jdbcType=VARCHAR},-->
+    <!--bed_fid = #{record.bedFid,jdbcType=VARCHAR},-->
+    <!--order_sn = #{record.orderSn,jdbcType=VARCHAR},-->
+    <!--house_type = #{record.houseType,jdbcType=TINYINT},-->
+    <!--lock_time = #{record.lockTime,jdbcType=TIMESTAMP},-->
+    <!--lock_type = #{record.lockType,jdbcType=TINYINT},-->
+    <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+    <!--last_modify_date = #{record.lastModifyDate,jdbcType=TIMESTAMP},-->
+    <!--is_del = 1-->
+    <!--where house_fid = #{houseFid,jdbcType=VARCHAR}-->
+    <!--and lock_time = #{lockTime,jdbcType=TIMESTAMP}-->
+
+  <!--</update>-->
+
+
+  <insert id="insertHouseLock" parameterType="com.ziroom.minsu.entity.order.HouseLockEntity" >
+    <!-- 保存房源的锁定-->
+    insert IGNORE into t_base_house_lock
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+
+      <if test="fid != null">
+        fid,
+      </if>
+      <if test="houseFid != null">
+        house_fid,
+      </if>
+      <if test="roomFid != null">
+        room_fid,
+      </if>
+      <if test="bedFid != null">
+        bed_fid,
+      </if>
+      <if test="orderSn != null">
+        order_sn,
+      </if>
+      <if test="rentWay != null">
+          rent_way,
+      </if>
+      <if test="lockTime != null">
+        lock_time,
+      </if>
+      <if test="lockType != null">
+        lock_type,
+      </if>
+      <if test="payStatus != null">
+        pay_status,
+      </if>
+      <if test="lockSource != null">
+        lock_source,
+      </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+      <if test="fid != null">
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseFid != null">
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null">
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null">
+        #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null">
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null">
+        #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="lockTime != null">
+        #{lockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lockType != null">
+        #{lockType,jdbcType=TINYINT},
+      </if>
+      <if test="payStatus != null">
+        #{payStatus,jdbcType=TINYINT},
+      </if>
+      <if test="lockSource != null">
+        #{lockSource,jdbcType=TINYINT},
+      </if>
+    </trim>
+
+  </insert>
+  
+  <!-- 房源房间未来30天预订天数 -->
+  <select id="getBookDaysByFid"  parameterType="map"  resultType="int">
+  	SELECT COUNT(id) FROM t_base_house_lock
+	WHERE house_fid=#{houseFid,jdbcType=VARCHAR}
+	<if test="roomFid != null">
+	AND room_fid=#{roomFid,jdbcType=VARCHAR}
+	</if>
+	AND lock_time>=#{startTime,jdbcType=VARCHAR}
+	<![CDATA[ AND lock_time<= #{endTime,jdbcType=VARCHAR}]]>
+	<if test="lockType != null">
+	AND lock_type= #{lockType,jdbcType=TINYINT}
+	</if>
+	AND is_del=0
+  </select>
+  
+  
+  <!-- 整租转分组前预订天数 -->
+  <select id="getBookDaysByHouseFidAndRoomFid" parameterType="map" resultType="int">
+  	SELECT COUNT(id) FROM t_base_house_lock
+	WHERE house_fid=#{houseFid,jdbcType=VARCHAR}
+	AND room_fid IS NULL
+	AND lock_time>=#{startTime,jdbcType=VARCHAR}
+	<![CDATA[ AND lock_time<= #{endTime,jdbcType=VARCHAR}]]>
+	AND lock_type=1
+	AND is_del=0
+  </select>
+  
+  <update id="updateHouseLockByFid" parameterType="com.ziroom.minsu.entity.order.HouseLockEntity">
+    update t_base_house_lock
+    <set>
+      <if test="houseFid != null">
+       	house_fid = #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null">
+        bed_fid = #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null">
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null">
+        rent_way = #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="lockTime != null">
+        lock_time = #{lockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lockType != null">
+        lock_type = #{lockType,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null">
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  
+    <!-- 获取当前的房源的审核通过时间 -->
+    <select id="getLocksByHouseFid" resultType="java.util.Date"  parameterType="com.ziroom.minsu.services.house.dto.HousePriorityDto" >
+        SELECT
+        lock_time
+        FROM t_base_house_lock
+        WHERE  house_fid = #{houseBaseFid,jdbcType=VARCHAR}
+        AND lock_time  <![CDATA[>= ]]> #{startDateStr,jdbcType=VARCHAR}
+        AND lock_time <![CDATA[<= ]]> #{endDateStr,jdbcType=VARCHAR}
+        AND rent_way = 0
+        AND is_del = 0
+        AND ( pay_status = 1 OR lock_type = 2 OR lock_type = 3 )
+    </select>
+
+    <!-- 获取房间的锁定信息信息 -->
+    <select id="getLocksByRoomFid" resultType="java.util.Date"  parameterType="com.ziroom.minsu.services.house.dto.HousePriorityDto" >
+        SELECT
+        lock_time
+        FROM t_base_house_lock
+        WHERE  room_fid = #{houseRoomFid,jdbcType=VARCHAR}
+        AND lock_time  <![CDATA[>= ]]> #{startDateStr,jdbcType=VARCHAR}
+        AND lock_time <![CDATA[<= ]]> #{endDateStr,jdbcType=VARCHAR}
+        AND rent_way = 1
+        AND is_del = 0
+        AND ( pay_status = 1 OR lock_type = 2 OR lock_type = 3 )
+    </select>
+
+    <!--airbnb锁定-->
+    <select id="listAirLocks" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.order.dto.LockHouseRequest">
+      SELECT
+      <include refid="Base_Column_List" />
+      FROM t_base_house_lock
+      WHERE lock_time >=  CURDATE()
+      AND house_fid = #{houseFid,jdbcType=VARCHAR}
+      <if test="roomFid != null and roomFid !=''">
+          AND room_fid = #{roomFid,jdbcType=VARCHAR}
+      </if>
+      AND rent_way = #{rentWay,jdbcType=TINYINT}
+      AND lock_source = 1
+    </select>
+
+    <!--airbnb删除-->
+    <select id="deleteAirLock" parameterType="map">
+        DELETE FROM t_base_house_lock
+        WHERE 1=1
+         <if test="roomFid != null and roomFid !=''">
+           AND room_fid = #{roomFid,jdbcType=VARCHAR}
+           AND rent_way = 1
+         </if>
+         <if test="houseFid != null and houseFid !=''">
+           AND house_fid = #{houseFid,jdbcType=VARCHAR}
+           AND rent_way = 0
+         </if>
+        AND lock_time in
+        <foreach collection="dateList" item="item" index="index"
+                 open="(" separator="," close=")">#{item,jdbcType=TIMESTAMP}</foreach>
+        AND lock_source = 1
+    </select>
+    
+    <!-- 根据orderSn修改lockType -->
+    <update id="updateSystemLock" parameterType="map">
+		update t_base_house_lock set lock_type = 3
+        WHERE order_sn=#{orderSn,jdbcType=VARCHAR}
+        <if test="limitDate != null">
+            AND lock_time > #{limitDate,jdbcType=TIMESTAMP}
+        </if>
+    </update>
+    
+    <!-- 查询房源fid根据锁定时间 -->
+    <select id="findHouseFidsByLockTime" parameterType="string"  resultType="string">
+    	SELECT house_fid FROM `t_base_house_lock` WHERE rent_way=0 AND is_del=0 AND lock_time=#{lockTime,jdbcType=VARCHAR}
+    </select>
+    
+    <!-- 查询房间fid根据锁定时间 -->
+    <select id="findRoomFidsByLockTime" parameterType="string"  resultType="string">
+    	SELECT room_fid FROM `t_base_house_lock` WHERE rent_way=1 AND is_del=0 AND lock_time=#{lockTime,jdbcType=VARCHAR}
+    </select>
+    
+    
+    <!-- 查询当前房源当前被锁定的记录数（整租） -->
+    <select id="getcountHousePayLockCurrentDayByHousefid" resultType="java.lang.Long" parameterType="map" >
+        SELECT
+          COUNT(id)
+        FROM  minsu_order_db.t_base_house_lock t
+        WHERE house_fid = #{houseFid,jdbcType=VARCHAR}
+          AND t.lock_time = CURRENT_DATE
+          AND t.rent_way = 0
+          AND ((t.lock_type = 1 AND t.pay_status = 1 ) or t.lock_type = 2 or t.lock_type = 3)
+          AND is_del = 0
+    </select>
+    
+    <!-- 查询当前房源当前被锁定的记录数（分租） -->
+    <select id="getcountHousePayLockCurrentDayByHousefidAndRoomfid" resultType="java.lang.Long" parameterType="map" >
+        SELECT
+          COUNT(id)
+        FROM  minsu_order_db.t_base_house_lock t
+        WHERE t.room_fid = #{roomFid,jdbcType=VARCHAR}
+          AND t.lock_time = CURRENT_DATE
+          AND t.rent_way = 1
+          AND ((t.lock_type = 1 AND t.pay_status = 1 ) or t.lock_type = 2 or t.lock_type = 3)
+          AND is_del = 0
+    </select>
+    
+    <select id="getHouseLockByOrderSn" parameterType="map" resultMap="BaseResultMap">
+         select
+         <include refid="Base_Column_List" />
+         from t_base_house_lock 
+         where order_sn=#{orderSn}
+         AND is_del = 0
+    </select>
+
+	<!-- 查询房源日历 -->
+	<select id="getHouseLockDayList" parameterType="map" resultMap="CalendarResultMap">
+		<!-- 房东、系统锁定记录 -->
+		SELECT
+		lock_time AS start_time, DATE_ADD(lock_time, interval 1 day) AS end_time, '' AS summary, lock_type AS calendar_type
+		FROM t_base_house_lock
+		WHERE house_fid = #{houseFid,jdbcType=VARCHAR}
+		<if test="roomFid != null and roomFid != ''">
+			AND room_fid = #{roomFid,jdbcType=VARCHAR}
+		</if>
+		AND rent_way = #{rentWay,jdbcType=INTEGER}
+		AND lock_type in (2,3)
+		AND lock_time >= #{startTime,jdbcType=VARCHAR}
+		AND is_del = 0
+		
+		UNION ALL
+		<!-- 订单锁定记录 -->
+		SELECT
+		tlock.start_time, tlock.end_time, CONCAT(torder.user_name, ' ', torder.people_num, '人入住') AS summary, lock_type AS calendar_type
+		FROM
+		(
+			SELECT
+			MIN(lock_time) AS start_time, MAX(lock_time) AS end_time, lock_type, order_sn
+			FROM t_base_house_lock
+			WHERE house_fid = #{houseFid,jdbcType=VARCHAR}
+			<if test="roomFid != null and roomFid != ''">
+				AND room_fid = #{roomFid,jdbcType=VARCHAR}
+			</if>
+			AND rent_way = #{rentWay,jdbcType=INTEGER}
+			AND lock_type = 1
+			AND lock_time >= #{startTime,jdbcType=VARCHAR}
+			AND is_del = 0
+			GROUP BY order_sn
+		) tlock
+		JOIN t_order torder ON torder.`order_sn` = tlock.`order_sn`
+	</select>
+</mapper>

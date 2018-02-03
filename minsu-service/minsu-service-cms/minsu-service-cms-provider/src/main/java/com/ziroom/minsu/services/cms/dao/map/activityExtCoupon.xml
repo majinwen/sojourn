@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.activityExtCouponDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityExtCouponEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="act_sn" property="actSn" jdbcType="VARCHAR" />
+    <result column="coupon_name" property="couponName" jdbcType="VARCHAR" />
+    <result column="coupon_num" property="couponNum" jdbcType="INTEGER" />
+    <result column="random_min" property="randomMin" jdbcType="INTEGER" />
+    <result column="random_max" property="randomMax" jdbcType="INTEGER" />
+    <result column="coupon_start_time" property="couponStartTime" jdbcType="TIMESTAMP" />
+    <result column="coupon_end_time" property="couponEndTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="is_warn" property="isWarn" jdbcType="INTEGER" />
+    <result column="warn_times" property="warnTimes" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, act_sn, coupon_name, coupon_num, random_min, random_max, coupon_start_time, coupon_end_time, 
+ create_id, create_time, last_modify_date, is_del,is_warn,warn_times
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_activity_ext_coupon
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 通过优惠券码获取优惠券扩展信息 -->
+  <select id="selectByActSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_activity_ext_coupon
+    WHERE act_sn = #{actSn,jdbcType=VARCHAR}
+    AND is_del = 0
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_activity_ext_coupon
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.cms.ActivityExtCouponEntity" >
+    insert into t_activity_ext_coupon (id, act_sn, coupon_name, 
+      coupon_num, random_min, random_max, 
+      coupon_start_time, coupon_end_time,
+      create_id, create_time, last_modify_date, 
+      is_del)
+    values (#{id,jdbcType=INTEGER}, #{actSn,jdbcType=VARCHAR}, #{couponName,jdbcType=VARCHAR}, 
+      #{couponNum,jdbcType=INTEGER}, #{randomMin,jdbcType=INTEGER}, #{randomMax,jdbcType=INTEGER}, 
+      #{couponStartTime,jdbcType=TIMESTAMP}, #{couponEndTime,jdbcType=TIMESTAMP},
+      #{createId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{lastModifyDate,jdbcType=TIMESTAMP}, 
+      #{isDel,jdbcType=INTEGER})
+  </insert>
+
+
+  <insert id="insertActExtCoupon" parameterType="com.ziroom.minsu.entity.cms.ActivityExtCouponEntity" >
+    insert into t_activity_ext_coupon
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="actSn != null" >
+        act_sn,
+      </if>
+      <if test="couponName != null" >
+        coupon_name,
+      </if>
+      <if test="couponNum != null" >
+        coupon_num,
+      </if>
+      <if test="randomMin != null" >
+        random_min,
+      </if>
+      <if test="randomMax != null" >
+        random_max,
+      </if>
+      <if test="couponStartTime != null" >
+        coupon_start_time,
+      </if>
+      <if test="couponEndTime != null" >
+        coupon_end_time,
+      </if>
+
+      <if test="couponTimeType != null" >
+        coupon_time_type,
+      </if>
+
+      <if test="couponTimeLast != null" >
+        coupon_time_last,
+      </if>
+
+
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="isWarn != null" >
+        is_warn,
+      </if>
+      <if test="warnTimes != null" >
+        warn_times,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="actSn != null" >
+        #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="couponName != null" >
+        #{couponName,jdbcType=VARCHAR},
+      </if>
+      <if test="couponNum != null" >
+        #{couponNum,jdbcType=INTEGER},
+      </if>
+      <if test="randomMin != null" >
+        #{randomMin,jdbcType=INTEGER},
+      </if>
+      <if test="randomMax != null" >
+        #{randomMax,jdbcType=INTEGER},
+      </if>
+      <if test="couponStartTime != null" >
+        #{couponStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="couponEndTime != null" >
+        #{couponEndTime,jdbcType=TIMESTAMP},
+      </if>
+
+      <if test="couponTimeType != null" >
+        #{couponTimeType,jdbcType=INTEGER},
+      </if>
+
+      <if test="couponTimeLast != null" >
+        #{couponTimeLast,jdbcType=INTEGER},
+      </if>
+
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="isWarn != null" >
+        #{isWarn,jdbcType=INTEGER},
+      </if>
+      <if test="warnTimes != null" >
+        #{warnTimes,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+
+
+
+  <update id="updateActivityExtCoupon" parameterType="com.ziroom.minsu.entity.cms.ActivityExtCouponEntity" >
+    update t_activity_ext_coupon
+    <set >
+
+      <if test="couponName != null" >
+        coupon_name = #{couponName,jdbcType=VARCHAR},
+      </if>
+      <if test="couponNum != null" >
+        coupon_num = #{couponNum,jdbcType=INTEGER},
+      </if>
+      <if test="randomMin != null" >
+        random_min = #{randomMin,jdbcType=INTEGER},
+      </if>
+      <if test="randomMax != null" >
+        random_max = #{randomMax,jdbcType=INTEGER},
+      </if>
+
+      <!-- 开始时间和结束时间不做非空的限制，每次都去更新 -->
+
+        coupon_start_time = #{couponStartTime,jdbcType=TIMESTAMP},
+
+
+        coupon_end_time = #{couponEndTime,jdbcType=TIMESTAMP},
+
+
+      <if test="couponTimeType != null" >
+        coupon_time_type = #{couponTimeType,jdbcType=INTEGER},
+      </if>
+      <if test="couponTimeLast != null" >
+        coupon_time_last = #{couponTimeLast,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="isWarn != null" >
+        is_warn = #{isWarn,jdbcType=INTEGER},
+      </if>
+      <if test="warnTimes != null" >
+        warn_times = #{warnTimes,jdbcType=INTEGER},
+      </if>
+    </set>
+    where act_sn = #{actSn,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.cms.ActivityExtCouponEntity" >
+    update t_activity_ext_coupon
+    set act_sn = #{actSn,jdbcType=VARCHAR},
+      coupon_name = #{couponName,jdbcType=VARCHAR},
+      coupon_num = #{couponNum,jdbcType=INTEGER},
+      random_min = #{randomMin,jdbcType=INTEGER},
+      random_max = #{randomMax,jdbcType=INTEGER},
+      coupon_start_time = #{couponStartTime,jdbcType=TIMESTAMP},
+      coupon_end_time = #{couponEndTime,jdbcType=TIMESTAMP},
+      create_id = #{createId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015. ziroom.
+  -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+   <dubbo:reference id="customer.customerAuthService" interface="com.ziroom.minsu.services.customer.api.inner.CustomerAuthService" check="false"/>
+   <dubbo:reference id="customer.customerInfoService" interface="com.ziroom.minsu.services.customer.api.inner.CustomerInfoService" check="false"/>
+   <dubbo:reference id="customer.customerMsgManagerService" interface="com.ziroom.minsu.services.customer.api.inner.CustomerMsgManagerService" check="false"/>
+   <dubbo:reference id="customer.telExtensionService" interface="com.ziroom.minsu.services.customer.api.inner.TelExtensionService" check="false"/>
+   <dubbo:reference id="customer.customerRoleService" interface="com.ziroom.minsu.services.customer.api.inner.CustomerRoleService" check="false"/>
+   <dubbo:reference id="customer.landlordStaticsService" interface="com.ziroom.minsu.services.customer.api.inner.LandlordStaticsService" check="false"/>
+   <dubbo:reference id="customer.customerCollectionService" interface="com.ziroom.minsu.services.customer.api.inner.CustomerCollectionService" check="false"/>
+   <dubbo:reference id="customer.customerInfoPcService" interface="com.ziroom.minsu.services.customer.api.inner.CustomerInfoPcService" check="false"/>
+   <dubbo:reference id="customer.customerBlackService" interface="com.ziroom.minsu.services.customer.api.inner.CustomerBlackService" check="false"/>
+   <dubbo:reference id="customer.landlordBehaviorService" interface="com.ziroom.minsu.services.customer.api.inner.LandlordBehaviorService" check="false"/>
+   <dubbo:reference id="customer.customerLocationService" interface="com.ziroom.minsu.services.customer.api.inner.CustomerLocationService" check="false"/>
+   <dubbo:reference id="customer.customerChatService" interface="com.ziroom.minsu.services.customer.api.inner.CustomerChatService" check="false"/>
+   <dubbo:reference id="customer.customerBehaviorService" interface="com.ziroom.minsu.services.customer.api.inner.CustomerBehaviorService" check="false"/>
+
+
+
+</beans>

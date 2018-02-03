@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderMoneyDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderMoneyEntity" >
+    <!-- 基础map -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="sum_money" property="sumMoney" jdbcType="INTEGER" />
+    <result column="coupon_money" property="couponMoney" jdbcType="INTEGER" />
+    <result column="deposit_money" property="depositMoney" jdbcType="INTEGER" />
+    <result column="insurance_money" property="insuranceMoney" jdbcType="INTEGER" />
+    <result column="insurance_type" property="insuranceType" jdbcType="VARCHAR" />
+    <result column="discount_money" property="discountMoney" jdbcType="INTEGER" />
+    <result column="need_pay" property="needPay" jdbcType="INTEGER" />
+    <result column="real_money" property="realMoney" jdbcType="INTEGER" />
+    <result column="pay_money" property="payMoney" jdbcType="INTEGER" />
+    <result column="other_money" property="otherMoney" jdbcType="INTEGER" />
+    <result column="penalty_money" property="penaltyMoney" jdbcType="INTEGER" />
+    <result column="rental_money" property="rentalMoney" jdbcType="INTEGER" />
+    <result column="refund_money" property="refundMoney" jdbcType="INTEGER" />
+    <result column="lan_comm_money" property="lanCommMoney" jdbcType="INTEGER" />
+    <result column="user_comm_money" property="userCommMoney" jdbcType="INTEGER" />
+    <result column="real_lan_money" property="realLanMoney" jdbcType="INTEGER" />
+    <result column="real_user_money" property="realUserMoney" jdbcType="INTEGER" />
+    <result column="punish_money" property="punishMoney" jdbcType="INTEGER" />
+    <result column="clean_money" property="cleanMoney" jdbcType="INTEGER" />
+    <result column="coupon_money_all" property="couponMoneyAll" jdbcType="INTEGER" />
+    <result column="deposit_money_all" property="depositMoneyAll" jdbcType="INTEGER" />
+    <result column="rental_money_all" property="rentalMoneyAll" jdbcType="INTEGER" />
+    <result column="act_money" property="actMoney" jdbcType="INTEGER" />
+    <result column="act_money_all" property="actMoneyAll" jdbcType="INTEGER" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    <!-- -->
+    fid, order_sn, sum_money, coupon_money, deposit_money, insurance_money, insurance_type, 
+    discount_money, need_pay, real_money, pay_money, other_money, penalty_money, rental_money, 
+    refund_money, lan_comm_money,user_comm_money,real_lan_money,real_user_money,punish_money,
+    clean_money,coupon_money_all,deposit_money_all,rental_money_all,act_money,act_money_all
+    
+  </sql>
+
+
+  <select id="getOrderMoneyByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!-- 通过定orderSn 获取订单价格 -->
+    SELECT
+      <include refid="Base_Column_List" />
+    FROM t_order_money
+
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+  </select>
+
+
+  <insert id="insertOrderMoney" parameterType="com.ziroom.minsu.entity.order.OrderMoneyEntity" >
+    <!--  -->
+    INSERT INTO t_order_money
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="sumMoney != null" >
+        sum_money,
+      </if>
+      <if test="couponMoney != null" >
+        coupon_money,
+      </if>
+      <if test="depositMoney != null" >
+        deposit_money,
+      </if>
+      <if test="insuranceMoney != null" >
+        insurance_money,
+      </if>
+      <if test="insuranceType != null" >
+        insurance_type,
+      </if>
+      <if test="discountMoney != null" >
+        discount_money,
+      </if>
+      <if test="needPay != null" >
+        need_pay,
+      </if>
+      <if test="realMoney != null" >
+        real_money,
+      </if>
+      <if test="payMoney != null" >
+        pay_money,
+      </if>
+      <if test="otherMoney != null" >
+        other_money,
+      </if>
+      <if test="penaltyMoney != null" >
+        penalty_money,
+      </if>
+      <if test="rentalMoney != null" >
+        rental_money,
+      </if>
+      <if test="refundMoney != null" >
+        refund_money,
+      </if>
+      <if test="lanCommMoney != null" >
+        lan_comm_money,
+      </if>
+      <if test="userCommMoney != null" >
+        user_comm_money,
+      </if>
+      <if test="punishMoney != null" >
+        punish_money,
+      </if>
+      <if test="cleanMoney != null" >
+        clean_money,
+      </if>
+       <if test="couponMoneyAll != null" >
+        coupon_money_all,
+      </if>
+      <if test="depositMoneyAll != null" >
+        deposit_money_all,
+      </if>
+      <if test="rentalMoneyAll != null" >
+        rental_money_all,
+      </if>
+      <if test="actMoney != null" >
+        act_money,
+      </if>
+      <if test="actMoneyAll != null" >
+        act_money_all,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="sumMoney != null" >
+        #{sumMoney,jdbcType=INTEGER},
+      </if>
+      <if test="couponMoney != null" >
+        #{couponMoney,jdbcType=INTEGER},
+      </if>
+      <if test="depositMoney != null" >
+        #{depositMoney,jdbcType=INTEGER},
+      </if>
+      <if test="insuranceMoney != null" >
+        #{insuranceMoney,jdbcType=INTEGER},
+      </if>
+      <if test="insuranceType != null" >
+        #{insuranceType,jdbcType=VARCHAR},
+      </if>
+      <if test="discountMoney != null" >
+        #{discountMoney,jdbcType=INTEGER},
+      </if>
+      <if test="needPay != null" >
+        #{needPay,jdbcType=INTEGER},
+      </if>
+      <if test="realMoney != null" >
+        #{realMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payMoney != null" >
+        #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="otherMoney != null" >
+        #{otherMoney,jdbcType=INTEGER},
+      </if>
+      <if test="penaltyMoney != null" >
+        #{penaltyMoney,jdbcType=INTEGER},
+      </if>
+      <if test="rentalMoney != null" >
+        #{rentalMoney,jdbcType=INTEGER},
+      </if>
+      <if test="refundMoney != null" >
+        #{refundMoney,jdbcType=INTEGER},
+      </if>
+      <if test="lanCommMoney != null" >
+        #{lanCommMoney,jdbcType=INTEGER},
+      </if>
+      <if test="userCommMoney != null" >
+          #{userCommMoney,jdbcType=INTEGER},
+      </if>
+      <if test="punishMoney != null" >
+          #{punishMoney,jdbcType=INTEGER},
+      </if>
+      <if test="cleanMoney != null" >
+        #{cleanMoney,jdbcType=INTEGER},
+      </if>
+      <if test="couponMoneyAll != null" >
+          #{couponMoneyAll,jdbcType=INTEGER},
+      </if>
+      <if test="depositMoneyAll != null" >
+          #{depositMoneyAll,jdbcType=INTEGER},
+      </if>
+      <if test="rentalMoneyAll != null" >
+        #{rentalMoneyAll,jdbcType=INTEGER},
+      </if>
+      <if test="actMoney != null" >
+        #{actMoney,jdbcType=INTEGER},
+      </if>
+      <if test="actMoneyAll != null" >
+        #{actMoneyAll,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+
+  <update id="updateOrderMoney" parameterType="com.ziroom.minsu.entity.order.OrderMoneyEntity" >
+    <!-- 更新订单金额 -->
+    UPDATE t_order_money
+    <set >
+
+      <if test="sumMoney != null" >
+        sum_money = #{sumMoney,jdbcType=INTEGER},
+      </if>
+      <if test="couponMoney != null" >
+        coupon_money = #{couponMoney,jdbcType=INTEGER},
+      </if>
+      <if test="depositMoney != null" >
+        deposit_money = #{depositMoney,jdbcType=INTEGER},
+      </if>
+      <if test="insuranceMoney != null" >
+        insurance_money = #{insuranceMoney,jdbcType=INTEGER},
+      </if>
+      <if test="insuranceType != null" >
+        insurance_type = #{insuranceType,jdbcType=VARCHAR},
+      </if>
+      <if test="discountMoney != null" >
+        discount_money = #{discountMoney,jdbcType=INTEGER},
+      </if>
+      <if test="needPay != null" >
+        need_pay = #{needPay,jdbcType=INTEGER},
+      </if>
+      <if test="realMoney != null" >
+        real_money = #{realMoney,jdbcType=INTEGER},
+      </if>
+      <if test="payMoney != null" >
+        pay_money = #{payMoney,jdbcType=INTEGER},
+      </if>
+      <if test="otherMoney != null" >
+        other_money = #{otherMoney,jdbcType=INTEGER},
+      </if>
+      <if test="penaltyMoney != null" >
+        penalty_money = #{penaltyMoney,jdbcType=INTEGER},
+      </if>
+      <if test="rentalMoney != null" >
+        rental_money = #{rentalMoney,jdbcType=INTEGER},
+      </if>
+      <if test="refundMoney != null" >
+        refund_money = #{refundMoney,jdbcType=INTEGER},
+      </if>
+      <if test="lanCommMoney != null" >
+          lan_comm_money = #{lanCommMoney,jdbcType=INTEGER},
+      </if>
+      <if test="userCommMoney != null" >
+          user_comm_money =#{userCommMoney,jdbcType=INTEGER},
+      </if>
+      <if test="realLanMoney != null" >
+          real_lan_money =#{realLanMoney,jdbcType=INTEGER},
+      </if>
+      <if test="realUserMoney != null" >
+          real_user_money =#{realUserMoney,jdbcType=INTEGER},
+      </if>
+      <if test="punishMoney != null" >
+          punish_money =#{punishMoney,jdbcType=INTEGER},
+      </if>
+
+      <if test="cleanMoney != null" >
+        clean_money =#{cleanMoney,jdbcType=INTEGER},
+      </if>
+      <if test="actMoney != null" >
+        act_money = #{actMoney,jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="monthRealProfit" resultType="java.lang.Long" parameterType="map">
+      <!-- 入参 房源fid 订单开始时间限制时间段 计算一个房源  在某一月的 实际收入 -->
+      SELECT COALESCE(SUM(tm.rental_money + tm.clean_money + tm.other_money + tm.penalty_money - tm.real_lan_money),0)
+      FROM t_order_money AS tm
+      INNER JOIN t_order_house_snapshot th ON tm.order_sn = th.order_sn
+      INNER JOIN t_order tr ON tm.order_sn = tr.order_sn
+      WHERE th.house_fid = #{houseFid,jdbcType=VARCHAR}
+      <if test="roomFid != null">
+          AND th.room_fid=#{roomFid,jdbcType=VARCHAR}
+      </if>
+      AND tr.pay_status = 1
+      AND th.rent_way = #{rentWay,jdbcType=INTEGER}
+      AND tr.order_status IN(32,37,70,71,72,73)
+      AND tr.accounts_status = 2
+      AND tr.start_time <![CDATA[ >= ]]> #{beginTime,jdbcType=TIMESTAMP}
+      AND tr.start_time <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP}
+  </select>
+
+  <select id="monthPredictProfit" resultType="java.lang.Long" parameterType="map">
+      <!--#入参 房源fid 订单开始时间限制时间段 计算一个房源  在某一月的 预计收入  -->
+      SELECT COALESCE(SUM(
+      CASE
+      WHEN tr.order_status IN (32,37,50,51,60,61,70,71,72)
+      THEN tm.rental_money + tm.clean_money + tm.other_money + tm.penalty_money - tm.real_lan_money
+      ELSE tm.rental_money + tm.clean_money + tm.other_money + tm.penalty_money - tm.lan_comm_money
+      END ), 0)
+      FROM t_order_money AS tm
+      INNER JOIN t_order_house_snapshot th ON tm.order_sn = th.order_sn
+      INNER JOIN t_order tr ON tm.order_sn = tr.order_sn
+      WHERE th.house_fid = #{houseFid,jdbcType=VARCHAR}
+      <if test="roomFid != null">
+          AND th.room_fid=#{roomFid,jdbcType=VARCHAR}
+      </if>
+      AND tr.pay_status = 1
+      AND th.rent_way = #{rentWay,jdbcType=INTEGER}
+      AND tr.accounts_status != 2
+      AND tr.start_time <![CDATA[ >= ]]> #{beginTime,jdbcType=TIMESTAMP}
+      AND tr.start_time <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP}
+  </select>
+
+</mapper>

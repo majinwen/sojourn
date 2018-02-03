@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderBaseDao" >
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderEntity">
+        <!-- map -->
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="fid" jdbcType="VARCHAR" property="fid" />
+        <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+        <result column="nation_code" jdbcType="VARCHAR" property="nationCode" />
+        <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+        <result column="check_type" jdbcType="TINYINT" property="checkType" />
+        <result column="order_source" jdbcType="TINYINT" property="orderSource" />
+        <result column="order_status" jdbcType="TINYINT" property="orderStatus" />
+        <result column="accounts_status" jdbcType="TINYINT" property="accountsStatus" />
+        <result column="pay_status" jdbcType="TINYINT" property="payStatus" />
+        <result column="eva_status" jdbcType="TINYINT" property="evaStatus" />
+        <result column="landlord_uid" jdbcType="VARCHAR" property="landlordUid" />
+        <result column="landlord_tel" jdbcType="VARCHAR" property="landlordTel" />
+         <result column="landlord_tel_code" jdbcType="VARCHAR" property="landlordTelCode" />
+        <result column="landlord_name" jdbcType="VARCHAR" property="landlordName" />
+        <result column="user_uid" jdbcType="VARCHAR" property="userUid" />
+        <result column="user_tel_code" jdbcType="VARCHAR" property="userTelCode" />
+         <result column="user_tel" jdbcType="VARCHAR" property="userTel" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="people_num" jdbcType="INTEGER" property="peopleNum" />
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+        <result column="real_end_time" jdbcType="TIMESTAMP" property="realEndTime" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
+        <result column="is_del" jdbcType="TINYINT" property="isDel" />
+        <result column="trip_purpose" jdbcType="TINYINT" property="tripPurpose" />
+    </resultMap>
+    
+    
+    <resultMap id="RemindOrderResult" type="com.ziroom.minsu.services.finance.entity.RemindOrderVo" extends="BaseResultMap">
+       <result column="house_fid" jdbcType="VARCHAR" property="houseFid" />
+       <result column="house_name" jdbcType="VARCHAR" property="houseName" />
+    </resultMap>
+    
+    
+    <resultMap id="RefuseOrderResult" type="com.ziroom.minsu.services.finance.entity.RefuseOrderVo" extends="BaseResultMap">
+       <result column="house_fid" jdbcType="VARCHAR" property="houseFid" />
+       <result column="house_name" jdbcType="VARCHAR" property="houseName" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        <!--  -->
+        id, fid, order_sn, nation_code,province_code,area_code, city_code,check_type, order_source,eva_status, order_status, accounts_status,
+        pay_status, landlord_uid, landlord_tel, landlord_name, user_uid, user_tel, user_name,
+        people_num, start_time, end_time, real_end_time, pay_time,create_time, last_modify_date, is_del ,trip_purpose
+    </sql>
+    
+    <sql id="Base_Column_Flag">
+        a.id, a.fid, a.order_sn, a.nation_code, a.province_code, a.area_code, a.city_code, a.check_type, a.order_source, a.eva_status, a.order_status, a.accounts_status,
+        a.pay_status, a.landlord_uid, a.landlord_tel,a.landlord_tel_code, a.landlord_name, a.user_uid, a.user_tel, a.user_tel_code, a.user_name,
+        a.people_num, a.start_time, a.end_time, a.real_end_time, a.pay_time, a.create_time, a.last_modify_date, a.is_del ,a.trip_purpose
+    </sql>
+
+
+    <!-- 当前房源下有效的订单编号列表 -->
+    <select id="getOrderSnList4LockByRooms" resultType="java.lang.String" parameterType="map" >
+        SELECT  o.order_sn  FROM
+        t_order o INNER JOIN t_order_house_snapshot s ON o.order_sn = s.order_sn
+        WHERE
+        (
+        (o.end_time > NOW() AND real_end_time  IS NULL)
+        OR
+        (o.real_end_time  IS NOT NULL AND  o.real_end_time > NOW()  )
+        )
+        AND s.room_fid  IN
+        <foreach collection="rooms" item="item" index="index"
+                 open="(" separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
+
+        AND s.is_lock = 0
+    </select>
+
+
+
+    <!-- 当前房源下有效的订单编号列表 -->
+    <select id="getOrderSnList4LockByHouse" resultType="java.lang.String" parameterType="map" >
+       SELECT  o.order_sn  FROM
+        t_order o INNER JOIN t_order_house_snapshot s ON o.order_sn = s.order_sn
+        WHERE
+        (
+            (o.end_time > NOW() AND real_end_time  IS NULL)
+            OR
+            (o.real_end_time  IS NOT NULL AND  o.real_end_time > NOW()  )
+        )
+
+        AND s.house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND s.is_lock = 0
+    </select>
+
+
+    <!-- 获取用户当前的未支付的订单的数量 -->
+    <select id="countCurrentNoPayOrder" resultType="java.lang.Long" parameterType="map" >
+        <!--  -->
+        SELECT
+        COUNT(id)
+        FROM t_order
+        WHERE city_code = #{cityCode,jdbcType=VARCHAR}
+        AND user_uid = #{uid,jdbcType=VARCHAR}
+        AND order_status IN (10,20)
+        AND pay_status = 0
+        AND is_del = 0
+    </select>
+
+
+    <!-- 通过订单号 查询订单的基础信息 -->
+    <select id="getOrderBaseByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_order
+        WHERE is_del = 0
+        and order_sn=#{orderSn,jdbcType=VARCHAR}
+        limit 1
+    </select>
+    
+    
+    <select id="getOrdersBySns" resultMap="BaseResultMap" parameterType="map" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_order
+        WHERE is_del = 0
+        AND order_sn IN
+        <foreach collection="orderSns"  item="orderSn" open="(" separator="," close=")">
+            #{orderSn,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+    
+    
+    
+
+    <!-- 校验当前的订单 -->
+    <select id="countOrderByLoadlord" resultType="Long">
+        SELECT COUNT(id) FROM t_order
+        WHERE  order_sn =#{orderSn,jdbcType=VARCHAR}  AND landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+    </select>
+
+	
+
+
+    <!-- 查询  未支付 待入住 且 最后更新时间 与 现在相差30min的订单 数量 -->
+    <select id="taskGetOverTimeNum" resultType="Long" >
+        SELECT COUNT(id) FROM t_order
+        WHERE is_del = 0
+        AND pay_status=#{payStatus,jdbcType=INTEGER}
+        AND order_status=#{orderStatus,jdbcType=INTEGER}
+        AND last_modify_date <![CDATA[ <= ]]> #{limitDate,jdbcType=TIMESTAMP}
+    </select>
+
+
+    <!-- 查询  已经入住 但是已经过了退房时间的订单数量 -->
+    <select id="taskGetOverCheckOutNum" resultType="Long" >
+        SELECT COUNT(id) FROM t_order
+        WHERE is_del = 0
+        AND pay_status=#{payStatus,jdbcType=INTEGER}
+        AND order_status=#{orderStatus,jdbcType=INTEGER}
+        AND end_time <![CDATA[ <= ]]> #{limitDate,jdbcType=TIMESTAMP}
+    </select>
+    <!-- 查询  已经入住 但是已经过了退房时间的订单的list -->
+    <select id="taskGetToCheckOutOrderSnList" resultType="java.lang.String" >
+        SELECT order_sn FROM t_order
+        WHERE is_del = 0
+        AND pay_status=#{payStatus,jdbcType=INTEGER}
+        AND order_status=#{orderStatus,jdbcType=INTEGER}
+        AND end_time <![CDATA[ <= ]]> #{limitDate,jdbcType=TIMESTAMP}
+        limit #{limit,jdbcType=INTEGER}
+    </select>
+
+    <!-- 查询  未支付 待入住 且 最后更新时间 与 现在相差30min的订单的list -->
+    <select id="taskGetToCanceOrderSnList" resultType="java.lang.String" >
+        SELECT order_sn FROM t_order
+        WHERE is_del = 0
+        AND pay_status=#{payStatus,jdbcType=INTEGER}
+        AND order_status=#{orderStatus,jdbcType=INTEGER}
+        AND last_modify_date <![CDATA[ <= ]]> #{limitDate,jdbcType=TIMESTAMP}
+        limit #{limit,jdbcType=INTEGER}
+    </select>
+
+
+
+    <!-- 查询  已支付 待入住  且 入住时间小于当前时间的订单 -->
+    <select id="taskGetOverCheckInTimeOrderSnList" resultType="java.lang.String" >
+        SELECT order_sn FROM t_order
+        WHERE is_del = 0
+         AND pay_status=#{payStatus,jdbcType=INTEGER}
+        AND order_status=#{orderStatus,jdbcType=INTEGER}
+        and start_time <![CDATA[ <= ]]> #{limitDate,jdbcType=TIMESTAMP}
+        limit #{limit,jdbcType=INTEGER}
+    </select>
+
+
+    <!-- 查询  已支付 待入住  且 入住时间小于当前时间的订单 -->
+    <select id="taskGetOverCheckInNum" resultType="Long" >
+        SELECT COUNT(id) FROM t_order
+        WHERE is_del = 0
+        AND pay_status=#{payStatus,jdbcType=INTEGER}
+        AND order_status=#{orderStatus,jdbcType=INTEGER}
+        and start_time <![CDATA[ <= ]]> #{limitDate,jdbcType=TIMESTAMP}
+    </select>
+
+	
+	<!-- 查询 已支付  待入住 前一天订单  count-->
+	<select id="taskGetTomorrowOrderNum" resultType="Long">
+		SELECT 
+		COUNT(id)
+        FROM t_order
+        WHERE is_del = 0
+        AND pay_status = 1 
+        AND order_status  = 20 
+        AND DATE(start_time) = #{limitDate,jdbcType=TIMESTAMP}
+	</select>
+	
+	<!-- 查询  查询前一天订单list -->
+    <select id="taskGetTomorrowOrderList" resultType="java.lang.String" >
+        SELECT  
+        <include refid="Base_Column_List" />
+        FROM t_order
+        WHERE is_del = 0
+        AND pay_status = 1 
+        AND order_status  = 20 
+        AND DATE(start_time) = #{limitDate,jdbcType=TIMESTAMP}
+        limit #{limit,jdbcType=INTEGER}
+    </select>
+
+
+
+	<!-- 根据订单状态 查询订单 数量 -->
+    <select id="getOrderCountByStatus" resultType="Long">
+        SELECT COUNT(id) FROM t_order
+        WHERE is_del = 0
+        AND order_status=#{orderStatus,jdbcType=INTEGER}
+    </select>
+    
+    <!-- 根据订单状态 查询订单 -->
+    <select id="getOrderListByStatus" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_order
+        WHERE is_del = 0
+        AND order_status=#{orderStatus,jdbcType=INTEGER}
+        limit #{limit,jdbcType=INTEGER}
+    </select>
+    
+    
+    
+    <!-- 查询一定时间内未操作的订单count -->
+    <select id="getNoOperateOrderCount" resultType="Long">
+        SELECT COUNT(o.id) FROM t_order o
+        LEFT JOIN `t_order_log` l
+        ON o.`order_sn`=l.`order_sn`
+        WHERE l.`create_date` &lt; #{limitTime,jdbcType=TIMESTAMP} 
+        AND o.order_status in
+        <foreach collection="orderStatusList"  item="orderStatus" open="(" separator="," close=")">
+            #{orderStatus,jdbcType=INTEGER}
+        </foreach>
+        AND l.`to_status` in
+        <foreach collection="orderStatusList"  item="orderStatus" open="(" separator="," close=")">
+            #{orderStatus,jdbcType=INTEGER}
+        </foreach>
+        AND o.is_del = 0
+        AND l.is_del = 0
+    </select>
+    
+    <!-- 查询一定时间内未操作的订单订单list -->
+    <select id="getNoOperateOrderList" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        o.id,o.fid,o.order_sn,o.nation_code,o.province_code,o.area_code,o.city_code,o.check_type,o.order_source,
+        o.eva_status,o.order_status,o.accounts_status,o.pay_status,
+        o.landlord_uid,o.landlord_tel,o.landlord_name,o.user_uid,o.user_tel,o.user_name,o.people_num,
+        o.start_time,o.end_time,o.real_end_time,o.pay_time,o.create_time,o.last_modify_date,o.is_del ,o.trip_purpose
+        FROM t_order o
+        LEFT JOIN `t_order_log` l
+        ON o.`order_sn`=l.`order_sn`
+        WHERE l.`create_date` &lt; #{limitTime,jdbcType=TIMESTAMP} 
+        AND o.order_status in
+        <foreach collection="orderStatusList"  item="orderStatus" open="(" separator="," close=")">
+            #{orderStatus,jdbcType=INTEGER}
+        </foreach>
+        AND l.`to_status` in
+        <foreach collection="orderStatusList"  item="orderStatus" open="(" separator="," close=")">
+            #{orderStatus,jdbcType=INTEGER}
+        </foreach>
+        AND o.is_del = 0
+        AND l.is_del = 0
+        limit #{limit,jdbcType=INTEGER}
+    </select>
+    
+    
+    
+	<!-- 查询下单后未提醒房东确认的订单count  -->
+    <select id="getWaitConfimOrderCount" resultType="Long" parameterType="map">
+		SELECT COUNT(a.id) FROM t_order a 
+    	LEFT JOIN t_order_flag b 
+    	ON a.order_sn=b.order_sn AND b.flag_code=#{flagCode,jdbcType=VARCHAR} AND b.is_del = 0
+		WHERE a.order_status = #{orderStatus,jdbcType=INTEGER}
+		AND a.create_time <![CDATA[ < ]]> #{limitDate,jdbcType=TIMESTAMP}
+		AND (b.flag_value IS NULL OR b.flag_value!=#{flagValue,jdbcType=VARCHAR})
+		AND a.is_del = 0
+    </select>
+    
+	<!-- 查询下单后未提醒房东确认的订单list  -->
+    <select id="getWaitConfimOrderList" resultMap="BaseResultMap" parameterType="map">
+		SELECT
+    	<include refid="Base_Column_Flag" />
+    	FROM t_order a 
+    	LEFT JOIN t_order_flag b 
+    	ON a.order_sn=b.order_sn AND b.flag_code=#{flagCode,jdbcType=VARCHAR} AND b.is_del = 0
+		WHERE a.order_status = #{orderStatus,jdbcType=INTEGER}
+		AND a.create_time <![CDATA[ < ]]> #{limitDate,jdbcType=TIMESTAMP}
+		AND (b.flag_value IS NULL OR b.flag_value!=#{flagValue,jdbcType=VARCHAR})
+		AND a.is_del = 0
+		limit #{limit,jdbcType=INTEGER}
+    </select>
+
+
+
+
+    <!-- 查询房东待确认的清单  只给房东超时未确认的定时任务用 -->
+    <select id="getWaitConformOrderList" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_order
+        WHERE is_del = 0
+        AND order_status in
+        <foreach collection="orderStatusList"  item="orderStatus" open="(" separator="," close=")">
+            #{orderStatus,jdbcType=INTEGER}
+        </foreach>
+        AND last_modify_date &lt; #{limitTime,jdbcType=TIMESTAMP}
+        limit #{limit,jdbcType=INTEGER}
+    </select>
+
+    <!--  查询房东待确认的清单  只给房东超时未确认的定时任务用 -->
+    <select id="getWaitConformOrderCount" resultType="Long">
+        SELECT COUNT(id) FROM t_order
+        WHERE is_del = 0
+        AND order_status in
+        <foreach collection="orderStatusList"  item="orderStatus" open="(" separator="," close=")">
+            #{orderStatus,jdbcType=INTEGER}
+        </foreach>
+        AND last_modify_date &lt; #{limitTime,jdbcType=TIMESTAMP}
+    </select>
+
+    
+    <!-- tory查询申请预订且房东未回复的订单 -->
+    <select id="getRemindOrderList" resultMap="RemindOrderResult" parameterType="map">
+		SELECT
+    	<include refid="Base_Column_Flag" />,c.house_fid, c.house_name
+    	FROM t_order a 
+    	LEFT JOIN t_order_house_snapshot c ON a.order_sn=c.order_sn
+		WHERE a.order_status = #{orderStatus,jdbcType=INTEGER}
+		AND a.is_del = 0
+		ORDER BY a.create_time
+    </select>
+    
+    <!-- troy查询房东拒绝的申请预定（12小时以内） -->
+    <select id="getRefuseOrderList" resultMap="RefuseOrderResult" parameterType="map">
+		SELECT
+		<include refid="Base_Column_Flag" />,b.house_fid, b.house_name
+    	FROM t_order a 
+    	LEFT JOIN t_order_house_snapshot b ON a.order_sn=b.order_sn
+		WHERE a.order_status = #{orderStatus,jdbcType=INTEGER}
+		AND a.last_modify_date >= #{limitDate,jdbcType=TIMESTAMP}
+		AND a.is_del = 0
+		ORDER BY a.last_modify_date
+    </select>
+
+
+
+    <select id="getCheckOutTodayList" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_order
+        WHERE order_status = #{orderStatus,jdbcType=INTEGER}
+        AND DATE_FORMAT(end_time,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d')
+        AND is_del = 0
+    </select>
+
+
+    <!--检查被邀请人是否有已经入住订单-->
+    <select id="checkIfInviteCheckInOrder" resultType="Long" parameterType="map">
+        SELECT COUNT(1) FROM t_order
+        WHERE start_time &lt; NOW()
+        AND user_uid = #{uid,jdbcType=VARCHAR}
+        AND create_time > #{inviteTime,jdbcType=TIMESTAMP}
+        AND order_status >= 40
+        AND is_del = 0
+        LIMIT 1
+    </select>
+
+
+
+    <!-- 更新 未删除  未支付超过30min后的订单为 未入住已取消 -->
+    <update id="taskUpdateOrderToCancelStatus" parameterType="java.lang.String">
+        <!--  查询订单相关 相关 -->
+        update t_order tor
+        set tor.order_status=33
+        where tor.is_del = 0
+        and tor.pay_status=0
+        and tor.order_status=20
+        and tor.order_sn = #{orderSn,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 更新 未删除  已支付 待入住  且 入住时间小于当前时间的订单  更新订单状态可评价-->
+    <update id="taskUpdateOrderToCheckInStatus" parameterType="java.lang.String">
+        <!--  查询订单相关 相关 -->
+        update t_order tor
+        set tor.order_status=40,tor.eva_status = 100
+        where tor.is_del = 0
+        and tor.pay_status=1
+        and tor.order_status=20
+        and tor.order_sn = #{orderSn,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 更新 订单的主表信息-->
+    <update id="updateOrderBaseByOrderSn" parameterType="com.ziroom.minsu.entity.order.OrderEntity">
+        <!--  -->
+        UPDATE t_order
+        <set>
+            <if test="nationCode != null">
+                nation_code = #{nationCode,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceCode != null">
+                province_code = #{provinceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="cityCode != null">
+                city_code = #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="areaCode != null">
+                area_code = #{areaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="orderSource != null">
+                order_source = #{orderSource,jdbcType=TINYINT},
+            </if>
+            <if test="orderStatus != null">
+                order_status = #{orderStatus,jdbcType=TINYINT},
+            </if>
+            <if test="evaStatus != null">
+                eva_status = #{evaStatus,jdbcType=TINYINT},
+            </if>
+            <if test="accountsStatus != null">
+                accounts_status = #{accountsStatus,jdbcType=TINYINT},
+            </if>
+            <if test="payStatus != null">
+                pay_status = #{payStatus,jdbcType=TINYINT},
+            </if>
+            <if test="landlordUid != null">
+                landlord_uid = #{landlordUid,jdbcType=VARCHAR},
+            </if>
+            <if test="landlordTel != null">
+                landlord_tel = #{landlordTel,jdbcType=VARCHAR},
+            </if>
+            <if test="landlordName != null">
+                landlord_name = #{landlordName,jdbcType=VARCHAR},
+            </if>
+            <if test="userUid != null">
+                user_uid = #{userUid,jdbcType=VARCHAR},
+            </if>
+            <if test="userTel != null">
+                user_tel = #{userTel,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="peopleNum != null">
+                people_num = #{peopleNum,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="realEndTime != null">
+                real_end_time = #{realEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="payTime != null">
+                pay_time = #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null">
+                last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=TINYINT},
+            </if>
+            <if test="tripPurpose != null">
+                trip_purpose = #{tripPurpose,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+        and order_status = #{oldStatus,jdbcType=INTEGER}
+    </update>
+
+
+
+    <insert id="insertOrderBase" parameterType="com.ziroom.minsu.entity.order.OrderEntity">
+        <!-- 保存订单信息  -->
+        insert into t_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="orderSn != null">
+                order_sn,
+            </if>
+            <if test="nationCode != null">
+                nation_code,
+            </if>
+            <if test="provinceCode != null">
+                province_code,
+            </if>
+            <if test="cityCode != null">
+                city_code,
+            </if>
+            <if test="areaCode != null">
+                area_code,
+            </if>
+
+            <if test="checkType != null">
+                check_type,
+            </if>
+
+            <if test="orderSource != null">
+                order_source,
+            </if>
+            <if test="orderStatus != null">
+                order_status,
+            </if>
+            <if test="accountsStatus != null">
+                accounts_status,
+            </if>
+            <if test="payStatus != null">
+                pay_status,
+            </if>
+            <if test="landlordUid != null">
+                landlord_uid,
+            </if>
+            <if test="landlordTel != null">
+                landlord_tel,
+            </if>
+            <if test="landlordTelCode != null">
+                landlord_tel_code,
+            </if>
+            <if test="landlordName != null">
+                landlord_name,
+            </if>
+            <if test="userUid != null">
+                user_uid,
+            </if>
+            <if test="userTel != null">
+                user_tel,
+            </if>
+             <if test="userTelCode != null">
+                user_tel_code,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="peopleNum != null">
+                people_num,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="realEndTime != null">
+                real_end_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="lastModifyDate != null">
+                last_modify_date,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+            <if test="tripPurpose != null">
+                trip_purpose,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="fid != null">
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="orderSn != null">
+                #{orderSn,jdbcType=VARCHAR},
+            </if>
+            <if test="nationCode != null">
+                #{nationCode,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceCode != null">
+                #{provinceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="cityCode != null">
+                #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="areaCode != null">
+                #{areaCode,jdbcType=VARCHAR},
+            </if>
+            <if test="checkType != null">
+                #{checkType,jdbcType=TINYINT},
+            </if>
+            <if test="orderSource != null">
+                #{orderSource,jdbcType=TINYINT},
+            </if>
+            <if test="orderStatus != null">
+                #{orderStatus,jdbcType=TINYINT},
+            </if>
+            <if test="accountsStatus != null">
+                #{accountsStatus,jdbcType=TINYINT},
+            </if>
+            <if test="payStatus != null">
+                #{payStatus,jdbcType=TINYINT},
+            </if>
+            <if test="landlordUid != null">
+                #{landlordUid,jdbcType=VARCHAR},
+            </if>
+            <if test="landlordTel != null">
+                #{landlordTel,jdbcType=VARCHAR},
+            </if>
+            <if test="landlordTelCode != null">
+                #{landlordTelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="landlordName != null">
+                #{landlordName,jdbcType=VARCHAR},
+            </if>
+            <if test="userUid != null">
+                #{userUid,jdbcType=VARCHAR},
+            </if>
+            <if test="userTel != null">
+                #{userTel,jdbcType=VARCHAR},
+            </if>
+             <if test="userTelCode != null">
+                #{userTelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="peopleNum != null">
+                #{peopleNum,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="realEndTime != null">
+                #{realEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null">
+                #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=TINYINT},
+            </if>
+            <if test="tripPurpose != null">
+                #{tripPurpose,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 更新 订单的主表信息-->
+    <update id="updateOrderPayStatusByOrderSn" parameterType="map">
+    UPDATE t_order
+    SET pay_status = #{payStatus,jdbcType=INTEGER},
+        pay_time=#{payTime,jdbcType=TIMESTAMP}
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+     AND  pay_status = #{oldPayStatus,jdbcType=VARCHAR}
+    AND is_del = 0
+    
+    </update>
+    
+    <!--   获取每天将要入住的订单 -->
+    <select id="getWaitCheckinList" resultType="com.ziroom.minsu.services.order.entity.OrderHouseVo">
+         SELECT t.user_name AS userName, t.landlord_tel as landlordTel,
+                DATE_FORMAT(t.start_time,'%Y-%m-%d') as startTime,DATE_FORMAT(t.end_time,'%Y-%m-%d')as endTime,
+                hs.house_name as houseName
+		 FROM `minsu_order_db`.t_order t
+		 JOIN `minsu_order_db`.t_order_house_snapshot hs
+		 ON t.order_sn=hs.order_sn
+		 WHERE t.start_time <![CDATA[ >= ]]> DATE_ADD(CURDATE(),INTERVAL 1 DAY)
+         AND t.start_time <![CDATA[ < ]]> DATE_ADD(CURDATE(),INTERVAL 2 DAY)
+		 AND t.pay_status=1
+		 AND hs.rent_way=0 
+		 AND t.order_status=20
+		 UNION    
+		 SELECT t.user_name AS userName, t.landlord_tel as landlordTel,
+		        DATE_FORMAT(t.start_time,'%Y-%m-%d') as startTime,DATE_FORMAT(t.end_time,'%Y-%m-%d')as endTime,
+		        hs.room_name AS houseName
+		 FROM `minsu_order_db`.t_order t
+		 JOIN `minsu_order_db`.t_order_house_snapshot hs
+		 ON t.order_sn=hs.order_sn
+		 WHERE t.start_time <![CDATA[ >= ]]> DATE_ADD(CURDATE(),INTERVAL 1 DAY)
+         AND t.start_time <![CDATA[ < ]]> DATE_ADD(CURDATE(),INTERVAL 2 DAY)
+		 AND t.pay_status=1 
+		 AND hs.rent_way=1 
+		 AND t.order_status=20
+    </select>
+
+
+    <select id="getAdvisoryOrderInfo" resultType="com.ziroom.minsu.entity.order.OrderEntity" parameterType="com.ziroom.minsu.entity.message.MsgFirstAdvisoryEntity">
+        SELECT t2.pay_status as payStatus,t2.order_sn as orderSn FROM minsu_order_db.t_order_house_snapshot t1
+        LEFT JOIN minsu_order_db.`t_order` t2
+        ON t1.order_sn = t2.order_sn
+        WHERE t1.house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND t2.user_uid = #{fromUid,jdbcType=VARCHAR}
+        AND (DAY(t2.create_time) = DAY(#{createTime,jdbcType=TIMESTAMP}) OR  DAY(t2.create_time) = DAY(DATE_ADD(#{createTime,jdbcType=TIMESTAMP},INTERVAL -1 DAY)))
+        ORDER BY t2.pay_status DESC
+        LIMIT 1
+    </select>
+
+	<update id="updateOrderStatusByOrderSn" parameterType="com.ziroom.minsu.entity.order.OrderEntity">
+	    update t_order tor
+        set tor.order_status=#{orderStatus,jdbcType=VARCHAR}
+        where tor.is_del = 0
+        and tor.order_status=20
+        and tor.order_sn = #{orderSn,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 批量获取被邀请用户，订单及状态，填充其被邀请状态 -->
+	<select id="getBeInviterStatusInfo" parameterType="com.ziroom.minsu.services.order.dto.BeInviterStatusInfoRequest" resultType="com.ziroom.minsu.services.order.entity.BeInviterStatusInfoVo">
+	  SELECT a.user_uid AS beInviterUid, a.orderNum AS orderNum  FROM 
+	      (SELECT o.`user_uid`,COUNT(id) AS orderNum FROM `minsu_order_db`.`t_order` o
+	       WHERE o.`order_status` in (20,40,41)  AND o.is_del=0 AND o.pay_status=1
+	       GROUP BY o.`user_uid`) AS a
+      WHERE a.user_uid in
+        <foreach collection="beInviterInfoList"  item="beInviterUid" open="(" separator="," close=")">
+            #{beInviterUid,jdbcType=VARCHAR}
+        </foreach>
+	</select>
+	
+	<!-- 批量获取被邀请用户，订单及状态，填充其被邀请状态 -->
+	<select id="getEarliestOrderTime" parameterType="string" resultType="com.ziroom.minsu.services.order.entity.BeInviterStatusInfoVo">
+	  SELECT o.user_uid AS beInviterUid, o.create_time as orderCreateTime FROM `minsu_order_db`.`t_order` o
+	  WHERE o.user_uid = #{beInviterUid,jdbcType=VARCHAR} AND o.pay_status=1 AND o.`order_status` in (20,40,41)  AND o.is_del=0
+	  ORDER BY o.create_time LIMIT 1
+	</select>
+</mapper>

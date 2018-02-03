@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseBaseExtDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseBaseExtEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="building_num" property="buildingNum" jdbcType="VARCHAR" />
+    <result column="unit_num" property="unitNum" jdbcType="VARCHAR" />
+    <result column="floor_num" property="floorNum" jdbcType="VARCHAR" />
+    <result column="house_num" property="houseNum" jdbcType="VARCHAR" />
+    <result column="house_street" property="houseStreet" jdbcType="VARCHAR" />
+    <result column="facility_code" property="facilityCode" jdbcType="VARCHAR" />
+    <result column="service_code" property="serviceCode" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="INTEGER" />
+    <result column="homestay_type" property="homestayType" jdbcType="INTEGER" />
+    <result column="min_day" property="minDay" jdbcType="INTEGER" />
+    <result column="discount_rules_code" property="discountRulesCode" jdbcType="VARCHAR" />
+    <result column="deposit_rules_code" property="depositRulesCode" jdbcType="VARCHAR" />
+    <result column="check_in_limit" property="checkInLimit" jdbcType="TINYINT" />
+    <result column="check_out_rules_code" property="checkOutRulesCode" jdbcType="VARCHAR" />
+    <result column="check_in_time" property="checkInTime" jdbcType="VARCHAR" />
+    <result column="check_out_time" property="checkOutTime" jdbcType="VARCHAR" />
+    <result column="sheets_replace_rules" property="sheetsReplaceRules" jdbcType="INTEGER" />
+    <result column="full_discount" property="fullDiscount" jdbcType="DECIMAL" />
+    <result column="is_together_landlord" property="isTogetherLandlord" jdbcType="INTEGER" />
+    <result column="default_pic_fid" property="defaultPicFid" jdbcType="VARCHAR" />
+    <result column="old_default_pic_fid" property="oldDefaultPicFid" jdbcType="VARCHAR" />
+    <result column="detail_address" property="detailAddress" jdbcType="VARCHAR" />
+    <result column="is_landlord_pic" property="isLandlordPic" jdbcType="INTEGER" />
+    <result column="house_quality_grade" property="houseQualityGrade" jdbcType="VARCHAR" />
+    <result column="is_photography" property="isPhotography" jdbcType="INTEGER" />
+    <result column="survey_result" property="surveyResult" jdbcType="INTEGER" />
+    <result column="rent_room_num" property="rentRoomNum" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    hbe.id, hbe.fid, hbe.house_base_fid, hbe.building_num, hbe.unit_num, hbe.floor_num, hbe.house_num, hbe.house_street, 
+    hbe.facility_code,hbe.service_code, hbe.order_type, hbe.homestay_type, hbe.min_day, hbe.discount_rules_code, hbe.check_in_limit,
+    hbe.deposit_rules_code, hbe.check_out_rules_code, hbe.check_in_time, hbe.check_out_time, hbe.sheets_replace_rules,
+    hbe.full_discount, hbe.is_together_landlord, hbe.default_pic_fid, hbe.old_default_pic_fid, hbe.detail_address,
+    hbe.is_landlord_pic, hbe.house_quality_grade, hbe.is_photography, hbe.survey_result, hbe.rent_room_num
+  </sql>
+
+  <insert id="insertHouseBaseExt" parameterType="com.ziroom.minsu.entity.house.HouseBaseExtEntity" >
+    insert into t_house_base_ext
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="buildingNum != null" >
+        building_num,
+      </if>
+      <if test="unitNum != null" >
+        unit_num,
+      </if>
+      <if test="floorNum != null" >
+        floor_num,
+      </if>
+      <if test="houseNum != null" >
+        house_num,
+      </if>
+      <if test="houseStreet != null" >
+        house_street,
+      </if>
+      <if test="facilityCode != null" >
+        facility_code,
+      </if>
+      <if test="serviceCode != null" >
+        service_code,
+      </if>
+      <if test="orderType != null" >
+        order_type,
+      </if>
+      <if test="homestayType != null" >
+        homestay_type,
+      </if>
+      <if test="minDay != null" >
+        min_day,
+      </if>
+      <if test="discountRulesCode != null" >
+        discount_rules_code,
+      </if>
+      <if test="depositRulesCode != null" >
+        deposit_rules_code,
+      </if>
+      <if test="checkOutRulesCode != null" >
+        check_out_rules_code,
+      </if>
+      <if test="checkInLimit != null" >
+        check_in_limit,
+      </if>
+      <if test="checkInTime != null" >
+        check_in_time,
+      </if>
+      <if test="checkOutTime != null" >
+        check_out_time,
+      </if>
+      <if test="sheetsReplaceRules != null" >
+        sheets_replace_rules,
+      </if>
+      <if test="fullDiscount != null" >
+        full_discount,
+      </if>
+      <if test="isTogetherLandlord != null" >
+        is_together_landlord,
+      </if>
+      <if test="defaultPicFid != null" >
+        default_pic_fid,
+      </if>
+      <if test="oldDefaultPicFid != null" >
+        old_default_pic_fid,
+      </if>
+      <if test="detailAddress != null" >
+        detail_address,
+      </if>
+      <if test="isLandlordPic != null" >
+        is_landlord_pic,
+      </if>
+      <if test="houseQualityGrade != null" >
+        house_quality_grade,
+      </if>
+      <if test="isPhotography != null" >
+        is_photography,
+      </if>
+      <if test="surveyResult != null" >
+        survey_result,
+      </if>
+      <if test="rentRoomNum != null" >
+        rent_room_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingNum != null" >
+        #{buildingNum,jdbcType=VARCHAR},
+      </if>
+      <if test="unitNum != null" >
+        #{unitNum,jdbcType=VARCHAR},
+      </if>
+      <if test="floorNum != null" >
+        #{floorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="houseNum != null" >
+        #{houseNum,jdbcType=VARCHAR},
+      </if>
+      <if test="houseStreet != null" >
+        #{houseStreet,jdbcType=VARCHAR},
+      </if>
+      <if test="facilityCode != null" >
+        #{facilityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCode != null" >
+        #{serviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="homestayType != null" >
+        #{homestayType,jdbcType=INTEGER},
+      </if>
+      <if test="minDay != null" >
+        #{minDay,jdbcType=INTEGER},
+      </if>
+      <if test="discountRulesCode != null" >
+        #{discountRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="depositRulesCode != null" >
+        #{depositRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkOutRulesCode != null" >
+        #{checkOutRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkInLimit != null" >
+        #{checkInLimit,jdbcType=TINYINT},
+      </if>
+      <if test="checkInTime != null" >
+        #{checkInTime,jdbcType=VARCHAR},
+      </if>
+      <if test="checkOutTime != null" >
+        #{checkOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sheetsReplaceRules != null" >
+        #{sheetsReplaceRules,jdbcType=INTEGER},
+      </if>
+      <if test="fullDiscount != null" >
+        #{fullDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="isTogetherLandlord != null" >
+        #{isTogetherLandlord,jdbcType=DECIMAL},
+      </if>
+      <if test="defaultPicFid != null" >
+        #{defaultPicFid,jdbcType=VARCHAR},
+      </if>
+      <if test="oldDefaultPicFid != null" >
+        #{oldDefaultPicFid,jdbcType=VARCHAR},
+      </if> 
+      <if test="detailAddress != null" >
+        #{detailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isLandlordPic != null" >
+        #{isLandlordPic,jdbcType=INTEGER},
+      </if>
+      <if test="houseQualityGrade != null" >
+        #{houseQualityGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="isPhotography != null" >
+        #{isPhotography,jdbcType=INTEGER},
+      </if>
+      <if test="surveyResult != null" >
+        #{surveyResult,jdbcType=INTEGER},
+      </if>
+      <if test="rentRoomNum != null" >
+        #{rentRoomNum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateHouseBaseExtByHouseBaseFid" parameterType="com.ziroom.minsu.entity.house.HouseBaseExtEntity" >
+    update t_house_base_ext
+    <set >
+      <if test="houseBaseFid != null" >
+    	house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingNum != null" >
+        building_num = #{buildingNum,jdbcType=VARCHAR},
+      </if>
+      <if test="unitNum != null" >
+        unit_num = #{unitNum,jdbcType=VARCHAR},
+      </if>
+      <if test="floorNum != null" >
+        floor_num = #{floorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="houseNum != null" >
+        house_num = #{houseNum,jdbcType=VARCHAR},
+      </if>
+      <if test="houseStreet != null" >
+        house_street = #{houseStreet,jdbcType=VARCHAR},
+      </if>
+      <if test="facilityCode != null" >
+        facility_code = #{facilityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCode != null" >
+        service_code = #{serviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="homestayType != null" >
+        homestay_type = #{homestayType,jdbcType=INTEGER},
+      </if>
+      <if test="minDay != null" >
+        min_day = #{minDay,jdbcType=TINYINT},
+      </if>
+      <if test="discountRulesCode != null" >
+        discount_rules_code = #{discountRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="depositRulesCode != null" >
+        deposit_rules_code = #{depositRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkInLimit != null" >
+        check_in_limit = #{checkInLimit,jdbcType=TINYINT},
+      </if>
+      <if test="checkOutRulesCode != null" >
+        check_out_rules_code = #{checkOutRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkInTime != null" >
+        check_in_time = #{checkInTime,jdbcType=VARCHAR},
+      </if>
+      <if test="checkOutTime != null" >
+        check_out_time = #{checkOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sheetsReplaceRules != null" >
+        sheets_replace_rules = #{sheetsReplaceRules,jdbcType=INTEGER},
+      </if>
+       <if test="fullDiscount != null" >
+        full_discount = #{fullDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="isTogetherLandlord != null" >
+        is_together_landlord = #{isTogetherLandlord,jdbcType=DECIMAL},
+      </if>
+      <if test="defaultPicFid != null" >
+        default_pic_fid = #{defaultPicFid,jdbcType=VARCHAR},
+      </if>
+      <if test="oldDefaultPicFid != null" >
+        old_default_pic_fid = #{oldDefaultPicFid,jdbcType=VARCHAR},
+      </if>
+      <if test="detailAddress != null" >
+        detail_address = #{detailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isLandlordPic != null" >
+        is_landlord_pic = #{isLandlordPic,jdbcType=INTEGER},
+      </if>
+      <if test="houseQualityGrade != null" >
+        house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="isPhotography != null" >
+        is_photography = #{isPhotography,jdbcType=INTEGER},
+      </if>
+      <if test="surveyResult != null" >
+        survey_result = #{surveyResult,jdbcType=INTEGER},
+      </if>
+      <if test="rentRoomNum != null" >
+        rent_room_num = #{rentRoomNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+  </update>
+  
+  <!--特殊更新，楼号-门牌号可以更新成空  -->
+  <update id="specialUpdateHouseBaseExtByHouseBaseFid" parameterType="com.ziroom.minsu.entity.house.HouseBaseExtEntity" >
+    update t_house_base_ext
+    <set >
+        detail_address = #{detailAddress,jdbcType=VARCHAR},
+      <if test="houseBaseFid != null" >
+    	house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingNum != null" >
+        building_num = #{buildingNum,jdbcType=VARCHAR},
+      </if>
+      <if test="unitNum != null" >
+        unit_num = #{unitNum,jdbcType=VARCHAR},
+      </if>
+      <if test="floorNum != null" >
+        floor_num = #{floorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="houseNum != null" >
+        house_num = #{houseNum,jdbcType=VARCHAR},
+      </if>
+      <if test="houseStreet != null" >
+        house_street = #{houseStreet,jdbcType=VARCHAR},
+      </if>
+      <if test="facilityCode != null" >
+        facility_code = #{facilityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCode != null" >
+        service_code = #{serviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="homestayType != null" >
+        homestay_type = #{homestayType,jdbcType=INTEGER},
+      </if>
+      <if test="minDay != null" >
+        min_day = #{minDay,jdbcType=TINYINT},
+      </if>
+      <if test="discountRulesCode != null" >
+        discount_rules_code = #{discountRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="depositRulesCode != null" >
+        deposit_rules_code = #{depositRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkInLimit != null" >
+        check_in_limit = #{checkInLimit,jdbcType=TINYINT},
+      </if>
+      <if test="checkOutRulesCode != null" >
+        check_out_rules_code = #{checkOutRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkInTime != null" >
+        check_in_time = #{checkInTime,jdbcType=VARCHAR},
+      </if>
+      <if test="checkOutTime != null" >
+        check_out_time = #{checkOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sheetsReplaceRules != null" >
+        sheets_replace_rules = #{sheetsReplaceRules,jdbcType=INTEGER},
+      </if>
+       <if test="fullDiscount != null" >
+        full_discount = #{fullDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="isTogetherLandlord != null" >
+        is_together_landlord = #{isTogetherLandlord,jdbcType=DECIMAL},
+      </if>
+      <if test="defaultPicFid != null" >
+        default_pic_fid = #{defaultPicFid,jdbcType=VARCHAR},
+      </if>
+      <if test="oldDefaultPicFid != null" >
+        old_default_pic_fid = #{oldDefaultPicFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isLandlordPic != null" >
+        is_landlord_pic = #{isLandlordPic,jdbcType=INTEGER},
+      </if>
+      <if test="houseQualityGrade != null" >
+        house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="isPhotography != null" >
+        is_photography = #{isPhotography,jdbcType=INTEGER},
+      </if>
+      <if test="surveyResult != null" >
+        survey_result = #{surveyResult,jdbcType=INTEGER},
+      </if>
+      <if test="rentRoomNum != null" >
+        rent_room_num = #{rentRoomNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询房源扩展信息表 -->
+  <select id="getHouseBaseExtByHouseBaseFid"  parameterType="string"  resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from t_house_base_ext hbe
+    where hbe.house_base_fid = #{fid,jdbcType=VARCHAR}
+    limit 1
+  </select>
+  
+  <resultMap id="BaseExtVoMap" extends="BaseResultMap" type="com.ziroom.minsu.services.house.entity.HouseBaseExtVo" >
+  	<result column="operate_seq" property="operateSeq" jdbcType="INTEGER" />
+  </resultMap>
+  <!-- 查询房源扩展信息表 -->
+  <select id="findBaseExtVoByHouseBaseFid"  parameterType="string"  resultMap="BaseExtVoMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from t_house_base_ext hbe
+    where hbe.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+    limit 1
+  </select>
+  
+  <update id="updateHouseBaseExtByFid" parameterType="com.ziroom.minsu.entity.house.HouseBaseExtEntity" >
+    UPDATE t_house_base_ext
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="buildingNum != null" >
+        building_num = #{buildingNum,jdbcType=VARCHAR},
+      </if>
+      <if test="unitNum != null" >
+        unit_num = #{unitNum,jdbcType=VARCHAR},
+      </if>
+      <if test="floorNum != null" >
+        floor_num = #{floorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="houseNum != null" >
+        house_num = #{houseNum,jdbcType=VARCHAR},
+      </if>
+      <if test="houseStreet != null" >
+        house_street = #{houseStreet,jdbcType=VARCHAR},
+      </if>
+      <if test="facilityCode != null" >
+        facility_code = #{facilityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCode != null" >
+        service_code = #{serviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null" >
+        order_type = #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="homestayType != null" >
+        homestay_type = #{homestayType,jdbcType=INTEGER},
+      </if>
+      <if test="minDay != null" >
+        min_day = #{minDay,jdbcType=TINYINT},
+      </if>
+      <if test="discountRulesCode != null" >
+        discount_rules_code = #{discountRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="depositRulesCode != null" >
+        deposit_rules_code = #{depositRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkInLimit != null" >
+        check_in_limit = #{checkInLimit,jdbcType=TINYINT},
+      </if>
+      <if test="checkOutRulesCode != null" >
+        check_out_rules_code = #{checkOutRulesCode,jdbcType=VARCHAR},
+      </if>
+      <if test="checkInTime != null" >
+        check_in_time = #{checkInTime,jdbcType=VARCHAR},
+      </if>
+      <if test="checkOutTime != null" >
+        check_out_time = #{checkOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sheetsReplaceRules != null" >
+        sheets_replace_rules = #{sheetsReplaceRules,jdbcType=INTEGER},
+      </if>
+       <if test="fullDiscount != null" >
+        full_discount = #{fullDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="isTogetherLandlord != null" >
+        is_together_landlord = #{isTogetherLandlord,jdbcType=DECIMAL},
+      </if>
+      <if test="defaultPicFid != null" >
+        default_pic_fid = #{defaultPicFid,jdbcType=VARCHAR},
+      </if>
+      <if test="oldDefaultPicFid != null" >
+        old_default_pic_fid = #{oldDefaultPicFid,jdbcType=VARCHAR},
+      </if>
+      <if test="detailAddress != null" >
+        detail_address = #{detailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isLandlordPic != null" >
+        is_landlord_pic = #{isLandlordPic,jdbcType=INTEGER},
+      </if>
+      <if test="houseQualityGrade != null" >
+        house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="isPhotography != null" >
+        is_photography = #{isPhotography,jdbcType=INTEGER},
+      </if>
+      <if test="surveyResult != null" >
+        survey_result = #{surveyResult,jdbcType=VARCHAR},
+      </if>
+      <if test="rentRoomNum != null" >
+        rent_room_num = #{rentRoomNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询房源扩展信息表 -->
+  <select id="findHouseBaseExtListByCondition" parameterType="com.ziroom.minsu.services.house.dto.HouseBaseExtRequest"  resultMap="BaseResultMap">
+  	SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_base_ext hbe
+    <where> 
+    <if test="(buildingNum == null or buildingNum == '') and (unitNum == null or unitNum == '') and (floorNum == null or floorNum == '') and (houseNum == null or houseNum == '')" >
+      OR 1 = 1
+    </if>
+    <if test="buildingNum != null and buildingNum != ''" >
+      OR hbe.building_num = #{buildingNum,jdbcType=VARCHAR}
+    </if>
+    <if test="unitNum != null and unitNum != ''" >
+      OR hbe.unit_num = #{unitNum,jdbcType=VARCHAR}
+    </if>
+    <if test="floorNum != null and floorNum != ''" >
+      OR hbe.floor_num = #{floorNum,jdbcType=VARCHAR}
+    </if>
+    <if test="houseNum != null and houseNum != ''" >
+      OR hbe.house_num = #{houseNum,jdbcType=VARCHAR}
+    </if>
+    </where> 
+  </select>
+
+  <select id="findHouseBaseExtByPageF"   resultMap="BaseResultMap">
+    SELECT
+  t2.*
+  FROM
+  t_house_base_msg t
+  LEFT JOIN t_house_base_ext t2
+  ON t.`fid` = t2.`house_base_fid`
+  WHERE t.`rent_way` = 1
+  </select>
+
+</mapper>

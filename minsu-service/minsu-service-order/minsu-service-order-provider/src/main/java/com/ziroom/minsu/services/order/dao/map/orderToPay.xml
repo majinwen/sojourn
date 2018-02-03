@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.toPayDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderToPayEntity" >
+    <!-- 基本列  -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="biz_code" property="bizCode" jdbcType="VARCHAR" />
+    <result column="pay_code" property="payCode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    <!-- 基本列字段  -->
+    id,order_sn,biz_code,pay_code,create_time,is_del
+  </sql>
+
+
+
+  <select id="selectByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_order_to_pay
+    WHERE
+    order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND is_del = 0
+    limit 1
+  </select>
+
+  
+  <select id="selectByPayCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_order_to_pay
+    WHERE
+   	pay_code = #{payCode,jdbcType=VARCHAR}
+    AND is_del = 0
+    limit 1
+  </select>
+  
+
+  
+  <insert id="insertToPay" parameterType="com.ziroom.minsu.entity.order.OrderToPayEntity" >
+    <!--
+     添加收款单
+    -->
+    insert into t_order_to_pay
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="bizCode != null" >
+        biz_code,
+      </if>
+      <if test="payCode != null" >
+        pay_code,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="bizCode != null" >
+        #{bizCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payCode != null" >
+        #{payCode,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>

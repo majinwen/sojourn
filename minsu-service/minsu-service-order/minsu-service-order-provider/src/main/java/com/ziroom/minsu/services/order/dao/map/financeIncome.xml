@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.financeIncomeDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.FinanceIncomeEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="income_sn" property="incomeSn" jdbcType="VARCHAR" />
+    <result column="income_source_type" property="incomeSourceType" jdbcType="INTEGER" />
+    <result column="income_type" property="incomeType" jdbcType="INTEGER" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="pay_uid" property="payUid" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="INTEGER" />
+    <result column="total_fee" property="totalFee" jdbcType="INTEGER" />
+    <result column="income_status" property="incomeStatus" jdbcType="INTEGER" />
+    <result column="generate_fee_time" property="generateFeeTime" jdbcType="TIMESTAMP" />
+    <result column="actual_income_time" property="actualIncomeTime" jdbcType="TIMESTAMP" />
+    <result column="run_time" property="runTime" jdbcType="TIMESTAMP" />
+    <result column="sync_status" property="syncStatus" jdbcType="INTEGER" />
+    <result column="actual_sync_time" property="actualSyncTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_send" property="isSend" jdbcType="INTEGER" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+   <resultMap id="FinanceIncomeVoMap" type="com.ziroom.minsu.services.finance.entity.FinanceIncomeVo" extends="BaseResultMap">
+       <!-- 收入表返回参数 -->
+       <result column="user_name" property="userName" jdbcType="VARCHAR" />
+       <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+       <result column="pay_status" property="payStatus" jdbcType="INTEGER" />
+       <result column="landlord_name" property="landlordName" jdbcType="VARCHAR" />
+       <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+       <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+       <result column="real_end_time" property="realEndTime" jdbcType="VARCHAR" />
+       
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, income_sn, income_source_type, income_type, order_sn, city_code, pay_uid, pay_type, 
+    total_fee, income_status, generate_fee_time, actual_income_time, run_time, sync_status, 
+    actual_sync_time, create_id, create_time, last_modify_date, is_send, is_del
+  </sql>
+  
+  <sql id="Mutil_Column_List" >
+    inc.id,  inc.income_sn,  inc.income_source_type,  inc.income_type,  inc.order_sn,  inc.pay_uid, inc.pay_type, inc.total_fee,  inc.income_status, 
+     inc.generate_fee_time,  inc.actual_income_time,  inc.run_time,  inc.create_time,  inc.sync_status, inc.actual_sync_time, inc.create_id,  inc.last_modify_date, 
+     inc.is_send,  inc.is_del
+  </sql>
+
+    <!--  获取当前的收入列表 afi-->
+    <select id="getIncomeListByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_finance_income
+        WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+        AND income_type IN (1,2,3,4)
+        AND income_status IN (1,2)
+        AND is_del = 0
+        ORDER BY generate_fee_time ASC
+    </select>
+
+    <!-- 查询清洁费收入 -->
+    <select id="getCleanIncomeListByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_finance_income
+        WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+        AND income_type = 6
+        AND income_status IN (1,2)
+        AND is_del = 0
+        ORDER BY generate_fee_time ASC
+    </select>
+
+    <!-- 查询用户结算生成的佣金 -->
+    <select id="getSettlementIncomeListByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_finance_income
+        WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+        AND income_source_type = 2
+        AND income_status IN (1,2)
+        AND is_del = 0
+        ORDER BY generate_fee_time ASC
+    </select>
+
+
+    <select id="getFinanceIncomeDetail" resultMap="FinanceIncomeVoMap" parameterType="java.lang.String" >
+    <!-- 按条件分页查询收入记录 -->
+        SELECT <include refid="Mutil_Column_List" />,o.order_status ,o.user_name,o.pay_status
+        FROM `t_finance_income` inc
+        LEFT JOIN t_order o ON  inc.`order_sn` = o.`order_sn`
+        WHERE o.is_del=0 AND inc.is_del=0
+        AND inc.income_sn = #{incomeSn,jdbcType=VARCHAR}
+    </select>
+  
+  <select id="queryFinanceIncomeByPage" resultMap="FinanceIncomeVoMap" parameterType="com.ziroom.minsu.services.finance.dto.FinanceIncomeRequest" >
+   <!-- 按条件分页查询收入记录 -->
+   SELECT <include refid="Mutil_Column_List" />,o.order_status ,o.user_name,o.pay_status
+   FROM `t_finance_income` inc 
+   LEFT JOIN t_order o ON  inc.`order_sn` = o.`order_sn`
+   WHERE o.is_del=0 AND inc.is_del=0
+   
+   <if test="userName != null and userName!=''">
+     AND o.user_name = #{userName,jdbcType=VARCHAR}
+   </if>
+   <if test="userTel != null and userTel !=''">
+     AND o.user_tel = #{userTel,jdbcType=VARCHAR}
+   </if>
+   <if test="userUid != null and userUid !=''">
+     AND o.user_uid = #{userUid,jdbcType=VARCHAR}
+   </if>
+   <if test="orderSn != null and orderSn !=''">
+     AND o.order_sn = #{orderSn,jdbcType=VARCHAR}
+   </if>
+   <if test="incomeSn != null and incomeSn !=''">
+     AND inc.income_sn = #{incomeSn,jdbcType=VARCHAR}
+   </if>
+   <if test="incomeType != null and incomeType !=''">
+     AND inc.income_type = #{incomeType,jdbcType=INTEGER}
+   </if>
+    <if test="actualStartTime != null and actualStartTime !=''">
+     AND inc.actual_income_time &gt;= #{actualStartTime,jdbcType=VARCHAR}
+   </if>
+    <if test="actualEndTime != null and actualEndTime !=''">
+     AND inc.actual_income_time &lt;= #{actualEndTime,jdbcType=VARCHAR}
+   </if>
+    <if test="createTimeStart != null and createTimeStart !=''">
+     AND inc.create_time &gt;= #{createTimeStart,jdbcType=VARCHAR}
+   </if>
+    <if test="createTimeEnd != null and createTimeEnd !=''">
+     AND inc.create_time &lt;= #{createTimeEnd,jdbcType=VARCHAR}
+   </if>
+  </select>
+  
+  
+  <!-- 查询收入表中未收款记录数量 -->
+  <select id="getNotIncomeCount" resultType="java.lang.Long" parameterType="map">
+  	SELECT count(id)
+	FROM t_finance_income
+	WHERE income_status = #{incomeStatus,jdbcType=INTEGER}
+	AND income_type not in
+	<foreach collection="incomeTypeList"  item="incomeType" open="(" separator="," close=")">
+        #{incomeType}
+    </foreach>
+	AND is_send &lt;= #{retryTimes,jdbcType=INTEGER}
+	AND run_time &lt; NOW()
+	AND is_del = 0
+  </select>
+  
+  <!-- 查询收入表中未收款记录list -->
+  <select id="getNotIncomeList" resultMap="BaseResultMap" parameterType="map">
+  	SELECT
+  	<include refid="Base_Column_List" />
+	FROM t_finance_income
+	WHERE income_status = #{incomeStatus,jdbcType=INTEGER}
+	AND income_type not in
+	<foreach collection="incomeTypeList"  item="incomeType" open="(" separator="," close=")">
+        #{incomeType}
+    </foreach>
+	AND is_send &lt;= #{retryTimes,jdbcType=INTEGER}
+	AND run_time &lt; NOW()
+	AND is_del = 0
+	LIMIT #{limit,jdbcType=INTEGER}
+  </select>
+  
+  
+  
+  
+  <!-- 查询收入表中未同步收入记录数量 -->
+  <select id="getNotSyncIncomeCount" resultType="java.lang.Long" parameterType="map">
+  	SELECT count(id)
+	FROM t_finance_income inc
+	WHERE income_status IN(1,2)
+	AND sync_status IN(1,3)
+	AND is_del = 0
+   	AND inc.generate_fee_time <![CDATA[ >= ]]> #{runTimeStart,jdbcType=TIMESTAMP}
+   	AND inc.generate_fee_time <![CDATA[ < ]]> #{runTimeEnd,jdbcType=TIMESTAMP}
+  </select>
+  
+  <!-- 查询收入表中未同步收入记录list -->
+  <select id="getNotSyncIncomeList" resultMap="FinanceIncomeVoMap" parameterType="map">
+	SELECT 
+		<include refid="Mutil_Column_List" />,o.order_status ,o.user_name,o.pay_status,o.landlord_name,o.start_time,o.end_time,o.real_end_time
+	FROM t_finance_income inc 
+	LEFT JOIN t_order o ON  inc.order_sn = o.order_sn
+	WHERE o.is_del=0 AND inc.is_del=0
+    AND inc.income_status IN(1,2)
+	AND inc.sync_status IN(1,3)
+   	AND inc.generate_fee_time <![CDATA[ >= ]]> #{runTimeStart,jdbcType=TIMESTAMP}
+   	AND inc.generate_fee_time <![CDATA[ < ]]> #{runTimeEnd,jdbcType=TIMESTAMP}
+	LIMIT #{limit,jdbcType=INTEGER}
+  </select>
+  
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.order.FinanceIncomeEntity" >
+    insert into t_finance_income
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="incomeSn != null" >
+        income_sn,
+      </if>
+      <if test="incomeSourceType != null" >
+        income_source_type,
+      </if>
+      <if test="incomeType != null" >
+        income_type,
+      </if>
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="payUid != null" >
+        pay_uid,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="totalFee != null" >
+        total_fee,
+      </if>
+      <if test="incomeStatus != null" >
+        income_status,
+      </if>
+      <if test="generateFeeTime != null" >
+        generate_fee_time,
+      </if>
+      <if test="actualIncomeTime != null" >
+        actual_income_time,
+      </if>
+      <if test="runTime != null" >
+        run_time,
+      </if>
+      <if test="syncStatus != null" >
+        sync_status,
+      </if>
+      <if test="actualSyncTime != null" >
+        actual_sync_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isSend != null" >
+        is_send,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="incomeSn != null" >
+        #{incomeSn,jdbcType=VARCHAR},
+      </if>
+      <if test="incomeSourceType != null" >
+        #{incomeSourceType,jdbcType=INTEGER},
+      </if>
+      <if test="incomeType != null" >
+        #{incomeType,jdbcType=INTEGER},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payUid != null" >
+        #{payUid,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="totalFee != null" >
+        #{totalFee,jdbcType=INTEGER},
+      </if>
+      <if test="incomeStatus != null" >
+        #{incomeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="generateFeeTime != null" >
+        #{generateFeeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualIncomeTime != null" >
+        #{actualIncomeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="runTime != null" >
+        #{runTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="syncStatus != null" >
+        #{syncStatus,jdbcType=INTEGER},
+      </if>
+      <if test="actualSyncTime != null" >
+        #{actualSyncTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isSend != null" >
+        #{isSend,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+    <!-- 标志无效 -->
+    <update id="deleteIncomeByIncomeSnList" parameterType="map">
+      UPDATE t_finance_income
+      SET income_status =3
+      WHERE
+        income_sn IN
+        <foreach collection="incomeSnList" item="item" index="index"
+                       open="(" separator="," close=")">#{item}</foreach>
+    </update>
+
+  <update id="updateIncomeByIncomeSn" parameterType="com.ziroom.minsu.entity.order.FinanceIncomeEntity" >
+    UPDATE t_finance_income
+    <set >
+      <if test="incomeSn != null" >
+        income_sn = #{incomeSn,jdbcType=VARCHAR},
+      </if>
+      <if test="incomeSourceType != null" >
+        income_source_type = #{incomeSourceType,jdbcType=INTEGER},
+      </if>
+      <if test="incomeType != null" >
+        income_type = #{incomeType,jdbcType=INTEGER},
+      </if>
+      <if test="orderSn != null" >
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payUid != null" >
+        pay_uid = #{payUid,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="totalFee != null" >
+        total_fee = #{totalFee,jdbcType=INTEGER},
+      </if>
+      <if test="incomeStatus != null" >
+        income_status = #{incomeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="generateFeeTime != null" >
+        generate_fee_time = #{generateFeeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualIncomeTime != null" >
+        actual_income_time = #{actualIncomeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="runTime != null" >
+        run_time = #{runTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="syncStatus != null" >
+        sync_status = #{syncStatus,jdbcType=INTEGER},
+      </if>
+      <if test="actualSyncTime != null" >
+        actual_sync_time = #{actualSyncTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isSend != null" >
+        is_send = #{isSend,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE income_sn = #{incomeSn,jdbcType=VARCHAR}
+  </update>
+
+  
+  <update id="updateIncomeLandlordPunish" parameterType="map" >
+    UPDATE t_finance_income
+    <set >
+      <if test="incomeStatus != null" >
+        income_status = #{incomeStatus,jdbcType=INTEGER},
+      </if>
+      <if test="isSend != null" >
+        is_send = #{isSend,jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND income_type in
+    <foreach collection="incometTypeList"  item="incometType" open="(" separator="," close=")">
+        #{incometType}
+    </foreach>
+  </update>
+  
+  
+  
+	<update id="consumeIncome" parameterType="com.ziroom.minsu.entity.order.FinanceIncomeEntity">
+		UPDATE t_finance_income
+		<set >
+      		<if test="incomeStatus != null" >
+      			income_status = #{incomeStatus,jdbcType=INTEGER},
+      		</if>
+      		<if test="actualIncomeTime != null" >
+	        	actual_income_time = #{actualIncomeTime,jdbcType=TIMESTAMP},
+			</if>
+			is_send = is_send + 1
+		</set>
+		WHERE income_sn = #{incomeSn,jdbcType=VARCHAR} 
+	</update>
+	
+  <select id="specialQueryFinanceIncomeByPage" resultMap="FinanceIncomeVoMap" parameterType="map" >
+   <!-- 按条件分页查询收入记录  权限相关-->
+   SELECT <include refid="Mutil_Column_List" />,o.order_status ,o.user_name,o.pay_status
+   FROM `t_finance_income` inc 
+   LEFT JOIN t_order o ON  inc.`order_sn` = o.`order_sn`
+   LEFT JOIN `t_order_house_snapshot` tohs ON o.`order_sn`=tohs.`order_sn`
+   WHERE o.is_del=0 AND inc.is_del=0
+   
+   <if test="userName != null and userName!=''">
+     AND o.user_name = #{userName,jdbcType=VARCHAR}
+   </if>
+   <if test="userTel != null and userTel !=''">
+     AND o.user_tel = #{userTel,jdbcType=VARCHAR}
+   </if>
+   <if test="userUid != null and userUid !=''">
+     AND o.user_uid = #{userUid,jdbcType=VARCHAR}
+   </if>
+   <if test="orderSn != null and orderSn !=''">
+     AND o.order_sn = #{orderSn,jdbcType=VARCHAR}
+   </if>
+   <if test="incomeSn != null and incomeSn !=''">
+     AND inc.income_sn = #{incomeSn,jdbcType=VARCHAR}
+   </if>
+   <if test="incomeType != null and incomeType !=''">
+     AND inc.income_type = #{incomeType,jdbcType=INTEGER}
+   </if>
+    <if test="actualStartTime != null and actualStartTime !=''">
+     AND inc.actual_income_time &gt;= #{actualStartTime,jdbcType=VARCHAR}
+   </if>
+    <if test="actualEndTime != null and actualEndTime !=''">
+     AND inc.actual_income_time &lt;= #{actualEndTime,jdbcType=VARCHAR}
+   </if>
+    <if test="createTimeStart != null and createTimeStart !=''">
+     AND inc.create_time &gt;= #{createTimeStart,jdbcType=VARCHAR}
+   </if>
+    <if test="createTimeEnd != null and createTimeEnd !=''">
+     AND inc.create_time &lt;= #{createTimeEnd,jdbcType=VARCHAR}
+   </if>
+   <if test="houseFids != null and houseFids.size > 0">
+     AND tohs.house_fid in
+     <foreach collection="houseFids" item="houseFid" open="(" separator="," close=")">
+         #{houseFid,jdbcType=VARCHAR}
+     </foreach>
+   </if>
+  </select>
+	
+</mapper>

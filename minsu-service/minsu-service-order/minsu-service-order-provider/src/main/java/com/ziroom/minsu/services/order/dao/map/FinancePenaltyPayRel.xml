@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.financePenaltyPayRelDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.FinancePenaltyPayRelEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="penalty_sn" property="penaltySn" jdbcType="VARCHAR" />
+    <result column="penalty_order_sn" property="penaltyOrderSn" jdbcType="VARCHAR" />
+    <result column="pv_sn" property="pvSn" jdbcType="VARCHAR" />
+    <result column="pv_order_sn" property="pvOrderSn" jdbcType="VARCHAR" />
+    <result column="offset_fee" property="offsetFee" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, penalty_sn, penalty_order_sn,pv_sn,pv_order_sn,offset_fee,create_time, is_del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_finance_penalty_pay_rel
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.order.FinancePenaltyPayRelEntity" >
+    insert into t_finance_penalty_pay_rel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="penaltySn != null" >
+        penalty_sn,
+      </if>
+      <if test="penaltyOrderSn != null" >
+        penalty_order_sn,
+      </if>
+      <if test="pvSn != null" >
+        pv_sn,
+      </if>
+      <if test="pvOrderSn != null" >
+        pv_order_sn,
+      </if>
+      <if test="offsetFee != null" >
+        offset_fee,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="penaltySn != null" >
+        #{penaltySn,jdbcType=VARCHAR},
+      </if>
+      <if test="penaltyOrderSn != null" >
+        #{penaltyOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="pvSn != null" >
+        #{pvSn,jdbcType=VARCHAR},
+      </if>
+      <if test="pvOrderSn != null" >
+        #{pvOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="offsetFee != null" >
+        #{offsetFee,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="findFinancePenaltyPayRelVoByPvOrderSn" resultType="com.ziroom.minsu.services.order.entity.FinancePenaltyPayRelVo" parameterType="java.lang.String" >
+  
+	SELECT re.`pv_order_sn` AS pvOrderSn,re.`penalty_order_sn` AS penaltyOrderSn ,re.`offset_fee` AS totalFee FROM `t_finance_penalty_pay_rel` re
+	INNER JOIN `t_finance_pay_vouchers` vo ON  (vo.`order_sn` = re.`pv_order_sn` AND re.pv_sn = vo.`pv_sn`)
+	
+	WHERE re.`pv_order_sn` = #{pvOrderSn,jdbcType=VARCHAR}
+	  AND vo.`payment_status` = 30
+	  AND vo.`audit_status` = 4
+  </select>
+
+</mapper>

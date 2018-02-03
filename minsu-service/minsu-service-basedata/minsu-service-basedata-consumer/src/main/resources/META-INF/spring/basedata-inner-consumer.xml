@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015. ziroom.
+  -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:reference id="basedata.userPermissionService"
+                     interface="com.ziroom.minsu.services.basedata.api.inner.UserPermissionService" check="false"/>
+    <dubbo:reference id="basedata.resourceService"  interface="com.ziroom.minsu.services.basedata.api.inner.ResourceService" check="false"/>
+
+    <!-- 操作日志记录服务 -->
+    <dubbo:reference id="basedata.opLogApi"  interface="com.ziroom.minsu.services.basedata.api.inner.OpLogService" check="false"/>
+
+    <!--<dubbo:reference id="basedata.roleResourceApi" interface="com.ziroom.minsu.services.basedata.api.inner.RoleResourceService" check="false"/>-->
+    
+    <dubbo:reference id="basedata.permissionOperateService"
+                     interface="com.ziroom.minsu.services.basedata.api.inner.PermissionOperateService" check="false"/>
+    <!-- 登录相关接口 -->                 
+    <dubbo:reference id="basedata.loginService"
+                     interface="com.ziroom.minsu.services.basedata.api.inner.LoginService" check="false"/>
+                     
+     <!-- 城市相关接口 -->
+    <dubbo:reference id="basedata.confCityService"
+                     interface="com.ziroom.minsu.services.basedata.api.inner.ConfCityService" check="false"/>
+    <!-- 城市档案接口-->
+    <dubbo:reference id="basedata.cityArchiveService"
+                     interface="com.ziroom.minsu.services.basedata.api.inner.CityArchiveService" check="false"/>
+    <!-- 热门区域相关接口 -->
+    <dubbo:reference id="basedata.hotRegionService" interface="com.ziroom.minsu.services.basedata.api.inner.HotRegionService" check="false"/>
+
+    <!-- 模板配置的接口 -->
+    <dubbo:reference id="basedata.cityTemplateService" interface="com.ziroom.minsu.services.basedata.api.inner.CityTemplateService" check="false"/>
+    
+    <!-- 短信模板接口 -->
+    <dubbo:reference id="basedata.smsTemplateService" interface="com.ziroom.minsu.services.basedata.api.inner.SmsTemplateService" check="false"/>
+
+    <!-- 地铁配置管理接口 -->
+    <dubbo:reference id="basedata.subwayLineService" interface="com.ziroom.minsu.services.basedata.api.inner.SubwayLineService" check="false"/>
+
+    <!-- 天气 -->
+	<!-- <dubbo:reference id="basedata.weatherDayService" interface="com.ziroom.minsu.services.basedata.api.inner.WeatherDayService" check="false"/> -->   
+
+	<!-- 同步Ehr员工接口 -->
+	<dubbo:reference id="basedata.ehrAccountSyncService" interface="com.ziroom.minsu.services.basedata.api.inner.EhrAccountSyncService" check="false"/>
+	
+		<!-- 区域管家接口 -->
+	<dubbo:reference id="basedata.guardAreaService" interface="com.ziroom.minsu.services.basedata.api.inner.GuardAreaService" check="false"/>
+	
+	<!-- 员工接口 -->
+	<dubbo:reference id="basedata.employeeService" interface="com.ziroom.minsu.services.basedata.api.inner.EmployeeService" check="false"/>
+
+    <!-- 员工接口 -->
+    <dubbo:reference id="basedata.zkSysService" interface="com.ziroom.minsu.services.basedata.api.inner.ZkSysService" check="false"/>
+    <!--大区接口-->
+    <dubbo:reference id="basedata.cityRegionService" interface="com.ziroom.minsu.services.basedata.api.inner.CityRegionService" check="false"/>
+
+ 	<!-- 标签相关接口 -->
+    <dubbo:reference id="basedata.confTagService" interface="com.ziroom.minsu.services.basedata.api.inner.ConfTagService" check="false"/>
+
+ 	<!-- 静态资源相关接口 -->
+    <dubbo:reference id="basedata.staticResourceService" interface="com.ziroom.minsu.services.basedata.api.inner.StaticResourceService" check="false"/>
+
+    <!--代理ip相关接口-->
+    <dubbo:reference id="basedata.netProxyIpPortService" interface="com.ziroom.minsu.services.basedata.api.inner.NetProxyIpPortService" check="false"/>
+    
+    <!--授权业务接口-->
+    <dubbo:reference id="basedata.authIdentifyService" interface="com.ziroom.minsu.services.basedata.api.inner.AuthIdentifyService" check="false"/>
+
+</beans>

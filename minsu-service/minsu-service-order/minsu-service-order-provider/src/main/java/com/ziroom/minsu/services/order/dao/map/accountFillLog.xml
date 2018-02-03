@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.accountFillLogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.AccountFillLogEntity" >
+    <!--
+     基本
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fill_sn" property="fillSn" jdbcType="VARCHAR" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="bussiness_type" property="bussinessType" jdbcType="INTEGER" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="fill_type" property="fillType" jdbcType="INTEGER" />
+    <result column="fill_money_type" property="fillMoneyType" jdbcType="INTEGER" />
+    <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="result_msg" property="resultMsg" jdbcType="VARCHAR" />
+    <result column="target_uid" property="targetUid" jdbcType="VARCHAR" />
+    <result column="target_type" property="targetType" jdbcType="INTEGER" />
+    <result column="total_fee" property="totalFee" jdbcType="INTEGER" />
+    <result column="run_time" property="runTime" jdbcType="TIMESTAMP" />
+    <result column="fill_status" property="fillStatus" jdbcType="INTEGER" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
+    
+  <sql id="Base_Column_List" >
+    <!--
+     基本列
+    -->
+    id, fill_sn, order_sn, bussiness_type, pay_time, city_code,pay_type,result_msg,fill_type, fill_money_type,trade_no, target_uid, target_type, total_fee, run_time, fill_status, 
+    create_id, create_time, last_modify_date, is_del
+  </sql>
+  
+  <!-- 查询充值失败的list -->
+  <select id="taskSelectByCondiction" resultMap="BaseResultMap" parameterType="map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_account_fill_log
+    WHERE fill_status = 0
+    AND is_del = 0 
+    AND run_time &lt; NOW()
+    LIMIT #{limit,jdbcType=INTEGER}
+  </select>
+  
+   <!-- 查询充值失败的count -->
+   <select id="countFillFailNum" resultType="Long">
+       SELECT 
+       COUNT(id) 
+       FROM t_account_fill_log
+       WHERE fill_status = 0
+       AND run_time &lt; NOW()
+       AND is_del =0  
+   </select>
+  
+  <insert id="insertAccountFillLog" parameterType="com.ziroom.minsu.entity.order.AccountFillLogEntity" >
+    <!--
+      新增
+    -->
+    insert into t_account_fill_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fillSn != null" >
+        fill_sn,
+      </if>
+     <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="bussinessType != null" >
+        bussiness_type,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="resultMsg != null" >
+        result_msg,
+      </if>
+      <if test="fillType != null" >
+        fill_type,
+      </if>
+      <if test="fillMoneyType != null" >
+        fill_money_type,
+      </if>
+      <if test="tradeNo != null" >
+        trade_no,
+      </if>
+      <if test="targetUid != null" >
+        target_uid,
+      </if>
+      <if test="targetType != null" >
+        target_type,
+      </if>
+      <if test="totalFee != null" >
+        total_fee,
+      </if>
+      <if test="runTime != null" >
+        run_time,
+      </if>
+      <if test="fillStatus != null" >
+        fill_status,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fillSn != null" >
+        #{fillSn,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="bussinessType != null" >
+        #{bussinessType,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="resultMsg != null" >
+        #{resultMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="fillType != null" >
+        #{fillType,jdbcType=INTEGER},
+      </if>
+      <if test="fillMoneyType != null" >
+        #{fillMoneyType,jdbcType=INTEGER},
+      </if>
+      <if test="tradeNo != null" >
+        #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="targetUid != null" >
+        #{targetUid,jdbcType=VARCHAR},
+      </if>
+      <if test="targetType != null" >
+        #{targetType,jdbcType=INTEGER},
+      </if>
+      <if test="totalFee != null" >
+        #{totalFee,jdbcType=INTEGER},
+      </if>
+      <if test="runTime != null" >
+        #{runTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fillStatus != null" >
+        #{fillStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="taskUpdateSuccess" parameterType="map" >
+    <!--  更新 为充值成功-->
+    update t_account_fill_log
+    set fill_status = 1
+    where fill_sn = #{fillSn,jdbcType=VARCHAR} 
+    and is_del = 0 
+    and order_sn = #{orderSn,jdbcType=VARCHAR} 
+    and trade_no = #{tradeNo,jdbcType=VARCHAR}
+  </update>
+</mapper>

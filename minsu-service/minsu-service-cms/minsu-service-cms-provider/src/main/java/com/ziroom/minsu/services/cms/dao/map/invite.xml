@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.invite">
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.InviteEntity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="uid" property="uid" jdbcType="VARCHAR"/>
+        <result column="invite_code" property="inviteCode" jdbcType="VARCHAR"/>
+        <result column="invite_source" property="inviteSource" jdbcType="INTEGER"/>
+        <result column="is_give_inviter_points" property="isGiveInviterPoints" jdbcType="INTEGER"/>
+        <result column="invite_status" property="inviteStatus" jdbcType="INTEGER"/>
+        <result column="invite_uid" property="inviteUid" jdbcType="VARCHAR"/>
+        <result column="invite_time" property="inviteTime" jdbcType="TIMESTAMP"/>
+        <result column="create_id" property="createId" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP"/>
+        <result column="is_del" property="isDel" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, uid, invite_code, invite_source, is_give_inviter_points, invite_status, invite_uid, invite_time, create_id, create_time, 
+    last_modify_date, is_del
+      </sql>
+
+
+
+
+    <!-- 分页查询当前的邀请信息 -->
+    <select id="getInvitePageByCondition" resultMap="BaseResultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_invite
+        WHERE is_del = 0 AND invite_source =0
+        <if test="inviteCode != null and inviteCode != ''">
+            AND invite_code = #{inviteCode,jdbcType=VARCHAR}
+        </if>
+
+        <if test="uids != null and uids !='' and uids.size > 0">
+            AND uid IN
+            <foreach collection="uids"  item="uid" open="(" separator="," close=")">
+                #{uid,jdbcType=INTEGER}
+            </foreach>
+        </if>
+
+        <if test="inviteUids != null and inviteUids !='' and inviteUids.size > 0">
+            AND invite_uid IN
+            <foreach collection="inviteUids"  item="inviteUid" open="(" separator="," close=")">
+                #{inviteUid,jdbcType=INTEGER}
+            </foreach>
+        </if>
+        ORDER BY id DESC
+
+    </select>
+
+
+
+
+    <select id="getByUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_invite
+        WHERE uid = #{uid,jdbcType=VARCHAR}
+        AND is_del = 0  AND invite_source =0
+    </select>
+
+    <select id="getByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_invite
+        WHERE invite_code = #{inviteCode,jdbcType=VARCHAR}
+        AND is_del = 0  AND invite_source =0
+    </select>
+
+
+    <select id="getUnCouponList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_invite
+        WHERE invite_status = 1
+        AND invite_uid IS NOT NULL
+        AND invite_time IS NOT NULL
+        AND is_del = 0  AND invite_source =0
+    </select>
+
+    <insert id="save" parameterType="com.ziroom.minsu.entity.cms.InviteEntity">
+        insert into t_invite
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="uid != null" >
+                uid,
+            </if>
+            <if test="inviteCode != null" >
+                invite_code,
+            </if>
+            <if test="inviteSource != null" >
+                invite_source,
+            </if>
+            <if test="isGiveInviterPoints != null" >
+                is_give_inviter_points,
+            </if>
+            <if test="inviteStatus != null" >
+                invite_status,
+            </if>
+            <if test="inviteUid != null" >
+                invite_uid,
+            </if>
+            <if test="inviteTime != null" >
+                invite_time,
+            </if>
+            <if test="createId != null" >
+                create_id,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="lastModifyDate != null" >
+                last_modify_date,
+            </if>
+            <if test="isDel != null" >
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="uid != null" >
+                #{uid,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteCode != null" >
+                #{inviteCode,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteSource != null" >
+                #{inviteSource,jdbcType=INTEGER},
+            </if>
+            <if test="isGiveInviterPoints != null" >
+                #{isGiveInviterPoints,jdbcType=INTEGER},
+            </if>
+            <if test="inviteStatus != null" >
+                #{inviteStatus,jdbcType=INTEGER},
+            </if>
+            <if test="inviteUid != null" >
+                #{inviteUid,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteTime != null" >
+                #{inviteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createId != null" >
+                #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null" >
+                #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null" >
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.ziroom.minsu.entity.cms.InviteEntity">
+        update t_invite
+        <set>
+            <if test="uid != null">
+                uid = #{uid,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteCode != null">
+                invite_code = #{inviteCode,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteStatus != null">
+                invite_status = #{inviteStatus,jdbcType=INTEGER},
+            </if>
+            <if test="inviteUid != null">
+                invite_uid = #{inviteUid,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteTime != null">
+                invite_time = #{inviteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createId != null">
+                create_id = #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null">
+                last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <update id="updateInviteUid" parameterType="com.ziroom.minsu.entity.cms.InviteEntity">
+        UPDATE t_invite SET
+        invite_uid = #{inviteUid,jdbcType=VARCHAR},
+        invite_status = 1,
+        invite_time = NOW()
+        WHERE uid = #{uid,jdbcType=VARCHAR}
+        AND invite_uid IS NULL
+    </update>
+
+
+    <update id="updateStatusSendBack" parameterType="com.ziroom.minsu.entity.cms.InviteEntity">
+        UPDATE t_invite SET
+        invite_status = 2
+        WHERE uid = #{uid,jdbcType=VARCHAR}
+        AND invite_uid = #{inviteUid,jdbcType=VARCHAR}
+        AND invite_status = 1
+    </update>
+
+
+    <select id="countInviteByUid" resultType="java.lang.Long" parameterType="map">
+        SELECT count(1) FROM t_invite WHERE uid = #{uid,jdbcType=VARCHAR}  AND invite_source =0
+    </select>
+
+    <select id="getBeInvitersByPage" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.cms.dto.InviteCmsRequest">
+       SELECT  
+       <include refid="Base_Column_List"/>
+       FROM `minsu_cms_db`.`t_invite` 
+       WHERE invite_uid = #{uid,jdbcType=VARCHAR}
+       AND invite_source = #{inviteSource,jdbcType=INTEGER}
+       AND is_del=0
+       ORDER BY is_give_inviter_points DESC, last_modify_date DESC
+    </select>
+
+    <!--根据uid查询用户是否已经参加过邀请活动-->
+    <select id="isInvitedByUid" resultType="java.lang.Integer" parameterType="com.ziroom.minsu.services.cms.dto.InviteStateUidRequest">
+      SELECT
+      COUNT(1)
+      FROM t_invite
+      WHERE
+        is_del=0 AND uid =#{uid,jdbcType=VARCHAR}
+        <if test="inviteSource != null">
+            AND invite_source = #{inviteSource,jdbcType=INTEGER}
+        </if>
+        <if test="inviteStatus != null">
+            AND invite_status = #{inviteStatus,jdbcType=INTEGER}
+        </if>
+        <if test="isGiveInviterPoints != null">
+            AND is_give_inviter_points = #{isGiveInviterPoints,jdbcType=INTEGER}
+        </if>
+        <if test="lastModifyDate != null">
+            AND #{lastModifyDate,jdbcType=INTEGER} > create_time
+            AND DATE_SUB(create_time, INTERVAL -180 DAY)> #{lastModifyDate,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <update id="updateByUid" parameterType="com.ziroom.minsu.entity.cms.InviteEntity">
+        update t_invite
+        <set >
+            <if test="inviteCode != null" >
+                invite_code = #{inviteCode,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteSource != null" >
+                invite_source = #{inviteSource,jdbcType=INTEGER},
+            </if>
+            <if test="isGiveInviterPoints != null" >
+                is_give_inviter_points = #{isGiveInviterPoints,jdbcType=INTEGER},
+            </if>
+            <if test="inviteStatus != null" >
+                invite_status = #{inviteStatus,jdbcType=INTEGER},
+            </if>
+            <if test="inviteUid != null" >
+                invite_uid = #{inviteUid,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteTime != null" >
+                invite_time = #{inviteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createId != null" >
+                create_id = #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null" >
+                last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null" >
+                is_del = #{isDel,jdbcType=INTEGER},
+            </if>
+        </set>
+        where uid = #{uid,jdbcType=INTEGER}
+        <if test="inviteSource != null" >
+            AND invite_source = #{inviteSource,jdbcType=INTEGER}
+        </if>
+    </update>
+
+    <!--根据uid查询邀请人的uid-->
+    <select id="getInviteUidByUid" resultType="java.lang.String" parameterType="com.ziroom.minsu.services.cms.dto.InviteStateUidRequest">
+        SELECT
+        invite_uid
+        FROM t_invite
+        WHERE
+        is_del=0 AND uid =#{uid,jdbcType=VARCHAR}
+        <if test="inviteSource != null">
+            AND invite_source = #{inviteSource,jdbcType=INTEGER}
+        </if>
+        <if test="inviteStatus != null">
+            AND invite_status = #{inviteStatus,jdbcType=INTEGER}
+        </if>
+        <if test="isGiveInviterPoints != null">
+            AND is_give_inviter_points = #{isGiveInviterPoints,jdbcType=INTEGER}
+        </if>
+
+    </select>
+</mapper>

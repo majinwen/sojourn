@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.confDicDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.conf.ConfDicEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="show_name" property="showName" jdbcType="VARCHAR" />
+    <result column="dic_code" property="dicCode" jdbcType="VARCHAR" />
+    <result column="pfid" property="pfid" jdbcType="VARCHAR" />
+    <result column="dic_level" property="dicLevel" jdbcType="INTEGER" />
+    <result column="dic_index" property="dicIndex" jdbcType="INTEGER" />
+    <result column="dic_type" property="dicType" jdbcType="INTEGER" />
+    <result column="dic_line" property="dicLine" jdbcType="INTEGER"/>
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    <!--  -->
+    id, fid, show_name, dic_code, pfid,dic_level,dic_line,dic_index, create_date, last_modify_date, create_fid,
+    is_del,dic_type
+  </sql>
+
+
+  <!-- 树结构map -->
+  <resultMap type="com.ziroom.minsu.services.basedata.entity.TreeNodeVo" id="treeNodeMap">
+    <result column="fid" property="id" jdbcType="VARCHAR" />
+    <result column="show_name" property="text" jdbcType="VARCHAR" />
+    <result column="dic_type" property="nodeType" jdbcType="VARCHAR" />
+    <result column="dic_level" property="level" jdbcType="INTEGER" />
+    <result column="dic_code" property="code" jdbcType="VARCHAR" />
+    <collection column="fid" property="nodes" javaType="ArrayList" select="getChildDicTree" />
+  </resultMap>
+
+
+  <!-- 获取字典的树形结构 -->
+  <select id="getChildDicTree" resultMap="treeNodeMap" >
+    <!--  -->
+    select
+      show_name, dic_code,dic_type,fid,dic_level
+    from t_conf_dic
+    where is_del = 0  AND  pfid = #{fid}
+  </select>
+
+
+  <!-- 获取字典值信息 -->
+  <select id="countChildNumBuCode" resultType="java.lang.Long" parameterType="java.util.Map">
+    SELECT
+     COUNT(dic.id) AS codeCount
+    FROM t_conf_dic dic
+    WHERE dic.pfid in (SELECT fid FROM  t_conf_dic tmp WHERE tmp.dic_code = #{dicCode,jdbcType=VARCHAR})
+  </select>
+
+
+  <!-- 获取字典的树形结构 -->
+  <select id="getDicTree" resultMap="treeNodeMap" parameterType="java.lang.Integer">
+    <!--  -->
+    select
+    show_name, dic_code,dic_type,fid,dic_level
+    from t_conf_dic
+    where dic_level = 0  and  is_del = 0
+    <if test="_parameter != null">
+      AND dic_line = #{_parameter,jdbcType=INTEGER}
+    </if>
+  </select>
+
+
+
+  <!-- 获取字典信息 -->
+  <select id="getConfDicByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!--  -->
+    select
+    <include refid="Base_Column_List" />
+    from t_conf_dic
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+
+
+
+
+
+  <!-- 获取父节点下的字典信息 -->
+  <select id="getConfDicByPfid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!--  -->
+    select
+    <include refid="Base_Column_List" />
+    from t_conf_dic
+    where pfid = #{pfid,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <!-- 通过code获取字典信息 -->
+  <select id="getConfDicByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!--  -->
+    select
+    <include refid="Base_Column_List" />
+    from t_conf_dic
+    where dic_code = #{dicCode,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <!-- 保存信息-->
+  <insert id="insertConfDic" parameterType="com.ziroom.minsu.entity.conf.ConfDicEntity" >
+    <!-- -->
+    insert into t_conf_dic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="showName != null" >
+        show_name,
+      </if>
+      <if test="dicCode != null" >
+        dic_code,
+      </if>
+      <if test="pfid != null" >
+        pfid,
+      </if>
+      <if test="dicLevel != null" >
+        dic_level,
+      </if>
+      <if test="dicIndex != null" >
+        dic_index,
+      </if>
+
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+        <if test="dicType != null" >
+            dic_type,
+        </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="showName != null" >
+        #{showName,jdbcType=VARCHAR},
+      </if>
+      <if test="dicCode != null" >
+        #{dicCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pfid != null" >
+        #{pfid,jdbcType=VARCHAR},
+      </if>
+      <if test="dicLevel != null" >
+        #{dicLevel,jdbcType=INTEGER},
+      </if>
+
+      <if test="dicIndex != null" >
+        #{dicIndex,jdbcType=TIMESTAMP},
+      </if>
+
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+        <if test="dicType != null" >
+            #{dicType,jdbcType=INTEGER},
+        </if>
+    </trim>
+
+  </insert>
+
+  <!-- 修改结构信息 -->
+  <update id="updateConfDicByFid" parameterType="com.ziroom.minsu.entity.conf.ConfDicEntity" >
+    update t_conf_dic
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="showName != null" >
+        show_name = #{showName,jdbcType=VARCHAR},
+      </if>
+      <if test="dicCode != null" >
+        dic_code = #{dicCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pfid != null" >
+        pfid = #{pfid,jdbcType=VARCHAR},
+      </if>
+      <if test="dicLevel != null" >
+        dic_Level =  #{dicLevel,jdbcType=INTEGER},
+      </if>
+      <if test="dicIndex != null" >
+        dic_index =  #{dicIndex,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 配置项子节点 -->
+  <resultMap type="com.ziroom.minsu.services.basedata.entity.EnumVo" id="enumMap">
+  	  <result column="show_name" property="text" jdbcType="VARCHAR" />
+  	  <result column="dic_code" property="key" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 配置项父项code获取子code集合 -->
+  <select id="getEnumDicList"  parameterType="string"  resultMap="enumMap">
+  	SELECT show_name,dic_code FROM t_conf_dic
+	WHERE pfid=(SELECT fid FROM t_conf_dic WHERE dic_code= #{dicCode,jdbcType=VARCHAR})
+	and is_del=0
+  </select>
+</mapper>

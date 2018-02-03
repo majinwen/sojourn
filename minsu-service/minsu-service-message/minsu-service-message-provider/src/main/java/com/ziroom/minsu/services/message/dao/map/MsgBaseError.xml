@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="message.msgBaseErrorDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.message.MsgBaseErrorEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="tenant_uid" property="tenantUid" jdbcType="VARCHAR" />
+    <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+    <result column="msg_content" property="msgContent" jdbcType="VARCHAR" />
+    <result column="msg_sent_type" property="msgSentType" jdbcType="TINYINT" />
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="person_num" property="personNum" jdbcType="TINYINT" />
+    <result column="house_name" property="houseName" jdbcType="VARCHAR" />
+    <result column="msg_source" property="msgSource" jdbcType="TINYINT" />
+    <result column="house_pic_url" property="housePicUrl" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="url" property="url" jdbcType="VARCHAR"/>
+    <result column="secret" property="secret" jdbcType="VARCHAR"/>
+    <result column="filename" property="filename" jdbcType="VARCHAR"/>
+    <result column="file_length" property="fileLength" jdbcType="INTEGER"/>
+    <result column="type" property="type" jdbcType="VARCHAR"/>
+    <result column="size" property="size" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, tenant_uid, landlord_uid, msg_content, msg_sent_type, house_fid, rent_way, 
+    start_date, end_date, person_num, house_name, msg_source, house_pic_url, create_time,url,
+    secret,filename,file_length,type,size
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_msg_base_error
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="saveMsgBaseError" parameterType="com.ziroom.minsu.entity.message.MsgBaseErrorEntity" >
+    insert into t_msg_base_error
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="tenantUid != null" >
+        tenant_uid,
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid,
+      </if>
+      <if test="msgContent != null" >
+        msg_content,
+      </if>
+      <if test="msgSentType != null" >
+        msg_sent_type,
+      </if>
+      <if test="houseFid != null" >
+        house_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="personNum != null" >
+        person_num,
+      </if>
+      <if test="houseName != null" >
+        house_name,
+      </if>
+      <if test="msgSource != null" >
+        msg_source,
+      </if>
+      <if test="housePicUrl != null" >
+        house_pic_url,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    <if test="url != null">
+            url,
+    </if>
+    
+    <if test="secret != null">
+        secret,
+    </if>
+    
+    <if test="filename != null">
+        filename,
+    </if>
+    
+    <if test="fileLength != null">
+        file_length,
+    </if>
+    
+    <if test="type != null">
+        type,
+    </if>
+     <if test="size != null">
+        size,
+    </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantUid != null" >
+        #{tenantUid,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordUid != null" >
+        #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="msgContent != null" >
+        #{msgContent,jdbcType=VARCHAR},
+      </if>
+      <if test="msgSentType != null" >
+        #{msgSentType,jdbcType=TINYINT},
+      </if>
+      <if test="houseFid != null" >
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="personNum != null" >
+        #{personNum,jdbcType=TINYINT},
+      </if>
+      <if test="houseName != null" >
+        #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="msgSource != null" >
+        #{msgSource,jdbcType=TINYINT},
+      </if>
+      <if test="housePicUrl != null" >
+        #{housePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="url != null">
+          #{url,jdbcType=VARCHAR},
+      </if>
+       <if test="secret != null">
+          #{secret,jdbcType=VARCHAR},
+      </if>
+       <if test="filename != null">
+          #{filename,jdbcType=VARCHAR},
+      </if>
+       <if test="fileLength != null">
+          #{fileLength,jdbcType=INTEGER},
+      </if>
+       <if test="type != null">
+          #{type,jdbcType=VARCHAR},
+      </if>
+        <if test="size != null">
+          #{size,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.message.MsgBaseErrorEntity" >
+    update t_msg_base_error
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="tenantUid != null" >
+        tenant_uid = #{tenantUid,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid = #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="msgContent != null" >
+        msg_content = #{msgContent,jdbcType=VARCHAR},
+      </if>
+      <if test="msgSentType != null" >
+        msg_sent_type = #{msgSentType,jdbcType=TINYINT},
+      </if>
+      <if test="houseFid != null" >
+        house_fid = #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        rent_way = #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="personNum != null" >
+        person_num = #{personNum,jdbcType=TINYINT},
+      </if>
+      <if test="houseName != null" >
+        house_name = #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="msgSource != null" >
+        msg_source = #{msgSource,jdbcType=TINYINT},
+      </if>
+      <if test="housePicUrl != null" >
+        house_pic_url = #{housePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="url != null">
+          url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="secret != null">
+          secret = #{secret,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null">
+          filename = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="fileLength != null">
+          file_length = #{fileLength,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+          type = #{type,jdbcType=VARCHAR},
+      </if>
+       <if test="size != null">
+          size = #{size,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+ 
+</mapper>

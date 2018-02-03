@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseLockDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseLockEntity" >
+    <!--
+    基础map
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_lock_code" property="houseLockCode" jdbcType="VARCHAR" />
+    <result column="locker_fid" property="lockerFid" jdbcType="VARCHAR" />
+    <result column="locked_fid" property="lockedFid" jdbcType="VARCHAR" />
+    <result column="lock_fail_date" property="lockFailDate" jdbcType="VARCHAR" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    <!--
+    基础字段
+    -->
+    id, fid, house_lock_code, locker_fid, locked_fid, lock_fail_date, create_fid, create_date
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="string" >
+    <!--
+    fid查询
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_lock
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  
+
+  <insert id="insertHouseLock" parameterType="com.ziroom.minsu.entity.house.HouseLockEntity" >
+    <!--
+    插入房源锁业务表
+    -->
+    insert into t_house_lock
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseLockCode != null" >
+        house_lock_code,
+      </if>
+      <if test="lockerFid != null" >
+        locker_fid,
+      </if>
+      <if test="lockedFid != null" >
+        locked_fid,
+      </if>
+      <if test="lockFailDate != null" >
+        lock_fail_date,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseLockCode != null" >
+        #{houseLockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lockerFid != null" >
+        #{lockerFid,jdbcType=VARCHAR},
+      </if>
+      <if test="lockedFid != null" >
+        #{lockedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="lockFailDate != null" >
+        #{lockFailDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.house.HouseLockEntity" >
+    <!--
+    更新房源业务锁表
+    -->
+    update t_house_lock
+    <set >
+      <if test="houseLockCode != null" >
+        house_lock_code = #{houseLockCode,jdbcType=VARCHAR},
+      </if>
+      <if test="lockerFid != null" >
+        locker_fid = #{lockerFid,jdbcType=VARCHAR},
+      </if>
+      <if test="lockedFid != null" >
+        locked_fid = #{lockedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="lockFailDate != null" >
+        lock_fail_date = #{lockFailDate,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 条件查询房源被锁记录 -->
+  <select id="findHouseLock"  parameterType="map"  resultMap="BaseResultMap">
+  	SELECT  <include refid="Base_Column_List" />  FROM `t_house_lock`
+	WHERE locked_fid=#{lockedFid,jdbcType=VARCHAR}
+	AND locker_fid!=#{lockerFid,jdbcType=VARCHAR}
+	AND house_lock_code=#{houseLockCode,jdbcType=VARCHAR}
+	AND lock_fail_date>#{lockFailDate,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 删除房源锁业务 -->
+  <delete id="deleteHouseLock"  parameterType="map">
+  	DELETE FROM `t_house_lock`
+	WHERE house_lock_code=#{houseLockCode,jdbcType=VARCHAR}
+	AND locker_fid=#{lockerFid,jdbcType=VARCHAR}
+	AND locked_fid=#{lockedFid,jdbcType=VARCHAR}
+  </delete>
+</mapper>

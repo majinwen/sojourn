@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.activityGiftItemDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityGiftItemEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="act_sn" property="actSn" jdbcType="VARCHAR" />
+    <result column="gift_fid" property="giftFid" jdbcType="VARCHAR" />
+    <result column="gift_count" property="giftCount" jdbcType="INTEGER" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, act_sn, gift_fid, gift_count, is_del, create_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_activity_gift_item
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_activity_gift_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.cms.ActivityGiftItemEntity" >
+    insert into t_activity_gift_item (id, fid, act_sn, 
+      gift_fid, gift_count, is_del, 
+      create_date)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{actSn,jdbcType=VARCHAR}, 
+      #{giftFid,jdbcType=VARCHAR}, #{giftCount,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.cms.ActivityGiftItemEntity" >
+    insert into t_activity_gift_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="actSn != null" >
+        act_sn,
+      </if>
+      <if test="giftFid != null" >
+        gift_fid,
+      </if>
+      <if test="giftCount != null" >
+        gift_count,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="actSn != null" >
+        #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="giftFid != null" >
+        #{giftFid,jdbcType=VARCHAR},
+      </if>
+      <if test="giftCount != null" >
+        #{giftCount,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.cms.ActivityGiftItemEntity" >
+    update t_activity_gift_item
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="actSn != null" >
+        act_sn = #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="giftFid != null" >
+        gift_fid = #{giftFid,jdbcType=VARCHAR},
+      </if>
+      <if test="giftCount != null" >
+        gift_count = #{giftCount,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.cms.ActivityGiftItemEntity" >
+    update t_activity_gift_item
+    set fid = #{fid,jdbcType=VARCHAR},
+      act_sn = #{actSn,jdbcType=VARCHAR},
+      gift_fid = #{giftFid,jdbcType=VARCHAR},
+      gift_count = #{giftCount,jdbcType=INTEGER},
+      is_del = #{isDel,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByFid" parameterType="com.ziroom.minsu.entity.cms.ActivityGiftItemEntity" >
+    update t_activity_gift_item
+    <set >
+      <if test="actSn != null" >
+        act_sn = #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="giftFid != null" >
+        gift_fid = #{giftFid,jdbcType=VARCHAR},
+      </if>
+      <if test="giftCount != null" >
+        gift_count = #{giftCount,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+ 
+  <select id="getAcGiftItemByCon" resultType="com.ziroom.minsu.services.cms.entity.AcGiftItemVo" parameterType="com.ziroom.minsu.services.cms.dto.ActivityGiftItemRequest" >
+    <!-- 修改活动  查询当前活动的礼物 -->
+    SELECT giftFid,giftName,giftCount,giftFlag
+	 FROM 
+	 ( SELECT gtIt.`gift_fid` AS giftFid , gf.gift_name AS giftName ,gtIt.`gift_count` AS giftCount ,1 AS giftFlag
+	  FROM `t_activity_gift_item` gtIt 
+	   LEFT JOIN `t_activity_gift` gf  
+	   ON gf.fid  = gtIt.`gift_fid` 
+	   WHERE   gtIt.`act_sn`= #{actSn,jdbcType=VARCHAR}
+	   AND  gtIt.`is_del` = 0
+	   
+	   UNION 	
+	   
+	   SELECT gfN.fid AS giftFid , gfN.gift_name AS giftName,1 AS giftCount,0 AS giftFlag   
+	   FROM `t_activity_gift` gfN 
+	   WHERE NOT  EXISTS(
+	   
+	     SELECT gtIt.`gift_fid` AS giftFid , gf.gift_name AS giftName ,gtIt.`gift_count` AS giftCount ,1 AS giftFlag
+		  FROM `t_activity_gift_item` gtIt 
+		   LEFT JOIN `t_activity_gift` gf  
+		   ON gf.fid  = gtIt.`gift_fid` 
+		   WHERE   gtIt.`act_sn`= #{actSn,jdbcType=VARCHAR}
+		   AND gtIt.`gift_fid` = gfN.fid
+		   AND gfN.is_del = 0
+		   AND gtIt.`is_del` = 0
+	   )) AS tem  LIMIT 500 
+  </select>
+  
+   <update id="updateAcItemByActSn" parameterType="java.lang.String" >
+    update t_activity_gift_item  set is_del = 1 
+    where act_sn = #{actSn,jdbcType=VARCHAR}
+  </update>
+  
+   <select id="queryActivityGiftItemByActSn" resultMap="BaseResultMap" parameterType="map" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_activity_gift_item
+    WHERE act_sn = #{actSn,jdbcType=VARCHAR}
+    AND is_del = 0
+  </select>
+</mapper>

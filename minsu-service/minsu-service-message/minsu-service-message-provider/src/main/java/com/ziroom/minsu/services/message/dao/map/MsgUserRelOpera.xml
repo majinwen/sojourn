@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="message.msgUserRelOperaDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.message.MsgUserRelOperaEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="msg_user_rel_fid" property="msgUserRelFid" jdbcType="VARCHAR" />
+    <result column="from_status" property="fromStatus" jdbcType="INTEGER" />
+    <result column="to_status" property="toStatus" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="creater_type" property="createrType" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, msg_user_rel_fid, from_status, to_status, remark, create_fid, creater_type, 
+    create_time, last_modify_date, is_del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_msg_user_rel_opera_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_msg_user_rel_opera_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.message.MsgUserRelOperaEntity" >
+    insert into t_msg_user_rel_opera_log (id, fid, msg_user_rel_fid, 
+      from_status, to_status, remark, 
+      create_fid, creater_type, create_time, 
+      last_modify_date, is_del)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{msgUserRelFid,jdbcType=VARCHAR}, 
+      #{fromStatus,jdbcType=INTEGER}, #{toStatus,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{createFid,jdbcType=VARCHAR}, #{createrType,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{isDel,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.message.MsgUserRelOperaEntity" >
+    insert into t_msg_user_rel_opera_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="msgUserRelFid != null" >
+        msg_user_rel_fid,
+      </if>
+      <if test="fromStatus != null" >
+        from_status,
+      </if>
+      <if test="toStatus != null" >
+        to_status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createrType != null" >
+        creater_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="msgUserRelFid != null" >
+        #{msgUserRelFid,jdbcType=VARCHAR},
+      </if>
+      <if test="fromStatus != null" >
+        #{fromStatus,jdbcType=INTEGER},
+      </if>
+      <if test="toStatus != null" >
+        #{toStatus,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        #{createrType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByFid" parameterType="com.ziroom.minsu.entity.message.MsgUserRelOperaEntity" >
+    update t_msg_user_rel_opera_log
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="msgUserRelFid != null" >
+        msg_user_rel_fid = #{msgUserRelFid,jdbcType=VARCHAR},
+      </if>
+      <if test="fromStatus != null" >
+        from_status = #{fromStatus,jdbcType=INTEGER},
+      </if>
+      <if test="toStatus != null" >
+        to_status = #{toStatus,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        creater_type = #{createrType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.message.MsgUserRelOperaEntity" >
+    update t_msg_user_rel_opera_log
+    set fid = #{fid,jdbcType=VARCHAR},
+      msg_user_rel_fid = #{msgUserRelFid,jdbcType=VARCHAR},
+      from_status = #{fromStatus,jdbcType=INTEGER},
+      to_status = #{toStatus,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_fid = #{createFid,jdbcType=VARCHAR},
+      creater_type = #{createrType,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <select id="selectByFid" resultMap="BaseResultMap" parameterType="string" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from t_msg_user_rel_opera_log
+	    where is_del = 0 
+	    and fid = #{fid,jdbcType=VARCHAR}
+  </select>
+</mapper>

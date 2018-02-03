@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.staticResourceDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.base.StaticResourceEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="res_title" property="resTitle" jdbcType="VARCHAR" />
+    <result column="res_code" property="resCode" jdbcType="VARCHAR" />
+    <result column="parent_code" property="parentCode" jdbcType="VARCHAR" />
+    <result column="res_type" property="resType" jdbcType="TINYINT" />
+    <result column="res_remark" property="resRemark" jdbcType="VARCHAR" />
+    <result column="order_code" property="orderCode" jdbcType="TINYINT" />
+    <result column="res_content" property="resContent" jdbcType="LONGVARCHAR" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+
+  <resultMap id="ResCodeMap" type="com.ziroom.minsu.services.basedata.entity.StaticResourceVo" extends="BaseResultMap" >
+    <result column="pic_base_url" property="picBaseUrl" jdbcType="VARCHAR" />
+    <result column="pic_suffix" property="picSuffix" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, fid, res_title, res_code,parent_code, res_type, res_remark,order_code, create_fid, create_date, last_modify_date,
+    is_del, res_content
+  </sql>
+
+  <sql id="BaseExt_Column_List" >
+    sr.id, sr.fid, sr.res_title, sr.res_code, sr.res_type, sr.res_remark, sr.create_fid, sr.create_date, sr.last_modify_date,
+    sr.is_del, sr.res_content,srp.pic_base_url,srp.pic_suffix
+  </sql>
+  
+  <select id="findStaticResListByResCode" resultMap="ResCodeMap" parameterType="string" >
+    SELECT 
+    <include refid="BaseExt_Column_List" />,concat(srp.pic_base_url,srp.pic_suffix) picUrl
+    FROM t_static_resource sr
+    LEFT JOIN t_static_resource_pic srp ON sr.fid = srp.res_fid
+    WHERE sr.res_code = #{resCode,jdbcType=VARCHAR}
+    AND sr.is_del = 0
+  </select>
+
+  <select id="findStaticResourceByFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_static_resource
+    WHERE fid = #{fid,jdbcType=VARCHAR}
+    AND is_del = 0
+  </select>
+  
+  <select id="findStaticResourceList" resultMap="BaseResultMap" parameterType="map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_static_resource
+    WHERE is_del = 0
+    <if test="resTitle != null and resTitle !=''">
+      AND res_title like CONCAT(#{resTitle,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="resCode != null and resCode !=''">
+      AND res_code like CONCAT(#{resCode,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="resType != null">
+      AND res_type = #{resType,jdbcType=TINYINT}
+    </if>
+    <if test="createDateStart != null and createDateStart !=''">
+      AND create_date &gt;= #{createDateStart,jdbcType=VARCHAR}
+    </if>
+    <if test="createDateEnd != null and createDateEnd !=''">
+      AND create_date &lt; #{createDateEnd,jdbcType=VARCHAR}
+    </if>
+    <if test="createFidList != null and createFidList.size > 0">
+        AND create_fid in
+        <foreach collection="createFidList" item="createFid" index="index" open="(" separator="," close=")">
+            #{createFid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    ORDER BY create_date DESC
+  </select>
+  
+  <insert id="insertStaticResource" parameterType="com.ziroom.minsu.entity.base.StaticResourceEntity" >
+    insert into t_static_resource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="resTitle != null" >
+        res_title,
+      </if>
+      <if test="resCode != null" >
+        res_code,
+      </if>
+      <if test="parentCode != null" >
+        parent_code,
+      </if>
+      <if test="resType != null" >
+        res_type,
+      </if>
+      <if test="resContent != null" >
+        res_content,
+      </if>
+      <if test="resRemark != null" >
+        res_remark,
+      </if>
+      <if test="orderCode != null" >
+        order_code,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="resTitle != null" >
+        #{resTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="resCode != null" >
+        #{resCode,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null" >
+        #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="resType != null" >
+        #{resType,jdbcType=TINYINT},
+      </if>
+      <if test="resContent != null" >
+        #{resContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="resRemark != null" >
+        #{resRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null" >
+          #{orderCode,jdbcType=TINYINT},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateStaticResourceByFid" parameterType="com.ziroom.minsu.entity.base.StaticResourceEntity" >
+    update t_static_resource
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="resTitle != null" >
+        res_title = #{resTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="resCode != null" >
+        res_code = #{resCode,jdbcType=VARCHAR},
+      </if>
+      <if test="resType != null" >
+        res_type = #{resType,jdbcType=TINYINT},
+      </if>
+      <if test="resContent != null" >
+        res_content = #{resContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="resRemark != null" >
+        res_remark = #{resRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findStaticResourceByCode" resultMap="BaseResultMap" parameterType="string" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_static_resource
+    WHERE res_code = #{resCode,jdbcType=VARCHAR}
+    AND is_del = 0
+    LIMIT 1
+  </select>
+
+
+  <select id="listStaticResourceByParentCode" resultMap="BaseResultMap" parameterType="string" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_static_resource
+    WHERE parent_code = #{parentCode,jdbcType=VARCHAR}
+    AND is_del = 0
+    ORDER BY order_code ASC
+  </select>
+  
+  <!-- 查询最新一个静态资源 -->
+  <select id="findStaticResByResCode" resultMap="ResCodeMap" parameterType="string" >
+    SELECT 
+    <include refid="BaseExt_Column_List" />,concat(srp.pic_base_url,srp.pic_suffix) picUrl
+    FROM t_static_resource sr
+    LEFT JOIN t_static_resource_pic srp ON sr.fid = srp.res_fid
+    WHERE sr.res_code = #{resCode,jdbcType=VARCHAR}
+    AND sr.is_del = 0
+    ORDER BY sr.create_date DESC
+    LIMIT 1
+  </select>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="search.subwayDbInfoDao" >
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.services.search.vo.SubwayStationVo" >
+        <result column="line_fid" property="lineFid" jdbcType="VARCHAR" />
+        <result column="line_name" property="lineName" jdbcType="VARCHAR" />
+        <result column="line_sort" property="lineSort" jdbcType="INTEGER" />
+        <result column="station_fid" property="stationFid" jdbcType="VARCHAR" />
+        <result column="station_name" property="stationName" jdbcType="VARCHAR" />
+        <result column="station_sort" property="stationSort" jdbcType="INTEGER" />
+    </resultMap>
+
+
+    <!-- 获取字典值信息 -->
+    <select id="getSubwayStation" resultMap="BaseResultMap" parameterType="string" >
+    	SELECT a.fid line_fid, a.line_name, a.sort line_sort, b.fid station_fid, b.station_name, b.sort station_sort 
+		FROM t_biz_subway_line a, t_biz_subway_station b
+		WHERE a.fid=b.line_fid AND a.city_code=#{cityCode,jdbcType=VARCHAR}
+		ORDER BY a.sort, b.sort
+    </select>
+
+</mapper>

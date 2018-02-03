@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="customer.landlordBehaviorDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.customer.LandlordBehaviorEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+    <result column="advisory_num" property="advisoryNum" jdbcType="INTEGER" />
+    <result column="reply_num" property="replyNum" jdbcType="INTEGER" />
+    <result column="reply_time_avg" property="replyTimeAvg" jdbcType="INTEGER" />
+    <result column="reply_time_max" property="replyTimeMax" jdbcType="INTEGER" />
+    <result column="reply_time_min" property="replyTimeMin" jdbcType="INTEGER" />
+    <result column="ten_wait_eva_num" property="tenWaitEvaNum" jdbcType="INTEGER" />
+    <result column="ten_has_eva_num" property="tenHasEvaNum" jdbcType="INTEGER" />
+    <result column="lan_wait_eva_num" property="lanWaitEvaNum" jdbcType="INTEGER" />
+    <result column="lan_has_eva_num" property="lanHasEvaNum" jdbcType="INTEGER" />
+    <result column="total_order_num" property="totalOrderNum" jdbcType="INTEGER" />
+    <result column="accept_order_num" property="acceptOrderNum" jdbcType="INTEGER" />
+    <result column="refuse_order_num" property="refuseOrderNum" jdbcType="INTEGER" />
+    <result column="notdo_order_num" property="notdoOrderNum" jdbcType="INTEGER" />
+    <result column="house_num" property="houseNum" jdbcType="INTEGER" />
+    <result column="house_sku_num" property="houseSkuNum" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, landlord_uid, advisory_num, reply_num, reply_time_avg, reply_time_max, reply_time_min, 
+    ten_wait_eva_num, ten_has_eva_num, lan_wait_eva_num, lan_has_eva_num, total_order_num, 
+    accept_order_num, refuse_order_num, notdo_order_num,house_num,house_sku_num, city_code,create_time, last_modify_date,
+    is_del
+  </sql>
+  <select id="findBehaviorByUid" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_landlord_behavior
+    where landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_landlord_behavior
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.customer.LandlordBehaviorEntity" >
+    insert into t_landlord_behavior
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid,
+      </if>
+      <if test="advisoryNum != null" >
+        advisory_num,
+      </if>
+      <if test="replyNum != null" >
+        reply_num,
+      </if>
+      <if test="replyTimeAvg != null" >
+        reply_time_avg,
+      </if>
+      <if test="replyTimeMax != null" >
+        reply_time_max,
+      </if>
+      <if test="replyTimeMin != null" >
+        reply_time_min,
+      </if>
+      <if test="tenWaitEvaNum != null" >
+        ten_wait_eva_num,
+      </if>
+      <if test="tenHasEvaNum != null" >
+        ten_has_eva_num,
+      </if>
+      <if test="lanWaitEvaNum != null" >
+        lan_wait_eva_num,
+      </if>
+      <if test="lanHasEvaNum != null" >
+        lan_has_eva_num,
+      </if>
+      <if test="totalOrderNum != null" >
+        total_order_num,
+      </if>
+      <if test="acceptOrderNum != null" >
+        accept_order_num,
+      </if>
+      <if test="refuseOrderNum != null" >
+        refuse_order_num,
+      </if>
+      <if test="notdoOrderNum != null" >
+        notdo_order_num,
+      </if>
+
+      <if test="houseNum != null" >
+        house_num,
+      </if>
+      <if test="houseSkuNum != null" >
+        house_sku_num,
+      </if>
+
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+
+
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordUid != null" >
+        #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="advisoryNum != null" >
+        #{advisoryNum,jdbcType=INTEGER},
+      </if>
+      <if test="replyNum != null" >
+        #{replyNum,jdbcType=INTEGER},
+      </if>
+      <if test="replyTimeAvg != null" >
+        #{replyTimeAvg,jdbcType=INTEGER},
+      </if>
+      <if test="replyTimeMax != null" >
+        #{replyTimeMax,jdbcType=INTEGER},
+      </if>
+      <if test="replyTimeMin != null" >
+        #{replyTimeMin,jdbcType=INTEGER},
+      </if>
+      <if test="tenWaitEvaNum != null" >
+        #{tenWaitEvaNum,jdbcType=INTEGER},
+      </if>
+      <if test="tenHasEvaNum != null" >
+        #{tenHasEvaNum,jdbcType=INTEGER},
+      </if>
+      <if test="lanWaitEvaNum != null" >
+        #{lanWaitEvaNum,jdbcType=INTEGER},
+      </if>
+      <if test="lanHasEvaNum != null" >
+        #{lanHasEvaNum,jdbcType=INTEGER},
+      </if>
+      <if test="totalOrderNum != null" >
+        #{totalOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="acceptOrderNum != null" >
+        #{acceptOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="refuseOrderNum != null" >
+        #{refuseOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="notdoOrderNum != null" >
+        #{notdoOrderNum,jdbcType=INTEGER},
+      </if>
+
+      <if test="houseNum != null" >
+        #{houseNum,jdbcType=INTEGER},
+      </if>
+      <if test="houseSkuNum != null" >
+        #{houseSkuNum,jdbcType=INTEGER},
+      </if>
+
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=INTEGER},
+      </if>
+
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+
+  <!--更新房东数据-->
+  <update id="updateByUid" parameterType="com.ziroom.minsu.entity.customer.LandlordBehaviorEntity" >
+    update t_landlord_behavior
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid = #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="advisoryNum != null" >
+        advisory_num = #{advisoryNum,jdbcType=INTEGER},
+      </if>
+      <if test="replyNum != null" >
+        reply_num = #{replyNum,jdbcType=INTEGER},
+      </if>
+      <if test="replyTimeAvg != null" >
+        reply_time_avg = #{replyTimeAvg,jdbcType=INTEGER},
+      </if>
+      <if test="replyTimeMax != null" >
+        reply_time_max = #{replyTimeMax,jdbcType=INTEGER},
+      </if>
+      <if test="replyTimeMin != null" >
+        reply_time_min = #{replyTimeMin,jdbcType=INTEGER},
+      </if>
+      <if test="tenWaitEvaNum != null" >
+        ten_wait_eva_num = #{tenWaitEvaNum,jdbcType=INTEGER},
+      </if>
+      <if test="tenHasEvaNum != null" >
+        ten_has_eva_num = #{tenHasEvaNum,jdbcType=INTEGER},
+      </if>
+      <if test="lanWaitEvaNum != null" >
+        lan_wait_eva_num = #{lanWaitEvaNum,jdbcType=INTEGER},
+      </if>
+      <if test="lanHasEvaNum != null" >
+        lan_has_eva_num = #{lanHasEvaNum,jdbcType=INTEGER},
+      </if>
+      <if test="totalOrderNum != null" >
+        total_order_num = #{totalOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="acceptOrderNum != null" >
+        accept_order_num = #{acceptOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="refuseOrderNum != null" >
+        refuse_order_num = #{refuseOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="notdoOrderNum != null" >
+        notdo_order_num = #{notdoOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="houseNum != null" >
+        house_num = #{houseNum,jdbcType=INTEGER},
+      </if>
+      <if test="houseSkuNum != null" >
+        house_sku_num = #{houseSkuNum,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+    and is_del = 0
+  </update>
+
+</mapper>

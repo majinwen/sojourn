@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="message.msgHuanxinImLogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.message.MsgHuanxinImLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="msg_id" property="msgId" jdbcType="VARCHAR" />
+    <result column="from_uid" property="fromUid" jdbcType="VARCHAR" />
+    <result column="to_uid" property="toUid" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="ext" property="ext" jdbcType="VARCHAR" />
+    <result column="chat_type" property="chatType" jdbcType="VARCHAR" />
+    <result column="ziroom_flag" property="ziroomFlag" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="ziroomType" property="ziroomType" jdbcType="INTEGER" />
+    <result column="length" property="length" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="filename" property="filename" jdbcType="VARCHAR" />
+    <result column="file_length" jdbcType="INTEGER" property="fileLength" />
+    <result column="size" jdbcType="VARCHAR" property="size" />
+    <result column="secret" property="secret" jdbcType="VARCHAR" />
+    <result column="lat" property="lat" jdbcType="REAL" />
+    <result column="lng" property="lng" jdbcType="REAL" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="chat_statu" property="chatStatu" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+     id, msg_id, from_uid, to_uid, content, ext, chat_type, ziroom_flag, type,ziroomType, length, 
+    url, filename, file_length, size, secret, lat, lng, addr, is_del, chat_statu, create_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_msg_huanxin_im_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_msg_huanxin_im_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+ 
+  <insert id="saveMsgHuanxinImLog" parameterType="com.ziroom.minsu.entity.message.MsgHuanxinImLogEntity" >
+    insert into t_msg_huanxin_im_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="msgId != null" >
+        msg_id,
+      </if>
+      <if test="fromUid != null" >
+        from_uid,
+      </if>
+      <if test="toUid != null" >
+        to_uid,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="ext != null" >
+        ext,
+      </if>
+      <if test="chatType != null" >
+        chat_type,
+      </if>
+      <if test="ziroomFlag != null" >
+        ziroom_flag,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="ziroomType != null" >
+        ziroomType,
+      </if>
+      <if test="length != null" >
+        length,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="filename != null" >
+        filename,
+      </if>
+      <if test="fileLength != null" >
+        file_length,
+      </if>
+      <if test="size != null" >
+        size,
+      </if>
+      <if test="secret != null" >
+        secret,
+      </if>
+      <if test="lat != null" >
+        lat,
+      </if>
+      <if test="lng != null" >
+        lng,
+      </if>
+      <if test="addr != null" >
+        addr,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="chatStatu != null" >
+        chat_statu,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="msgId != null" >
+        #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="fromUid != null" >
+        #{fromUid,jdbcType=VARCHAR},
+      </if>
+      <if test="toUid != null" >
+        #{toUid,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="ext != null" >
+        #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="chatType != null" >
+        #{chatType,jdbcType=VARCHAR},
+      </if>
+      <if test="ziroomFlag != null" >
+        #{ziroomFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="ziroomType != null" >
+        #{ziroomType,jdbcType=INTEGER},
+      </if>
+      <if test="length != null" >
+        #{length,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null" >
+        #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="fileLength != null" >
+        #{fileLength,jdbcType=INTEGER},
+      </if>
+      <if test="size != null" >
+        #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="secret != null" >
+        #{secret,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        #{lat,jdbcType=REAL},
+      </if>
+      <if test="lng != null" >
+        #{lng,jdbcType=REAL},
+      </if>
+      <if test="addr != null" >
+        #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="chatStatu != null" >
+        #{chatStatu,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.message.MsgHuanxinImLogEntity" >
+    update t_msg_huanxin_im_log
+    <set >
+      <if test="msgId != null" >
+        msg_id = #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="fromUid != null" >
+        from_uid = #{fromUid,jdbcType=VARCHAR},
+      </if>
+      <if test="toUid != null" >
+        to_uid = #{toUid,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="ext != null" >
+        ext = #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="chatType != null" >
+        chat_type = #{chatType,jdbcType=VARCHAR},
+      </if>
+      <if test="ziroomFlag != null" >
+        ziroom_flag = #{ziroomFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+       <if test="ziroomType != null" >
+        ziroomType = #{ziroomType,jdbcType=INTEGER},
+      </if>
+      <if test="length != null" >
+        length = #{length,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null" >
+        filename = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="fileLength != null" >
+        file_length = #{fileLength,jdbcType=INTEGER},
+      </if>
+      <if test="size != null" >
+        size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="secret != null" >
+        secret = #{secret,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        lat = #{lat,jdbcType=REAL},
+      </if>
+      <if test="lng != null" >
+        lng = #{lng,jdbcType=REAL},
+      </if>
+      <if test="addr != null" >
+        addr = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="chatStatu != null" >
+        chat_statu = #{chatStatu,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

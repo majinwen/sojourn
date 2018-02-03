@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseBizMsgDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseBizMsgEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="bed_fid" property="bedFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+    <result column="first_deploy_date" property="firstDeployDate" jdbcType="TIMESTAMP" />
+    <result column="first_up_date" property="firstUpDate" jdbcType="TIMESTAMP" />
+    <result column="last_deploy_date" property="lastDeployDate" jdbcType="TIMESTAMP" />
+    <result column="last_up_date" property="lastUpDate" jdbcType="TIMESTAMP" />
+    <result column="refuse_reason" property="refuseReason" jdbcType="VARCHAR" />
+    <result column="refuse_mark" property="refuseMark" jdbcType="VARCHAR" />
+    <result column="refuse_date" property="refuseDate" jdbcType="TIMESTAMP" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, fid, house_base_fid, room_fid, bed_fid, rent_way, first_deploy_date, first_up_date, 
+    last_deploy_date, last_up_date, refuse_reason, refuse_mark, refuse_date, create_fid, 
+    create_date, last_modify_date
+  </sql>
+  
+  <select id="getHouseBizMsgByHouseFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_biz_msg
+    WHERE house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+    AND rent_way = 0
+    ORDER BY `last_modify_date` DESC LIMIT 1
+  </select>
+  
+  <select id="getHouseBizMsgByRoomFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_biz_msg
+    WHERE room_fid = #{roomFid,jdbcType=VARCHAR}
+    AND rent_way = 1
+  </select>
+  
+  <insert id="insertHouseBizMsg" parameterType="com.ziroom.minsu.entity.house.HouseBizMsgEntity" >
+    insert ignore into t_house_biz_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="bedFid != null" >
+        bed_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="firstDeployDate != null" >
+        first_deploy_date,
+      </if>
+      <if test="firstUpDate != null" >
+        first_up_date,
+      </if>
+      <if test="lastDeployDate != null" >
+        last_deploy_date,
+      </if>
+      <if test="lastUpDate != null" >
+        last_up_date,
+      </if>
+      <if test="refuseReason != null" >
+        refuse_reason,
+      </if>
+      <if test="refuseMark != null" >
+        refuse_mark,
+      </if>
+      <if test="refuseDate != null" >
+        refuse_date,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null" >
+        #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="firstDeployDate != null" >
+        #{firstDeployDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firstUpDate != null" >
+        #{firstUpDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastDeployDate != null" >
+        #{lastDeployDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpDate != null" >
+        #{lastUpDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refuseReason != null" >
+        #{refuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseMark != null" >
+        #{refuseMark,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseDate != null" >
+        #{refuseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateHouseBizMsgByHouseFid" parameterType="com.ziroom.minsu.entity.house.HouseBizMsgEntity" >
+    update t_house_biz_msg
+    <set >
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="firstDeployDate != null" >
+        first_deploy_date = #{firstDeployDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firstUpDate != null" >
+        first_up_date = #{firstUpDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastDeployDate != null" >
+        last_deploy_date = #{lastDeployDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpDate != null" >
+        last_up_date = #{lastUpDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refuseReason != null" >
+        refuse_reason = #{refuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseMark != null" >
+        refuse_mark = #{refuseMark,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseDate != null" >
+        refuse_date = #{refuseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+    AND rent_way = 0
+  </update>
+  
+  <update id="updateHouseBizMsgByRoomFid" parameterType="com.ziroom.minsu.entity.house.HouseBizMsgEntity" >
+    update t_house_biz_msg
+    <set >
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="firstDeployDate != null" >
+        first_deploy_date = #{firstDeployDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firstUpDate != null" >
+        first_up_date = #{firstUpDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastDeployDate != null" >
+        last_deploy_date = #{lastDeployDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpDate != null" >
+        last_up_date = #{lastUpDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refuseReason != null" >
+        refuse_reason = #{refuseReason,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseMark != null" >
+        refuse_mark = #{refuseMark,jdbcType=VARCHAR},
+      </if>
+      <if test="refuseDate != null" >
+        refuse_date = #{refuseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where room_fid = #{roomFid,jdbcType=VARCHAR}
+    AND rent_way = 1
+  </update>
+  
+  <!-- 查询此房源在biz表中的记录数 -->
+  <select id="getHouseBizNumByHouseBaseFid"   parameterType="map"  resultType="int">
+  	SELECT COUNT(id) FROM `t_house_biz_msg` WHERE house_base_fid= #{houseBaseFid,jdbcType=VARCHAR}
+  </select>
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderContactDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderContactEntity" >
+    <!-- 基础map -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="contact_fid" property="contactFid" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    <!--  基础列集合 -->
+    id, order_sn, contact_fid
+  </sql>
+
+  <insert id="insertOrderContact" parameterType="com.ziroom.minsu.entity.order.OrderContactEntity" >
+    <!-- 保存常用入住人 -->
+    insert into t_order_contacts
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="contactFid != null" >
+        contact_fid,
+      </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+
+      <if test="contactFid != null" >
+        #{contactFid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="selectCountContactByOrderSn" resultType="int" parameterType="java.lang.String">
+  	select count(1)
+  	from t_order_contacts
+  	where order_sn = #{orderSn}
+  </select>
+
+</mapper>

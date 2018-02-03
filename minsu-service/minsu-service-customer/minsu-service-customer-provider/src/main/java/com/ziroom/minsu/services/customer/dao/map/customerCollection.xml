@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="customer.customerCollectionDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.customer.CustomerCollectionEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+    <result column="house_name" property="houseName" jdbcType="VARCHAR" />
+    <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+    <result column="pic_base_url" property="picBaseUrl" jdbcType="VARCHAR" />
+    <result column="pic_suffix" property="picSuffix" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    cc.id, cc.fid, cc.uid, cc.house_fid, cc.rent_way, cc.house_name, cc.landlord_uid, cc.pic_base_url, cc.pic_suffix, 
+    cc.create_date, cc.last_modify_date, cc.is_del
+  </sql>
+  
+  <select id="findCustomerCollectionEntityByFid" parameterType="string" resultMap="BaseResultMap">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_customer_collection cc
+    WHERE cc.fid = #{id,jdbcType=VARCHAR}
+    AND cc.is_del = 0
+  </select>
+  
+  <select id="findCustomerCollectionEntityByCondition" parameterType="com.ziroom.minsu.services.customer.dto.CollectionConditionDto" resultMap="BaseResultMap">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_customer_collection cc
+    WHERE cc.house_fid = #{houseFid,jdbcType=VARCHAR}
+    AND cc.uid = #{uid,jdbcType=VARCHAR}
+    AND cc.rent_way = #{rentWay,jdbcType=INTEGER}
+    LIMIT 1
+  </select>
+  
+  <resultMap id="CollectionVoMap" type="com.ziroom.minsu.services.customer.entity.CustomerCollectionVo" extends="BaseResultMap">
+    <result column="land_pic_base_url" property="landPicBaseUrl" jdbcType="VARCHAR" />
+    <result column="land_Pic_Suffix" property="landPicSuffix" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="findCustomerCollectionVoListByUid" parameterType="string" resultMap="CollectionVoMap">
+    SELECT 
+    <include refid="Base_Column_List" />, 
+    cpm.pic_base_url land_pic_base_url, cpm.pic_suffix land_Pic_Suffix
+    FROM t_customer_collection cc
+    LEFT JOIN t_customer_pic_msg cpm 
+    ON cc.landlord_uid = cpm.uid 
+    AND cpm.pic_type = 3
+    AND cpm.is_del = 0
+    AND cpm.audit_status = 1
+    WHERE cc.uid = #{uid,jdbcType=VARCHAR}
+    AND cc.is_del = 0
+    ORDER BY cc.last_modify_date desc
+  </select>
+  
+  <select id="countByUid" parameterType="map" resultType="long">
+    SELECT COUNT(id)
+    FROM t_customer_collection cc
+    WHERE cc.uid = #{uid,jdbcType=VARCHAR}
+    AND cc.is_del = 0
+  </select>
+  
+  <insert id="insertCustomerCollection" parameterType="com.ziroom.minsu.entity.customer.CustomerCollectionEntity" >
+    insert IGNORE into t_customer_collection
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="houseFid != null" >
+        house_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="houseName != null" >
+        house_name,
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid,
+      </if>
+      <if test="picBaseUrl != null" >
+        pic_base_url,
+      </if>
+      <if test="picSuffix != null" >
+        pic_suffix,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseFid != null" >
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="houseName != null" >
+        #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordUid != null" >
+        #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="picBaseUrl != null" >
+        #{picBaseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="picSuffix != null" >
+        #{picSuffix,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateCustomerCollectionByFid" parameterType="com.ziroom.minsu.entity.customer.CustomerCollectionEntity" >
+    update t_customer_collection
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseFid != null" >
+        house_fid = #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        rent_way = #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="houseName != null" >
+        house_name = #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid = #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="picBaseUrl != null" >
+        pic_base_url = #{picBaseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="picSuffix != null" >
+        pic_suffix = #{picSuffix,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+</mapper>

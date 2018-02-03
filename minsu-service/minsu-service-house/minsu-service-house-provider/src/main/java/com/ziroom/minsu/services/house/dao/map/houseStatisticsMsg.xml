@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseStatisticsMsgDao" >
+
+	<!--
+     基础map
+    -->
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseStatisticsMsgEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="bed_fid" property="bedFid" jdbcType="VARCHAR" />
+    <result column="house_pv" property="housePv" jdbcType="INTEGER" />
+    <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  
+   <!--
+     基础字段
+    -->
+  <sql id="Base_Column_List" >
+    id, fid, house_base_fid, room_fid, bed_fid, house_pv, rent_way, create_fid, create_date, 
+    last_modify_date, is_del
+  </sql>
+ 
+    <!--
+      条件查询房源统计信息
+    -->
+  <select id="getHouseStatisticsMsgByParam" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.entity.house.HouseStatisticsMsgEntity" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_statistics_msg
+   	where is_del=0 and rent_way=#{rentWay,jdbcType=INTEGER} and house_base_fid= #{houseBaseFid,jdbcType=VARCHAR}
+  	<if test="roomFid!=null and  roomFid!=''">
+  		and room_fid=#{roomFid,jdbcType=VARCHAR}
+  	</if>
+  	limit 1
+  </select>
+  
+  <!--
+     插入统计数据
+    -->
+  <insert id="insertHouseStatisticsMsg" parameterType="com.ziroom.minsu.entity.house.HouseStatisticsMsgEntity" >
+    insert into t_house_statistics_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="bedFid != null" >
+        bed_fid,
+      </if>
+      <if test="housePv != null" >
+        house_pv,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null" >
+        #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="housePv != null" >
+        #{housePv,jdbcType=INTEGER},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <!--更新房源统计浏览量-->
+  <update id="updateHouseStatisticsMsgPv" parameterType="com.ziroom.minsu.entity.house.HouseStatisticsMsgEntity">
+  	update t_house_statistics_msg set house_pv= #{housePv,jdbcType=INTEGER}
+  	where is_del=0 and rent_way=#{rentWay,jdbcType=INTEGER} and house_base_fid= #{houseBaseFid,jdbcType=VARCHAR}
+  	<if test="roomFid!=null and  roomFid!=''">
+  		and room_fid=#{roomFid,jdbcType=VARCHAR}
+  	</if>
+  </update>
+
+
+  <!-- 获取当前房东的房源数量 房源数量 -->
+  <select id="countLandHouseNum" resultType="java.lang.Long"  parameterType="map">
+    SELECT
+      COUNT(1)
+    FROM
+      (SELECT DISTINCT
+          id
+      FROM
+          (SELECT
+          base.fid AS id, base.fid, base.rent_way
+      FROM
+          minsu_house_db.t_house_base_msg base
+      WHERE
+          base.house_status = 40
+              AND base.rent_way = 0
+              AND base.landlord_uid = #{landUid,jdbcType=VARCHAR}
+      UNION ALL
+          SELECT
+          room.house_base_fid AS id, room.fid AS fid, base1.rent_way
+      FROM
+          minsu_house_db.t_house_base_msg base1
+      INNER JOIN minsu_house_db.t_house_room_msg room ON room.house_base_fid = base1.fid
+      WHERE
+          room.room_status = 40
+              AND base1.rent_way = 1
+              AND base1.landlord_uid = #{landUid,jdbcType=VARCHAR}) tmp
+
+      ) tmp1
+  </select>
+
+
+
+  <!-- 获取当前房东的房源数量 sku数量 -->
+  <select id="countLandHouseSkuNum" resultType="java.lang.Long"  parameterType="map">
+    SELECT
+    COUNT(1)
+    FROM
+    (SELECT DISTINCT
+      fid
+    FROM
+    (SELECT
+    base.fid AS id, base.fid, base.rent_way
+    FROM
+    minsu_house_db.t_house_base_msg base
+    WHERE
+    base.house_status = 40
+    AND base.rent_way = 0
+    AND base.landlord_uid = #{landUid,jdbcType=VARCHAR}
+    UNION ALL
+    SELECT
+    room.house_base_fid AS id, room.fid AS fid, base1.rent_way
+    FROM
+    minsu_house_db.t_house_base_msg base1
+    INNER JOIN minsu_house_db.t_house_room_msg room ON room.house_base_fid = base1.fid
+    WHERE
+    room.room_status = 40
+    AND base1.rent_way = 1
+    AND base1.landlord_uid = #{landUid,jdbcType=VARCHAR}) tmp
+
+    ) tmp1
+  </select>
+
+
+
+</mapper>

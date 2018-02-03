@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2011 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	<dubbo:provider filter="catFilter"></dubbo:provider>
+	<!-- 客户认证流程api -->
+	<dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.CustomerAuthService" ref="customer.customerAuthServiceProxy">
+		<dubbo:method name="saveSmsAuthLog" timeout="3000" retries="0"/>
+		<dubbo:method name="customerContactAuth" timeout="3000" retries="0"/>
+		<dubbo:method name="customerIdentityAuth" timeout="3000" retries="0"/>
+		<dubbo:method name="customerIconAuth" timeout="3000" retries="0"/>
+        <dubbo:method name="findMobileVerifyResult" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+     <dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.CustomerMsgManagerService" ref="customer.customerMsgManagerServiceProxy">
+     	<dubbo:method name="getCustomerDetail" timeout="3000" retries="3"/>
+		<dubbo:method name="queryCustomerBaseMsg" timeout="3000" retries="3"/>
+         <dubbo:method name="getCustomerBaseMsgEntitybyUid" timeout="3000" retries="3"/>
+         <dubbo:method name="updateCustomerBaseMsg" timeout="3000" retries="0"/>
+         <dubbo:method name="saveCustomerOperHistory" timeout="3000" retries="0"/>
+         <dubbo:method name="insertCustomerPicMsg" timeout="3000" retries="0"/>
+         <dubbo:method name="insertCustomerPicMsgAndDelOthers" timeout="3000" retries="0"/>
+         <dubbo:method name="updateCustomerPicMsg" timeout="3000" retries="0"/>
+         <dubbo:method name="insertCustomerPicMsgList" timeout="3000" retries="0"/>
+         <dubbo:method name="getCustomerPicByType" timeout="3000" retries="0"/>
+         <dubbo:method name="saveCustomerInfo" timeout="3000" retries="0"/>
+         <dubbo:method name="getCutomerVo" timeout="3000" retries="3"/>
+         <dubbo:method name="getCutomerVoFromRedis" timeout="3000" retries="3"/>
+         <dubbo:method name="getCutomerVoFromDb" timeout="3000" retries="3"/>
+         <dubbo:method name="selectCustomerExtByUid" timeout="3000" retries="3"/>
+         <dubbo:method name="insertCustomerExt" timeout="3000" retries="0"/>
+         <dubbo:method name="updateCustomerExtByUid" timeout="3000" retries="0"/>
+         <dubbo:method name="getCustomerPicByUid" timeout="3000" retries="3"/>
+         <dubbo:method name="saveNickNameAndIntroduce" timeout="3000" retries="0"/>
+         <dubbo:method name="updateCustomerUpdateFieldAuditNewlogByFid" timeout="3000" retries="0"/>
+         <dubbo:method name="updateBaseAndExtOrPic" timeout="3000" retries="0"/>
+         <dubbo:method name="getUpdateFieldAuditNewlogByFid" timeout="3000" retries="3"/>
+         <dubbo:method name="auditedCustomerInfo" timeout="3000" retries="0"/>
+         <dubbo:method name="updateCustomerExtNotAudit" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.CustomerInfoService" ref="customer.customerInfoServiceProxy">
+        <dubbo:method name="insertCustomerInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="updateLandPhone" timeout="3000" retries="0"/>
+        <dubbo:method name="updateCustomerInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="insertCustomerInvoice" timeout="3000" retries="0"/>
+        <dubbo:method name="insertCustomerBankcard" timeout="3000" retries="0"/>
+        <dubbo:method name="getCustomerBankCardDbByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="getCustomerBankCardDbByFid" timeout="3000" retries="3"/>
+        <dubbo:method name="getCustomerBankcard" timeout="3000" retries="3"/>
+        <dubbo:method name="updateCustomerBankcard" timeout="3000" retries="0"/>
+        <dubbo:method name="getCustomerInfoByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="getCustomerListByUidList" timeout="3000" retries="3"/>
+        <dubbo:method name="selectByCondition" timeout="3000" retries="3"/>
+        <dubbo:method name="getSmsAuthLogCountByCondition" timeout="3000" retries="3"/>
+        <dubbo:method name="getCustomerByMobile" timeout="3000" retries="3"/>
+        <dubbo:method name="getCustomerListByMobile" timeout="3000" retries="3"/>
+        <dubbo:method name="staticsGetLandlordList" timeout="3000" retries="3"/>
+        <dubbo:method name="countLanlordNum" timeout="3000" retries="3"/>
+        <dubbo:method name="updateLandPhoneNew" timeout="3000" retries="0"/>
+        <dubbo:method name="getCustomerSearchVoByUid" timeout="3000" retries="3"/> 
+   </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.TelExtensionService" ref="customer.telExtensionServiceProxy">
+        <dubbo:method name="getExtensionVOByPage" timeout="3000" retries="3"/>
+        <dubbo:method name="getZiroomPhone" timeout="3000" retries="3"/>
+        <dubbo:method name="getExtensionByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="getExtensionVoByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="saveExtensionIdempotent" timeout="3000" retries="0"/>
+        <dubbo:method name="updateBindStatus" timeout="3000" retries="0"/>
+        <dubbo:method name="getZiroomPhoneByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="bindZiroomPhone" timeout="10000" retries="0"/>
+        <dubbo:method name="bindZiroomPhoneAsynchronous" timeout="10000" retries="0"/>
+        <dubbo:method name="breakBindAsynchronous" timeout="10000" retries="0"/>
+        <dubbo:method name="bindZiroomPhone" timeout="10000" retries="0"/>
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.CustomerRoleService" ref="customer.customerRoleServiceProxy">
+        <dubbo:method name="saveCustomerRole" timeout="3000" retries="0"/>
+        <dubbo:method name="frozenCustomerRoleByType" timeout="3000" retries="0"/>
+        <dubbo:method name="unfrozenCustomerRoleByType" timeout="3000" retries="0"/>
+        <dubbo:method name="cancelAngelLandlord" timeout="3000" retries="0"/>
+        <dubbo:method name="checkIsBan" timeout="3000" retries="3"/>
+        <dubbo:method name="getCustomerRolesMapWithoutFrozen" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <!-- pc客户相关接口 -->
+    <dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.CustomerInfoPcService" ref="customer.customerInfoPcServiceProxy">
+        <dubbo:method name="updatePersonData" timeout="3000" retries="0"/>
+        <dubbo:method name="initCustomerAuthData" timeout="3000" retries="3"/>
+        <dubbo:method name="updateCustomerAuthData" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.LandlordStaticsService" ref="customer.landlordStaticsServiceProxy">
+        <dubbo:method name="staticsUpdateLanActAssociationImp" timeout="8000" retries="0"/>
+        <dubbo:method name="staticsInsertLanActAssociationImp" timeout="5000" retries="0"/>
+        <dubbo:method name="findLandlordStatisticsByUid" timeout="5000" retries="3"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.CustomerCollectionService" ref="customer.customerCollectionServiceProxy">
+        <dubbo:method name="saveCustomerCollectionEntity" timeout="3000" retries="0"/>
+        <dubbo:method name="findCustomerCollectionEntityByFid" timeout="3000" retries="3"/>
+        <dubbo:method name="findCustomerCollectionEntityByCondition" timeout="3000" retries="3"/>
+        <dubbo:method name="findCustomerCollectionVoListByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="updateCustomerCollectionByFid" timeout="3000" retries="0"/>
+        <dubbo:method name="countByUid" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.CustomerBlackService" ref="customer.customerBlackServiceProxy">
+        <dubbo:method name="findCustomerBlackByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="findCustomerBlackByImei" timeout="3000" retries="3"/>
+        <dubbo:method name="saveCustomerBlack" timeout="3000" retries="0"/>
+        <dubbo:method name="upBlack" timeout="3000" retries="0"/>
+        <dubbo:method name="getCustomerBlackBatch" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.LandlordBehaviorService" ref="customer.landlordBehaviorServiceProxy">
+        <dubbo:method name="findLandlordBehavior" timeout="3000" retries="3"/>
+        <dubbo:method name="saveLandlordBehavior" timeout="3000" retries="0"/>
+        <dubbo:method name="updateLandlordBehaviorByUid" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.CustomerLocationService" ref="customer.customerLocationServiceProxy">
+        <dubbo:method name="saveUserLocation" timeout="3000" retries="0"/>
+        <dubbo:method name="saveUserLocationAndFill" timeout="3000" retries="0"/>
+        <dubbo:method name="taskFillUserLocation" timeout="300000" retries="0"/>
+        <dubbo:method name="saveUserLocationAndFillV1" timeout="3000" retries="0"/>
+
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.CustomerChatService" ref="customer.customerChatServiceProxy">
+        <dubbo:method name="getListUserPicAndNickName" timeout="5000" retries="3"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.customer.api.inner.CustomerBehaviorService" ref="customer.customerBehaviorServiceProxy">
+        <dubbo:method name="saveCustomerBehavior" timeout="3000" retries="0"/>
+        <dubbo:method name="queryCustomerBehaviorProveFidsForJob" timeout="3000" retries="3"/>
+        <dubbo:method name="getCustomerBehaviorList" timeout="3000" retries="3"/>
+        <dubbo:method name="updateCustomerBehaviorAttr" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+</beans>

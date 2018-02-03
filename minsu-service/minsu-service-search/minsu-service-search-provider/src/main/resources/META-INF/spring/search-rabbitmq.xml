@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="rabbitConnectionFactory" class="com.asura.framework.rabbitmq.connection.RabbitConnectionFactory"
+             init-method="init" destroy-method="closeConnection"/>
+
+       <!-- 搜索刷新房源自动受理  start-->
+       <bean id="autoAccpectQueue" class="com.asura.framework.rabbitmq.entity.QueueName">
+              <constructor-arg  index="0" value="${fresh.search.system}" />
+              <constructor-arg  index="1" value="${fresh.search.module}"/>
+              <constructor-arg  index="2" value="${fresh.search.function}"/>
+       </bean>
+       
+       <bean id="freshHouseInfoListener" class="com.ziroom.minsu.services.mq.listener.FreshHouseInfoListener" />
+
+       <bean id="search.freshReceiver" class="com.asura.framework.rabbitmq.receive.queue.RabbitMqQueueReceiver"
+             init-method="receiveMessage">
+              <constructor-arg index="0">
+                     <ref bean="rabbitConnectionFactory"/>
+              </constructor-arg>
+              <constructor-arg index="1">
+                     <list>
+                          <ref bean="freshHouseInfoListener"/>
+                     </list>
+              </constructor-arg>
+              <constructor-arg index="2">
+                     <ref bean="autoAccpectQueue"/>
+              </constructor-arg>
+       </bean>
+       
+       <!-- 刷新自如驿mq  start-->
+       <bean id="freshZryProjectQueue" class="com.asura.framework.rabbitmq.entity.QueueName">
+              <constructor-arg  index="0" value="${fresh.zry.system}" />
+              <constructor-arg  index="1" value="${fresh.zry.module}"/>
+              <constructor-arg  index="2" value="${fresh.zry.function}"/>
+       </bean>
+       
+       <bean id="freshZryProjectInfoListener" class="com.ziroom.minsu.services.mq.listener.FreshZryProjectInfoListener" />
+       
+       <bean id="search.freshZryProjectReceiver" class="com.asura.framework.rabbitmq.receive.queue.RabbitMqQueueReceiver"
+             init-method="receiveMessage">
+              <constructor-arg index="0">
+                     <ref bean="rabbitConnectionFactory"/>
+              </constructor-arg>
+              <constructor-arg index="1">
+                     <list>
+                          <ref bean="freshZryProjectInfoListener"/>
+                     </list>
+              </constructor-arg>
+              <constructor-arg index="2">
+                     <ref bean="freshZryProjectQueue"/>
+              </constructor-arg>
+       </bean>
+
+    <!--<bean id="search.freshReceiver" class="com.asura.framework.rabbitmq.receive.queue.ExcutorRabbitMqQueueReceiver"-->
+          <!--init-method="receiveMessage">-->
+        <!--<constructor-arg index="0">-->
+            <!--<ref bean="rabbitConnectionFactory"/>-->
+        <!--</constructor-arg>-->
+        <!--<constructor-arg index="1">-->
+            <!--<list>-->
+                <!--<ref bean="freshHouseInfoListener"/>-->
+            <!--</list>-->
+        <!--</constructor-arg>-->
+        <!--<constructor-arg index="2" value="3" />-->
+        <!--<constructor-arg index="3">-->
+            <!--<ref bean="autoAccpectQueue"/>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+
+       <!-- 搜索刷新房源自动受理  end-->
+
+
+
+</beans>

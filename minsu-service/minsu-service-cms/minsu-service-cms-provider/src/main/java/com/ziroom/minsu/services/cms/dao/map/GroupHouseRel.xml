@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.groupHouseRelDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.GroupHouseRelEntity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="fid" property="fid" jdbcType="VARCHAR"/>
+        <result column="group_fid" property="groupFid" jdbcType="VARCHAR"/>
+        <result column="house_type" property="houseType" jdbcType="INTEGER"/>
+        <result column="project_id" property="projectId" jdbcType="VARCHAR"/>
+        <result column="layout_id" property="layoutId" jdbcType="VARCHAR"/>
+        <result column="room_id" property="roomId" jdbcType="VARCHAR"/>
+        <result column="create_fid" property="createFid" jdbcType="VARCHAR"/>
+        <result column="create_name" property="createName" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP"/>
+        <result column="is_del" property="isDel" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,fid, group_fid, house_type, project_id,layout_id,room_id,create_fid,
+        create_name, create_date, last_modify_date, is_del
+    </sql>
+
+    <select id="listHouseRelByFidForPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_group_house_rel
+        where is_del = 0
+              AND group_fid = #{groupFid,jdbcType=VARCHAR}
+        ORDER BY last_modify_date desc
+    </select>
+
+    <!--逻辑删除用户关系-->
+    <update id="deleteHouseRel" parameterType="com.ziroom.minsu.entity.cms.GroupHouseRelEntity">
+        update t_group_house_rel
+        set is_del = 1
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insert" parameterType="com.ziroom.minsu.entity.cms.GroupHouseRelEntity">
+        insert into t_group_house_rel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="groupFid != null">
+                group_fid,
+            </if>
+            <if test="houseType != null">
+                house_type,
+            </if>
+            <if test="projectId != null">
+                project_id,
+            </if>
+            <if test="layoutId != null">
+                layout_id,
+            </if>
+            <if test="roomId != null">
+                room_id,
+            </if>
+            <if test="createFid != null">
+                create_fid,
+            </if>
+            <if test="createName != null">
+                create_name,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="lastModifyDate != null">
+                last_modify_date,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="fid != null">
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="groupFid != null">
+                #{groupFid,jdbcType=VARCHAR},
+            </if>
+            <if test="houseType != null">
+                #{houseType,jdbcType=INTEGER},
+            </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="layoutId != null">
+                #{layoutId,jdbcType=VARCHAR},
+            </if>
+            <if test="roomId != null">
+                #{roomId,jdbcType=VARCHAR},
+            </if>
+            <if test="createFid != null">
+                #{createFid,jdbcType=VARCHAR},
+            </if>
+            <if test="createName != null">
+                #{createName,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null">
+                #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+
+    <select id="listHouseRelFilter" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_group_house_rel
+        WHERE group_fid IN
+        <foreach collection="groupFids" item="fid" open="(" separator="," close=")">
+            #{fid,jdbcType=VARCHAR}
+        </foreach>
+        AND (
+        (house_type = 1
+        AND project_id = #{projectId,jdbcType=VARCHAR}
+        )
+        OR (
+        house_type = 2
+        AND project_id = #{projectId,jdbcType=VARCHAR}
+        AND layout_id = #{layoutId,jdbcType=VARCHAR}
+        )
+        OR (
+        house_type = 3
+        AND project_id = #{projectId,jdbcType=VARCHAR}
+        AND layout_id = #{layoutId,jdbcType=VARCHAR}
+        AND room_id = #{roomId,jdbcType=VARCHAR}
+        )
+        )
+        AND is_del = 0
+    </select>
+
+
+    <select id="selectExistCount" resultType="java.lang.Long" parameterType="com.ziroom.minsu.entity.cms.GroupHouseRelEntity">
+        select
+        count(*)
+        from t_group_house_rel
+        WHERE is_del = 0
+        AND group_fid = #{groupFid,jdbcType=VARCHAR}
+        AND (
+        (house_type = 1
+        AND project_id = #{projectId,jdbcType=VARCHAR}
+        )
+        OR (
+        house_type = 2
+        AND project_id = #{projectId,jdbcType=VARCHAR}
+        <if test="layoutId != null and layoutId != ''">
+            AND layout_id = #{layoutId,jdbcType=VARCHAR}
+        </if>
+        )
+        OR (
+        house_type = 3
+        AND project_id = #{projectId,jdbcType=VARCHAR}
+        <if test="layoutId != null and layoutId != ''">
+            AND layout_id = #{layoutId,jdbcType=VARCHAR}
+        </if>
+        <if test="roomId != null and roomId != ''">
+            AND room_id = #{roomId,jdbcType=VARCHAR}
+        </if>
+        )
+        )
+    </select>
+
+</mapper>

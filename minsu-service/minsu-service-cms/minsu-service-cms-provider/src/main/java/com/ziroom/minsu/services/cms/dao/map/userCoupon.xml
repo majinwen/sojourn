@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.userCouponDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.UserCouponEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="coupon_sn" property="couponSn" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="customer_mobile" property="customerMobile" jdbcType="VARCHAR" />
+    <result column="used_time" property="usedTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, coupon_sn, uid, customer_mobile, used_time, create_id, create_time, 
+    last_modify_date, is_del
+  </sql>
+  
+  <select id="selectByCouponSn" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_user_coupon
+    WHERE coupon_sn = #{couponSn,jdbcType=VARCHAR}
+    AND is_del = 0
+  </select>
+  
+  <delete id="deleteByCouponSn" parameterType="java.lang.Integer" >
+    UPDATE t_user_coupon
+    SET is_del = 1
+    WHERE coupon_sn = #{couponSn,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="saveUserCoupon" parameterType="com.ziroom.minsu.entity.cms.UserCouponEntity" >
+    insert into t_user_coupon
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="couponSn != null" >
+        coupon_sn,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="customerMobile != null" >
+        customer_mobile,
+      </if>
+      <if test="usedTime != null" >
+        used_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="couponSn != null" >
+        #{couponSn,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerMobile != null" >
+        #{customerMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="usedTime != null" >
+        #{usedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+  <insert id="saveUserCouponIgnore" parameterType="com.ziroom.minsu.entity.cms.UserCouponEntity" >
+    insert ignore into t_user_coupon
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="couponSn != null" >
+        coupon_sn,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="customerMobile != null" >
+        customer_mobile,
+      </if>
+      <if test="usedTime != null" >
+        used_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="couponSn != null" >
+        #{couponSn,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerMobile != null" >
+        #{customerMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="usedTime != null" >
+        #{usedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByCouponSn" parameterType="com.ziroom.minsu.entity.cms.UserCouponEntity" >
+    update t_user_coupon
+    <set >
+      <if test="orderSn != null" >
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerMobile != null" >
+        customer_mobile = #{customerMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="usedTime != null" >
+        used_time = #{usedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE coupon_sn = #{couponSn,jdbcType=VARCHAR}
+  </update>
+  
+    
+
+  <select id="countUidAc" resultType="java.lang.Long" parameterType="map">
+  
+    SELECT count(1) FROM `t_user_coupon` usc 
+	INNER JOIN `t_act_coupon` aco on aco.`coupon_sn` = usc.`coupon_sn`
+	
+	where 1=1
+	AND usc.`uid` =  #{uid,jdbcType=VARCHAR}
+	AND usc.`is_del` = 0
+    <if test="groupSn != null and groupSn!=''" >
+      AND aco.`group_sn`= #{groupSn,jdbcType=VARCHAR}
+    </if>
+     <if test="actSn != null and actSn!=''" >
+     AND aco.`act_sn`= #{actSn,jdbcType=VARCHAR}
+    </if>
+
+  </select>
+  
+  <select id="findActSnsByUid" resultType="java.lang.String" parameterType="map">
+  
+    SELECT aco.`act_sn` FROM `t_user_coupon` usc 
+	INNER JOIN `t_act_coupon` aco on aco.`coupon_sn` = usc.`coupon_sn`
+	
+	where 1=1
+	AND usc.`uid` =  #{uid,jdbcType=VARCHAR}
+	AND usc.`is_del` = 0
+    <if test="groupSn != null and groupSn!=''" >
+      AND aco.`group_sn`= #{groupSn,jdbcType=VARCHAR}
+    </if>
+     <if test="actSn != null and actSn!=''" >
+     AND aco.`act_sn`= #{actSn,jdbcType=VARCHAR}
+    </if>
+
+  </select>
+
+
+  <select id="countCouponNumByUidAndAct" resultType="java.lang.Long" parameterType="map">
+    SELECT
+    COUNT(1)
+    FROM
+    t_user_coupon t
+    INNER JOIN t_act_coupon t1
+      ON t.coupon_sn = t1.coupon_sn
+    WHERE t.uid = #{uid,jdbcType=VARCHAR}
+    AND t1.act_sn = #{actSn,jdbcType=VARCHAR}
+    <if test="date != null">
+      AND DATE_FORMAT(t.`create_time`,'%Y-%m-%d') = #{date,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+
+</mapper>

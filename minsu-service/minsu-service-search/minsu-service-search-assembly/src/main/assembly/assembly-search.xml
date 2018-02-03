@@ -1,0 +1,29 @@
+<!---->
+<assembly>
+	<id>provider</id>
+	<formats>
+		<format>tar.gz</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${project.build.outputDirectory}</directory>
+			<includes>
+				<include>minsu-service-search-provider/bin/*</include>
+				<include>minsu-service-search-provider/lib/*</include>
+				<include>minsu-service-search-provider/conf/*</include>
+				<include>minsu-service-search-provider/logs/*</include>
+			</includes>
+			<fileMode>0755</fileMode>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+	</fileSets>
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>minsu-service-search-provider/lib</outputDirectory>
+			<excludes>
+				<exclude>com.ziroom.minsu:minsu-service-search-assembly</exclude>
+			</excludes>
+		</dependencySet>
+	</dependencySets>
+</assembly>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="rabbitConnectionFactory" class="com.asura.framework.rabbitmq.connection.RabbitConnectionFactory"
+          init-method="init" destroy-method="closeConnection"/>
+
+    <bean id="behavior.queueName" class="com.asura.framework.rabbitmq.entity.QueueName">
+        <constructor-arg index="0" value="${customer.behavior.system}"/>
+        <constructor-arg index="1" value="${customer.behavior.module}"/>
+        <constructor-arg index="2" value="${customer.behavior.function}"/>
+    </bean>
+
+    <bean id="behavior.rabbitSendClient" class="com.asura.framework.rabbitmq.send.RabbitMqSendClient"
+          destroy-method="closeChannel">
+        <property name="rabbitConnectionFactory" ref="rabbitConnectionFactory"/>
+    </bean>
+
+</beans>

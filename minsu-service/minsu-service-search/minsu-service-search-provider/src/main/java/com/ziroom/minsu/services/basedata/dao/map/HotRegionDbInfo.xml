@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="search.hotRegionDbInfoDao" >
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.services.search.vo.HotRegionVo" >
+        <!-- 基础map -->
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+        <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+        <result column="region_type" property="regionType" jdbcType="INTEGER" />
+        <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+        <result column="latitude" property="latitude" jdbcType="TINYINT" />
+        <result column="hot" property="hot" jdbcType="INTEGER" />
+        <result column="line_fid" property="lineFid" jdbcType="VARCHAR" />
+        <result column="radii" property="radii" jdbcType="INTEGER" />
+    </resultMap>
+
+
+    <!-- 获取数据库的信息 -->
+    <select id="getHotRegionList" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+            id,
+            region_name,
+            region_type,
+            longitude,
+            latitude,
+            hot,
+            radii
+        FROM t_conf_hot_region
+        WHERE city_code = #{cityCode,jdbcType=VARCHAR}
+        AND   is_del = 0
+    </select>
+        
+    <!-- 获取当前有效的景点商圈类型下的有效的景点商圈 -->
+    <select id="getHotRegionListByCityEnumStatus" resultMap="BaseResultMap" parameterType="map">
+		SELECT
+            chr.id,
+            chr.city_code,
+            chr.region_name,
+            chr.region_type,
+            chr.longitude,
+            chr.latitude,
+            chr.hot,
+            chr.radii
+        FROM t_conf_hot_region chr 
+        	RIGHT JOIN t_conf_dic_item cdi ON chr.region_type=cdi.item_value        	
+        WHERE 
+        	chr.is_del = 0  
+        	AND chr.region_status = 1
+	        AND chr.city_code = #{cityCode,jdbcType=VARCHAR}
+        	AND cdi.dic_code = #{dicCode,jdbcType=VARCHAR}  
+        	AND cdi.template_fid = #{templateFid,jdbcType=VARCHAR}
+        	AND cdi.is_del = 0
+       		AND cdi.item_status=1
+  	    	ORDER BY chr.hot desc   
+    </select>
+
+
+    <!-- 获取数据库的信息 -->
+    <select id="getSubWayList" resultMap="BaseResultMap" parameterType="java.lang.String">
+
+        SELECT
+                s.id,
+                s.station_name AS  region_name,
+                s.longitude,
+                s.latitude,
+                line_fid
+        FROM t_biz_subway_station s
+        INNER JOIN  t_biz_subway_line l ON s.line_fid = l.fid  AND s.is_del = 0
+        WHERE  l.city_code = #{cityCode,jdbcType=VARCHAR}
+
+    </select>
+
+
+    <!-- 获取当前区域的拼音统计信息 -->
+    <select id="getSubwaySimpleList" resultType="com.ziroom.minsu.services.search.vo.HotRegionSimpleVo" >
+        SELECT
+          s.fid AS id,
+          s.station_name  AS regionName,
+	      l.line_name AS areaName,
+	      ci.code AS cityCode
+        FROM
+        t_biz_subway_station s
+        INNER JOIN  t_biz_subway_line l ON s.line_fid = l.fid  AND s.is_del = 0
+        INNER JOIN   t_conf_city ci ON l.city_code = ci.code
+    </select>
+
+    <!-- 获取当前区域的拼音统计信息 -->
+    <select id="getHotRegionSimpleList" resultType="com.ziroom.minsu.services.search.vo.HotRegionSimpleVo" >
+        SELECT
+        hot.fid as id,
+        hot.region_name  AS regionName,
+        ci.show_name AS areaName,
+        ci.code AS cityCode
+        FROM
+        t_conf_hot_region hot
+        INNER JOIN   t_conf_city ci ON hot.area_code = ci.code  AND hot.is_del = 0
+    </select>
+
+    <!-- 获取城市区域的拼音统计信息 -->
+    <select id="getAreaSimpleList" resultType="com.ziroom.minsu.services.search.vo.HotRegionSimpleVo" >
+        SELECT
+          t.fid as id,
+          t.show_name AS regionName,
+          t.show_name AS showName,
+          t.code AS cityCode
+        FROM  t_conf_city t
+        WHERE LEVEL = 4 AND is_del = 0
+    </select>
+
+
+
+    <!-- 获取城市区域的拼音统计信息 -->
+    <select id="getKm" resultType="java.lang.Integer" >
+       SELECT item_value
+       FROM t_conf_dic_item
+       WHERE template_fid = '8a9e9aaf53c6a9df0153c6a9df880000'
+       AND dic_code = 'CityRulesEnum001'
+    </select>
+
+
+    <!-- 获取城市区域的拼音统计信息 -->
+    <select id="getDicList" resultType="java.lang.Integer" >
+        SELECT item_value
+        FROM t_conf_dic_item
+        WHERE template_fid = '8a9e9aaf53c6a9df0153c6a9df880000'
+        AND dic_code = 'CityRulesEnum001'
+    </select>
+    
+    
+    
+    <!-- 根据城市获取对应的区域 -->
+    <select id="getAreaByCity" resultType="com.ziroom.minsu.services.search.vo.HotRegionSimpleVo" parameterType="java.lang.String">
+        SELECT
+          t.fid as id,
+          t.show_name AS regionName,
+          t.show_name AS areaName,
+          t.code AS cityCode
+        FROM  t_conf_city t
+        WHERE pcode = #{cityCode,jdbcType=VARCHAR}
+        AND LEVEL = 4 AND is_del = 0 AND city_status = 1
+    </select>
+    
+    <!-- 根据有效的枚举类型查询商圈 -->
+    <select id="getHotRegionListByEnum" resultMap="BaseResultMap" parameterType="map">
+		SELECT
+            chr.id,
+            chr.city_code,
+            chr.region_name,
+            chr.region_type,
+            chr.longitude,
+            chr.latitude,
+            chr.hot,
+            chr.radii
+        FROM t_conf_hot_region chr 
+        	RIGHT JOIN t_conf_dic_item cdi ON chr.region_type=cdi.item_value
+        	<if test="cityCode == null">
+	        	INNER JOIN (SELECT chr2.city_code ,MAX(chr2.hot) hot FROM t_conf_hot_region chr2 GROUP BY chr2.city_code) chr3 
+        			ON chr.city_code=chr3.city_code AND chr.hot =chr3.hot 
+        	</if>        	
+        WHERE 
+        	chr.is_del = 0  
+        	<if test="cityCode != null">
+	        	AND chr.city_code = #{cityCode,jdbcType=VARCHAR}
+        	</if>      
+        	<if test="regionType != null">
+        		AND chr.region_type = #{regionType,jdbcType=INTEGER}
+        	</if>
+        	<if test="regionStatus != null">
+        		AND chr.region_status = #{regionStatus,jdbcType=INTEGER}
+        	</if>
+        	AND cdi.dic_code = #{dicCode,jdbcType=VARCHAR}  
+        	AND cdi.template_fid = #{templateFid,jdbcType=VARCHAR}
+        	AND cdi.is_del = 0
+        	<if test="itemStatus != null">
+        		AND cdi.item_status=#{itemStatus,jdbcType=INTEGER}
+    		</if> 
+  	    	ORDER BY chr.hot desc
+    		<if test="cityCode == null">
+    			LIMIT 20
+    		</if>   
+    </select>
+
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015. ziroom.
+  -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 搜索接口 -->
+    <dubbo:reference id="search.searchServiceApi" interface="com.ziroom.minsu.services.search.api.inner.SearchService" check="false"/>
+    <!-- 自如驿搜索接口 -->
+    <dubbo:reference id="search.zrySearchService" interface="com.ziroom.minsu.services.search.api.inner.ZrySearchService" check="false"/>
+    <!-- cms搜索接口 -->
+    <dubbo:reference id="search.cmsSearchService" interface="com.ziroom.minsu.services.search.api.inner.CmsSearchService" check="false"/>
+</beans>

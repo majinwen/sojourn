@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseFollowLogDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseFollowLogEntity" >
+    <!--
+    基础map
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="follow_fid" property="followFid" jdbcType="VARCHAR" />
+    <result column="from_status" property="fromStatus" jdbcType="TINYINT" />
+    <result column="to_status" property="toStatus" jdbcType="TINYINT" />
+    <result column="follow_user_type" property="followUserType" jdbcType="TINYINT" />
+    <result column="follow_user_fid" property="followUserFid" jdbcType="VARCHAR" />
+    <result column="follow_emp_code" property="followEmpCode" jdbcType="VARCHAR" />
+    <result column="follow_emp_name" property="followEmpName" jdbcType="VARCHAR" />
+    <result column="follow_desc" property="followDesc" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List" >
+    <!--
+    基础字段
+    -->
+    id, fid, follow_fid, from_status, to_status,follow_user_type, follow_user_fid, follow_emp_code, follow_emp_name, 
+    follow_desc, create_date, last_modify_date, is_del
+  </sql>
+  
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="string" >
+    <!--
+    fid查询
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_follow_log
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  
+
+  <insert id="insertHouseFollowLog" parameterType="com.ziroom.minsu.entity.house.HouseFollowLogEntity" >
+    <!--
+    插入房源跟进明细表
+    -->
+    insert into t_house_follow_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="followFid != null" >
+        follow_fid,
+      </if>
+      <if test="fromStatus != null" >
+        from_status,
+      </if>
+      <if test="toStatus != null" >
+        to_status,
+      </if>
+      <if test="followUserType != null" >
+        follow_user_type,
+      </if>
+      <if test="followUserFid != null" >
+        follow_user_fid,
+      </if>
+      <if test="followEmpCode != null" >
+        follow_emp_code,
+      </if>
+      <if test="followEmpName != null" >
+        follow_emp_name,
+      </if>
+      <if test="followDesc != null" >
+        follow_desc,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="followFid != null" >
+        #{followFid,jdbcType=VARCHAR},
+      </if>
+      <if test="fromStatus != null" >
+        #{fromStatus,jdbcType=TINYINT},
+      </if>
+      <if test="toStatus != null" >
+        #{toStatus,jdbcType=TINYINT},
+      </if>
+      <if test="followUserType != null" >
+        #{followUserType,jdbcType=TINYINT},
+      </if>
+      <if test="followUserFid != null" >
+        #{followUserFid,jdbcType=VARCHAR},
+      </if>
+      <if test="followEmpCode != null" >
+        #{followEmpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="followEmpName != null" >
+        #{followEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="followDesc != null" >
+        #{followDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.house.HouseFollowLogEntity" >
+    <!--
+    更新房源跟进明细表
+    -->
+    update t_house_follow_log
+    <set >
+      <if test="followFid != null" >
+        follow_fid = #{followFid,jdbcType=VARCHAR},
+      </if>
+      <if test="fromStatus != null" >
+        from_status = #{fromStatus,jdbcType=TINYINT},
+      </if>
+      <if test="toStatus != null" >
+        to_status = #{toStatus,jdbcType=TINYINT},
+      </if>
+      <if test="followUserType != null" >
+        to_status = #{followUserType,jdbcType=TINYINT},
+      </if>
+      <if test="followUserFid != null" >
+        follow_user_fid = #{followUserFid,jdbcType=VARCHAR},
+      </if>
+      <if test="followEmpCode != null" >
+        follow_emp_code = #{followEmpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="followEmpName != null" >
+        follow_emp_name = #{followEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="followDesc != null" >
+        follow_desc = #{followDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据房源跟进主表查询房源跟进记录明细 -->
+  <select id="findHouseFollowLog" parameterType="string"  resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from t_house_follow_log
+    where follow_fid = #{followFid,jdbcType=VARCHAR}
+  </select>
+</mapper>

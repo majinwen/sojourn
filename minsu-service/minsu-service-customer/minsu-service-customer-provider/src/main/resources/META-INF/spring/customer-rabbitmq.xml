@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="rabbitConnectionFactory" class="com.asura.framework.rabbitmq.connection.RabbitConnectionFactory"
+             init-method="init" destroy-method="closeConnection"/>
+
+       <bean id="customerBehaviorQueue" class="com.asura.framework.rabbitmq.entity.QueueName">
+              <constructor-arg index="0" value="${customer.behavior.system}"/>
+              <constructor-arg index="1" value="${customer.behavior.module}"/>
+              <constructor-arg index="2" value="${customer.behavior.function}"/>
+       </bean>
+
+       <bean id="customerBehaviorListener" class="com.ziroom.minsu.services.customer.mq.listener.CustomerBehaviorListener" />
+
+       <bean id="customer.behaviorReceiver" class="com.asura.framework.rabbitmq.receive.queue.RabbitMqQueueReceiver"
+             init-method="receiveMessage">
+              <constructor-arg index="0">
+                     <ref bean="rabbitConnectionFactory"/>
+              </constructor-arg>
+              <constructor-arg index="1">
+                     <list>
+                          <ref bean="customerBehaviorListener"/>
+                     </list>
+              </constructor-arg>
+              <constructor-arg index="2">
+                     <ref bean="customerBehaviorQueue"/>
+              </constructor-arg>
+       </bean>
+
+</beans>

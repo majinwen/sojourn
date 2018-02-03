@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.activityRecordDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityRecordEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="group_sn" property="groupSn" jdbcType="VARCHAR" />
+    <result column="act_sn" property="actSn" jdbcType="VARCHAR" />
+    <result column="user_uid" property="userUid" jdbcType="VARCHAR" />
+    <result column="user_mobile" property="userMobile" jdbcType="VARCHAR" />
+    <result column="gift_fid" property="giftFid" jdbcType="VARCHAR" />
+    <result column="is_pick_up" property="isPickUp" jdbcType="TINYINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_adress" property="userAdress" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, group_sn, act_sn, user_uid, user_mobile, gift_fid, is_pick_up, create_date, 
+    last_modify_date, start_time, end_time, user_name, user_adress, remark
+  </sql>
+
+
+  <!-- 获取当前未领取的数量 -->
+  <select id="getNoRecordCountByGroupSn" resultType="java.lang.Long" parameterType="java.lang.String">
+    select
+    COUNT(1)
+    from t_activity_record  re
+    inner join t_activity ac on re.`act_sn` = ac.`act_sn`
+    where ac.act_status = 2
+    AND ac.act_start_time <![CDATA[ <= ]]>  NOW()
+    AND ac.act_end_time <![CDATA[ >= ]]>  NOW()
+    AND ac.is_del = 0
+    and re.`group_sn` = #{groupSn,jdbcType=VARCHAR}
+    and re.`user_uid` is null
+  </select>
+
+
+
+  <select id="selectOneRecordByGroupSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+      select
+      re.id, re.fid, re.group_sn, re.act_sn, re.user_uid, re.user_mobile, re.gift_fid, re.is_pick_up, re.create_date,
+    re.last_modify_date, re.start_time, re.end_time, re.user_name, re.user_adress, re.remark
+      from t_activity_record  re
+          inner join t_activity ac on re.`act_sn` = ac.`act_sn`
+          where ac.act_status = 2
+        AND ac.act_start_time <![CDATA[ <= ]]>  NOW()
+        AND ac.act_end_time <![CDATA[ >= ]]>  NOW()
+        AND ac.is_del = 0
+        and re.`group_sn` = #{groupSn,jdbcType=VARCHAR}
+        and re.`user_uid` is null
+        and re.`user_mobile` is null
+        and re.`is_pick_up` = 0
+        ORDER BY re.rand_sn DESC
+        limit 1
+  </select>
+
+
+
+  <!-- 当前用户是否已经参加了当前活动-->
+  <select id="getHasRecordCountByGroupSnMobile" resultType="java.lang.Long" parameterType="java.util.Map" >
+    select
+    COUNT(1)
+    from t_activity_record
+    where group_sn = #{groupSn,jdbcType=VARCHAR}
+    AND user_mobile = #{mobile,jdbcType=VARCHAR}
+  </select>
+
+
+  <!-- 当前用户是否已经参加了当前活动-->
+  <select id="getHasRecordCountByGroupSnUid" resultType="java.lang.Long" parameterType="java.util.Map" >
+    select
+    COUNT(1)
+    from t_activity_record
+    where group_sn = #{groupSn,jdbcType=VARCHAR}
+    AND user_uid = #{uid,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <select id="getRecordByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_activity_record
+    where fid = #{recordFid,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_activity_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_activity_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.cms.ActivityRecordEntity" >
+    insert into t_activity_record (id, fid, group_sn, 
+      act_sn, user_uid, user_mobile, 
+      gift_fid, is_pick_up, create_date, 
+      last_modify_date, start_time, end_time, 
+      user_name, user_adress, remark
+      )
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{groupSn,jdbcType=VARCHAR}, 
+      #{actSn,jdbcType=VARCHAR}, #{userUid,jdbcType=VARCHAR}, #{userMobile,jdbcType=VARCHAR}, 
+      #{giftFid,jdbcType=VARCHAR}, #{isPickUp,jdbcType=TINYINT}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{userName,jdbcType=VARCHAR}, #{userAdress,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.cms.ActivityRecordEntity" >
+    insert into t_activity_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="groupSn != null" >
+        group_sn,
+      </if>
+      <if test="actSn != null" >
+        act_sn,
+      </if>
+      <if test="randSn != null" >
+        rand_sn,
+      </if>
+
+      <if test="userUid != null" >
+        user_uid,
+      </if>
+      <if test="userMobile != null" >
+        user_mobile,
+      </if>
+      <if test="giftFid != null" >
+        gift_fid,
+      </if>
+      <if test="isPickUp != null" >
+        is_pick_up,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userAdress != null" >
+        user_adress,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="groupSn != null" >
+        #{groupSn,jdbcType=VARCHAR},
+      </if>
+      <if test="actSn != null" >
+        #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="randSn != null" >
+        #{randSn,jdbcType=VARCHAR},
+      </if>
+
+      <if test="userUid != null" >
+        #{userUid,jdbcType=VARCHAR},
+      </if>
+      <if test="userMobile != null" >
+        #{userMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="giftFid != null" >
+        #{giftFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isPickUp != null" >
+        #{isPickUp,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAdress != null" >
+        #{userAdress,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <!-- 锁定当前礼品地址 -->
+  <update id="updateAddress" parameterType="java.util.Map" >
+    update t_activity_record
+    set
+    user_name = #{name,jdbcType=VARCHAR},
+    user_adress = #{address,jdbcType=VARCHAR}
+    where fid =#{recordFid,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <!-- 锁定当前的活动 -->
+  <update id="updateLockUserRecord" parameterType="java.util.Map" >
+    update t_activity_record
+    set
+    user_uid = #{uid,jdbcType=VARCHAR},
+    user_mobile = #{mobile,jdbcType=VARCHAR},
+    is_pick_up = 1
+    where fid =#{recordFid,jdbcType=VARCHAR}
+    AND user_uid is NULL
+    AND user_mobile IS NULL
+    AND is_pick_up = 0
+  </update>
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.cms.ActivityRecordEntity" >
+    update t_activity_record
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="groupSn != null" >
+        group_sn = #{groupSn,jdbcType=VARCHAR},
+      </if>
+      <if test="actSn != null" >
+        act_sn = #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="userUid != null" >
+        user_uid = #{userUid,jdbcType=VARCHAR},
+      </if>
+      <if test="userMobile != null" >
+        user_mobile = #{userMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="giftFid != null" >
+        gift_fid = #{giftFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isPickUp != null" >
+        is_pick_up = #{isPickUp,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAdress != null" >
+        user_adress = #{userAdress,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.cms.ActivityRecordEntity" >
+    update t_activity_record
+    set fid = #{fid,jdbcType=VARCHAR},
+      group_sn = #{groupSn,jdbcType=VARCHAR},
+      act_sn = #{actSn,jdbcType=VARCHAR},
+      user_uid = #{userUid,jdbcType=VARCHAR},
+      user_mobile = #{userMobile,jdbcType=VARCHAR},
+      gift_fid = #{giftFid,jdbcType=VARCHAR},
+      is_pick_up = #{isPickUp,jdbcType=TINYINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_adress = #{userAdress,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  
+  <select id="queryActivityRecordByPage" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.cms.dto.ActivityRecordRequest" >
+   
+    <!-- 条件查询 活动礼物领取记录 -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_activity_record
+    WHERE 1=1
+    <if test="groupSn != null and groupSn !=''">
+      AND group_sn = #{groupSn,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="actSn != null and actSn !='' ">
+      AND act_sn = #{actSn,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="userUid != null and userUid != ''">
+     AND user_uid = #{userUid,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="userMobile != null and userMobile != ''">
+    AND user_mobile = #{userMobile,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="giftFid ! = null and giftFid != ''">
+      AND  gift_fid = #{giftFid,jdbcType=VARCHAR}
+    </if>
+     
+    <if test="isPickUp != null">
+      AND is_pick_up = #{isPickUp,jdbcType=TINYINT}
+    </if>
+  </select>
+  
+   <update id="updateActivityRecordByFid" parameterType="com.ziroom.minsu.entity.cms.ActivityRecordEntity" >
+   <!-- 修改活动礼物领取 -->
+    update t_activity_record
+    <set >
+      <if test="userUid != null" >
+        user_uid = #{userUid,jdbcType=VARCHAR},
+      </if>
+      <if test="userMobile != null" >
+        user_mobile = #{userMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="isPickUp != null" >
+        is_pick_up = #{isPickUp,jdbcType=TINYINT},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAdress != null" >
+        user_adress = #{userAdress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+    <delete id="deleteAcRecord" parameterType="map" >
+    delete from t_activity_record
+    WHERE act_sn = #{actSn,jdbcType=VARCHAR}
+    AND is_pick_up = 0
+  </delete>
+  
+    <select id="queryAcRecordInfoByPage" resultType="com.ziroom.minsu.services.cms.entity.ActRecordVo" parameterType="com.ziroom.minsu.services.cms.dto.ActivityRecordRequest" >
+   
+    <!-- 条件查询 活动礼物领取记录 -->
+   SELECT axR.user_mobile AS userMobile,axR.is_pick_up AS isPickUp,axR.create_date AS createDate,axR.user_uid AS userUid,axR.remark AS axRemark,axR.user_name AS userName,axR.user_adress AS userAdress,
+ ac.group_sn AS groupSn,ac.act_sn AS actSn,ac.`act_name` AS actName,ac.`act_source` AS actSource,COALESCE(gi.gift_name,axR.gift_fid) AS giftName,gi.remark AS giftRemark,
+    ac.`act_type` AS actType,ac.act_kind as actKind
+   FROM `t_activity_record` axR  
+   LEFT JOIN `t_activity` ac  ON ac.`act_sn` = axR.act_sn
+   LEFT JOIN `t_activity_gift` gi ON gi.fid = axR.gift_fid
+    WHERE 1=1
+    AND axR.is_pick_up = 1
+    <if test="groupSn != null and groupSn !=''">
+      AND axR.group_sn = #{groupSn,jdbcType=VARCHAR}
+    </if>
+    
+    <if test="actSn != null and actSn !='' ">
+      AND axR.act_sn  like CONCAT(#{actSn,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="userUid != null and userUid != ''">
+     AND axR.user_uid = #{userUid,jdbcType=VARCHAR}
+    </if>
+    <if test="userMobile != null and userMobile != ''">
+    AND axR.user_mobile = #{userMobile,jdbcType=VARCHAR}
+    </if>
+    <if test="giftFid != null and giftFid != ''">
+      AND  axR.gift_fid = #{giftFid,jdbcType=VARCHAR}
+    </if>
+    <if test="actKind != null">
+      AND ac.act_kind = #{actKind,jdbcType=TINYINT}
+    </if>
+     <if test="actName != null and actName !=''">
+		AND ac.`act_name`  like CONCAT(#{actName,jdbcType=VARCHAR},'%')
+    </if>
+     <if test="actSource != null">
+      AND  ac.`act_source` = #{actSource,jdbcType=TINYINT}
+    </if>
+  </select>
+</mapper>

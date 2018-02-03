@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderFollowDao" >
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderFollowEntity" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="fid" property="fid" jdbcType="VARCHAR" />
+        <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+        <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+        <result column="follow_status" property="followStatus" jdbcType="INTEGER" />
+        <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+        <result column="create_name" property="createName" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+        <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    </resultMap>
+
+
+
+    <resultMap id="OrderResultMap" type="com.ziroom.minsu.services.order.entity.OrderFollowVo" >
+        <!-- 基础map -->
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="fid" jdbcType="VARCHAR" property="fid" />
+        <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+        <result column="nation_code" jdbcType="VARCHAR" property="nationCode" />
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+        <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="check_type" jdbcType="TINYINT" property="checkType" />
+        <result column="order_source" jdbcType="TINYINT" property="orderSource" />
+        <result column="order_status" jdbcType="TINYINT" property="orderStatus" />
+        <result column="accounts_status" jdbcType="TINYINT" property="accountsStatus" />
+        <result column="pay_status" jdbcType="TINYINT" property="payStatus" />
+        <result column="eva_status" jdbcType="TINYINT" property="evaStatus" />
+        <result column="landlord_uid" jdbcType="VARCHAR" property="landlordUid" />
+        <result column="landlord_tel" jdbcType="VARCHAR" property="landlordTel" />
+        <result column="landlord_name" jdbcType="VARCHAR" property="landlordName" />
+        <result column="user_uid" jdbcType="VARCHAR" property="userUid" />
+        <result column="user_tel" jdbcType="VARCHAR" property="userTel" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="people_num" jdbcType="INTEGER" property="peopleNum" />
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+        <result column="real_end_time" jdbcType="TIMESTAMP" property="realEndTime" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+        <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
+        <result column="is_del" jdbcType="TINYINT" property="isDel" />
+        <result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+        <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+        <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+        <result column="bed_fid" property="bedFid" jdbcType="VARCHAR" />
+        <result column="house_name" property="houseName" jdbcType="VARCHAR" />
+        <result column="room_name" property="roomName" jdbcType="VARCHAR" />
+        <result column="bed_sn" property="bedSn" jdbcType="VARCHAR" />
+        <result column="house_addr" property="houseAddr" jdbcType="VARCHAR" />
+        <result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
+        <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+        <result column="order_type" property="orderType" jdbcType="TINYINT" />
+        <result column="price" property="price" jdbcType="INTEGER" />
+        <result column="discount_rules_code" property="discountRulesCode" jdbcType="VARCHAR" />
+        <result column="deposit_rules_code" property="depositRulesCode" jdbcType="VARCHAR" />
+        <result column="check_out_rules_code" property="checkOutRulesCode" jdbcType="VARCHAR" />
+        <result column="check_in_time" property="checkInTime" jdbcType="VARCHAR" />
+        <result column="check_out_time" property="checkOutTime" jdbcType="VARCHAR" />
+        <result column="is_lock" property="isLock" jdbcType="INTEGER" />
+        <result column="trip_purpose" property="tripPurpose" jdbcType="VARCHAR" />
+
+        <result column="follow_status" property="followStatus" jdbcType="INTEGER" />
+        <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <sql id="Multi_Column_List" >
+        <!--  列表显示基本列  -->
+        t.id,
+        t.fid,
+        t.order_sn,
+        t.nation_code,
+        t.city_code,
+        t.check_type,
+        t.order_source,
+        t.order_status,
+        t.accounts_status,
+        t.pay_status,
+        t.eva_status,
+        t.landlord_uid,
+        t.landlord_tel,
+        t.landlord_name,
+        t.user_uid,
+        t.user_tel,
+        t.user_name,
+        t.people_num,
+        t.start_time,
+        t.end_time,
+        t.real_end_time,
+        t.create_time,
+        t.pay_time,
+        t.last_modify_date,
+        t.trip_purpose,
+        hs.house_sn,
+        hs.house_fid,
+        hs.room_fid,
+        hs.bed_fid,
+        hs.house_name,
+        hs.room_name,
+        hs.bed_sn,
+        hs.house_addr,
+        hs.pic_url,
+        hs.rent_way,
+        hs.order_type,
+        hs.price,
+        hs.discount_rules_code,
+        hs.deposit_rules_code,
+        hs.check_out_rules_code,
+        hs.check_in_time,
+        hs.check_out_time,
+        hs.is_lock,
+        f.follow_status,
+        f.create_name
+    </sql>
+
+
+
+    <sql id="Base_Column_List" >
+        id, fid, order_sn, order_status, follow_status, create_fid, create_name, create_time,
+        last_modify_date, is_del
+    </sql>
+
+
+
+
+
+    <resultMap id="UidMap" type="com.ziroom.minsu.services.order.entity.UidVo" >
+        <result column="user_uid" property="userUid" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getOrderFollowUidByPage" resultMap="UidMap" parameterType="com.ziroom.minsu.services.order.dto.OrderFollowRequest" >
+        SELECT t.user_uid FROM
+        t_order t
+        INNER JOIN t_order_house_snapshot hs ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_follow f  ON t.order_sn = f.order_sn
+        WHERE
+        <include refid="queryOrderFollowCondition"/>
+        GROUP BY t.user_uid, t.user_name
+        ORDER BY t.user_name
+    </select>
+
+
+    <select id="getOrderFollow" resultMap="OrderResultMap" parameterType="map" >
+        select
+          <include refid="Multi_Column_List" />
+        FROM
+        t_order t
+        INNER JOIN t_order_house_snapshot hs ON t.order_sn = hs.order_sn
+        LEFT JOIN t_order_follow f  ON t.order_sn = f.order_sn
+        WHERE
+        <include refid="queryOrderFollowCondition"/>
+        AND t.user_uid in
+        <foreach item="item" index="index" collection="userUidList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY user_uid ASC , t.create_time ASC
+    </select>
+
+    <sql id="queryOrderFollowCondition">
+        (
+          <!--f.follow_status = 1
+          OR
+          (f.follow_status IS NULL AND t.create_time > #{limitTime,jdbcType=TIMESTAMP})-->
+          f.follow_status IS NULL or f.follow_status != 2
+        ) AND t.create_time > '2017-02-09 00:00:00'
+        <!-- 订单状态 -->
+        <if test="orderStatus != null and orderStatus != ''">
+            AND t.order_status=#{orderStatus,jdbcType=INTEGER}
+        </if>
+        <!-- 订单编号    -->
+        <if test="orderSn != null and orderSn != ''">
+            AND t.order_sn=#{orderSn,jdbcType=VARCHAR}
+        </if>
+        <if test="payStatus != null and payStatus != ''">
+            AND t.pay_status=#{payStatus,jdbcType=INTEGER}
+        </if>
+
+        <!-- 用户姓名 -->
+        <if test="userName != null and userName != ''">
+            AND t.user_name=#{userName,jdbcType=VARCHAR}
+        </if>
+        <!-- 预订人手机号 -->
+        <if test="userTel != null and userTel != ''">
+            AND t.user_tel=#{userTel,jdbcType=VARCHAR}
+        </if>
+        <!-- 房东姓名 -->
+        <if test="landlordName != null and landlordName != ''">
+            AND t.landlord_name=#{landlordName,jdbcType=VARCHAR}
+        </if>
+        <!-- 房东电话 -->
+        <if test="landlordTel != null and landlordTel != ''">
+            AND t.landlord_tel=#{landlordTel,jdbcType=VARCHAR}
+        </if>
+
+        <!-- 国家code -->
+        <if test="nationCode != null and nationCode != ''">
+            AND t.nation_code=#{nationCode,jdbcType=VARCHAR}
+        </if>
+        <!-- 省code -->
+        <if test="provinceCode != null and provinceCode != ''">
+            AND t.province_code=#{provinceCode,jdbcType=VARCHAR}
+        </if>
+        <!-- 城市code -->
+        <if test="cityCode != null and cityCode != ''">
+            AND t.city_code=#{cityCode,jdbcType=VARCHAR}
+        </if>
+        <!-- 区code -->
+        <if test="areaCode != null and areaCode != ''">
+            AND t.area_code=#{areaCode,jdbcType=VARCHAR}
+        </if>
+        <!-- 房源别名 -->
+        <if test="houseName != null and houseName != ''">
+            AND hs.house_name=#{houseName,jdbcType=VARCHAR}
+        </if>
+        <!-- 房源编号 -->
+        <if test="houseSn != null and houseSn != ''">
+            AND hs.house_sn=#{houseSn,jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+
+
+
+    <select id="getOrderFollowByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from t_order_follow
+        where order_sn = #{orderSn,jdbcType=VARCHAR}
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from t_order_follow
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+
+    <insert id="saveOrderFollow" parameterType="com.ziroom.minsu.entity.order.OrderFollowEntity" >
+        insert into t_order_follow
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="fid != null" >
+                fid,
+            </if>
+            <if test="orderSn != null" >
+                order_sn,
+            </if>
+            <if test="orderStatus != null" >
+                order_status,
+            </if>
+            <if test="followStatus != null" >
+                follow_status,
+            </if>
+            <if test="createFid != null" >
+                create_fid,
+            </if>
+            <if test="createName != null" >
+                create_name,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="lastModifyDate != null" >
+                last_modify_date,
+            </if>
+            <if test="isDel != null" >
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="fid != null" >
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="orderSn != null" >
+                #{orderSn,jdbcType=VARCHAR},
+            </if>
+            <if test="orderStatus != null" >
+                #{orderStatus,jdbcType=INTEGER},
+            </if>
+            <if test="followStatus != null" >
+                #{followStatus,jdbcType=INTEGER},
+            </if>
+            <if test="createFid != null" >
+                #{createFid,jdbcType=VARCHAR},
+            </if>
+            <if test="createName != null" >
+                #{createName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null" >
+                #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null" >
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+
+
+    <!-- 结束当前的订单跟进 -->
+    <update id="updateOrderFollowOverByOrderSn" parameterType="java.lang.String">
+        update t_order_follow
+          SET  follow_status = 2
+        WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+        AND follow_status = 1
+    </update>
+
+
+
+    <update id="updateOrderFollow" parameterType="com.ziroom.minsu.entity.order.OrderFollowEntity" >
+        update t_order_follow
+        <set >
+            <if test="fid != null" >
+                fid = #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="orderSn != null" >
+                order_sn = #{orderSn,jdbcType=VARCHAR},
+            </if>
+            <if test="orderStatus != null" >
+                order_status = #{orderStatus,jdbcType=INTEGER},
+            </if>
+            <if test="followStatus != null" >
+                follow_status = #{followStatus,jdbcType=INTEGER},
+            </if>
+            <if test="createFid != null" >
+                create_fid = #{createFid,jdbcType=VARCHAR},
+            </if>
+            <if test="createName != null" >
+                create_name = #{createName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null" >
+                last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null" >
+                is_del = #{isDel,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

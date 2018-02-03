@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseBusinessMsgDao" >
+
+	<!--
+     商机信息表映射map
+    -->
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseBusinessMsgEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="busniess_sn" property="busniessSn" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="nation_code" property="nationCode" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+    <result column="community_name" property="communityName" jdbcType="VARCHAR" />
+    <result column="house_addr" property="houseAddr" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+    <result column="business_area" property="businessArea" jdbcType="VARCHAR" />
+    <result column="business_remark" property="businessRemark" jdbcType="VARCHAR" />
+    <result column="release_date" property="releaseDate" jdbcType="TIMESTAMP" />
+    <result column="putaway_date" property="putawayDate" jdbcType="TIMESTAMP" />
+    <result column="make_check_date" property="makeCheckDate" jdbcType="TIMESTAMP" />
+    <result column="real_check_date" property="realCheckDate" jdbcType="TIMESTAMP" />
+    <result column="make_photo_date" property="makePhotoDate" jdbcType="TIMESTAMP" />
+    <result column="real_photo_date" property="realPhotoDate" jdbcType="TIMESTAMP" />
+    <result column="register_date" property="registerDate" jdbcType="TIMESTAMP" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  
+  <!-- 房源商机列表map -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.HouseBusinessListVo" id="houseBusinessListMap" extends="BaseResultMap">
+  	<result column="landlord_name" property="landlordName" jdbcType="VARCHAR" />
+  	<result column="landlord_mobile" property="landlordMobile" jdbcType="VARCHAR" />
+  	<result column="dt_guard_code" property="dtGuardCode" jdbcType="VARCHAR" />
+  	<result column="dt_guard_name" property="dtGuardName" jdbcType="VARCHAR" />
+  </resultMap>
+
+	<!--
+      商机信息表字段
+    -->
+  <sql id="Base_Column_List" >
+    hb.id, hb.fid, hb.busniess_sn, hb.house_base_fid, hb.nation_code, hb.province_code, hb.city_code, hb.area_code, 
+    hb.community_name, hb.house_addr, hb.rent_way, hb.business_area, hb.business_remark, hb.release_date, 
+    hb.putaway_date, hb.make_check_date, hb.real_check_date, hb.make_photo_date, hb.real_photo_date, 
+    hb.register_date, hb.create_date, hb.create_fid, hb.last_modify_date, hb.is_del
+  </sql>
+  
+  
+  <!-- 分页查询房源商机列表 -->
+  <select id="findHouseBusinessList" parameterType="com.ziroom.minsu.services.house.dto.HouseBusinessDto" resultMap="houseBusinessListMap">
+  	SELECT <include refid="Base_Column_List" />,hbe.landlord_name,hbe.landlord_mobile,hbe.dt_guard_code,hbe.dt_guard_name FROM t_house_business_msg hb
+	LEFT JOIN t_house_business_msg_ext hbe
+	ON hb.fid=hbe.business_fid
+	WHERE hb.is_del=0
+	<if test="dtGuardCode != null and dtGuardCode !=''">
+	AND hbe.dt_guard_code=#{dtGuardCode,jdbcType=VARCHAR}
+	</if>
+	<if test="dtGuardName != null and dtGuardName !=''">
+	AND hbe.dt_guard_name=#{dtGuardName,jdbcType=VARCHAR}
+	</if>
+	<if test="landlordName != null and landlordName !=''">
+	AND hbe.landlord_name=#{landlordName,jdbcType=VARCHAR}
+	</if>
+	<if test="landlordMobile != null and landlordMobile !=''">
+	AND hbe.landlord_mobile=#{landlordMobile,jdbcType=VARCHAR}
+	</if>
+	<if test="businessPlan != null ">
+	AND hbe.business_plan=#{businessPlan,jdbcType=VARCHAR}
+	</if>
+	<if test="busniessSn != null and busniessSn !=''">
+	AND hb.busniess_sn=#{busniessSn,jdbcType=VARCHAR}
+	</if>
+	<if test="houseAddr != null and houseAddr !=''">
+	AND hb.house_addr like CONCAT(#{houseAddr,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="nationCode != null and nationCode !=''">
+	AND hb.nation_code=#{nationCode,jdbcType=VARCHAR}
+	</if>
+	<if test="provinceCode != null and provinceCode !=''">
+	AND hb.province_code=#{provinceCode,jdbcType=VARCHAR}
+	</if>
+	<if test="cityCode != null and cityCode !=''">
+	AND hb.city_code=#{cityCode,jdbcType=VARCHAR}
+	</if>
+	ORDER BY create_date DESC
+   </select>
+
+	<!--
+      插入房源商机表信息
+    -->
+  <insert id="insertHouseBusinessMsgEntity" parameterType="com.ziroom.minsu.entity.house.HouseBusinessMsgEntity" >
+    insert into t_house_business_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="busniessSn != null" >
+        busniess_sn,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="nationCode != null" >
+        nation_code,
+      </if>
+      <if test="provinceCode != null" >
+        province_code,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="areaCode != null" >
+        area_code,
+      </if>
+      <if test="communityName != null" >
+        community_name,
+      </if>
+      <if test="houseAddr != null" >
+        house_addr,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="businessArea != null" >
+        business_area,
+      </if>
+      <if test="businessRemark != null" >
+        business_remark,
+      </if>
+      <if test="releaseDate != null" >
+        release_date,
+      </if>
+      <if test="putawayDate != null" >
+        putaway_date,
+      </if>
+      <if test="makeCheckDate != null" >
+        make_check_date,
+      </if>
+      <if test="realCheckDate != null" >
+        real_check_date,
+      </if>
+      <if test="makePhotoDate != null" >
+        make_photo_date,
+      </if>
+      <if test="realPhotoDate != null" >
+        real_photo_date,
+      </if>
+      <if test="registerDate != null" >
+        register_date,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="busniessSn != null" >
+        #{busniessSn,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="nationCode != null" >
+        #{nationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="communityName != null" >
+        #{communityName,jdbcType=VARCHAR},
+      </if>
+      <if test="houseAddr != null" >
+        #{houseAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="businessArea != null" >
+        #{businessArea,jdbcType=VARCHAR},
+      </if>
+      <if test="businessRemark != null" >
+        #{businessRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="releaseDate != null" >
+        #{releaseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="putawayDate != null" >
+        #{putawayDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="makeCheckDate != null" >
+        #{makeCheckDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="realCheckDate != null" >
+        #{realCheckDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="makePhotoDate != null" >
+        #{makePhotoDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="realPhotoDate != null" >
+        #{realPhotoDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registerDate != null" >
+        #{registerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+   <!--
+      更新房源商机表信息
+    -->
+  <update id="updateHouseBusinessMsgEntity" parameterType="com.ziroom.minsu.entity.house.HouseBusinessMsgEntity" >
+    update t_house_business_msg
+    <set >
+      <if test="busniessSn != null" >
+        busniess_sn = #{busniessSn,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="nationCode != null" >
+        nation_code = #{nationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        province_code = #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        area_code = #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="communityName != null" >
+        community_name = #{communityName,jdbcType=VARCHAR},
+      </if>
+      <if test="houseAddr != null" >
+        house_addr = #{houseAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        rent_way = #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="businessArea != null" >
+        business_area = #{businessArea,jdbcType=VARCHAR},
+      </if>
+      <if test="businessRemark != null" >
+        business_remark = #{businessRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="releaseDate != null" >
+        release_date = #{releaseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="putawayDate != null" >
+        putaway_date = #{putawayDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="makeCheckDate != null" >
+        make_check_date = #{makeCheckDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="realCheckDate != null" >
+        real_check_date = #{realCheckDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="makePhotoDate != null" >
+        make_photo_date = #{makePhotoDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="realPhotoDate != null" >
+        real_photo_date = #{realPhotoDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registerDate != null" >
+        register_date = #{registerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询房源商机信息fid -->
+  <select id="getHouseBusinessMsgByFid"  parameterType="string"  resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM t_house_business_msg hb
+  	where hb.fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询房源商机通过房源fid -->
+  <select id="getHouseBusinessByHouseFid"  parameterType="string"  resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM t_house_business_msg hb
+  	WHERE hb.is_del=0 AND house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+  	LIMIT 1
+  </select>
+</mapper>

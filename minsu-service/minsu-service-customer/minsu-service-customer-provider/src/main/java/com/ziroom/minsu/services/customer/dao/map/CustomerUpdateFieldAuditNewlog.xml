@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="customer.customerUpdateFieldAuditNewlogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.customer.CustomerUpdateFieldAuditNewlogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="field_audit_statu" property="fieldAuditStatu" jdbcType="INTEGER" />
+    <result column="field_path" property="fieldPath" jdbcType="VARCHAR" />
+    <result column="field_desc" property="fieldDesc" jdbcType="VARCHAR" />
+    <result column="creater_fid" property="createrFid" jdbcType="VARCHAR" />
+    <result column="creater_type" property="createrType" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, uid, field_audit_statu, field_path, field_desc, creater_fid, creater_type, 
+    create_date, last_modify_date
+  </sql>
+  <select id="selectByUid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_customer_update_field_audit_newlog
+    where uid = #{uid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_customer_update_field_audit_newlog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.customer.CustomerUpdateFieldAuditNewlogEntity" >
+    insert into t_customer_update_field_audit_newlog (id, fid, uid, 
+      field_audit_statu, field_path, field_desc, 
+      creater_fid, creater_type, create_date, 
+      last_modify_date)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{uid,jdbcType=VARCHAR}, 
+      #{fieldAuditStatu,jdbcType=INTEGER}, #{fieldPath,jdbcType=VARCHAR}, #{fieldDesc,jdbcType=VARCHAR}, 
+      #{createrFid,jdbcType=VARCHAR}, #{createrType,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.customer.CustomerUpdateFieldAuditNewlogEntity" >
+    insert ignore into t_customer_update_field_audit_newlog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="fieldAuditStatu != null" >
+        field_audit_statu,
+      </if>
+      <if test="fieldPath != null" >
+        field_path,
+      </if>
+      <if test="fieldDesc != null" >
+        field_desc,
+      </if>
+      <if test="createrFid != null" >
+        creater_fid,
+      </if>
+      <if test="createrType != null" >
+        creater_type,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldAuditStatu != null" >
+        #{fieldAuditStatu,jdbcType=INTEGER},
+      </if>
+      <if test="fieldPath != null" >
+        #{fieldPath,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldDesc != null" >
+        #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createrFid != null" >
+        #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        #{createrType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateCustomerUpdateFieldAuditNewlogByFid" parameterType="com.ziroom.minsu.entity.customer.CustomerUpdateFieldAuditNewlogEntity" >
+    update t_customer_update_field_audit_newlog
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldAuditStatu != null" >
+        field_audit_statu = #{fieldAuditStatu,jdbcType=INTEGER},
+      </if>
+      <if test="fieldPath != null" >
+        field_path = #{fieldPath,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldDesc != null" >
+        field_desc = #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createrFid != null" >
+        creater_fid = #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        creater_type = #{createrType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.customer.CustomerUpdateFieldAuditNewlogEntity" >
+    update t_customer_update_field_audit_newlog
+    set fid = #{fid,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=VARCHAR},
+      field_audit_statu = #{fieldAuditStatu,jdbcType=INTEGER},
+      field_path = #{fieldPath,jdbcType=VARCHAR},
+      field_desc = #{fieldDesc,jdbcType=VARCHAR},
+      creater_fid = #{createrFid,jdbcType=VARCHAR},
+      creater_type = #{createrType,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+    <select id="findCustomerUpdateFieldAuditNewlogByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_customer_update_field_audit_newlog
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getAllNeedAuditLand" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    SELECT DISTINCT uid FROM t_customer_update_field_audit_newlog
+    WHERE  field_audit_statu = #{fieldAuditStatu}
+  </select>
+</mapper>

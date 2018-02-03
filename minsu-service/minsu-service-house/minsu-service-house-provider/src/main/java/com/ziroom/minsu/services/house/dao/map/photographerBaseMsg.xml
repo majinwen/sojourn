@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="photographer.photographerBaseMsgDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.photographer.PhotographerBaseMsgEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="photographer_uid" property="photographerUid" jdbcType="VARCHAR" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="photographer_start_time" property="photographerStartTime" jdbcType="DATE" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="TINYINT" />
+    <result column="photographer_grade" property="photographerGrade" jdbcType="VARCHAR" />
+    <result column="photographer_source" property="photographerSource" jdbcType="TINYINT" />
+    <result column="photographer_statu" property="photographerStatu" jdbcType="TINYINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, photographer_uid, real_name, nick_name, mobile, city_code, city_name, photographer_start_time, 
+    email, sex, photographer_grade, photographer_source, photographer_statu, create_date, 
+    last_modify_date
+  </sql>
+  
+  <select id="findPhotogList" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.house.photog.dto.PhotogRequestDto" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_photographer_base_msg
+    WHERE (photographer_statu = 1 OR photographer_statu = 2)
+    <if test="realName != null and realName != ''" >
+       AND real_name LIKE CONCAT(#{realName,jdbcType=VARCHAR}, '%') 
+    </if>
+    <if test="mobile != null and mobile != ''" >
+       AND mobile = #{mobile,jdbcType=VARCHAR}
+    </if>
+    <if test="cityCode != null and cityCode != ''" >
+       AND city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <resultMap id="PhotogDetailMap" type="com.ziroom.minsu.services.house.photog.dto.PhotogDetailDto" extends="BaseResultMap">
+    <association column="photographer_uid" property="ext"  javaType="com.ziroom.minsu.entity.photographer.PhotographerBaseMsgExtEntity" select="photographer.photographerBaseMsgExtDao.findPhotogExtByUid"/>
+    <collection column="photographer_uid" property="picList"  javaType="ArrayList" select="photographer.photographerBaseMsgPicDao.findPhotogPicListByUid"/>
+  </resultMap>
+  <select id="findPhotogDetailByUid" resultMap="PhotogDetailMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_photographer_base_msg
+    WHERE (photographer_statu = 1 OR photographer_statu = 2)
+    AND photographer_uid = #{photographerUid,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="savePhotographerBaseMsg" parameterType="com.ziroom.minsu.entity.photographer.PhotographerBaseMsgEntity" >
+    insert into t_photographer_base_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="photographerUid != null" >
+        photographer_uid,
+      </if>
+      <if test="realName != null" >
+        real_name,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+      <if test="photographerStartTime != null" >
+        photographer_start_time,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="photographerGrade != null" >
+        photographer_grade,
+      </if>
+      <if test="photographerSource != null" >
+        photographer_source,
+      </if>
+      <if test="photographerStatu != null" >
+        photographer_statu,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="photographerUid != null" >
+        #{photographerUid,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null" >
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="photographerStartTime != null" >
+        #{photographerStartTime,jdbcType=DATE},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="photographerGrade != null" >
+        #{photographerGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="photographerSource != null" >
+        #{photographerSource,jdbcType=TINYINT},
+      </if>
+      <if test="photographerStatu != null" >
+        #{photographerStatu,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updatePhotographerBaseMsgByUid" parameterType="com.ziroom.minsu.entity.photographer.PhotographerBaseMsgEntity" >
+    update t_photographer_base_msg
+    <set >
+      <if test="realName != null and realName !=''" >
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null and nickName !=''" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null and mobile !=''" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null and cityCode !=''" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="photographerStartTime != null" >
+        photographer_start_time = #{photographerStartTime,jdbcType=DATE},
+      </if>
+      <if test="email != null and email !=''" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="photographerGrade != null and photographerGrade !=''" >
+        photographer_grade = #{photographerGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="photographerSource != null" >
+        photographer_source = #{photographerSource,jdbcType=TINYINT},
+      </if>
+      <if test="photographerStatu != null" >
+        photographer_statu = #{photographerStatu,jdbcType=TINYINT},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where  photographer_uid = #{photographerUid,jdbcType=VARCHAR}
+  </update>
+</mapper>

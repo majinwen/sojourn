@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.abHouseRelateDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.AbHouseRelateEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+    <result column="ab_sn" property="abSn" jdbcType="VARCHAR" />
+    <result column="calendar_url" property="calendarUrl" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
+  <resultMap id="abHouseVoMap" type="com.ziroom.minsu.services.house.airbnb.vo.AbHouseRelateVo" extends="BaseResultMap" > 
+  	<result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+  	<result column="house_name" property="houseName" jdbcType="VARCHAR" />
+  	<result column="house_status" property="houseStatus" jdbcType="INTEGER" />
+  	<result column="house_channel" property="houseChannel" jdbcType="INTEGER" />
+  	<result column="till_date" property="tillDate" jdbcType="TIMESTAMP" />
+  	<result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+  
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, fid, house_fid, room_fid, rent_way, ab_sn, calendar_url, create_time,
+    last_modify_date, is_del
+  </sql>
+   
+   
+  <select id="listRelateByPage" resultMap="abHouseVoMap" parameterType="map" >
+  
+   SELECT abhr.*,
+	CASE WHEN abhr.rent_way ='0' THEN hb.house_sn ELSE hrm.room_sn END AS house_sn ,
+	CASE WHEN abhr.rent_way ='0' THEN hb.house_name ELSE hrm.room_name END AS house_name , 
+	CASE WHEN abhr.rent_way ='0' THEN hb.house_status ELSE hrm.room_status END AS house_status ,  
+	hb.house_channel AS house_channel,
+	hb.till_date AS till_date,
+	hb.landlord_uid AS landlord_uid
+    FROM t_ab_house_relate abhr
+    LEFT JOIN t_house_base_msg hb ON abhr.house_fid = hb.fid
+    LEFT JOIN t_house_room_msg hrm ON hrm.fid= abhr.room_fid
+    WHERE abhr.is_del = 0 
+    AND hb.is_del = 0 
+    <if test="houseFid != null and houseFid !=''">
+      AND abhr.house_fid = #{houseFid,jdbcType=VARCHAR}
+    </if>
+    <if test="roomFid != null and roomFid !=''">
+      AND abhr.room_fid = #{roomFid,jdbcType=VARCHAR}
+    </if>
+    <if test="rentWay != null">
+      AND abhr.rent_way = #{rentWay,jdbcType=INTEGER}
+    </if>
+    <if test="abSn != null and abSn!=''">
+      AND abhr.ab_sn = #{abSn,jdbcType=VARCHAR}
+    </if>
+	<if test="houseName != null and houseName !=''">
+      AND (hb.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%') OR hrm.room_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%'))
+    </if>
+	<if test="houseSn != null and houseSn !=''">
+      AND (hb.house_sn = #{houseSn,jdbcType=VARCHAR} OR hrm.room_sn = #{houseSn,jdbcType=VARCHAR})
+    </if>
+    <if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    ORDER by abhr.last_modify_date DESC
+  </select>
+
+  <select id="findRelateByHouseFid" resultMap="abHouseVoMap"  parameterType="com.ziroom.minsu.services.house.airbnb.dto.AbHouseDto" >
+    SELECT abhr.*,
+	CASE WHEN abhr.rent_way ='0' THEN hb.house_sn ELSE hrm.room_sn END AS house_sn ,
+	CASE WHEN abhr.rent_way ='0' THEN hb.house_name ELSE hrm.room_name END AS house_name , 
+	CASE WHEN abhr.rent_way ='0' THEN hb.house_status ELSE hrm.room_status END AS house_status ,  
+	hb.house_channel AS house_channel,
+	hb.till_date AS till_date,
+	hb.landlord_uid AS landlord_uid
+    FROM t_ab_house_relate abhr
+    LEFT JOIN t_house_base_msg hb ON abhr.house_fid = hb.fid
+    LEFT JOIN t_house_room_msg hrm ON hrm.fid= abhr.room_fid
+    WHERE hb.is_del = 0
+    <if test="houseFid != null and houseFid !=''">
+      AND abhr.house_fid = #{houseFid,jdbcType=VARCHAR}
+    </if>
+    <if test="roomFid != null and roomFid !=''">
+      AND abhr.room_fid = #{roomFid,jdbcType=VARCHAR}
+    </if>
+    <if test="rentWay != null">
+      AND abhr.rent_way = #{rentWay,jdbcType=INTEGER}
+    </if>
+    <if test="status != null">
+      AND abhr.is_del = #{status,jdbcType=INTEGER}
+    </if>
+    ORDER BY abhr.is_del ASC
+    LIMIT 1
+  </select>
+
+  <select id="findAbHouseByHouseInfo" resultMap="BaseResultMap" parameterType="map">
+      SELECT <include refid="Base_Column_List" />
+      FROM t_ab_house_relate
+      WHERE is_del=0 AND  house_fid = #{houseFid,jdbcType=VARCHAR}
+      <if test="rentWay != null">
+        AND rent_way = #{rentWay,jdbcType=INTEGER}
+      </if>
+      <if test="roomFid != null and roomFid !=''">
+        AND room_fid = #{roomFid,jdbcType=VARCHAR}
+      </if>
+      limit 1
+  </select>
+
+  <insert id="save" parameterType="com.ziroom.minsu.entity.house.AbHouseRelateEntity" >
+    insert into t_ab_house_relate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseFid != null" >
+        house_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="abSn != null" >
+        ab_sn,
+      </if>
+      <if test="calendarUrl != null" >
+        calendar_url,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseFid != null" >
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="abSn != null" >
+        #{abSn,jdbcType=VARCHAR},
+      </if>
+      <if test="calendarUrl != null" >
+        #{calendarUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateHouseRelateByFid" parameterType="com.ziroom.minsu.entity.house.AbHouseRelateEntity" >
+    update t_ab_house_relate
+    <set >
+      <if test="houseFid != null" >
+        house_fid = #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        rent_way = #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="abSn != null" >
+        ab_sn = #{abSn,jdbcType=VARCHAR},
+      </if>
+      <if test="calendarUrl != null" >
+        calendar_url = #{calendarUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

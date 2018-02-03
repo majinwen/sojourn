@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="message.statusConfDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.base.StatusConfEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="sta_key" property="staKey" jdbcType="VARCHAR" />
+    <result column="sta_val" property="staVal" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_uid" property="createUid" jdbcType="VARCHAR" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, sta_key, sta_val, create_date, create_uid, last_modify_date, is_del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_status_conf
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_status_conf
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.base.StatusConfEntity" >
+    insert into t_status_conf (id, fid, sta_key, 
+      sta_val, create_date, create_uid, 
+      last_modify_date, is_del)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{staKey,jdbcType=VARCHAR}, 
+      #{staVal,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{createUid,jdbcType=VARCHAR}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{isDel,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.base.StatusConfEntity" >
+    insert into t_status_conf
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="staKey != null" >
+        sta_key,
+      </if>
+      <if test="staVal != null" >
+        sta_val,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createUid != null" >
+        create_uid,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="staKey != null" >
+        #{staKey,jdbcType=VARCHAR},
+      </if>
+      <if test="staVal != null" >
+        #{staVal,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.base.StatusConfEntity" >
+    update t_status_conf
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="staKey != null" >
+        sta_key = #{staKey,jdbcType=VARCHAR},
+      </if>
+      <if test="staVal != null" >
+        sta_val = #{staVal,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        create_uid = #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.base.StatusConfEntity" >
+    update t_status_conf
+    set fid = #{fid,jdbcType=VARCHAR},
+      sta_key = #{staKey,jdbcType=VARCHAR},
+      sta_val = #{staVal,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_uid = #{createUid,jdbcType=VARCHAR},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="queryStatusConfByKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_status_conf
+    where sta_key = #{key,jdbcType=VARCHAR}
+  </select>
+  
+    <update id="updateByCondition" parameterType="com.ziroom.minsu.entity.base.StatusConfEntity" >
+    update t_status_conf
+    <set >
+      
+      <if test="staVal != null" >
+        sta_val = #{staVal,jdbcType=VARCHAR},
+      </if>
+      <if test="createUid != null" >
+        create_uid = #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    WHERE 1=1
+      <if test="fid != null" >
+       AND fid = #{fid,jdbcType=VARCHAR}
+      </if>
+      <if test="staKey != null" >
+      AND  sta_key = #{staKey,jdbcType=VARCHAR}
+      </if>
+  </update>
+</mapper>

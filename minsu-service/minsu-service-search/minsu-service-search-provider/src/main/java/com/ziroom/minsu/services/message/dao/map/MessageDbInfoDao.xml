@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="search.messageDbInfoDao" >
+
+
+
+
+    <!--获取当前房间的订单的数量 -->
+    <select id="getHouseMessageRate" resultType="com.ziroom.minsu.services.search.vo.WeightMessageVo"  parameterType="java.lang.String">
+        SELECT
+            CASE
+            WHEN user_time IS NOT NULL
+            THEN 1
+            ELSE 0
+            END AS messageNum,
+            CASE
+            WHEN TIMESTAMPDIFF(MINUTE, user_time, land_time)
+        <![CDATA[ < 30 ]]>
+
+            THEN 1
+            ELSE 0
+            END AS replyNum
+        FROM
+            (SELECT
+            tmp1.house_fid,
+            tmp1.room_fid,
+            tmp1.rent_way,
+            tmp1.tmp_create_time AS user_time,
+            tmp2.tmp_create_time AS land_time
+            FROM
+            (SELECT
+            h.house_fid,
+            h.room_fid,
+            h.rent_way,
+            MIN(t.create_time) AS tmp_create_time
+            FROM
+            t_msg_base t
+            INNER JOIN t_msg_house h
+            ON h.fid = t.msg_house_fid
+            AND t.create_time > DATE_ADD(NOW(), INTERVAL - 30 DAY)
+            WHERE t.msg_sender_type = 1 AND h.house_fid = #{houseFid,jdbcType=VARCHAR} AND h.rent_way = 0
+            GROUP BY h.house_fid,
+            h.room_fid,
+            h.rent_way) AS tmp1
+            LEFT JOIN
+            (SELECT
+            h.house_fid,
+            h.room_fid,
+            h.rent_way,
+            MIN(t.create_time) AS tmp_create_time
+            FROM
+            t_msg_base t
+            INNER JOIN t_msg_house h
+            ON h.fid = t.msg_house_fid
+            AND t.create_time > DATE_ADD(NOW(), INTERVAL -30 DAY)
+            WHERE t.msg_sender_type = 2 AND h.house_fid = #{houseFid,jdbcType=VARCHAR} AND h.rent_way = 0
+            GROUP BY h.house_fid,
+            h.room_fid,
+            h.rent_way) AS tmp2
+            ON tmp1.house_fid = tmp2.house_fid
+            AND tmp1.rent_way = tmp2.rent_way
+            AND (
+            tmp1.room_fid = tmp2.room_fid
+            OR (
+            tmp1.room_fid IS NULL
+            AND tmp2.room_fid IS NULL
+            )
+            )) tmp
+    </select>
+
+
+    <!--获取当前房间的订单的数量 -->
+    <select id="getRoomMessageRate" resultType="com.ziroom.minsu.services.search.vo.WeightMessageVo"  parameterType="java.lang.String">
+        SELECT
+        CASE
+        WHEN user_time IS NOT NULL
+        THEN 1
+        ELSE 0
+        END AS messageNum,
+        CASE
+        WHEN TIMESTAMPDIFF(MINUTE, user_time, land_time)
+        <![CDATA[ < 30 ]]>
+        THEN 1
+        ELSE 0
+        END AS replyNum
+        FROM
+        (SELECT
+        tmp1.house_fid,
+        tmp1.room_fid,
+        tmp1.rent_way,
+        tmp1.tmp_create_time AS user_time,
+        tmp2.tmp_create_time AS land_time
+        FROM
+        (SELECT
+        h.house_fid,
+        h.room_fid,
+        h.rent_way,
+        MIN(t.create_time) AS tmp_create_time
+        FROM
+        t_msg_base t
+        INNER JOIN t_msg_house h
+        ON h.fid = t.msg_house_fid
+        AND t.create_time > DATE_ADD(NOW(), INTERVAL - 30 DAY)
+        WHERE t.msg_sender_type = 1 AND h.room_fid = #{roomFid,jdbcType=VARCHAR} AND h.rent_way = 1
+        GROUP BY h.house_fid,
+        h.room_fid,
+        h.rent_way) AS tmp1
+        LEFT JOIN
+        (SELECT
+        h.house_fid,
+        h.room_fid,
+        h.rent_way,
+        MIN(t.create_time) AS tmp_create_time
+        FROM
+        t_msg_base t
+        INNER JOIN t_msg_house h
+        ON h.fid = t.msg_house_fid
+        AND t.create_time > DATE_ADD(NOW(), INTERVAL -30 DAY)
+        WHERE t.msg_sender_type = 2 AND h.room_fid = #{roomFid,jdbcType=VARCHAR} AND h.rent_way = 1
+        GROUP BY h.house_fid,
+        h.room_fid,
+        h.rent_way) AS tmp2
+        ON tmp1.house_fid = tmp2.house_fid
+        AND tmp1.rent_way = tmp2.rent_way
+        AND (
+        tmp1.room_fid = tmp2.room_fid
+        OR (
+        tmp1.room_fid IS NULL
+        AND tmp2.room_fid IS NULL
+        )
+        )) tmp
+    </select>
+
+
+
+
+
+    <!--获取平均时间 -->
+    <select id="getHouseMessageTime" resultType="java.lang.Double"  parameterType="java.lang.String">
+        SELECT
+          AVG(TIMESTAMPDIFF(MINUTE, user_time, land_time)) AS replyNum
+        FROM
+        (SELECT
+        tmp1.house_fid,
+        tmp1.room_fid,
+        tmp1.rent_way,
+        tmp1.tmp_create_time AS user_time,
+        tmp2.tmp_create_time AS land_time
+        FROM
+        (SELECT
+        h.house_fid,
+        h.room_fid,
+        h.rent_way,
+        MIN(t.create_time) AS tmp_create_time
+        FROM
+        t_msg_base t
+        INNER JOIN t_msg_house h
+        ON h.fid = t.msg_house_fid
+        AND t.create_time > DATE_ADD(NOW(), INTERVAL - 30 DAY)
+        WHERE t.msg_sender_type = 1 AND h.house_fid = #{houseFid,jdbcType=VARCHAR} AND h.rent_way = 0
+        GROUP BY h.house_fid,
+        h.room_fid,
+        h.rent_way) AS tmp1
+        INNER JOIN
+        (SELECT
+        h.house_fid,
+        h.room_fid,
+        h.rent_way,
+        MIN(t.create_time) AS tmp_create_time
+        FROM
+        t_msg_base t
+        INNER JOIN t_msg_house h
+        ON h.fid = t.msg_house_fid
+        AND t.create_time > DATE_ADD(NOW(), INTERVAL -30 DAY)
+        WHERE t.msg_sender_type = 2 AND h.house_fid = #{houseFid,jdbcType=VARCHAR} AND h.rent_way = 0
+        GROUP BY h.house_fid,
+        h.room_fid,
+        h.rent_way) AS tmp2
+        ON tmp1.house_fid = tmp2.house_fid
+        AND tmp1.rent_way = tmp2.rent_way
+        AND (
+        tmp1.room_fid = tmp2.room_fid
+        OR (
+        tmp1.room_fid IS NULL
+        AND tmp2.room_fid IS NULL
+        )
+        )) tmp
+    </select>
+
+
+    <!--获取当前房间的订单的数量 -->
+    <select id="getRoomMessageTime" resultType="java.lang.Double"  parameterType="java.lang.String">
+        SELECT
+          AVG(TIMESTAMPDIFF(MINUTE, user_time, land_time)) AS replyNum
+        FROM
+        (SELECT
+        tmp1.house_fid,
+        tmp1.room_fid,
+        tmp1.rent_way,
+        tmp1.tmp_create_time AS user_time,
+        tmp2.tmp_create_time AS land_time
+        FROM
+        (SELECT
+        h.house_fid,
+        h.room_fid,
+        h.rent_way,
+        MIN(t.create_time) AS tmp_create_time
+        FROM
+        t_msg_base t
+        INNER JOIN t_msg_house h
+        ON h.fid = t.msg_house_fid
+        AND t.create_time > DATE_ADD(NOW(), INTERVAL - 30 DAY)
+        WHERE t.msg_sender_type = 1 AND h.room_fid = #{roomFid,jdbcType=VARCHAR} AND h.rent_way = 1
+        GROUP BY h.house_fid,
+        h.room_fid,
+        h.rent_way) AS tmp1
+        INNER JOIN
+        (SELECT
+        h.house_fid,
+        h.room_fid,
+        h.rent_way,
+        MIN(t.create_time) AS tmp_create_time
+        FROM
+        t_msg_base t
+        INNER JOIN t_msg_house h
+        ON h.fid = t.msg_house_fid
+        AND t.create_time > DATE_ADD(NOW(), INTERVAL -30 DAY)
+        WHERE t.msg_sender_type = 2 AND h.room_fid = #{roomFid,jdbcType=VARCHAR} AND h.rent_way = 1
+        GROUP BY h.house_fid,
+        h.room_fid,
+        h.rent_way) AS tmp2
+        ON tmp1.house_fid = tmp2.house_fid
+        AND tmp1.rent_way = tmp2.rent_way
+        AND (
+        tmp1.room_fid = tmp2.room_fid
+        OR (
+        tmp1.room_fid IS NULL
+        AND tmp2.room_fid IS NULL
+        )
+        )) tmp
+    </select>
+
+
+</mapper>

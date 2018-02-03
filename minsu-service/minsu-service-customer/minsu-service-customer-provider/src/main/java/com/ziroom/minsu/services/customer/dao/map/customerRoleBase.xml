@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="customer.customerRoleBaseDao" >
+
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.customer.CustomerRoleBaseEntity" >
+        <!-- 基础map -->
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="fid" property="fid" jdbcType="VARCHAR" />
+        <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+        <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+        <result column="is_frozen" property="isFrozen" jdbcType="INTEGER" />
+        <result column="is_life" property="isLife" jdbcType="INTEGER" />
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+        <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    </resultMap>
+
+    <sql id="base_List" >
+        <!-- 基础列表 -->
+        id,
+        fid,
+        role_code,
+        role_name,
+        is_frozen,
+        is_life,
+        start_time,
+        end_time,
+        create_date,
+        last_modify_date,
+        is_del
+    </sql>
+
+    <select id="getBaseRolesByPage" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.common.dto.PageRequest">
+        <!-- 获取当前用户的有效角色 -->
+        select
+        <include refid="base_List" />
+        FROM
+        t_customer_role
+        WHERE is_del = 0
+    </select>
+
+
+
+
+    <select id="getCustomerRoleBaseByType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        <!-- 获取当前用户的有效角色 -->
+        select
+        <include refid="base_List" />
+        FROM
+        t_customer_role
+        WHERE
+        role_code = #{roleType,jdbcType=VARCHAR}
+        AND is_del = 0
+    </select>
+
+
+
+    <select id="getBaseRoles" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        <!-- 获取当前用户的有效角色 -->
+        select
+        <include refid="base_List" />
+        FROM
+        t_customer_role
+        WHERE is_del = 0
+    </select>
+
+
+
+
+    <insert id="insertCustomerBaseRole" parameterType="com.ziroom.minsu.entity.customer.CustomerRoleBaseEntity" >
+        <!-- 保存用户角色信息 -->
+        insert into t_customer_role
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+
+            <if test="fid != null" >
+                fid,
+            </if>
+
+            <if test="roleCode != null" >
+                role_code,
+            </if>
+            <if test="roleName != null" >
+                role_name,
+            </if>
+            <if test="isFrozen != null" >
+                is_frozen,
+            </if>
+            <if test="isLife != null" >
+                is_life,
+            </if>
+            <if test="startTime != null" >
+                start_time,
+            </if>
+            <if test="endTime != null" >
+                end_time,
+            </if>
+            <if test="createDate != null" >
+                create_date,
+            </if>
+            <if test="lastModifyDate != null" >
+                last_modify_date,
+            </if>
+            <if test="isDel != null" >
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+            <if test="fid != null" >
+                #{fid,jdbcType=VARCHAR},
+            </if>
+
+            <if test="roleCode != null" >
+                #{roleCode,jdbcType=VARCHAR},
+            </if>
+            <if test="roleName != null" >
+                #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="isFrozen != null" >
+                #{isFrozen,jdbcType=INTEGER},
+            </if>
+            <if test="isLife != null" >
+                #{isLife,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null" >
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null" >
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDate != null" >
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null" >
+                #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null" >
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

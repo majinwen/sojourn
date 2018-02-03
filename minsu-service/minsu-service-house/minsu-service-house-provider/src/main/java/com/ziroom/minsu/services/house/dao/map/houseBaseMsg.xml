@@ -1,0 +1,3177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="house.houseBaseMsgDao">
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseBaseMsgEntity">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="fid" jdbcType="VARCHAR" property="fid" />
+    <result column="phy_fid" jdbcType="VARCHAR" property="phyFid" />
+    <result column="house_name" jdbcType="VARCHAR" property="houseName" />
+    <result column="rent_way" jdbcType="INTEGER" property="rentWay" />
+    <result column="house_type" property="houseType" jdbcType="INTEGER" />
+    <result column="house_status" jdbcType="TINYINT" property="houseStatus" />
+    <result column="house_weight" jdbcType="TINYINT" property="houseWeight" />
+    <result column="landlord_uid" jdbcType="VARCHAR" property="landlordUid" />
+    <result column="lease_price" jdbcType="INTEGER" property="leasePrice" />
+    <result column="house_area" jdbcType="DECIMAL" property="houseArea" />
+    <result column="room_num" jdbcType="INTEGER" property="roomNum" />
+    <result column="hall_num" jdbcType="INTEGER" property="hallNum" />
+    <result column="toilet_num" jdbcType="INTEGER" property="toiletNum" />
+    <result column="kitchen_num" jdbcType="INTEGER" property="kitchenNum" />
+    <result column="balcony_num" jdbcType="INTEGER" property="balconyNum" />
+    <result column="cameraman_name" jdbcType="VARCHAR" property="cameramanName" />
+    <result column="cameraman_mobile" jdbcType="VARCHAR" property="cameramanMobile" />
+    <result column="operate_seq" jdbcType="TINYINT" property="operateSeq" />
+    <result column="intact_rate" jdbcType="DECIMAL" property="intactRate" />
+    <result column="refresh_date" jdbcType="TIMESTAMP" property="refreshDate" />
+    <result column="till_date" jdbcType="TIMESTAMP" property="tillDate" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+    <result column="house_addr" property="houseAddr" jdbcType="VARCHAR" />
+    <result column="is_pic" jdbcType="INTEGER" property="isPic" />
+    <result column="is_lock" jdbcType="INTEGER" property="isLock" />
+    <result column="house_source" jdbcType="INTEGER" property="houseSource" />
+    <result column="house_sn" jdbcType="VARCHAR" property="houseSn" />
+    <result column="house_cleaning_fees" property="houseCleaningFees" jdbcType="INTEGER" />
+    <result column="house_channel" jdbcType="INTEGER" property="houseChannel" />
+  </resultMap>
+  
+  <!-- 房东端房源列表 -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.HouseBaseListVo" id="houseBaseListMap" extends="BaseResultMap">
+  	<result column="house_book_rate" jdbcType="DECIMAL" property="houseBookRate" />
+  </resultMap>
+  
+  <resultMap id="BaseMsgDtoMap" extends="BaseResultMap" type="com.ziroom.minsu.services.house.dto.HouseBaseMsgDto">
+  	<result column="house_desc" jdbcType="VARCHAR" property="houseDesc" />
+  	<result column="house_desc_fid" jdbcType="VARCHAR" property="houseDescFid" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    hb.id, hb.fid, hb.phy_fid, hb.house_name, hb.rent_way, hb.house_status, hb.landlord_uid, hb.lease_price, 
+    hb.house_type, hb.house_area, hb.room_num, hb.hall_num, hb.toilet_num, hb.kitchen_num, hb.balcony_num,
+    hb.cameraman_name, hb.cameraman_mobile, hb.operate_seq,hb.intact_rate,hb.refresh_date, hb.house_weight,
+    hb.till_date, hb.create_date, hb.last_modify_date, hb.is_del,hb.house_addr,hb.is_pic,hb.house_source,
+    hb.house_sn, hb.is_lock, hb.house_cleaning_fees, hb.house_channel
+  </sql>
+  
+  <!-- 查询房源列表 -->
+  <select id="findHouseBaseList"  parameterType="com.ziroom.minsu.services.house.dto.HouseBaseListDto"  resultMap="houseBaseListMap">
+  	SELECT <include refid="Base_Column_List"/> FROM t_house_base_msg hb
+	LEFT JOIN t_house_phy_msg hp
+	ON hb.phy_fid=hp.fid
+	WHERE hb.is_del=0
+	AND hb.landlord_uid= #{landlordUid,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="findHouseBaseByHouseSn" parameterType="string" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_house_base_msg hb
+    WHERE hb.house_sn = #{houseSn,jdbcType=VARCHAR}
+    LIMIT 1
+  </select>
+
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_base_msg hb
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  <insert id="insertHouseBaseMsg" parameterType="com.ziroom.minsu.entity.house.HouseBaseMsgEntity">
+    insert into t_house_base_msg
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="fid != null">
+        fid,
+      </if>
+      <if test="phyFid != null">
+        phy_fid,
+      </if>
+      <if test="houseName != null">
+        house_name,
+      </if>
+      <if test="rentWay != null">
+        rent_way,
+      </if>
+      <if test="houseType != null" >
+        house_type,
+      </if>
+      <if test="houseStatus != null">
+        house_status,
+      </if>
+      <if test="houseWeight != null">
+        house_weight,
+      </if>
+      <if test="landlordUid != null">
+        landlord_uid,
+      </if>
+      <if test="leasePrice != null">
+        lease_price,
+      </if>
+      <if test="houseArea != null">
+        house_area,
+      </if>
+      <if test="roomNum != null">
+        room_num,
+      </if>
+      <if test="hallNum != null">
+        hall_num,
+      </if>
+      <if test="toiletNum != null">
+        toilet_num,
+      </if>
+      <if test="kitchenNum != null">
+        kitchen_num,
+      </if>
+      <if test="balconyNum != null">
+        balcony_num,
+      </if>
+      <if test="cameramanName != null">
+        cameraman_name,
+      </if>
+      <if test="cameramanMobile != null">
+        cameraman_mobile,
+      </if>
+      <if test="operateSeq != null">
+        operate_seq,
+      </if>
+      <if test="intactRate != null">
+        intact_rate,
+      </if>
+      <if test="refreshDate != null">
+        refresh_date,
+      </if>
+      <if test="tillDate != null">
+        till_date,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="lastModifyDate != null">
+        last_modify_date,
+      </if>
+      <if test="isDel != null">
+        is_del,
+      </if>
+      <if test="houseAddr != null">
+        house_addr,
+      </if>
+      <if test="isPic != null">
+        is_pic,
+      </if>
+      <if test="isLock != null">
+        is_lock,
+      </if>
+      <if test="houseSource != null">
+        house_source,
+      </if>
+      <if test="houseSn != null">
+        house_sn,
+      </if>
+      <if test="houseCleaningFees != null">
+        house_cleaning_fees,
+      </if>
+      <if test="houseChannel != null">
+        house_channel,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null">
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="phyFid != null">
+        #{phyFid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseName != null">
+        #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null">
+        #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="houseType != null" >
+        #{houseType,jdbcType=INTEGER},
+      </if>
+      <if test="houseStatus != null">
+        #{houseStatus,jdbcType=TINYINT},
+      </if>
+      <if test="houseWeight != null">
+        #{houseWeight,jdbcType=TINYINT},
+      </if>
+      <if test="landlordUid != null">
+        #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="leasePrice != null">
+        #{leasePrice,jdbcType=INTEGER},
+      </if>
+      <if test="houseArea != null">
+        #{houseArea,jdbcType=DECIMAL},
+      </if>
+      <if test="roomNum != null">
+        #{roomNum,jdbcType=INTEGER},
+      </if>
+      <if test="hallNum != null">
+        #{hallNum,jdbcType=INTEGER},
+      </if>
+      <if test="toiletNum != null">
+        #{toiletNum,jdbcType=INTEGER},
+      </if>
+      <if test="kitchenNum != null">
+        #{kitchenNum,jdbcType=INTEGER},
+      </if>
+      <if test="balconyNum != null">
+        #{balconyNum,jdbcType=INTEGER},
+      </if>
+      <if test="cameramanName != null">
+        #{cameramanName,jdbcType=VARCHAR},
+      </if>
+      <if test="cameramanMobile != null">
+        #{cameramanMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="operateSeq != null">
+        #{operateSeq,jdbcType=TINYINT},
+      </if>
+      <if test="intactRate != null">
+        #{intactRate,jdbcType=TINYINT},
+      </if>
+      <if test="refreshDate != null">
+        #{refreshDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tillDate != null">
+        #{tillDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null">
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="houseAddr != null">
+        #{houseAddr,jdbcType=VARCHAR},
+       </if>
+      <if test="isPic != null">
+        #{isPic,jdbcType=INTEGER},
+      </if>
+      <if test="isLock != null">
+        #{isLock,jdbcType=INTEGER},
+      </if>
+      <if test="houseSource != null">
+        #{houseSource,jdbcType=INTEGER},
+      </if>
+       <if test="houseSn != null">
+        #{houseSn,jdbcType=VARCHAR},
+      </if>
+      <if test="houseCleaningFees != null">
+        #{houseCleaningFees,jdbcType=INTEGER},
+      </if>
+      <if test="houseChannel != null"> 
+        #{houseChannel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateHouseBaseMsgByFid" parameterType="com.ziroom.minsu.entity.house.HouseBaseMsgEntity">
+    update t_house_base_msg
+    <set>
+      <if test="fid != null">
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="phyFid != null">
+        phy_fid = #{phyFid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseName != null">
+        house_name = #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null">
+        rent_way = #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="houseType != null" >
+        house_type = #{houseType,jdbcType=INTEGER},
+      </if>
+      <if test="houseStatus != null">
+        house_status = #{houseStatus,jdbcType=TINYINT},
+      </if>
+      <if test="houseWeight != null">
+        house_weight = #{houseWeight,jdbcType=TINYINT},
+      </if>
+      <if test="landlordUid != null">
+        landlord_uid = #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="leasePrice != null">
+        lease_price = #{leasePrice,jdbcType=INTEGER},
+      </if>
+      <if test="houseArea != null">
+        house_area = #{houseArea,jdbcType=DECIMAL},
+      </if>
+      <if test="roomNum != null">
+        room_num = #{roomNum,jdbcType=INTEGER},
+      </if>
+      <if test="hallNum != null">
+        hall_num = #{hallNum,jdbcType=INTEGER},
+      </if>
+      <if test="toiletNum != null">
+        toilet_num = #{toiletNum,jdbcType=INTEGER},
+      </if>
+      <if test="kitchenNum != null">
+        kitchen_num = #{kitchenNum,jdbcType=INTEGER},
+      </if>
+      <if test="balconyNum != null">
+        balcony_num = #{balconyNum,jdbcType=INTEGER},
+      </if>
+      <if test="cameramanName != null">
+        cameraman_name = #{cameramanName,jdbcType=VARCHAR},
+      </if>
+      <if test="cameramanMobile != null">
+        cameraman_mobile = #{cameramanMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="operateSeq != null">
+        operate_seq = #{operateSeq,jdbcType=TINYINT},
+      </if>
+      <if test="intactRate!= null">
+        intact_rate = #{intactRate,jdbcType=TINYINT},
+      </if>
+      <if test="refreshDate != null">
+        refresh_date = #{refreshDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tillDate != null">
+        till_date = #{tillDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null">
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="houseAddr != null">
+        house_addr = #{houseAddr,jdbcType=INTEGER},
+      </if>
+      <if test="isPic != null">
+        is_pic = #{isPic,jdbcType=INTEGER},
+      </if>
+      <if test="isLock != null">
+        is_lock = #{isLock,jdbcType=INTEGER},
+      </if>
+      <if test="houseSource != null">
+        house_source = #{houseSource,jdbcType=INTEGER},
+      </if>
+      <if test="houseSn != null and houseSn !=''">
+        house_sn = #{houseSn,jdbcType=VARCHAR},
+      </if>
+      <if test="houseCleaningFees != null">
+        house_cleaning_fees = #{houseCleaningFees,jdbcType=INTEGER},
+      </if>
+      <if test="houseChannel != null"> 
+        house_channel = #{houseChannel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateHouseBaseMsgByUid" parameterType="com.ziroom.minsu.entity.house.HouseBaseMsgEntity">
+    UPDATE t_house_base_msg
+    <set>
+      <if test="fid != null">
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="phyFid != null">
+        phy_fid = #{phyFid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseName != null">
+        house_name = #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null">
+        rent_way = #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="houseType != null" >
+        house_type = #{houseType,jdbcType=INTEGER},
+      </if>
+      <if test="houseStatus != null">
+        house_status = #{houseStatus,jdbcType=TINYINT},
+      </if>
+      <if test="houseWeight != null">
+        house_weight = #{houseWeight,jdbcType=TINYINT},
+      </if>
+      <if test="landlordUid != null">
+        landlord_uid = #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="leasePrice != null">
+        lease_price = #{leasePrice,jdbcType=INTEGER},
+      </if>
+      <if test="houseArea != null">
+        house_area = #{houseArea,jdbcType=DECIMAL},
+      </if>
+      <if test="roomNum != null">
+        room_num = #{roomNum,jdbcType=INTEGER},
+      </if>
+      <if test="hallNum != null">
+        hall_num = #{hallNum,jdbcType=INTEGER},
+      </if>
+      <if test="toiletNum != null">
+        toilet_num = #{toiletNum,jdbcType=INTEGER},
+      </if>
+      <if test="kitchenNum != null">
+        kitchen_num = #{kitchenNum,jdbcType=INTEGER},
+      </if>
+      <if test="balconyNum != null">
+        balcony_num = #{balconyNum,jdbcType=INTEGER},
+      </if>
+      <if test="cameramanName != null">
+        cameraman_name = #{cameramanName,jdbcType=VARCHAR},
+      </if>
+      <if test="cameramanMobile != null">
+        cameraman_mobile = #{cameramanMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="operateSeq != null">
+        operate_seq = #{operateSeq,jdbcType=TINYINT},
+      </if>
+      <if test="intactRate!= null">
+        intact_rate = #{intactRate,jdbcType=TINYINT},
+      </if>
+      <if test="refreshDate != null">
+        refresh_date = #{refreshDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tillDate != null">
+        till_date = #{tillDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null">
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="houseAddr != null">
+        house_addr = #{houseAddr,jdbcType=INTEGER},
+      </if>
+      <if test="isPic != null">
+        is_pic = #{isPic,jdbcType=INTEGER},
+      </if>
+      <if test="isLock != null">
+        is_lock = #{isLock,jdbcType=INTEGER},
+      </if>
+      <if test="houseSource != null">
+        house_source = #{houseSource,jdbcType=INTEGER},
+      </if>
+       <if test="houseSn != null and houseSn !=''">
+        house_sn = #{houseSn,jdbcType=VARCHAR},
+      </if>
+      <if test="houseCleaningFees != null">
+        house_cleaning_fees = #{houseCleaningFees,jdbcType=INTEGER},
+      </if>
+      <if test="houseChannel != null"> 
+        house_channel = #{houseChannel,jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE fid = #{fid,jdbcType=VARCHAR}
+    AND landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+    <if test="oldStatus != null and oldStatus !=''">
+		AND house_status = #{oldStatus,jdbcType=INTEGER}
+    </if>
+  </update>
+  
+  <!-- 查询房源基础信息 -->
+  <select id="getHouseBaseByFid"  parameterType="string" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/> FROM t_house_base_msg hb
+	WHERE hb.is_del=0
+	AND hb.fid=#{fid,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 根据房源编号集合查询房源信息集合-->
+  <select id="getHouseBaseListByHouseSns"  parameterType="list" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM t_house_base_msg hb
+    where
+    hb.is_del = 0
+    AND
+    hb.house_sn in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+      #{item,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+
+    <!-- 通过房间fid 查询房源基础信息 -->
+    <select id="getHouseBaseMsgEntityByRoomFid"  parameterType="string" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+          FROM t_house_base_msg hb
+          INNER JOIN t_house_room_msg  r
+              ON hb.fid = r.house_base_fid
+        WHERE r.fid = #{roomFid,jdbcType=VARCHAR}
+        AND hb.is_del=0
+    </select>
+    
+    <!-- 通过房东uid 分租查询房源基础信息 -->
+    <select id="getHouseSubletByLandlordUid"  parameterType="string" resultMap="BaseResultMap">
+    	SELECT <include refid="Base_Column_List"/>
+    	  FROM t_house_base_msg hb
+    	  left JOIN t_house_room_msg  r
+    	    ON hb.fid = r.house_base_fid
+    	  WHERE r.room_status = 40
+    	  AND hb.rent_way = 1
+    	  AND hb.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+    	  AND hb.is_del=0
+    	  limit 1
+    </select>
+    
+    <!-- 通过房东uid 整租查询房源基础信息 -->
+    <select id="getHouseWholeByLandlordUid"  parameterType="string" resultMap="BaseResultMap">
+    	SELECT <include refid="Base_Column_List"/>
+    	  FROM t_house_base_msg hb
+    	  WHERE hb.house_status = 40
+    	  AND hb.rent_way = 0
+    	  AND hb.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+    	  AND hb.is_del=0
+    	  limit 1
+    </select>
+
+  
+  <!-- 查询房源基础信息与房源描述信息 -->
+  <select id="findHouseBaseMsgAndHouseDesc" parameterType="string" resultMap="BaseMsgDtoMap">
+  	select <include refid="Base_Column_List"/>
+  	, hd.house_desc, hd.fid house_desc_fid
+  	from t_house_base_msg hb,t_house_desc hd
+	where hb.fid=#{fid,jdbcType=VARCHAR}
+	and hb.fid = hd.house_base_fid
+	and hb.is_del = 0
+	and hd.is_del = 0
+	limit 1  
+  </select>
+  
+  <!-- 查询房源详情信息 -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.HouseDetailVo" id="houseDetailMap" extends="BaseResultMap">
+  	<association column="fid" property="houseDefaultPic"  javaType="com.ziroom.minsu.entity.house.HousePicMsgEntity" select="getHouseDefaultPic"/>
+  </resultMap>
+  
+   <!-- 查询房源详情信息 -->
+  <select id="getHouseDetailByFid"  parameterType="map" resultMap="houseDetailMap">
+  	SELECT <include refid="Base_Column_List"/> FROM t_house_base_msg hb
+	WHERE hb.is_del=0
+	AND hb.fid=#{houseBaseFid,jdbcType=VARCHAR}
+	AND hb.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询房源默认图片 -->
+  <select id="getHouseDefaultPic"  parameterType="string"  resultMap="house.housePicMsgDao.BaseResultMap">
+  	SELECT <include refid="house.housePicMsgDao.Base_Column_List"/> FROM t_house_pic_msg hpm
+  	WHERE hpm.is_del=0
+	AND hpm.is_default=1
+    AND hpm.house_base_fid=#{fid,jdbcType=VARCHAR}
+    limit 0,1
+  </select>
+  
+  <!--保存订单时需要房源信息  -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.OrderNeedHouseVo" id="orderHouseMap" extends="BaseResultMap">
+  	<result column="nation_code" jdbcType="VARCHAR" property="nationCode" />
+  	<result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+  	<result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+  	<result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+  	<association column="fid" property="houseBaseExtEntity"  javaType="com.ziroom.minsu.entity.house.HouseBaseExtEntity" select="house.houseBaseExtDao.getHouseBaseExtByHouseBaseFid"/>
+  	<collection property="housePriceList"  column="{houseBaseFid=fid}"  javaType="arrayList"  select="house.housePriceConfDao.findSpecialPrice"></collection>
+  	<collection property="houseWeekPriceList"  column="{houseBaseFid=fid}"  javaType="arrayList"  select="house.housePriceWeekConfDao.findValidHousePriceWeekConfList"></collection>
+  	<collection property="houseConfList"  column="fid"  javaType="arrayList"  select="house.houseConfMsgDao.findHouseConfList"></collection>
+  </resultMap>
+  
+  <!-- 查询订单需要房源信息 -->
+  <select id="getOrderNeedHouseVo"  parameterType="string"  resultMap="orderHouseMap">
+  	SELECT <include refid="Base_Column_List"/>,hp.nation_code,hp.province_code,hp.city_code,hp.area_code FROM t_house_base_msg hb
+	LEFT JOIN t_house_phy_msg hp
+	ON hb.phy_fid=hp.fid
+	WHERE hb.is_del=0
+	AND hb.fid=#{houseBaseFid,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <!-- 特洛伊后台查询房源信息列表 -->
+  <select id="findHouseMsgListByHouse" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.HouseResultVo">
+  	SELECT hb.fid fid, hb.house_name houseName, hb.house_status houseStatus, hb.landlord_uid landlordUid, hb.cameraman_name cameramanName, hb.house_type houseType,
+  	hb.house_weight weight, hb.cameraman_mobile cameramanMobile, hb.house_addr houseAddr, hb.rent_way rentWay, hb.is_pic isPic, hb.house_sn houseSn,
+  	hb.create_date createDate, hp.zo_job_num zoJobNum, hp.zo_name zoName, hp.zo_mobile zoMobile, hgr.emp_push_code empPushCode, hgr.emp_push_name empPushName, 
+  	hgr.emp_guard_code empGuardCode, hgr.emp_guard_name empGuardName, hb.house_channel houseChannel, ext.house_quality_grade houseQualityGrade
+  	FROM t_house_phy_msg hp 
+  	INNER JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid
+    LEFT JOIN t_house_base_ext ext ON hb.fid = ext.house_base_fid
+  	LEFT JOIN t_house_guard_rel hgr ON hb.fid = hgr.house_fid
+	<where> 
+    AND hb.rent_way = 0
+	AND hp.is_del = 0
+	AND hb.is_del = 0
+	<if test="houseName != null and houseName !=''">
+		AND hb.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseStatusList != null and houseStatusList.size > 0">
+        AND hb.house_status in
+        <foreach collection="houseStatusList"  item="house_status" index="index" open="(" separator="," close=")">
+            #{house_status,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+	<if test="houseStatus != null">
+		AND hb.house_status = #{houseStatus,jdbcType=INTEGER}
+    </if>
+	<if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="isPic != null">
+		AND hb.is_pic = #{isPic,jdbcType=INTEGER}
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+	<if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+	<if test="zoName != null and zoName !=''">
+		AND hp.zo_name like CONCAT(#{zoName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="houseType != null">
+		AND hb.house_type = #{houseType,jdbcType=INTEGER}
+    </if>
+	<if test="isWeight != null and isWeight == 0">
+		AND hb.house_weight = 0
+    </if>
+	<if test="isWeight != null and isWeight == 1">
+		AND hb.house_weight != 0
+    </if>
+    <!-- 创建时间 start -->
+    <if test="houseCreateTimeStart != null and houseCreateTimeStart != ''">
+        AND hb.create_date &gt;=#{houseCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="houseCreateTimeEnd != null and houseCreateTimeEnd != ''">
+        AND hb.create_date &lt;=#{houseCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 创建时间 end -->
+	<if test="houseSn != null and houseSn !=''">
+		AND hb.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+    </if>
+   
+    <!-- 上架时间 end -->
+	<if test="empPushName != null and empPushName !=''">
+		AND hgr.emp_push_name like CONCAT(#{empPushName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="empGuardName != null and empGuardName !=''">
+		AND hgr.emp_guard_name like CONCAT(#{empGuardName,jdbcType=VARCHAR},'%')
+    </if>
+	
+    <if test="houseChannel != null">
+		AND hb.house_channel = #{houseChannel,jdbcType=INTEGER}
+    </if>
+    <if test="houseQualityGrade != null and houseQualityGrade !=''">
+      AND ext.house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR}
+    </if>
+    <if test="(houseOnlineTimeStart != null and houseOnlineTimeStart != '') or (houseOnlineTimeEnd != null and houseOnlineTimeEnd != '') 
+    or (issueLastTimeStart != null and issueLastTimeStart != '') or (issueLastTimeEnd != null and issueLastTimeEnd != '')
+    or (auditCause != null and auditCause != '')">
+    
+	    AND EXISTS(
+		  SELECT hbm.`fid` FROM `t_house_biz_msg` hbm WHERE 
+		  hbm.`house_base_fid` = hb.`fid`
+		  AND hbm.`rent_way` = 0
+		      <!-- 最新上架时间 start -->
+		  <if test="houseOnlineTimeStart != null and houseOnlineTimeStart != ''">
+	        AND hbm.last_up_date &gt;=#{houseOnlineTimeStart,jdbcType=VARCHAR}
+	    </if>
+	    <if test="houseOnlineTimeEnd != null and houseOnlineTimeEnd != ''">
+	        AND hbm.last_up_date &lt;=#{houseOnlineTimeEnd,jdbcType=VARCHAR}
+	    </if>
+	     <!--最新发布时间-->
+	    <if test="issueLastTimeStart != null and issueLastTimeStart != ''">
+	        AND hbm.last_deploy_date &gt;=#{issueLastTimeStart,jdbcType=VARCHAR}
+	    </if>
+	    <if test="issueLastTimeEnd != null and issueLastTimeEnd != ''">
+	        AND hbm.last_deploy_date &lt;=#{issueLastTimeEnd,jdbcType=VARCHAR}
+	    </if>
+	    <if test="auditCause != null and auditCause != ''">
+			AND FIND_IN_SET(#{auditCause,jdbcType=VARCHAR},hbm.refuse_reason) > 0
+	    </if>
+		)
+	     
+    </if>
+	</where>
+	<if test="orderByType==null">
+	ORDER BY hb.create_date desc,hb.house_weight
+	</if>
+    <if test="orderByType==1">
+	ORDER BY hb.last_modify_date desc,hb.house_weight
+	</if>
+	
+	
+  </select>
+  
+    <!-- 特洛伊后台查询房源信息列表  区分houseFid和roomFid-->
+  <select id="findHouseMsgListByHouseNew" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.HouseResultNewVo">
+  	SELECT distinct hb.fid houseFid, hb.house_name houseName, hb.house_status houseStatus, hb.landlord_uid landlordUid, hb.cameraman_name cameramanName, hb.house_type houseType,
+  	hb.house_weight weight, hb.cameraman_mobile cameramanMobile, hb.house_addr houseAddr, hb.rent_way rentWay, hb.is_pic isPic, hb.house_sn houseSn, 
+  	hb.create_date createDate, hp.zo_job_num zoJobNum, hp.zo_name zoName, hp.zo_mobile zoMobile, hgr.emp_push_code empPushCode, hgr.emp_push_name empPushName, 
+  	hgr.emp_guard_code empGuardCode, hgr.emp_guard_name empGuardName, hb.house_channel houseChannel, ext.house_quality_grade houseQualityGrade, ext.survey_result surveyResult,ext.order_type orderType
+  	FROM t_house_phy_msg hp 
+  	INNER JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid
+    LEFT JOIN t_house_base_ext ext ON hb.fid = ext.house_base_fid
+  	LEFT JOIN t_house_guard_rel hgr on hb.fid = hgr.house_fid
+	<where>
+    AND hb.rent_way = 0
+	AND hp.is_del = 0
+	AND hb.is_del = 0
+	<if test="houseName != null and houseName !=''">
+		AND hb.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseStatusList != null and houseStatusList.size > 0">
+        AND hb.house_status in
+        <foreach collection="houseStatusList"  item="house_status" index="index" open="(" separator="," close=")">
+            #{house_status,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+	<if test="houseStatus != null">
+		AND hb.house_status = #{houseStatus,jdbcType=INTEGER}
+    </if>
+	<if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="isPic != null">
+		AND hb.is_pic = #{isPic,jdbcType=INTEGER}
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+	<if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+	<if test="zoName != null and zoName !=''">
+		AND hp.zo_name like CONCAT(#{zoName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="houseType != null">
+		AND hb.house_type = #{houseType,jdbcType=INTEGER}
+    </if>
+	<if test="isWeight != null and isWeight == 0">
+		AND hb.house_weight = 0
+    </if>
+	<if test="isWeight != null and isWeight == 1">
+		AND hb.house_weight != 0
+    </if>
+    <!-- 创建时间 start -->
+    <if test="houseCreateTimeStart != null and houseCreateTimeStart != ''">
+        AND hb.create_date &gt;=#{houseCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="houseCreateTimeEnd != null and houseCreateTimeEnd != ''">
+        AND hb.create_date &lt;=#{houseCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 创建时间 end -->
+	<if test="houseSn != null and houseSn !=''">
+		AND hb.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+    </if>
+    
+    
+	<if test="empPushName != null and empPushName !=''">
+		AND hgr.emp_push_name like CONCAT(#{empPushName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="empGuardName != null and empGuardName !=''">
+		AND hgr.emp_guard_name like CONCAT(#{empGuardName,jdbcType=VARCHAR},'%')
+    </if>
+
+    <if test="houseChannel != null">
+		AND hb.house_channel = #{houseChannel,jdbcType=INTEGER}
+    </if>
+      <if test="houseQualityGrade != null and houseQualityGrade !=''">
+      AND ext.house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR}
+    </if>
+    <if test="surveyResult != null">
+      AND ext.survey_result = #{surveyResult,jdbcType=INTEGER}
+    </if>
+      <if test="orderType != null">
+        AND ext.order_type = #{orderType,jdbcType=INTEGER}
+      </if>
+
+   <if test="(houseOnlineTimeStart != null and houseOnlineTimeStart != '') or (houseOnlineTimeEnd != null and houseOnlineTimeEnd != '') 
+    or (issueLastTimeStart != null and issueLastTimeStart != '') or (issueLastTimeEnd != null and issueLastTimeEnd != '')
+    or (auditCause != null and auditCause != '')">
+    
+	    AND EXISTS(
+		  SELECT hbm.`fid` FROM `t_house_biz_msg` hbm WHERE 
+		  hbm.`house_base_fid` = hb.`fid`
+		  AND hbm.`rent_way` = 0
+		      <!-- 最新上架时间 start -->
+		  <if test="houseOnlineTimeStart != null and houseOnlineTimeStart != ''">
+	        AND hbm.last_up_date &gt;=#{houseOnlineTimeStart,jdbcType=VARCHAR}
+	    </if>
+	    <if test="houseOnlineTimeEnd != null and houseOnlineTimeEnd != ''">
+	        AND hbm.last_up_date &lt;=#{houseOnlineTimeEnd,jdbcType=VARCHAR}
+	    </if>
+	     <!--最新发布时间-->
+	    <if test="issueLastTimeStart != null and issueLastTimeStart != ''">
+	        AND hbm.last_deploy_date &gt;=#{issueLastTimeStart,jdbcType=VARCHAR}
+	    </if>
+	    <if test="issueLastTimeEnd != null and issueLastTimeEnd != ''">
+	        AND hbm.last_deploy_date &lt;=#{issueLastTimeEnd,jdbcType=VARCHAR}
+	    </if>
+	    <if test="auditCause != null and auditCause != ''">
+			AND FIND_IN_SET(#{auditCause,jdbcType=VARCHAR},hbm.refuse_reason) > 0
+	    </if>
+		)
+	     
+    </if>
+	</where>
+	ORDER BY hb.create_date desc,hb.house_weight
+  </select>
+	
+  <!-- 特洛伊后台查询房间信息列表 -->
+  <select id="findHouseMsgListByRoom" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.HouseResultVo">
+  	SELECT hr.fid fid, hr.room_name houseName, hr.room_type roomType, hr.room_status houseStatus, hr.room_weight weight, hr.room_sn roomSn, hr.create_date createDate, hb.landlord_uid landlordUid, 
+	hb.cameraman_name cameramanName, hb.house_type houseType, hb.cameraman_mobile cameramanMobile, hb.house_addr houseAddr, hb.rent_way rentWay, hb.is_pic isPic, hb.house_sn houseSn, 
+	hp.zo_job_num zoJobNum, hp.zo_name zoName, hp.zo_mobile zoMobile, hgr.emp_push_code empPushCode, hgr.emp_push_name empPushName, hgr.emp_guard_code empGuardCode, 
+	hgr.emp_guard_name empGuardName, hb.house_channel houseChannel, ext.house_quality_grade houseQualityGrade,
+	hbm.`last_up_date` onlineDate, hbm.`refuse_reason` auditCause,hbm.last_deploy_date lastDeployDate
+  	FROM t_house_phy_msg hp
+  	INNER JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid
+  	INNER JOIN t_house_room_msg hr ON hb.fid = hr.house_base_fid
+    LEFT JOIN t_house_base_ext ext ON hb.fid = ext.house_base_fid
+	LEFT JOIN t_house_guard_rel hgr on hb.fid = hgr.house_fid
+    LEFT JOIN t_house_biz_msg hbm on hr.fid = hbm.room_fid
+	<where> 
+	AND hb.rent_way = 1
+	AND hp.is_del = 0
+	AND hb.is_del = 0
+	AND hr.is_del = 0
+	<if test="houseName != null and houseName !=''">
+		AND hr.room_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="roomType != null">
+		AND hr.room_type = #{roomType,jdbcType=INTEGER}
+    </if>
+	<if test="houseStatusList != null and houseStatusList.size > 0">
+		AND hr.room_status in
+        <foreach collection="houseStatusList" item="room_status" open="(" separator="," close=")">  
+			#{room_status,jdbcType=INTEGER}
+        </foreach>
+    </if>
+	<if test="houseStatus != null">
+		AND hr.room_status = #{houseStatus,jdbcType=INTEGER}
+    </if>
+	<if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+	<if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="isPic != null">
+		AND hb.is_pic = #{isPic,jdbcType=INTEGER}
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="zoName != null and zoName !=''">
+		AND hp.zo_name like CONCAT(#{zoName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseType != null ">
+		AND hb.house_type = #{houseType,jdbcType=INTEGER}
+    </if>
+	<if test="isWeight != null and isWeight == 0">
+		AND hr.room_weight = 0
+    </if>
+	<if test="isWeight != null and isWeight == 1">
+		AND hr.room_weight != 0
+    </if>
+    <!-- 创建时间 start -->
+    <if test="roomCreateTimeStart != null and roomCreateTimeStart != ''">
+        AND hr.create_date &gt;=#{roomCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="roomCreateTimeEnd != null and roomCreateTimeEnd != ''">
+        AND hr.create_date &lt;=#{roomCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 创建时间 end -->
+    <if test="roomSn != null and roomSn !=''">
+		AND hr.room_sn like CONCAT(#{roomSn,jdbcType=VARCHAR},'%') 
+    </if>
+    <!-- 上架时间 start -->
+    <if test="roomOnlineTimeStart != null and roomOnlineTimeStart != ''">
+        AND hbm.`last_up_date` &gt;=#{roomOnlineTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="roomOnlineTimeEnd != null and roomOnlineTimeEnd != ''">
+        AND hbm.`last_up_date` &lt;=#{roomOnlineTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 上架时间 end -->
+    <if test="empPushName != null and empPushName !=''">
+		AND hgr.emp_push_name like CONCAT(#{empPushName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="empGuardName != null and empGuardName !=''">
+		AND hgr.emp_guard_name like CONCAT(#{empGuardName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseChannel != null">
+		AND hb.house_channel = #{houseChannel,jdbcType=INTEGER}
+	</if>
+      <if test="houseQualityGrade != null and houseQualityGrade !=''">
+      AND ext.house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR}
+    </if>
+    <if test="auditCause != null and auditCause != ''">
+		AND FIND_IN_SET(#{auditCause,jdbcType=VARCHAR},hbm.`refuse_reason`) > 0
+    </if>
+    <if test="issueLastTimeStart != null and issueLastTimeStart != ''">
+      AND hbm.last_deploy_date &gt;=#{issueLastTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="issueLastTimeEnd != null and issueLastTimeEnd != ''">
+      AND hbm.last_deploy_date &lt;=#{issueLastTimeEnd,jdbcType=VARCHAR}
+    </if>
+
+	</where>
+	<if test="orderByType==null">
+	ORDER BY hr.create_date desc,hr.room_weight
+	</if>
+    <if test="orderByType==1">
+	ORDER BY hr.last_modify_date desc,hr.room_weight
+	</if>
+  </select>
+  
+    <!-- 特洛伊后台查询房间信息列表   区分houseFid和roomFid-->
+  <select id="findHouseMsgListByRoomNew" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.HouseResultNewVo">
+  	SELECT hr.house_base_fid  houseFid, hr.fid roomFid, hr.room_name houseName, hr.room_type roomType, hr.room_status houseStatus, hr.room_weight weight, hr.room_sn roomSn,hr.create_date createDate, hb.landlord_uid landlordUid, 
+	hb.cameraman_name cameramanName, hb.house_type houseType, hb.cameraman_mobile cameramanMobile, hb.house_addr houseAddr, hb.rent_way rentWay, hb.is_pic isPic, hb.house_sn houseSn, 
+	hp.zo_job_num zoJobNum, hp.zo_name zoName, hp.zo_mobile zoMobile, hgr.emp_push_code empPushCode, hgr.emp_push_name empPushName, hgr.emp_guard_code empGuardCode, 
+	hgr.emp_guard_name empGuardName, hb.house_channel houseChannel, ext.house_quality_grade houseQualityGrade ,ext.survey_result surveyResult,
+	hbm.`last_up_date` onlineDate, hbm.`refuse_reason` auditCause,hbm.last_deploy_date lastDeployDate,ext.is_together_landlord isTogetherLandlord,hre.order_type orderType
+  	FROM t_house_phy_msg hp
+  	INNER JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid
+  	INNER JOIN t_house_room_msg hr ON hb.fid = hr.house_base_fid
+    LEFT JOIN t_house_base_ext ext ON hb.fid = ext.house_base_fid
+	LEFT JOIN t_house_guard_rel hgr on hb.fid = hgr.house_fid
+    LEFT JOIN t_house_biz_msg hbm on hr.fid = hbm.room_fid
+    LEFT JOIN t_house_room_ext hre ON hr.fid = hre.room_fid
+	<where> 
+	AND hb.rent_way = 1
+	AND hp.is_del = 0
+	AND hb.is_del = 0
+	AND hr.is_del = 0
+	<if test="houseName != null and houseName !=''">
+		AND hr.room_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="roomType != null">
+		AND hr.room_type = #{roomType,jdbcType=INTEGER}
+    </if>
+	<if test="houseStatusList != null and houseStatusList.size > 0">
+		AND hr.room_status in
+        <foreach collection="houseStatusList" item="room_status" open="(" separator="," close=")">  
+			#{room_status,jdbcType=INTEGER}
+        </foreach>
+    </if>
+	<if test="houseStatus != null">
+		AND hr.room_status = #{houseStatus,jdbcType=INTEGER}
+    </if>
+	<if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+	<if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="isPic != null">
+		AND hb.is_pic = #{isPic,jdbcType=INTEGER}
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="zoName != null and zoName !=''">
+		AND hp.zo_name like CONCAT(#{zoName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseType != null ">
+		AND hb.house_type = #{houseType,jdbcType=INTEGER}
+    </if>
+	<if test="isWeight != null and isWeight == 0">
+		AND hr.room_weight = 0
+    </if>
+	<if test="isWeight != null and isWeight == 1">
+		AND hr.room_weight != 0
+    </if>
+    <!-- 创建时间 end -->
+    <if test="roomCreateTimeStart != null and roomCreateTimeStart != ''">
+        AND hr.create_date &gt;=#{roomCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="roomCreateTimeEnd != null and roomCreateTimeEnd != ''">
+        AND hr.create_date &lt;=#{roomCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 创建时间 end -->
+    <if test="roomSn != null and roomSn !=''">
+		AND hr.room_sn like CONCAT(#{roomSn,jdbcType=VARCHAR},'%') 
+    </if>
+    <!-- 上架时间 end -->
+    <if test="roomOnlineTimeStart != null and roomOnlineTimeStart != ''">
+        AND hbm.`last_up_date` &gt;=#{roomOnlineTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="roomOnlineTimeEnd != null and roomOnlineTimeEnd != ''">
+        AND hbm.`last_up_date` &lt;=#{roomOnlineTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 上架时间 end -->
+    <if test="empPushName != null and empPushName !=''">
+		AND hgr.emp_push_name like CONCAT(#{empPushName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="empGuardName != null and empGuardName !=''">
+		AND hgr.emp_guard_name like CONCAT(#{empGuardName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseChannel != null">
+		AND hb.house_channel = #{houseChannel,jdbcType=INTEGER}
+	</if>
+      <if test="houseQualityGrade != null and houseQualityGrade !=''">
+      AND ext.house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR}
+    </if>
+    <if test="surveyResult != null">
+      AND ext.survey_result = #{surveyResult,jdbcType=INTEGER}
+    </if>
+    <if test="auditCause != null and auditCause != ''">
+		AND FIND_IN_SET(#{auditCause,jdbcType=VARCHAR},hbm.`refuse_reason`) > 0
+    </if>
+    <if test="issueLastTimeStart != null and issueLastTimeStart != ''">
+      AND hbm.last_deploy_date &gt;=#{issueLastTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="issueLastTimeEnd != null and issueLastTimeEnd != ''">
+      AND hbm.last_deploy_date &lt;=#{issueLastTimeEnd,jdbcType=VARCHAR}
+    </if>
+      <if test="isTogetherLandlord != null">
+        AND ext.is_together_landlord = #{isTogetherLandlord,jdbcType=INTEGER}
+      </if>
+      <if test="orderType != null">
+        AND hre.order_type = #{orderType,jdbcType=INTEGER}
+      </if>
+	</where>
+	ORDER BY hr.create_date desc,hr.room_weight
+  </select>  
+  
+  <!-- 特洛伊系统查询房源详情 -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.HouseMsgVo" id="HouseMsgVoMap" extends="BaseResultMap">
+  	<association column="phy_fid" property="housePhyMsg" javaType="com.ziroom.minsu.entity.house.HousePhyMsgEntity" select="house.housePhyMsgDao.findHousePhyMsgByFid"/>
+  	<association column="fid" property="houseBaseExt" javaType="com.ziroom.minsu.entity.house.HouseBaseExtEntity" select="house.houseBaseExtDao.getHouseBaseExtByHouseBaseFid"/>
+  	<association column="fid" property="houseDesc" javaType="com.ziroom.minsu.entity.house.HouseDescEntity" select="house.houseDescDao.findHouseDescByHouseBaseFid"/>
+  	<collection property="houseConfList" column="fid" javaType="ArrayList" select="house.houseConfMsgDao.findHouseConfList"></collection>
+  	<collection property="housePicList" column="fid" javaType="ArrayList" select="house.housePicMsgDao.findHousePicListByHouseBaseFid"></collection>
+  	<collection property="roomList" column="fid" javaType="ArrayList" select="house.houseRoomMsgDao.findRoomMsgVoListByHouseFid"></collection>
+  </resultMap>
+  
+  <!-- 特洛伊系统查询房源详情 -->
+  <select id="findHouseDetailByFid" parameterType="string" resultMap="HouseMsgVoMap">
+  	SELECT <include refid="Base_Column_List"/>
+  	FROM t_house_base_msg hb
+	WHERE hb.fid=#{fid,jdbcType=VARCHAR}
+	AND hb.is_del=0
+	LIMIT 1
+  </select>
+  
+  <resultMap id="BaseExtDtoMap" extends="BaseResultMap" type="com.ziroom.minsu.services.house.dto.HouseBaseExtDto" >
+    <association column="fid" property="houseBaseExt" javaType="com.ziroom.minsu.entity.house.HouseBaseExtEntity" select="house.houseBaseExtDao.getHouseBaseExtByHouseBaseFid"/>
+  </resultMap>
+  
+  <!-- 根据房源基础信息逻辑id查询基础信息与基础信息扩展 -->
+  <select id="findHouseBaseExtDtoByHouseBaseFid" parameterType="string"  resultMap="BaseExtDtoMap">
+  	SELECT  <include refid="Base_Column_List" />
+    FROM t_house_base_msg hb
+    WHERE hb.fid = #{fid,jdbcType=VARCHAR}
+    AND hb.is_del = 0
+    LIMIT 1
+  </select>
+  
+  <!-- 查询超时未审核房源 -->
+  <select id="findOverAuditLimitHouse" resultMap="BaseResultMap" parameterType="map">
+  	 SELECT fid,landlord_uid FROM t_house_base_msg 
+	 WHERE house_status=#{houseStatus,jdbcType=INTEGER}
+	 <![CDATA[AND create_date<=#{limitDate,jdbcType=TIMESTAMP}]]>
+	 AND rent_way=#{rentWay,jdbcType=INTEGER}
+	 AND is_del=0
+  </select>
+  
+  <!-- 查询房源 -->
+  <select id="findHouseByPhy" resultMap="BaseResultMap" parameterType="map">
+  	 SELECT th.*  FROM t_house_base_msg th 
+     LEFT JOIN t_house_phy_msg tp 
+     ON th.phy_fid = tp.fid
+     WHERE  tp.nation_code=#{nationCode,jdbcType=VARCHAR}
+     AND tp.province_code=#{provinceCode,jdbcType=VARCHAR}
+     AND tp.city_code=#{cityCode,jdbcType=VARCHAR}
+     AND tp.area_code=#{areaCode,jdbcType=VARCHAR}
+     AND tp.is_del = 0
+     AND th.is_del = 0
+  </select>
+  
+  <!-- 更新房源对应物理房源fid -->
+  <update id="updateHousePhyFid"  parameterType="map" >
+  	UPDATE t_house_base_msg SET phy_fid=#{newPhyFid,jdbcType=VARCHAR}
+    WHERE phy_fid=#{oldPhyFid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据房源fid逻辑删除房源信息 -->
+  <update id="deleteHouseBaseMsgByFid" parameterType="map" >
+  	update t_house_base_msg hb set hb.is_del = 1
+  	where hb.fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <resultMap type="com.ziroom.minsu.services.house.entity.HousePicAuditVo" id="picAuditMap" extends="BaseResultMap">
+  	  	<result column="community_name" jdbcType="VARCHAR" property="communityName" />
+  	  	<result column="default_pic_fid" jdbcType="VARCHAR" property="defaultPicFid" />
+  </resultMap>
+  
+  <!-- 查询房源图片审核详情 -->
+  <select id="findHousePicAuditVo"  parameterType="string"  resultMap="picAuditMap">
+  	SELECT <include refid="Base_Column_List"/> ,hp.community_name,hbe.default_pic_fid FROM t_house_base_msg hb
+	LEFT JOIN  t_house_phy_msg hp
+	ON hb.phy_fid=hp.fid
+	LEFT JOIN  t_house_base_ext hbe
+	ON hbe.house_base_fid=hb.fid
+	WHERE hb.fid=#{houseBaseFid,jdbcType=VARCHAR}
+	AND hb.is_del=0
+  </select>
+
+  <!--使用 union 增加上架房源中房东修改需要审核字段的整租房源信息. @Author:lusp  @Date:2017/8/11-->
+  <!-- 特洛伊后台查询存在照片审核未通过上架房源列表和存在待审核字段的上架房源 -->
+  <select id="findPicUnapproveedHouseList" parameterType="com.ziroom.minsu.services.house.dto.HouseRequestDto"  resultType="com.ziroom.minsu.services.house.entity.HouseResultVo">
+    SELECT tt.fid fid, tt.house_name houseName, tt.house_status houseStatus, tt.landlord_uid landlordUid, tt.cameraman_name cameramanName,
+    tt.cameraman_mobile cameramanMobile, tt.house_addr houseAddr, tt.rent_way rentWay, tt.is_pic isPic,tt.house_sn AS houseSn,tt.last_modify_date  AS lastModifyDate, tt.zo_job_num zoJobNum,
+    tt.zo_name zoName, tt.zo_mobile zoMobile
+    FROM
+    (
+      SELECT hb.fid, hb.house_name, hb.house_status, hb.landlord_uid, hb.cameraman_name,
+      hb.cameraman_mobile, hb.house_addr, hb.rent_way, hb.is_pic,hb.house_sn,hb.last_modify_date, hp.zo_job_num,
+      hp.zo_name, hp.zo_mobile, hp.nation_code, hp.province_code, hp.city_code
+      FROM t_house_phy_msg hp,t_house_base_msg hb,t_house_pic_msg hpm
+      where hp.fid = hb.phy_fid
+      AND hb.fid = hpm.house_base_fid
+      AND hb.house_status = 40
+      AND hpm.audit_status = 0
+      AND hb.rent_way = 0
+      AND hp.is_del = 0
+      AND hb.is_del = 0
+      AND hpm.is_del = 0
+
+      UNION
+
+      SELECT hb.fid, hb.house_name, hb.house_status, hb.landlord_uid, hb.cameraman_name,
+      hb.cameraman_mobile, hb.house_addr, hb.rent_way, hb.is_pic,hb.house_sn,hb.last_modify_date, hp.zo_job_num,
+      hp.zo_name, hp.zo_mobile, hp.nation_code, hp.province_code, hp.city_code
+      FROM t_house_base_msg hb
+      LEFT JOIN t_house_phy_msg hp
+      ON  hp.fid = hb.phy_fid
+      LEFT JOIN (SELECT DISTINCT house_fid FROM `t_house_update_field_audit_newlog` thufan
+      WHERE thufan.`field_audit_statu` = 0) thf
+      ON hb.`fid` = thf.`house_fid`
+      WHERE hb.rent_way = 0
+      AND hp.is_del = 0
+      AND hb.is_del = 0
+      AND hb.house_status = 40
+      AND thf.house_fid IS NOT NULL
+    ) tt
+    <where>
+      <if test="landlordUidList != null and landlordUidList.size > 0">
+        AND tt.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">
+          #{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+      </if>
+      <if test="houseSn != null and houseSn !=''">
+        AND tt.house_sn  = #{houseSn,jdbcType=VARCHAR}
+      </if>
+      <if test="cameramanName != null and cameramanName !=''">
+        AND tt.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND tt.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="houseName != null and houseName !=''">
+        AND tt.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="nationCode != null and nationCode !=''">
+        AND tt.nation_code = #{nationCode,jdbcType=VARCHAR}
+      </if>
+      <if test="provinceCode != null and provinceCode !=''">
+        AND tt.province_code = #{provinceCode,jdbcType=VARCHAR}
+      </if>
+      <if test="cityCode != null and cityCode !=''">
+        AND tt.city_code = #{cityCode,jdbcType=VARCHAR}
+      </if>
+      <!-- 创建时间 -->
+      <if test="houseCreateTimeStart != null and houseCreateTimeStart != ''">
+        AND tt.last_modify_date &gt;=#{houseCreateTimeStart,jdbcType=VARCHAR}
+      </if>
+      <if test="houseCreateTimeEnd != null and houseCreateTimeEnd != ''">
+        AND tt.last_modify_date &lt;=#{houseCreateTimeEnd,jdbcType=VARCHAR}
+      </if>
+    </where>
+    ORDER BY tt.last_modify_date desc
+  </select>
+
+  <!--使用 union 增加上架房源中房东修改需要审核字段的分租房源信息. @Author:lusp  @Date:2017/8/11-->
+  <!-- 特洛伊后台查询存在照片审核未通过上架房间列表和存在需要审核部分信息的上架房间 -->
+  <select id="findPicUnapproveedRoomList" parameterType="com.ziroom.minsu.services.house.dto.HouseRequestDto"  resultType="com.ziroom.minsu.services.house.entity.HouseResultVo">
+  SELECT
+    tem.fid AS fid,
+    tem.room_name AS houseName,
+    tem.room_type AS roomType,
+    tem.room_status AS houseStatus,
+    tem.landlord_uid AS landlordUid,
+    tem.cameraman_name AS cameramanName,
+    tem.cameraman_mobile AS cameramanMobile,
+    tem.house_addr AS houseAddr,
+    tem.rent_way AS rentWay,
+    tem.room_sn AS roomSn,
+    tem.last_modify_date AS lastModifyDate,
+    tem.is_pic AS isPic,
+    tem.zo_job_num AS zoJobNum,
+    tem.zo_name AS zoName,
+    tem.zo_mobile AS zoMobile
+  FROM
+  (
+    SELECT 
+      hr.fid,
+      hr.room_name,
+      hr.room_type,
+      hr.room_status,
+      hb.landlord_uid,
+      hb.cameraman_name,
+      hb.cameraman_mobile,
+      hb.house_addr,
+      hb.rent_way,
+      hr.room_sn,
+      hr.last_modify_date,
+      hr.is_pic,
+      hp.zo_job_num,
+      hp.zo_name,
+      hp.zo_mobile, hp.nation_code, hp.province_code, hp.city_code
+    FROM
+      t_house_phy_msg hp,
+      t_house_base_msg hb,
+      t_house_room_msg hr,
+      t_house_pic_msg hpm
+    WHERE hp.fid = hb.phy_fid
+      AND hb.fid = hr.house_base_fid
+      AND hr.fid = hpm.room_fid
+      AND hr.room_status = 40
+      AND hpm.audit_status = 0
+      AND hb.rent_way = 1
+      AND hp.is_del = 0
+      AND hb.is_del = 0
+      AND hr.is_del = 0
+      AND hpm.is_del = 0
+
+    UNION
+
+    SELECT
+      hr.fid,
+      hr.room_name,
+      hr.room_type,
+      hr.room_status,
+      hb.landlord_uid,
+      hb.cameraman_name,
+      hb.cameraman_mobile,
+      hb.house_addr,
+      hb.rent_way,
+      hr.room_sn,
+      hr.last_modify_date,
+      hr.is_pic,
+      hp.zo_job_num,
+      hp.zo_name,
+      hp.zo_mobile, hp.nation_code, hp.province_code, hp.city_code
+    FROM
+      t_house_phy_msg hp,
+      t_house_base_msg hb,
+      t_house_room_msg hr,
+      t_house_pic_msg hpm
+    WHERE hp.fid = hb.phy_fid
+      AND hb.fid = hr.house_base_fid
+      AND hpm.house_base_fid = hr.house_base_fid
+      AND hpm.pic_type != 0
+      AND hr.room_status = 40
+      AND hpm.audit_status = 0
+      AND hb.rent_way = 1
+      AND hp.is_del = 0
+      AND hb.is_del = 0
+      AND hr.is_del = 0
+      AND hpm.is_del = 0
+      AND (
+        hpm.room_fid IS NULL
+        OR hpm.room_fid = ''
+      )
+
+      UNION
+
+    SELECT
+      hr.fid,
+      hr.room_name,
+      hr.room_type,
+      hr.room_status,
+      hb.landlord_uid,
+      hb.cameraman_name,
+      hb.cameraman_mobile,
+      hb.house_addr,
+      hb.rent_way,
+      hr.room_sn,
+      hr.last_modify_date,
+      hr.is_pic,
+      hp.zo_job_num,
+      hp.zo_name,
+      hp.zo_mobile, hp.nation_code, hp.province_code, hp.city_code
+    FROM  t_house_room_msg hr
+    LEFT JOIN  t_house_base_msg hb
+    ON hb.fid = hr.house_base_fid
+    LEFT JOIN  t_house_phy_msg hp
+    ON hp.fid = hb.phy_fid
+    LEFT JOIN (
+      SELECT DISTINCT house_fid FROM `t_house_update_field_audit_newlog` thufan
+      WHERE thufan.`field_audit_statu` = 0 AND thufan.`rent_way` = 1 AND (thufan.room_fid ='' OR thufan.`room_fid` IS NULL) ) thua
+    ON hb.`fid` = thua.house_fid
+    WHERE hr.room_status = 40
+      AND hb.rent_way = 1
+      AND hp.is_del = 0
+      AND hb.is_del = 0
+      AND hr.is_del = 0
+      AND thua.house_fid IS NOT NULL
+
+  UNION
+
+    SELECT
+      hr.fid,
+      hr.room_name,
+      hr.room_type,
+      hr.room_status,
+      hb.landlord_uid,
+      hb.cameraman_name,
+      hb.cameraman_mobile,
+      hb.house_addr,
+      hb.rent_way,
+      hr.room_sn,
+      hr.last_modify_date,
+      hr.is_pic,
+      hp.zo_job_num,
+      hp.zo_name,
+      hp.zo_mobile, hp.nation_code, hp.province_code, hp.city_code
+    FROM  t_house_room_msg hr
+    LEFT JOIN  t_house_base_msg hb
+    ON hb.fid = hr.house_base_fid
+    LEFT JOIN  t_house_phy_msg hp
+    ON hp.fid = hb.phy_fid
+    LEFT JOIN (
+      SELECT DISTINCT room_fid FROM t_house_update_field_audit_newlog tua
+      WHERE tua.`field_audit_statu` = 0 AND tua.`rent_way` = 1 AND (tua.room_fid !='' OR tua.`room_fid` IS NOT NULL) ) tuah
+    ON hr.`fid` = tuah.room_fid
+    WHERE hr.room_status = 40
+      AND hb.rent_way = 1
+      AND hp.is_del = 0
+      AND hb.is_del = 0
+      AND hr.is_del = 0
+      AND tuah.room_fid IS NOT NULL
+
+    ) AS tem
+  <where>
+    <if test="landlordUidList != null and landlordUidList.size > 0">
+      AND tem.landlord_uid in
+      <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">
+        #{landlordUid,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <if test="cameramanName != null and cameramanName !=''">
+      AND tem.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+      AND tem.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="roomSn != null and roomSn !=''">
+      AND tem.room_sn = #{roomSn,jdbcType=VARCHAR}
+    </if>
+    <if test="houseName != null and houseName !=''">
+      AND tem.room_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="roomType != null">
+      AND tem.room_type = #{roomType,jdbcType=VARCHAR}
+    </if>
+    <if test="nationCode != null and nationCode !=''">
+      AND tem.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+      AND tem.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+    <if test="cityCode != null and cityCode !=''">
+      AND tem.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <!-- 创建时间 -->
+    <if test="roomCreateTimeStart != null and roomCreateTimeStart != ''">
+      AND tem.last_modify_date &gt;=#{roomCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="roomCreateTimeEnd != null and roomCreateTimeEnd != ''">
+      AND tem.last_modify_date &lt;=#{roomCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+  </where>
+  ORDER BY tem.last_modify_date DESC
+  </select>
+  
+  <!-- 房东房源包含小区列表map -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.SearchTerm" id="cyListMap">
+  	  <result column="community_name" jdbcType="VARCHAR" property="termName" />
+  	  <result column="fid" jdbcType="VARCHAR" property="termValue" />
+  </resultMap>
+  
+  <!-- 房东房源包含小区列表 -->
+  <select id="getCommunityListByLandlordUid"  parameterType="string"  resultMap="cyListMap">
+  	SELECT DISTINCT hp.fid,hp.community_name FROM t_house_base_msg hb
+	LEFT JOIN t_house_phy_msg hp
+	ON hb.phy_fid=hp.fid
+	WHERE hb.landlord_uid=#{landlordUid,jdbcType=VARCHAR}
+	AND hb.is_del=0
+  </select>
+  
+  <!-- 客户端房源详情map -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.TenantHouseDetailVo" id="tenantHouseDetailMap">
+    <result column="fid" jdbcType="VARCHAR" property="fid" />
+  	<result column="rent_way" jdbcType="INTEGER" property="rentWay" />
+    <result column="house_status" jdbcType="INTEGER" property="houseStatus" />
+  	<result column="lease_price" jdbcType="INTEGER" property="housePrice" />
+    <result column="house_name" jdbcType="VARCHAR" property="houseName" />
+    <result column="landlord_uid" jdbcType="VARCHAR" property="landlordUid" />
+    <result column="house_around_desc" jdbcType="VARCHAR" property="houseAroundDesc" />
+   	<result column="room_num" jdbcType="INTEGER" property="roomNum" />
+   	<result column="toilet_num" jdbcType="INTEGER" property="toiletNum" />
+   	<result column="kitchen_num" jdbcType="INTEGER" property="kitchenNum" />
+    <result column="check_in_limit" jdbcType="INTEGER" property="checkInLimit" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="google_latitude" jdbcType="DECIMAL" property="googleLatitude" />
+    <result column="google_longitude" jdbcType="DECIMAL" property="googleLongitude" />
+    <result column="is_together_landlord" jdbcType="INTEGER" property="isTogetherLandlord" />
+    <result column="house_desc" jdbcType="VARCHAR" property="houseDesc" />
+    <result column="check_in_time" jdbcType="VARCHAR" property="checkInTime" />
+    <result column="check_out_time" jdbcType="VARCHAR" property="checkOutTime" />
+    <result column="check_out_rules_code" jdbcType="VARCHAR" property="checkOutRulesCode" />
+    <result column="deposit_rules_code" jdbcType="VARCHAR" property="depositRulesCode" />
+    <result column="sheets_replace_rules" jdbcType="INTEGER" property="sheetsReplaceRulesValue" />
+    <result column="min_day" jdbcType="INTEGER" property="minDay" />
+    <result column="order_type" jdbcType="INTEGER" property="orderType" />
+    <result column="community_name" jdbcType="VARCHAR" property="communityName" />
+    <result column="house_addr" jdbcType="VARCHAR" property="houseAddr" />
+    <result column="house_area" jdbcType="DECIMAL" property="houseArea" />
+    <result column="is_lock" jdbcType="INTEGER" property="isLock" />
+    <result column="house_rules" jdbcType="VARCHAR" property="houseRules" />
+    <result column="house_cleaning_fees" property="cleaningFees" jdbcType="INTEGER" />
+    <result column="till_date" jdbcType="TIMESTAMP" property="tillDate" />
+  </resultMap>
+  
+  <!-- 客户端查询房源详情 -->
+  <select id="getHouseDetail" parameterType="com.ziroom.minsu.services.house.dto.HouseDetailDto"  resultMap="tenantHouseDetailMap">
+  	SELECT hb.fid,hb.house_name,hb.rent_way,hb.house_status ,hb.lease_price,hb.landlord_uid,hd.house_around_desc,hb.room_num,hb.toilet_num,hb.kitchen_num ,hbe.check_in_limit,
+  	hp.latitude,hp.longitude, hp.google_latitude, hp.google_longitude ,hbe.is_together_landlord,hd.house_desc,hbe.min_day,hbe.check_in_time,hbe.check_out_time,hbe.check_out_rules_code,hbe.deposit_rules_code,hbe.sheets_replace_rules,
+  	hbe.order_type,hp.community_name,hb.house_addr,hb.house_area,hb.is_lock,hd.house_rules,hb.house_cleaning_fees,hb.till_date
+  	FROM t_house_base_msg hb
+  	LEFT JOIN t_house_desc hd ON hb.fid=hd.house_base_fid AND (hd.`is_del` = 0 OR hd.`is_del` = '' OR hd.`is_del` IS NULL)
+  	LEFT JOIN t_house_base_ext hbe ON hbe.house_base_fid=hb.fid
+  	LEFT JOIN t_house_phy_msg hp ON hb.phy_fid=hp.fid AND ( hp.`is_del` = 0 OR hp.`is_del` = '' OR hp.`is_del`  IS NULL)
+	WHERE hb.fid=#{fid,jdbcType=VARCHAR}
+	AND hb.rent_way=#{rentWay,jdbcType=INTEGER}
+	AND hb.`is_del` = 0
+  </select>
+  
+  <!-- 更新房源是否有图片 -->
+  <update id="updateHousePic"  parameterType="map" >
+	UPDATE t_house_base_msg SET is_pic=1 WHERE fid=#{fid,jdbcType=VARCHAR}
+	AND is_pic=0
+  </update>
+  
+  <!-- 录入房源房源详情map -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.HouseBaseDetailVo" id="houseBaseDetailMap"  extends="BaseResultMap">
+      <result column="check_in_limit" jdbcType="INTEGER" property="checkInLimit" />
+      <result column="house_desc" jdbcType="VARCHAR" property="houseDesc" />
+      <result column="house_around_desc" jdbcType="VARCHAR" property="houseAroundDesc" />
+      <result column="is_together_landlord" jdbcType="INTEGER" property="isTogetherLandlord" />
+  </resultMap>
+  
+  <!-- 查询录入房源房源详情 -->
+  <select id="getHouseBaseDetail"  parameterType="string" resultMap="houseBaseDetailMap">
+  	SELECT <include refid="Base_Column_List" />,hbe.check_in_limit,hd.house_desc,hd.house_around_desc,hbe.is_together_landlord FROM t_house_base_msg hb
+	LEFT JOIN t_house_base_ext hbe ON hb.fid=hbe.house_base_fid
+	LEFT JOIN t_house_desc hd ON hb.fid=hd.house_base_fid
+	WHERE hb.fid=#{fid,jdbcType=VARCHAR}
+	LIMIT 1
+  </select>
+  
+  <!-- M站-我的房源列表 -->
+  <resultMap id="landlordHouseList" type="com.ziroom.minsu.services.house.entity.HouseRoomVo">
+  	<result column="fid" jdbcType="VARCHAR" property="houseBaseFid" />
+  	<result column="house_sn" jdbcType="VARCHAR" property="houseSn" />
+  	<result column="rent_way" jdbcType="INTEGER" property="rentWay" />
+  	<result column="house_status" jdbcType="INTEGER" property="houseStatus" />
+  	<result column="house_name" jdbcType="VARCHAR" property="houseName" />
+  	<result column="intact_rate" jdbcType="DECIMAL" property="intactRate" />
+  	<result column="house_addr" jdbcType="VARCHAR" property="houseAddr" />
+  	<result column="emp_guard_code" jdbcType="VARCHAR" property="zoCode" />
+  	<result column="emp_guard_name" jdbcType="VARCHAR" property="zoName" />
+  	<result column="operate_seq" jdbcType="INTEGER" property="operateSeq" />
+  	<result column="order_type" jdbcType="INTEGER" property="orderType" />
+  </resultMap>
+  
+  <!-- M站房东房源列表 -->
+  <select id="getLandlordHouseList" parameterType="string" resultMap="landlordHouseList">
+  	SELECT
+	  hb.fid,
+	  hb.house_sn,
+	  hb.rent_way,
+	  hb.house_status,
+	  hb.house_name,
+	  hb.intact_rate,
+	  hb.house_addr,
+	  hgr.emp_guard_code,
+	  hgr.emp_guard_name,
+	  hb.operate_seq,
+	  ext.order_type
+	FROM t_house_base_msg hb
+	LEFT JOIN t_house_guard_rel hgr
+	ON hb.fid = hgr.house_fid
+	LEFT JOIN t_house_base_ext ext
+	ON hb.fid = ext.house_base_fid
+	WHERE hb.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+	AND hb.is_del = 0
+	<if test="houseBaseFid!=null and houseBaseFid!=''">
+	AND hb.fid=#{houseBaseFid,jdbcType=VARCHAR}
+	</if>
+	AND (hgr.is_del = 0 OR hgr.is_del is null)
+	ORDER BY hb.create_date desc
+  </select>
+  
+   <!-- PC房源查询列表映射 -->
+   <resultMap id="housePCResultMapList" type="com.ziroom.minsu.services.house.entity.HouseRoomVo">
+  	<result column="fid" jdbcType="VARCHAR" property="houseBaseFid" />
+  	<result column="house_sn" jdbcType="VARCHAR" property="houseSn" />
+  	<result column="rent_way" jdbcType="INTEGER" property="rentWay" />
+  	<result column="house_status" jdbcType="INTEGER" property="status" />
+  	<result column="house_status" jdbcType="INTEGER" property="houseStatus" />
+  	<result column="house_name" jdbcType="VARCHAR" property="houseName" />
+  	<result column="house_name" jdbcType="VARCHAR" property="name" />
+  	<result column="intact_rate" jdbcType="DECIMAL" property="intactRate" />
+  	<result column="house_addr" jdbcType="VARCHAR" property="houseAddr" />
+  	<result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate"/>
+  </resultMap>
+  <!--PC 获取房源列表 -->
+  <select id="getHousePCList" parameterType="com.ziroom.minsu.services.house.dto.HouseBaseListDto" resultMap="housePCResultMapList">
+  	SELECT
+	  h.fid,
+	  h.house_sn,
+	  h.rent_way,
+	  h.house_status,
+	  h.house_name,
+	  h.intact_rate,
+	  h.house_addr,
+	  h.last_modify_date
+	FROM t_house_base_msg h
+	WHERE h.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+	<if test="houseStatus != null">
+	AND h.house_status = #{houseStatus,jdbcType=INTEGER}
+	</if>
+	<if test="rentWay != null">
+	AND h.rent_way = #{rentWay,jdbcType=INTEGER}
+	</if>
+	AND	h.is_del = 0
+	ORDER BY h.last_modify_date DESC
+  </select>
+  
+   <!--PC 日历获取房源列表 -->
+  <select id="getCalendarHousePCList" parameterType="com.ziroom.minsu.services.house.dto.HouseBaseListDto" resultMap="housePCResultMapList">
+  	SELECT
+	  h.fid,
+	  h.house_sn,
+	  h.rent_way,
+	  h.house_status,
+	  h.house_name,
+	  h.intact_rate,
+	  h.house_addr,
+	  h.last_modify_date
+	FROM t_house_base_msg h
+	WHERE h.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+	<if test="houseStatus != null">
+	AND h.house_status != #{houseStatus,jdbcType=INTEGER}
+	</if>
+	<if test="rentWay != null">
+	AND h.rent_way = #{rentWay,jdbcType=INTEGER}
+	</if>
+	AND	h.is_del = 0
+	ORDER BY h.last_modify_date DESC
+  </select>
+
+
+  <!-- 根据房东UID查询房源数量 -->
+  <select id="countHouseNum" parameterType="string" resultType="long">
+  	SELECT COUNT(id) from t_house_base_msg WHERE
+  	landlord_uid=#{landlordUid,jdbcType=VARCHAR}
+  	AND rent_way=0
+  	AND is_del = 0
+  </select>
+
+  <!-- 根据房东UID查询房间数量 -->
+  <select id="countRoomNum" parameterType="string" resultType="long">
+  	SELECT COUNT( tr.id) FROM  t_house_base_msg th LEFT JOIN t_house_room_msg tr
+    ON tr.house_base_fid = th.fid
+    WHERE th.landlord_uid=#{landlordUid,jdbcType=VARCHAR}
+    AND th.rent_way=1
+    AND th.is_del = 0
+    AND tr.is_del = 0
+    AND tr.room_type=0
+  </select>
+  
+    <!-- 根据房源houseSn查询返回记录数-->
+  <select id="countByHouseSn" parameterType="map" resultType="long">
+  	SELECT COUNT(hou.`id`) FROM `t_house_base_msg` hou WHERE  hou.`house_sn`  = #{houseSn,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询房源数量 -->
+  <select id="findHouseCountByUid" parameterType="string" resultType="int">
+  	SELECT COUNT(id) FROM t_house_base_msg WHERE landlord_uid=#{landlordUid,jdbcType=VARCHAR}
+  </select>
+  
+  <!--  楼盘物理地址fid查询房源数量-->
+  <select id="findHouseCountByPhyFid"  parameterType="string" resultType="int">
+  	SELECT COUNT(id) FROM t_house_base_msg WHERE phy_fid=#{phyFid,jdbcType=VARCHAR} AND is_del=0
+  	AND fid!=#{houseBaseFid,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 房源房间map -->
+  <resultMap type="com.ziroom.minsu.services.house.dto.HouseRoomListPcDto" id="pcRoomListResult" extends="BaseResultMap">
+  	<collection property="roomList"  column="fid" javaType="ArrayList" select="house.houseRoomMsgDao.findRoomListByHouseBaseFid"></collection>
+  </resultMap>
+
+  <!-- 查询房源房间信息 -->
+  <select id="findHouseRoomList" parameterType="string" resultMap="pcRoomListResult">
+    select
+    <include refid="Base_Column_List" />
+    from t_house_base_msg hb
+    where fid = #{fid,jdbcType=VARCHAR}
+    AND is_del=0
+  </select>
+
+
+  <!--查询房源信息和所在城市信息  -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.HouseCityVo" id="houseCityMap" extends="BaseResultMap">
+      <result column="nation_code" jdbcType="VARCHAR" property="nationCode" />
+      <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+      <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+      <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+  </resultMap>
+
+  <!--查询房源信息和所在城市信息 -->
+  <select id="getHouseCityVoByFids" parameterType="map" resultMap="houseCityMap">
+    SELECT <include refid="Base_Column_List"/>,hp.nation_code,hp.province_code,hp.city_code,hp.area_code FROM t_house_base_msg hb
+    LEFT JOIN t_house_phy_msg hp
+    ON hb.phy_fid=hp.fid
+    WHERE hb.is_del=0
+    AND hb.fid in
+    <foreach collection="houseFidList"  item="houseBaseFid" index="index" open="(" separator="," close=")">
+        #{houseBaseFid,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+
+  <!--特殊权限查询后台房源列表 -->
+  <select id="findSpecialHouseMsgListByHouse" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.HouseResultVo">
+  	SELECT hb.fid fid, hb.house_name houseName, hb.house_status houseStatus, hb.landlord_uid landlordUid, hb.cameraman_name cameramanName, hb.house_type houseType,
+  	hb.house_weight weight, hb.cameraman_mobile cameramanMobile, hb.house_addr houseAddr, hb.rent_way rentWay, hb.is_pic isPic, hb.house_sn houseSn,
+  	hb.create_date createDate, hp.zo_job_num zoJobNum, hp.zo_name zoName, hp.zo_mobile zoMobile, hgr.emp_push_code empPushCode, hgr.emp_push_name empPushName, 
+  	hgr.emp_guard_code empGuardCode, hgr.emp_guard_name empGuardName, hb.house_channel houseChannel, ext.house_quality_grade houseQualityGrade,
+	hbm.`last_up_date` onlineDate, hbm.`refuse_reason` auditCause,hbm.last_deploy_date lastDeployDate
+  	FROM t_house_phy_msg hp 
+  	INNER JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid
+    LEFT JOIN t_house_base_ext ext ON hb.fid = ext.house_base_fid
+  	LEFT JOIN t_house_guard_rel hgr on hb.fid = hgr.house_fid
+    LEFT JOIN t_house_biz_msg hbm on hb.fid = hbm.house_base_fid
+	<where> 
+    AND hb.rent_way = 0
+	AND hp.is_del = 0
+	AND hb.is_del = 0
+	<if test="houseName != null and houseName !=''">
+		AND hb.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseStatusList != null and houseStatusList.size > 0">
+        AND hb.house_status in
+        <foreach collection="houseStatusList"  item="house_status" index="index" open="(" separator="," close=")">
+            #{house_status,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+	<if test="houseStatus != null">
+		AND hb.house_status = #{houseStatus,jdbcType=INTEGER}
+    </if>
+	<if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="isPic != null">
+		AND hb.is_pic = #{isPic,jdbcType=INTEGER}
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+	<if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+	<if test="zoName != null and zoName !=''">
+		AND hp.zo_name like CONCAT(#{zoName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="houseType != null">
+		AND hb.house_type = #{houseType,jdbcType=INTEGER}
+    </if>
+	<if test="isWeight != null and isWeight == 0">
+		AND hb.house_weight = 0
+    </if>
+	<if test="isWeight != null and isWeight == 1">
+		AND hb.house_weight != 0
+    </if>
+    <!-- 创建时间 start -->
+    <if test="houseCreateTimeStart != null and houseCreateTimeStart != ''">
+        AND hb.create_date &gt;=#{houseCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="houseCreateTimeEnd != null and houseCreateTimeEnd != ''">
+        AND hb.create_date &lt;=#{houseCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 创建时间 end -->
+	<if test="houseSn != null and houseSn !=''">
+		AND hb.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+    </if>
+    <!-- 上架时间 start -->
+    <if test="houseOnlineTimeStart != null and houseOnlineTimeStart != ''">
+        AND hbm.`last_up_date` &gt;=#{houseOnlineTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="houseOnlineTimeEnd != null and houseOnlineTimeEnd != ''">
+        AND hbm.`last_up_date` &lt;=#{houseOnlineTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 上架时间 end -->
+	<if test="empPushName != null and empPushName !=''">
+		AND hgr.emp_push_name like CONCAT(#{empPushName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="empGuardName != null and empGuardName !=''">
+		AND hgr.emp_guard_name like CONCAT(#{empGuardName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="auditCause != null and auditCause != ''">
+		AND FIND_IN_SET(#{auditCause,jdbcType=VARCHAR},hbm.`refuse_reason`) > 0
+    </if>
+    <if test="houseChannel != null">
+		AND hb.house_channel = #{houseChannel,jdbcType=INTEGER}
+    </if>
+    <if test="houseQualityGrade != null and houseQualityGrade !=''">
+      AND ext.house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR}
+    </if>
+    <if test="issueLastTimeStart != null and issueLastTimeStart != ''">
+      AND hbm.last_deploy_date &gt;=#{issueLastTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="issueLastTimeEnd != null and issueLastTimeEnd != ''">
+      AND hbm.last_deploy_date &lt;=#{issueLastTimeEnd,jdbcType=VARCHAR}
+    </if>
+
+    <!-- 特殊权限判断 1:数据区域-->
+    <if test="roleType==1">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR} OR
+    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	</foreach>
+    	)
+    </if>
+    <if test="roleType==2">
+	    <if test="userCityList.size() > 0">
+	    	AND (
+	    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+		    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+		    	<if test="city.provinceCode!=null">
+		    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+		    	</if>
+		    	<if test="city.cityCode!=null">
+		    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+		    	</if>
+		    	<if test="city.areaCode!=null">
+		    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+		    	</if>
+		    	)
+	    	</foreach>
+	    	)
+	    </if>	
+    </if>
+    <if test="roleType==3">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR})
+    </if>
+	</where>
+	ORDER BY hb.create_date desc,hb.house_weight
+  </select>
+  
+    <!--特殊权限查询后台房源列表  区分houseFid和roomFid -->
+  <select id="findSpecialHouseMsgListByHouseNew" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.HouseResultNewVo">
+  	SELECT distinct hb.fid houseFid, hb.house_name houseName, hb.house_status houseStatus, hb.landlord_uid landlordUid, hb.cameraman_name cameramanName, hb.house_type houseType,
+  	hb.house_weight weight, hb.cameraman_mobile cameramanMobile, hb.house_addr houseAddr, hb.rent_way rentWay, hb.is_pic isPic, hb.house_sn houseSn, 
+  	hb.create_date createDate, hp.zo_job_num zoJobNum, hp.zo_name zoName, hp.zo_mobile zoMobile, hgr.emp_push_code empPushCode, hgr.emp_push_name empPushName, 
+  	hgr.emp_guard_code empGuardCode, hgr.emp_guard_name empGuardName, hb.house_channel houseChannel, ext.house_quality_grade houseQualityGrade, ext.survey_result surveyResult, hbm.`last_up_date` onlineDate, hbm.`refuse_reason` auditCause,hbm.last_deploy_date lastDeployDate, ext.order_type orderType
+	
+	FROM t_house_phy_msg hp 
+  	INNER JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid
+    LEFT JOIN t_house_base_ext ext ON hb.fid = ext.house_base_fid
+  	LEFT JOIN t_house_guard_rel hgr on hb.fid = hgr.house_fid
+    LEFT JOIN t_house_biz_msg hbm on hb.fid = hbm.house_base_fid
+	<where> 
+    AND hb.rent_way = 0
+	AND hp.is_del = 0
+	AND hb.is_del = 0
+	<if test="houseName != null and houseName !=''">
+		AND hb.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseStatusList != null and houseStatusList.size > 0">
+        AND hb.house_status in
+        <foreach collection="houseStatusList"  item="house_status" index="index" open="(" separator="," close=")">
+            #{house_status,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+	<if test="houseStatus != null">
+		AND hb.house_status = #{houseStatus,jdbcType=INTEGER}
+    </if>
+	<if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="isPic != null">
+		AND hb.is_pic = #{isPic,jdbcType=INTEGER}
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+	<if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+	<if test="zoName != null and zoName !=''">
+		AND hp.zo_name like CONCAT(#{zoName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="houseType != null">
+		AND hb.house_type = #{houseType,jdbcType=INTEGER}
+    </if>
+	<if test="isWeight != null and isWeight == 0">
+		AND hb.house_weight = 0
+    </if>
+	<if test="isWeight != null and isWeight == 1">
+		AND hb.house_weight != 0
+    </if>
+    <!-- 创建时间 start -->
+    <if test="houseCreateTimeStart != null and houseCreateTimeStart != ''">
+        AND hb.create_date &gt;=#{houseCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="houseCreateTimeEnd != null and houseCreateTimeEnd != ''">
+        AND hb.create_date &lt;=#{houseCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 创建时间 end -->
+	<if test="houseSn != null and houseSn !=''">
+		AND hb.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+    </if>
+    <!-- 上架时间 start -->
+    <if test="houseOnlineTimeStart != null and houseOnlineTimeStart != ''">
+        AND hbm.`last_up_date` &gt;=#{houseOnlineTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="houseOnlineTimeEnd != null and houseOnlineTimeEnd != ''">
+        AND hbm.`last_up_date` &lt;=#{houseOnlineTimeEnd,jdbcType=VARCHAR}
+    <!-- 上架时间 end -->
+    </if>
+	<if test="empPushName != null and empPushName !=''">
+		AND hgr.emp_push_name like CONCAT(#{empPushName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="empGuardName != null and empGuardName !=''">
+		AND hgr.emp_guard_name like CONCAT(#{empGuardName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="auditCause != null and auditCause != ''">
+		AND FIND_IN_SET(#{auditCause,jdbcType=VARCHAR},hbm.`refuse_reason`) > 0
+    </if>
+    <if test="houseChannel != null">
+		AND hb.house_channel = #{houseChannel,jdbcType=INTEGER}
+    </if>
+      <if test="houseQualityGrade != null and houseQualityGrade !=''">
+      AND ext.house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR}
+    </if>
+    <if test="surveyResult != null">
+      AND ext.survey_result = #{surveyResult,jdbcType=INTEGER}
+    </if>
+    <if test="issueLastTimeStart != null and issueLastTimeStart != ''">
+      AND hbm.last_deploy_date &gt;=#{issueLastTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="issueLastTimeEnd != null and issueLastTimeEnd != ''">
+      AND hbm.last_deploy_date &lt;=#{issueLastTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <if test="orderType != null">
+      AND ext.order_type = #{orderType,jdbcType=INTEGER}
+    </if>
+    <!-- 特殊权限判断 1:数据区域-->
+    <if test="roleType==1">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR} OR
+    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	</foreach>
+    	)
+    </if>
+    <if test="roleType==2">
+    <if test="userCityList.size() > 0">
+    	AND (
+    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	</foreach>
+    	)
+    </if>	
+    </if>
+    <if test="roleType==3">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR})
+    </if>
+	</where>
+	ORDER BY hb.create_date desc,hb.house_weight
+  </select>
+  
+  
+   <!-- 特殊权限查询房间信息列表 -->
+  <select id="findSpecialHouseMsgListByRoom" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.HouseResultVo">
+  	SELECT hr.fid fid, hr.room_name houseName, hr.room_type roomType, hr.room_status houseStatus, hr.room_weight weight, hr.room_sn roomSn, hr.create_date createDate, hb.landlord_uid landlordUid, 
+	hb.cameraman_name cameramanName, hb.house_type houseType, hb.cameraman_mobile cameramanMobile, hb.house_addr houseAddr, hb.rent_way rentWay, hb.is_pic isPic, hb.house_sn houseSn, 
+	hp.zo_job_num zoJobNum, hp.zo_name zoName, hp.zo_mobile zoMobile, hgr.emp_push_code empPushCode, hgr.emp_push_name empPushName, hgr.emp_guard_code empGuardCode, 
+	hgr.emp_guard_name empGuardName, hb.house_channel houseChannel, ext.house_quality_grade houseQualityGrade,
+	hbm.`last_up_date` onlineDate, hbm.`refuse_reason` auditCause,hbm.last_deploy_date lastDeployDate
+  	FROM t_house_phy_msg hp
+  	INNER JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid
+  	INNER JOIN t_house_room_msg hr ON hb.fid = hr.house_base_fid
+    LEFT JOIN t_house_base_ext ext ON hb.fid = ext.house_base_fid
+	LEFT JOIN t_house_guard_rel hgr on hb.fid = hgr.house_fid
+    LEFT JOIN t_house_biz_msg hbm on hr.fid = hbm.room_fid
+	<where> 
+	AND hb.rent_way = 1
+	AND hp.is_del = 0
+	AND hb.is_del = 0
+	AND hr.is_del = 0
+	<if test="houseName != null and houseName !=''">
+		AND hr.room_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="roomType != null">
+		AND hr.room_type = #{roomType,jdbcType=INTEGER}
+    </if>
+	<if test="houseStatusList != null and houseStatusList.size > 0">
+		AND hr.room_status in
+        <foreach collection="houseStatusList" item="room_status" open="(" separator="," close=")">  
+			#{room_status,jdbcType=INTEGER}
+        </foreach>
+    </if>
+	<if test="houseStatus != null">
+		AND hr.room_status = #{houseStatus,jdbcType=INTEGER}
+    </if>
+	<if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+	<if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="isPic != null">
+		AND hb.is_pic = #{isPic,jdbcType=INTEGER}
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="zoName != null and zoName !=''">
+		AND hp.zo_name like CONCAT(#{zoName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseType != null ">
+		AND hb.house_type = #{houseType,jdbcType=INTEGER}
+    </if>
+	<if test="isWeight != null and isWeight == 0">
+		AND hr.room_weight = 0
+    </if>
+	<if test="isWeight != null and isWeight == 1">
+		AND hr.room_weight != 0
+    </if>
+    <!-- 创建时间 start -->
+    <if test="roomCreateTimeStart != null and roomCreateTimeStart != ''">
+        AND hr.create_date &gt;=#{roomCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="roomCreateTimeEnd != null and roomCreateTimeEnd != ''">
+        AND hr.create_date &lt;=#{roomCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 创建时间 end -->
+    <if test="roomSn != null and roomSn !=''">
+		AND hr.room_sn like CONCAT(#{roomSn,jdbcType=VARCHAR},'%') 
+    </if>
+    <!-- 上架时间 start -->
+    <if test="roomOnlineTimeStart != null and roomOnlineTimeStart != ''">
+        AND hbm.`last_up_date` &gt;=#{roomOnlineTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="roomOnlineTimeEnd != null and roomOnlineTimeEnd != ''">
+        AND hbm.`last_up_date` &lt;=#{roomOnlineTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 上架时间 end -->
+    <if test="empPushName != null and empPushName !=''">
+		AND hgr.emp_push_name like CONCAT(#{empPushName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="empGuardName != null and empGuardName !=''">
+		AND hgr.emp_guard_name like CONCAT(#{empGuardName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseChannel != null">
+		AND hb.house_channel = #{houseChannel,jdbcType=INTEGER}
+	</if>
+      <if test="houseQualityGrade != null and houseQualityGrade !=''">
+      AND ext.house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR}
+    </if>
+    <if test="auditCause != null and auditCause != ''">
+		AND FIND_IN_SET(#{auditCause,jdbcType=VARCHAR},hbm.`refuse_reason`) > 0
+    </if>
+    <if test="issueLastTimeStart != null and issueLastTimeStart != ''">
+      AND hbm.last_deploy_date &gt;=#{issueLastTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="issueLastTimeEnd != null and issueLastTimeEnd != ''">
+      AND hbm.last_deploy_date &lt;=#{issueLastTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 特殊权限判断 1:数据区域，2：区域，3：数据-->
+    <if test="roleType==1">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR} OR
+    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	</foreach>
+    	)
+    </if>
+    <if test="roleType==2">
+    <if test="userCityList.size() > 0">
+    	AND (
+    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	</foreach>
+    	)
+    </if>	
+    </if>
+    <if test="roleType==3">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR})
+    </if>
+	</where>
+	ORDER BY hr.create_date desc,hr.room_weight
+  </select>
+  
+  <!-- 特殊权限查询房间信息列表  区分houseFid和roomFid  -->
+  <select id="findSpecialHouseMsgListByRoomNew" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.HouseResultNewVo">
+  	SELECT hr.house_base_fid  houseFid, hr.fid roomFid, hr.room_name houseName, hr.room_type roomType, hr.room_status houseStatus, hr.room_weight weight, hr.room_sn roomSn,hr.create_date createDate, hb.landlord_uid landlordUid, 
+	hb.cameraman_name cameramanName, hb.house_type houseType, hb.cameraman_mobile cameramanMobile, hb.house_addr houseAddr, hb.rent_way rentWay, hb.is_pic isPic, hb.house_sn houseSn, 
+	hp.zo_job_num zoJobNum, hp.zo_name zoName, hp.zo_mobile zoMobile, hgr.emp_push_code empPushCode, hgr.emp_push_name empPushName, hgr.emp_guard_code empGuardCode, 
+	hgr.emp_guard_name empGuardName, hb.house_channel houseChannel, ext.house_quality_grade houseQualityGrade ,ext.survey_result surveyResult,
+	hbm.`last_up_date` onlineDate, hbm.`refuse_reason` auditCause, ext.is_together_landlord isTogetherLandlord,hre.order_type orderType
+  	FROM t_house_phy_msg hp
+  	INNER JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid
+  	INNER JOIN t_house_room_msg hr ON hb.fid = hr.house_base_fid
+    LEFT JOIN t_house_base_ext ext ON hb.fid = ext.house_base_fid
+	LEFT JOIN t_house_guard_rel hgr on hb.fid = hgr.house_fid
+	LEFT JOIN t_house_biz_msg hbm on hr.fid = hbm.room_fid
+    LEFT JOIN t_house_room_ext hre ON hr.fid = hre.room_fid
+	<where> 
+	AND hb.rent_way = 1
+	AND hp.is_del = 0
+	AND hb.is_del = 0
+	AND hr.is_del = 0
+	<if test="houseName != null and houseName !=''">
+		AND hr.room_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="roomType != null">
+		AND hr.room_type = #{roomType,jdbcType=INTEGER}
+    </if>
+	<if test="houseStatusList != null and houseStatusList.size > 0">
+		AND hr.room_status in
+        <foreach collection="houseStatusList" item="room_status" open="(" separator="," close=")">  
+			#{room_status,jdbcType=INTEGER}
+        </foreach>
+    </if>
+	<if test="houseStatus != null">
+		AND hr.room_status = #{houseStatus,jdbcType=INTEGER}
+    </if>
+	<if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+	<if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="isPic != null">
+		AND hb.is_pic = #{isPic,jdbcType=INTEGER}
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="zoName != null and zoName !=''">
+		AND hp.zo_name like CONCAT(#{zoName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseType != null ">
+		AND hb.house_type = #{houseType,jdbcType=INTEGER}
+    </if>
+	<if test="isWeight != null and isWeight == 0">
+		AND hr.room_weight = 0
+    </if>
+	<if test="isWeight != null and isWeight == 1">
+		AND hr.room_weight != 0
+    </if>
+    <!-- 创建时间 end -->
+    <if test="roomCreateTimeStart != null and roomCreateTimeStart != ''">
+        AND hr.create_date &gt;=#{roomCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="roomCreateTimeEnd != null and roomCreateTimeEnd != ''">
+        AND hr.create_date &lt;=#{roomCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 创建时间 end -->
+    <if test="roomSn != null and roomSn !=''">
+		AND hr.room_sn like CONCAT(#{roomSn,jdbcType=VARCHAR},'%') 
+    </if>
+    <!-- 上架时间 end -->
+    <if test="roomOnlineTimeStart != null and roomOnlineTimeStart != ''">
+        AND hbm.`last_up_date` &gt;=#{roomOnlineTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="roomOnlineTimeEnd != null and roomOnlineTimeEnd != ''">
+        AND hbm.`last_up_date` &lt;=#{roomOnlineTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 上架时间 end -->
+    <if test="empPushName != null and empPushName !=''">
+		AND hgr.emp_push_name like CONCAT(#{empPushName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="empGuardName != null and empGuardName !=''">
+		AND hgr.emp_guard_name like CONCAT(#{empGuardName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseChannel != null">
+		AND hb.house_channel = #{houseChannel,jdbcType=INTEGER}
+	</if>
+      <if test="houseQualityGrade != null and houseQualityGrade !=''">
+      AND ext.house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR}
+    </if>
+    <if test="surveyResult != null">
+      AND ext.survey_result = #{surveyResult,jdbcType=INTEGER}
+    </if>
+    <if test="auditCause != null and auditCause != ''">
+		AND FIND_IN_SET(#{auditCause,jdbcType=VARCHAR},hbm.`refuse_reason`) > 0
+    </if>
+      <if test="isTogetherLandlord != null">
+        AND ext.is_together_landlord = #{isTogetherLandlord,jdbcType=INTEGER}
+      </if>
+      <if test="orderType != null">
+        AND hre.order_type = #{orderType,jdbcType=INTEGER}
+      </if>
+
+    <!-- 特殊权限判断 1:数据区域，2：区域，3：数据-->
+    <if test="roleType==1">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR} OR
+    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	</foreach>
+    	)
+    </if>
+    <if test="roleType==2">
+    <if test="userCityList.size() > 0">
+    	AND (
+    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	</foreach>
+    	)
+    </if>	
+    </if>
+    <if test="roleType==3">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR})
+    </if>
+	</where>
+	ORDER BY hr.create_date desc,hr.room_weight
+  </select>
+  
+   <!-- 特殊权限查询存在照片审核未通过上架房源列表 -->
+  <select id="findSpecialPicUnapproveedHouseList" parameterType="com.ziroom.minsu.services.house.dto.HouseRequestDto"  resultType="com.ziroom.minsu.services.house.entity.HouseResultVo">
+  	SELECT hb.fid fid, hb.house_name houseName, hb.house_status houseStatus, hb.landlord_uid landlordUid, hb.cameraman_name cameramanName, 
+  	hb.cameraman_mobile cameramanMobile, hb.house_addr houseAddr, hb.rent_way rentWay, hb.is_pic isPic,hb.house_sn AS houseSn,hb.create_date  AS createDate, hp.zo_job_num zoJobNum,
+  	hp.zo_name zoName, hp.zo_mobile zoMobile
+  	FROM t_house_phy_msg hp
+  	LEFT JOIN t_house_base_msg hb ON hp.fid=hb.phy_fid
+  	LEFT JOIN t_house_pic_msg hpm ON hpm.house_base_fid=hb.fid
+    LEFT JOIN t_house_guard_rel hgr on hb.fid = hgr.house_fid
+	<where> 
+	AND hp.fid = hb.phy_fid
+	AND hb.fid = hpm.house_base_fid
+	<if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="houseName != null and houseName !=''">
+		AND hb.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+	<if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+     <!-- 创建时间 -->
+    <if test="houseCreateTimeStart != null and houseCreateTimeStart != ''">
+        AND hb.create_date &gt;=#{houseCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+     <if test="houseCreateTimeEnd != null and houseCreateTimeEnd != ''">
+        AND hb.create_date &lt;=#{houseCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+   <!-- 特殊权限判断 1:数据区域，2：区域，3：数据-->
+   <if test="roleType==1">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR} OR
+    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	</foreach>
+    	)
+    </if>
+    <if test="roleType==2">
+    <if test="userCityList.size() > 0">
+    	AND (
+    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	</foreach>
+    	)
+    </if>	
+    </if>
+    <if test="roleType==3">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR})
+    </if>
+	AND hb.house_status = 40
+    AND hpm.audit_status = 0
+	AND hb.rent_way = 0
+	AND hp.is_del = 0
+	AND hb.is_del = 0
+	AND hpm.is_del = 0
+	</where>
+	GROUP BY hb.fid
+	ORDER BY hb.create_date desc
+
+  </select>
+  <!--特殊权限查询存在照片审核未通过上架房间列表 -->
+  <select id="findSpecialPicUnapproveedRoomList" parameterType="com.ziroom.minsu.services.house.dto.HouseRequestDto"  resultType="com.ziroom.minsu.services.house.entity.HouseResultVo">
+  	SELECT 
+  tem.fid,
+  tem.houseFid,
+  tem.houseName,
+  tem.houseStatus,
+  tem.landlordUid,
+  tem.cameramanName,
+  tem.cameramanMobile,
+  tem.houseAddr,
+  tem.rentWay,
+  tem.roomSn,
+  tem.createDate,
+  tem.isPic,
+  tem.zoJobNum,
+  tem.zoName,
+  tem.zoMobile,
+  tem.nationCode,
+  tem.provinceCode,
+  tem.cityCode,
+  tem.areaCode
+FROM
+  (
+    SELECT 
+    hr.fid AS fid,
+    hb.fid AS houseFid,
+    hr.room_name AS houseName,
+    hr.room_status AS houseStatus,
+    hb.landlord_uid AS landlordUid,
+    hb.cameraman_name AS cameramanName,
+    hb.cameraman_mobile AS cameramanMobile,
+    hb.house_addr AS houseAddr,
+    hb.rent_way AS rentWay,
+    hr.room_sn AS roomSn,
+    hr.create_date AS createDate,
+    hr.is_pic AS isPic,
+    hp.zo_job_num AS zoJobNum,
+    hp.zo_name AS zoName,
+    hp.zo_mobile AS zoMobile,
+    hp.nation_code AS nationCode,
+    hp.province_code AS provinceCode,
+    hp.city_code AS cityCode, 
+    hp.area_code AS areaCode
+  FROM
+    t_house_phy_msg hp,
+    t_house_base_msg hb,
+    t_house_room_msg hr,
+    t_house_pic_msg hpm 
+  WHERE hp.fid = hb.phy_fid 
+    AND hb.fid = hr.house_base_fid 
+    AND hr.fid = hpm.room_fid 
+    AND hr.room_status = 40 
+    AND hpm.audit_status = 0 
+    AND hb.rent_way = 1 
+    AND hp.is_del = 0 
+    AND hb.is_del = 0 
+    AND hr.is_del = 0 
+    AND hpm.is_del = 0 
+    <if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="houseName != null and houseName !=''">
+		AND hr.room_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+	<if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+     <!-- 创建时间 -->
+    <if test="roomCreateTimeStart != null and roomCreateTimeStart != ''">
+        AND hr.create_date &gt;=#{roomCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+     <if test="roomCreateTimeEnd != null and roomCreateTimeEnd != ''">
+        AND hr.create_date &lt;=#{roomCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+  UNION
+  ALL 
+  SELECT 
+    hr.fid AS fid,
+    hb.fid AS houseFid,
+    hr.room_name AS houseName,
+    hr.room_status AS houseStatus,
+    hb.landlord_uid AS landlordUid,
+    hb.cameraman_name AS cameramanName,
+    hb.cameraman_mobile AS cameramanMobile,
+    hb.house_addr AS houseAddr,
+    hb.rent_way AS rentWay,
+    hr.room_sn AS roomSn,
+    hr.create_date AS createDate,
+    hr.is_pic AS isPic,
+    hp.zo_job_num AS zoJobNum,
+    hp.zo_name AS zoName,
+    hp.zo_mobile AS zoMobile ,
+    hp.nation_code AS nationCode,
+    hp.province_code AS provinceCode,
+    hp.city_code AS cityCode, 
+    hp.area_code AS areaCode
+  FROM
+    t_house_phy_msg hp,
+    t_house_base_msg hb,
+    t_house_room_msg hr,
+    t_house_pic_msg hpm 
+  WHERE hp.fid = hb.phy_fid 
+    AND hb.fid = hr.house_base_fid 
+    AND hpm.house_base_fid = hr.house_base_fid 
+    AND hpm.pic_type != 0 
+    AND hr.room_status = 40 
+    AND hpm.audit_status = 0 
+    AND hb.rent_way = 1 
+    AND hp.is_del = 0 
+    AND hb.is_del = 0 
+    AND hr.is_del = 0 
+    AND hpm.is_del = 0 
+    AND (
+      hpm.room_fid IS NULL 
+      OR hpm.room_fid = ''
+    )
+    <if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="houseName != null and houseName !=''">
+		AND hr.room_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+	<if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+     <!-- 创建时间 -->
+    <if test="roomCreateTimeStart != null and roomCreateTimeStart != ''">
+        AND hr.create_date &gt;=#{roomCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+     <if test="roomCreateTimeEnd != null and roomCreateTimeEnd != ''">
+        AND hr.create_date &lt;=#{roomCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+    ) AS tem 
+    LEFT JOIN t_house_guard_rel hgr ON hgr.house_fid=tem.houseFid
+    <where> 
+    <!-- 特殊权限判断 1:数据区域，2：区域，3：数据-->
+    <if test="roleType==1">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR} OR
+    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	(tem.nationCode = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND tem.provinceCode=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND tem.cityCode=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND tem.areaCode=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	</foreach>
+    	)
+    </if>
+    <if test="roleType==2">
+    <if test="userCityList.size() > 0">
+    	AND (
+    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	(tem.nationCode = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND tem.provinceCode=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND tem.cityCode=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND tem.areaCode=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	</foreach>
+    	)
+    </if>	
+    </if>
+    <if test="roleType==3">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR})
+    </if>
+    </where>
+	GROUP BY tem.fid ,tem.houseFid,
+	  tem.houseName,
+	  tem.houseStatus,
+	  tem.landlordUid,
+	  tem.cameramanName,
+	  tem.cameramanMobile,
+	  tem.houseAddr,
+	  tem.rentWay,
+	  tem.roomSn,
+	  tem.createDate,
+	  tem.isPic,
+	  tem.zoJobNum,
+	  tem.zoName,
+	  tem.zoMobile,
+	  tem.nationCode,
+  	  tem.provinceCode,
+      tem.cityCode,
+      tem.areaCode
+	ORDER BY tem.createDate DESC 
+  </select>
+  
+  <select id="findHouseFidByAuth"  parameterType="com.ziroom.minsu.entity.base.AuthMenuEntity"  resultType="string">
+  
+    SELECT DISTINCT tem.fid from (
+   <!-- 特殊权限判断 1:数据区域，2：区域，3：数据  查询符合权限的房源fid集合-->
+    <if test="roleType==1 or roleType==2">
+	     SELECT ho.`fid` as fid FROM `t_house_base_msg` ho 
+		 INNER JOIN `t_house_phy_msg` ph ON ho.`phy_fid` = ph.`fid`
+		 
+		 WHERE 
+		 ho.`is_del` = 0 
+		 AND ph.`is_del` = 0
+		 <if test="userCityList.size() > 0">
+		   AND(
+		   <foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	( ph.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND ph.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND ph.city_code=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND ph.area_code=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	  </foreach>
+    	  )
+		 </if>
+    </if>
+    <if test="roleType==1">
+      UNION
+    </if>
+     <if test="roleType==1 or roleType==3">
+      SELECT gu.house_fid as fid FROM `t_house_guard_rel` gu
+       WHERE gu.emp_push_code=#{empCode,jdbcType=VARCHAR} OR gu.emp_guard_code=#{empCode,jdbcType=VARCHAR}
+     </if>
+     ) as tem 
+  </select>
+  
+   <select id="findNeedPhotographerHouse"  parameterType="com.ziroom.minsu.services.house.dto.HouseRequestDto"  resultType="com.ziroom.minsu.services.house.entity.NeedPhotogHouseVo">
+  SELECT houseFid,houseSn,houseName,houseAddr,rentWay,roomSn, roomName,isPhotography , landlordUid FROM (SELECT hou.`fid` AS houseFid ,hou.`house_sn` AS houseSn,hou.`house_name` AS houseName ,hou.`house_addr` AS houseAddr ,
+	  hou.`rent_way` AS rentWay ,'0' AS roomSn,'0'AS roomName,ex.is_photography AS isPhotography,hou.`landlord_uid` AS landlordUid,hou.`last_modify_date` AS lastModifyMate
+	  
+	  FROM `t_house_base_msg` hou 
+	  INNER JOIN `t_house_base_ext` ex ON hou.`fid` = ex.`house_base_fid`
+	  INNER JOIN (SELECT house_base_fid AS houseFid ,
+	                        room_fid,
+				to_status,
+				audit_cause
+			FROM
+				t_house_operate_log
+			WHERE
+			(FIND_IN_SET('1',audit_cause) >0
+			OR FIND_IN_SET('10',audit_cause) >0)
+			AND  room_fid IS NULL
+			
+			GROUP BY houseFid,room_fid,to_status,audit_cause
+			) tem ON tem.houseFid = hou.`fid`
+			
+	WHERE hou.`rent_way` = 0
+	AND hou.`is_del` = 0
+		
+		UNION ALL	
+		
+	  SELECT hou.`fid` AS houseFid,hou.`house_sn` AS houseSn,hou.`house_name` AS houseName ,hou.`house_addr` AS houseAddr ,
+	  hou.`rent_way` AS rentWay,GROUP_CONCAT(ro.`room_sn`) AS roomSn,GROUP_CONCAT(ro.room_name SEPARATOR ';') AS roomName
+	  ,ex.is_photography AS isPhotography,hou.`landlord_uid` AS landlordUid,ro.`last_modify_date` AS lastModifyMate
+	  
+	  FROM `t_house_base_msg` hou 
+	  INNER JOIN `t_house_base_ext` ex ON hou.`fid` = ex.`house_base_fid`	
+	  LEFT JOIN `t_house_room_msg`	 ro ON ro.`house_base_fid` = hou.`fid`
+	  
+	   INNER JOIN (SELECT house_base_fid,
+	                         room_fid,
+				to_status,
+				audit_cause
+			FROM
+				t_house_operate_log
+			WHERE
+			(FIND_IN_SET('1',audit_cause) >0
+			OR FIND_IN_SET('10',audit_cause) >0)
+			AND  room_fid IS NOT NULL
+
+			) tem ON tem.room_fid = ro.`fid`
+			WHERE hou.`rent_way` = 1
+			AND hou.`is_del` = 0
+			GROUP BY houseFid,houseSn,houseName,houseAddr,rentWay,isPhotography,landlordUid,lastModifyMate) houTem  
+   
+     WHERE isPhotography = 0
+     <if test="landlordUidList != null and landlordUidList.size > 0">
+		AND landlordUid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="houseName != null and houseName !=''">
+		AND houseName like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseSn != null and houseSn !=''">
+		AND houseSn = #{houseSn,jdbcType=VARCHAR}
+    </if>
+    <!-- 如果这里输入 0 则查出的都是整租  方便使用 -->
+     <if test="roomSn != null and roomSn !=''">
+		AND FIND_IN_SET(#{roomSn,jdbcType=VARCHAR},roomSn) >0
+    </if>
+    ORDER BY lastModifyMate DESC 
+   </select>
+   
+   <!-- 查询需要 发送短信和极光消息的短信 的房源 -->
+   <select id="findNoticeLanDfbHouseMsg" parameterType="map" resultType="com.ziroom.minsu.services.house.dto.HouseDfbNoticeDto">
+   
+	SELECT COUNT(houseNum) AS houseNum,t1.`landlord_uid` AS landlordUid FROM (
+	
+	(SELECT t.fid AS houseFid,1 AS houseNum FROM `t_house_base_msg` t WHERE
+	t.`house_status` = 10
+	AND t.`rent_way` = 0
+	AND t.`is_del` = 0
+	AND (
+	(t.`create_date` <![CDATA[<=]]>(SELECT DATE_ADD(#{cutTime,jdbcType=VARCHAR}, INTERVAL -#{dayPre,jdbcType=INTEGER} DAY))
+	
+	AND t.`create_date` <![CDATA[>=]]>(SELECT DATE_ADD(#{cutTime,jdbcType=VARCHAR}, INTERVAL -#{day,jdbcType=INTEGER} DAY)) 
+	)
+	)
+	 )
+	
+	UNION ALL
+	
+	(SELECT fzTem.houseFid  , fzTem.houseNum   FROM (
+	SELECT t.fid  AS houseFid, COUNT(1)  AS houseNum FROM `t_house_base_msg` t 
+	INNER JOIN  `t_house_room_msg`
+	 ro ON t.`fid` = ro.`house_base_fid`
+	 
+	 WHERE t.`rent_way` = 1 
+	 AND ro.`room_status` = 10 
+	 AND ro.`create_date`  <![CDATA[<=]]>(SELECT DATE_ADD(#{cutTime,jdbcType=VARCHAR}, INTERVAL -#{dayPre,jdbcType=INTEGER} DAY))
+	 AND ro.`create_date`  <![CDATA[>=]]>(SELECT DATE_ADD(#{cutTime,jdbcType=VARCHAR}, INTERVAL -#{day,jdbcType=INTEGER} DAY))
+	 AND ro.`is_del` = 0
+	 GROUP BY t.`fid`
+	 
+	 UNION ALL
+	 
+	 SELECT t.fid AS houseFid ,COUNT(1) AS houseNum FROM `t_house_base_msg` t
+	 
+	 WHERE 
+	  t.`house_status` = 10
+	 AND t.`create_date` <![CDATA[<=]]>(SELECT DATE_ADD(#{cutTime,jdbcType=VARCHAR}, INTERVAL -#{dayPre,jdbcType=INTEGER} DAY))
+	 AND t.`create_date` <![CDATA[>=]]>(SELECT DATE_ADD(#{cutTime,jdbcType=VARCHAR}, INTERVAL -#{day,jdbcType=INTEGER} DAY)) 
+	 AND t.`rent_way` = 1
+	 AND t.`is_del` = 0
+	 AND NOT EXISTS(
+	    SELECT ro.id FROM `t_house_room_msg`  ro  WHERE ro.`house_base_fid` = t.`fid`
+	 )
+	  GROUP BY t.`fid` ) AS fzTem )
+	  ) AS tem 
+	  
+	  LEFT JOIN `t_house_base_msg` t1 ON t1.`fid` = tem.houseFid  GROUP BY  landlordUid
+	 
+   
+   </select>
+   
+   <!-- 根据房源名称 ， 国家， 城市三个维度获取整租房源houseFidList -->
+   <select id="getHoseFidListForIMFollow" parameterType="map" resultType="string">
+        SELECT base.fid AS housefid
+		FROM `minsu_house_db`.`t_house_base_msg`  base 
+		JOIN `minsu_house_db`.`t_house_phy_msg` phy
+		ON base.phy_fid = phy.fid
+		<where>
+		    <if test="houseName != null">
+		       base.house_name LIKE CONCAT('%',#{houseName},'%')
+		     </if>
+		     <if test="nationCode != null">
+		        AND phy.nation_code = #{nationCode,jdbcType=VARCHAR}
+		     </if>
+		     <if test="provinceCode != null">
+		        AND phy.province_code = #{provinceCode,jdbcType=VARCHAR}
+		     </if>
+		     <if test="cityCode != null">
+		        AND phy.city_code = #{cityCode,jdbcType=VARCHAR}
+		     </if>
+		     AND base.rent_way =0
+			 AND base.`is_del`=0
+             AND phy.`is_del`=0
+		</where> 
+   </select>
+   
+   <!-- 根据房间名称 ， 国家， 城市三个维度获取分租roomFidList -->
+   <select id="getRoomFidListForIMFollow" parameterType="map" resultType="string">
+        SELECT room.fid AS roomfid
+		FROM `minsu_house_db`.`t_house_room_msg` room
+		JOIN `minsu_house_db`.`t_house_base_msg` base
+		ON room.house_base_fid=base.`fid`
+		JOIN  `minsu_house_db`.`t_house_phy_msg` phy
+		ON base.phy_fid = phy.fid
+		<where>
+		     <if test="houseName != null">
+		       room.room_name LIKE CONCAT('%',#{houseName},'%')
+		     </if>
+		     <if test="nationCode != null">
+		        AND phy.nation_code = #{nationCode,jdbcType=VARCHAR}
+		     </if>
+		     <if test="provinceCode != null">
+		        AND phy.province_code = #{provinceCode,jdbcType=VARCHAR}
+		     </if>
+		     <if test="cityCode != null">
+		        AND phy.city_code = #{cityCode,jdbcType=VARCHAR}
+		     </if>
+		     AND base.rent_way=1
+			 AND base.`is_del`=0
+             AND phy.`is_del`=0
+		</where> 
+   </select>
+   
+    <!-- 根据housefid获取房源名称 城市 -->
+   <select id="getHouseInfoForImFollow" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.HouseCityVo">
+        SELECT base.house_name AS houseName, phy.city_code AS cityCode
+		FROM `minsu_house_db`.`t_house_base_msg` base
+		JOIN `minsu_house_db`.`t_house_phy_msg` phy
+		ON base.`phy_fid`=phy.fid
+		WHERE base.`fid` = #{houseFid}
+		AND base.`is_del`=0
+		AND phy.is_del=0
+   </select>
+   
+      <!-- 根据roomfid获取房源名称 城市 -->
+   <select id="getRoomInfoForImFollow" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.HouseCityVo">
+        SELECT room.room_name AS houseName, phy.city_code AS cityCode
+		FROM `minsu_house_db`.`t_house_room_msg` room
+		JOIN `minsu_house_db`.`t_house_base_msg` base
+		ON room.house_base_fid = base.fid
+		JOIN `minsu_house_db`.`t_house_phy_msg` phy
+		ON base.`phy_fid`=phy.fid
+		WHERE room.`fid`= #{roomFid}
+		AND base.`is_del`=0
+		AND phy.is_del=0
+		AND room.is_del=0
+   </select>
+
+   <!-- 根据houseFid 获取房源名称 -->
+   <select id="getHouseNameListByHouseFid" parameterType="string" resultType="string">
+        SELECT house_name AS houseName
+        FROM minsu_house_db.`t_house_base_msg` thbm
+        WHERE thbm.fid = #{houseBaseFid,jdbcType=VARCHAR}
+        AND thbm.is_del = 0
+   </select>
+
+   <!-- 根据houseFid 获取房源名称 -->
+   <select id="getRoomNameListByRoomFid" parameterType="string" resultType="string">
+        SELECT room_name AS roomName
+        FROM minsu_house_db.`t_house_room_msg` thrm
+        WHERE thrm.fid = #{roomFid,jdbcType=VARCHAR}
+        AND thrm.is_del = 0
+   </select>
+
+   <!-- 根据houseFid 获取房源名称 -->
+   <select id="getRoomNameListByHouseFid" parameterType="string" resultType="string">
+        SELECT room_name AS roomName
+        FROM minsu_house_db.`t_house_room_msg` thrm
+        WHERE thrm.`house_base_fid` =  #{houseBaseFid,jdbcType=VARCHAR}
+        AND thrm.is_del = 0
+   </select>
+
+
+
+
+
+<!-- 后台查询房源修改信息列表 -->
+  <select id="findUpdateHouseMsgListByHouse" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.HouseResultVo">
+  	SELECT hb.fid fid, hb.house_name houseName, hb.house_status houseStatus, hb.landlord_uid landlordUid, hb.cameraman_name cameramanName, hb.house_type houseType,
+  	hb.house_weight weight, hb.cameraman_mobile cameramanMobile, hb.house_addr houseAddr, hb.rent_way rentWay, hb.is_pic isPic, hb.house_sn houseSn,
+  	hb.create_date createDate, hp.zo_job_num zoJobNum, hp.zo_name zoName, hp.zo_mobile zoMobile, hgr.emp_push_code empPushCode, hgr.emp_push_name empPushName, 
+  	hgr.emp_guard_code empGuardCode, hgr.emp_guard_name empGuardName, hb.house_channel houseChannel, ext.house_quality_grade houseQualityGrade,
+	hbm.last_up_date onlineDate,hbm.last_deploy_date lastDeployDate
+  	FROM t_house_phy_msg hp 
+  	INNER JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid
+        LEFT JOIN t_house_base_ext ext ON hb.fid = ext.house_base_fid
+  	LEFT JOIN t_house_guard_rel hgr ON hb.fid = hgr.house_fid
+        LEFT JOIN t_house_biz_msg hbm ON hb.fid = hbm.house_base_fid
+	<where> 
+    AND hb.rent_way = 0
+	AND hp.is_del = 0
+	AND hb.is_del = 0
+	<if test="houseName != null and houseName !=''">
+		AND hb.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseStatusList != null and houseStatusList.size > 0">
+        AND hb.house_status in
+        <foreach collection="houseStatusList"  item="house_status" index="index" open="(" separator="," close=")">
+            #{house_status,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+	<if test="houseStatus != null">
+		AND hb.house_status = #{houseStatus,jdbcType=INTEGER}
+    </if>
+	<if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="isPic != null">
+		AND hb.is_pic = #{isPic,jdbcType=INTEGER}
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+	<if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+	<if test="zoName != null and zoName !=''">
+		AND hp.zo_name like CONCAT(#{zoName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="houseType != null">
+		AND hb.house_type = #{houseType,jdbcType=INTEGER}
+    </if>
+	<if test="isWeight != null and isWeight == 0">
+		AND hb.house_weight = 0
+    </if>
+	<if test="isWeight != null and isWeight == 1">
+		AND hb.house_weight != 0
+    </if>
+    <!-- 创建时间 start -->
+    <if test="houseCreateTimeStart != null and houseCreateTimeStart != ''">
+        AND hb.create_date &gt;=#{houseCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="houseCreateTimeEnd != null and houseCreateTimeEnd != ''">
+        AND hb.create_date &lt;=#{houseCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 创建时间 end -->
+	<if test="houseSn != null and houseSn !=''">
+		AND hb.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+    </if>
+    <!-- 上架时间 start -->
+    <if test="houseOnlineTimeStart != null and houseOnlineTimeStart != ''">
+        AND hbm.last_up_date &gt;=#{houseOnlineTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="houseOnlineTimeEnd != null and houseOnlineTimeEnd != ''">
+        AND hbm.last_up_date &lt;=#{houseOnlineTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 上架时间 end -->
+	<if test="empPushName != null and empPushName !=''">
+		AND hgr.emp_push_name like CONCAT(#{empPushName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="empGuardName != null and empGuardName !=''">
+		AND hgr.emp_guard_name like CONCAT(#{empGuardName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseChannel != null">
+		AND hb.house_channel = #{houseChannel,jdbcType=INTEGER}
+    </if>
+    <if test="houseQualityGrade != null and houseQualityGrade !=''">
+      AND ext.house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR}
+    </if>
+      <!--最新发布时间-->
+    <if test="issueLastTimeStart != null and issueLastTimeStart != ''">
+        AND hbm.last_deploy_date &gt;=#{issueLastTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="issueLastTimeEnd != null and issueLastTimeEnd != ''">
+        AND hbm.last_deploy_date &lt;=#{issueLastTimeEnd,jdbcType=VARCHAR}
+    </if>
+	</where>
+	<if test="orderByType==null">
+	ORDER BY hb.create_date desc,hb.house_weight
+	</if>
+    <if test="orderByType==1">
+	ORDER BY hb.last_modify_date desc,hb.house_weight
+	</if>
+  </select>
+
+
+
+
+ <!-- 特殊权限:房源信息修改列表 -->
+  <select id="findSpecialUpateHouseMsgListByHouse" parameterType="map" resultType="com.ziroom.minsu.services.house.entity.HouseResultVo">
+  	SELECT hb.fid fid, hb.house_name houseName, hb.house_status houseStatus, hb.landlord_uid landlordUid, hb.cameraman_name cameramanName, hb.house_type houseType,
+  	hb.house_weight weight, hb.cameraman_mobile cameramanMobile, hb.house_addr houseAddr, hb.rent_way rentWay, hb.is_pic isPic, hb.house_sn houseSn,
+  	hb.create_date createDate, hp.zo_job_num zoJobNum, hp.zo_name zoName, hp.zo_mobile zoMobile, hgr.emp_push_code empPushCode, hgr.emp_push_name empPushName, 
+  	hgr.emp_guard_code empGuardCode, hgr.emp_guard_name empGuardName, hb.house_channel houseChannel, ext.house_quality_grade houseQualityGrade,
+	hbm.last_up_date onlineDate,hbm.last_deploy_date lastDeployDate
+  	FROM t_house_phy_msg hp 
+  	INNER JOIN t_house_base_msg hb ON hp.fid = hb.phy_fid
+        LEFT JOIN t_house_base_ext ext ON hb.fid = ext.house_base_fid
+  	LEFT JOIN t_house_guard_rel hgr ON hb.fid = hgr.house_fid
+        LEFT JOIN t_house_biz_msg hbm ON hb.fid = hbm.house_base_fid
+  	
+	<where> 
+    AND hb.rent_way = 0
+	AND hp.is_del = 0
+	AND hb.is_del = 0
+	<if test="houseName != null and houseName !=''">
+		AND hb.house_name like CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseStatusList != null and houseStatusList.size > 0">
+        AND hb.house_status in
+        <foreach collection="houseStatusList"  item="house_status" index="index" open="(" separator="," close=")">
+            #{house_status,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+	<if test="houseStatus != null">
+		AND hb.house_status = #{houseStatus,jdbcType=INTEGER}
+    </if>
+	<if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="cameramanName != null and cameramanName !=''">
+        AND hb.cameraman_name like CONCAT(#{cameramanName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="cameramanMobile != null and cameramanMobile !=''">
+        AND hb.cameraman_mobile like CONCAT(#{cameramanMobile,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="isPic != null">
+		AND hb.is_pic = #{isPic,jdbcType=INTEGER}
+    </if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+	<if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+	<if test="zoName != null and zoName !=''">
+		AND hp.zo_name like CONCAT(#{zoName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="houseType != null">
+		AND hb.house_type = #{houseType,jdbcType=INTEGER}
+    </if>
+	<if test="isWeight != null and isWeight == 0">
+		AND hb.house_weight = 0
+    </if>
+	<if test="isWeight != null and isWeight == 1">
+		AND hb.house_weight != 0
+    </if>
+    <!-- 创建时间 start -->
+    <if test="houseCreateTimeStart != null and houseCreateTimeStart != ''">
+        AND hb.create_date &gt;=#{houseCreateTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="houseCreateTimeEnd != null and houseCreateTimeEnd != ''">
+        AND hb.create_date &lt;=#{houseCreateTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 创建时间 end -->
+	<if test="houseSn != null and houseSn !=''">
+		AND hb.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+    </if>
+    <!-- 上架时间 start -->
+    <if test="houseOnlineTimeStart != null and houseOnlineTimeStart != ''">
+        AND hbm.last_up_date &gt;=#{houseOnlineTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="houseOnlineTimeEnd != null and houseOnlineTimeEnd != ''">
+        AND hbm.last_up_date &lt;=#{houseOnlineTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <!-- 上架时间 end -->
+	<if test="empPushName != null and empPushName !=''">
+		AND hgr.emp_push_name like CONCAT(#{empPushName,jdbcType=VARCHAR},'%')
+    </if>
+	<if test="empGuardName != null and empGuardName !=''">
+		AND hgr.emp_guard_name like CONCAT(#{empGuardName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="houseChannel != null">
+		AND hb.house_channel = #{houseChannel,jdbcType=INTEGER}
+    </if>
+    <if test="houseQualityGrade != null and houseQualityGrade !=''">
+      AND ext.house_quality_grade = #{houseQualityGrade,jdbcType=VARCHAR}
+    </if>
+      <if test="issueLastTimeStart != null and issueLastTimeStart != ''">
+        AND hbm.last_deploy_date &gt;=#{issueLastTimeStart,jdbcType=VARCHAR}
+      </if>
+      <if test="issueLastTimeEnd != null and issueLastTimeEnd != ''">
+        AND hbm.last_deploy_date &lt;=#{issueLastTimeEnd,jdbcType=VARCHAR}
+      </if>
+    <!-- 特殊权限判断 1:数据区域-->
+    <if test="roleType==1">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR} OR
+    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+	    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+	    	<if test="city.provinceCode!=null">
+	    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.cityCode!=null">
+	    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+	    	</if>
+	    	<if test="city.areaCode!=null">
+	    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+	    	</if>
+	    	)
+    	</foreach>
+    	)
+    </if>
+    <if test="roleType==2">
+	    <if test="userCityList.size() > 0">
+	    	AND (
+	    	<foreach collection="userCityList" item="city" open="" close="" separator="OR">
+		    	(hp.nation_code = #{city.nationCode,jdbcType=VARCHAR}
+		    	<if test="city.provinceCode!=null">
+		    		AND hp.province_code=#{city.provinceCode,jdbcType=VARCHAR}
+		    	</if>
+		    	<if test="city.cityCode!=null">
+		    		AND hp.city_code=#{city.cityCode,jdbcType=VARCHAR}
+		    	</if>
+		    	<if test="city.areaCode!=null">
+		    		AND hp.area_code=#{city.areaCode,jdbcType=VARCHAR}
+		    	</if>
+		    	)
+	    	</foreach>
+	    	)
+	    </if>	
+    </if>
+    <if test="roleType==3">
+    	AND (hgr.emp_push_code=#{empCode,jdbcType=VARCHAR} OR hgr.emp_guard_code=#{empCode,jdbcType=VARCHAR})
+    </if>
+	</where>
+	ORDER BY hb.create_date desc,hb.house_weight
+  </select>
+</mapper>

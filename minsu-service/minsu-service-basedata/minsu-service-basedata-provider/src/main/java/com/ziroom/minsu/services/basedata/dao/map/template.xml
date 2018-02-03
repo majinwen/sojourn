@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.templateDao" >
+
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.services.basedata.entity.TemplateEntityVo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="pfid" property="pfid" jdbcType="VARCHAR" />
+    <result column="template_name" property="templateName" jdbcType="VARCHAR" />
+    <result column="template_status" property="templateStatus" jdbcType="INTEGER" />
+    <result column="template_line" property="templateLine" jdbcType="INTEGER"/>
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+
+
+  <resultMap id="parentMap" type="com.ziroom.minsu.services.basedata.entity.TemplateEntityVo" extends="BaseResultMap" >
+    <result column="pName" property="pName" jdbcType="VARCHAR" />
+    <collection column="fid" property="cityList" javaType="ArrayList" select="getChildCitys" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    <!--  -->
+    id, fid,pfid, template_name, template_status,template_line, create_date, last_modify_date, create_fid, is_del
+  </sql>
+
+
+  <!-- 通过城市获取信息 -->
+  <select id="getTemplateList" resultMap="parentMap" parameterType="java.lang.String" >
+    <!--  -->
+    select
+    t.id, t.fid, t.pfid, t.template_name, t.template_status,t.template_line, t.create_date, t.last_modify_date,
+    t.create_fid, t.is_del, p.template_name as pName
+    from t_conf_template t
+    LEFT  join t_conf_template p on t.pfid = p.fid
+    where t.is_del = 0
+  </select>
+
+  <!-- 获取模板下的所有城市 -->
+  <select id="getChildCitys" resultType="java.lang.String" >
+    SELECT
+        ci.show_name
+    FROM t_conf_city_template r
+    INNER JOIN  t_conf_city ci ON r.city_code = ci.code
+    WHERE r.template_fid = #{fid}
+  </select>
+
+
+
+
+  <insert id="insertTemplate" parameterType="com.ziroom.minsu.entity.conf.TemplateEntity" >
+    <!--   -->
+    insert into t_conf_template
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="pfid != null" >
+        pfid,
+      </if>
+      <if test="templateName != null" >
+        template_name,
+      </if>
+      <if test="templateStatus != null" >
+        template_status,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="pfid != null" >
+        #{pfid,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null" >
+        #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="templateStatus != null" >
+        #{templateStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+
+  <update id="updateTemplateByFid" parameterType="com.ziroom.minsu.entity.conf.TemplateEntity" >
+    <!--  -->
+    update t_conf_template
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="pfid != null" >
+        pfid = #{pfid,jdbcType=VARCHAR},
+      </if>
+      <if test="templateName != null" >
+        template_name = #{templateName,jdbcType=VARCHAR},
+      </if>
+      <if test="templateStatus != null" >
+        template_status = #{templateStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+
+
+</mapper>

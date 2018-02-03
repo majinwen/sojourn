@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="photographer.photographerBaseMsgExtDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.photographer.PhotographerBaseMsgExtEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="photographer_uid" property="photographerUid" jdbcType="VARCHAR" />
+    <result column="id_type" property="idType" jdbcType="TINYINT" />
+    <result column="id_no" property="idNo" jdbcType="VARCHAR" />
+    <result column="photography_introduce" property="photographyIntroduce" jdbcType="VARCHAR" />
+    <result column="reside_addr" property="resideAddr" jdbcType="VARCHAR" />
+    <result column="job_type" property="jobType" jdbcType="TINYINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, photographer_uid, id_type, id_no, photography_introduce, reside_addr, job_type, 
+    create_date
+  </sql>
+  
+  <!-- 注意:本条sql在photographer.photographerBaseMsgDao中也有使用,不要轻易修改 -->
+  <select id="findPhotogExtByUid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_photographer_base_msg_ext
+    WHERE photographer_uid = #{photographerUid,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="savePhotographerBaseMsgExt" parameterType="com.ziroom.minsu.entity.photographer.PhotographerBaseMsgExtEntity" >
+    insert into t_photographer_base_msg_ext
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="photographerUid != null" >
+        photographer_uid,
+      </if>
+      <if test="idType != null" >
+        id_type,
+      </if>
+      <if test="idNo != null" >
+        id_no,
+      </if>
+      <if test="photographyIntroduce != null" >
+        photography_introduce,
+      </if>
+      <if test="resideAddr != null" >
+        reside_addr,
+      </if>
+      <if test="jobType != null" >
+        job_type,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="photographerUid != null" >
+        #{photographerUid,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null" >
+        #{idType,jdbcType=TINYINT},
+      </if>
+      <if test="idNo != null" >
+        #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="photographyIntroduce != null" >
+        #{photographyIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="resideAddr != null" >
+        #{resideAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="jobType != null" >
+        #{jobType,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updatePhotographerBaseMsgExtByUid" parameterType="com.ziroom.minsu.entity.photographer.PhotographerBaseMsgExtEntity" >
+    update t_photographer_base_msg_ext
+    <set >
+      <if test="idType != null" >
+        id_type = #{idType,jdbcType=TINYINT},
+      </if>
+      <if test="idNo != null" >
+        id_no = #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="photographyIntroduce != null" >
+        photography_introduce = #{photographyIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="resideAddr != null" >
+        reside_addr = #{resideAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="jobType != null" >
+        job_type = #{jobType,jdbcType=TINYINT},
+      </if>
+    </set>
+    where  photographer_uid = #{photographerUid,jdbcType=VARCHAR}
+  </update>
+</mapper>

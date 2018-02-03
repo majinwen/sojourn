@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- - Copyright 1999-2011 Alibaba Group. - - Licensed under the Apache License, 
+	Version 2.0 (the "License"); - you may not use this file except in compliance 
+	with the License. - You may obtain a copy of the License at - - http://www.apache.org/licenses/LICENSE-2.0 
+	- - Unless required by applicable law or agreed to in writing, software - 
+	distributed under the License is distributed on an "AS IS" BASIS, - WITHOUT 
+	WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. - See the 
+	License for the specific language governing permissions and - limitations 
+	under the License. -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+		
+	<dubbo:provider filter="catFilter"></dubbo:provider>
+	<!-- <dubbo:service interface="com.ziroom.minsu.services.message.api.inner.messageOrderService" 
+		ref="message.messageOrderProxy"> </dubbo:service> -->
+	<dubbo:service
+		interface="com.ziroom.minsu.services.message.api.inner.SysMsgService" ref="message.sysMsgProxy">
+		<dubbo:method name="saveSysMsg" timeout="3000" retries="0" />
+		<dubbo:method name="saveSysMsgBatch" timeout="3000" retries="0" />
+		<dubbo:method name="querySysMsg" timeout="3000" retries="3" />
+		<dubbo:method name="deleteSysMsg" timeout="3000" retries="0" />
+        <dubbo:method name="updateSysMsgRead" timeout="3000" retries="0" />
+        <!-- <dubbo:method name="sendSysMsg" timeout="3000" retries="0" /> -->
+	</dubbo:service>
+	
+	<dubbo:service
+		interface="com.ziroom.minsu.services.message.api.inner.SysMsgManagerService" ref="message.sysMsgManagerProxy">
+		<dubbo:method name="saveSysMsgManager" timeout="3000" retries="0" />
+		<dubbo:method name="releaseMsg" timeout="3000" retries="0" />
+		<dubbo:method name="deleteMsg" timeout="3000" retries="0" />
+		<dubbo:method name="updateMsg" timeout="3000" retries="0" />
+		<dubbo:method name="queryMsgPage" timeout="3000" retries="3" />
+		<dubbo:method name="findSysMsgManagerByFid" timeout="3000" retries="3" />
+	</dubbo:service>
+	
+	<dubbo:service
+		interface="com.ziroom.minsu.services.message.api.inner.MsgBaseService" ref="message.msgBaseServiceProxy">
+		<dubbo:method name="queryAllMsgByCondition" timeout="3000" retries="3" />
+		<dubbo:method name="queryByCondition" timeout="3000" retries="3" />
+		<dubbo:method name="save" timeout="3000" retries="0" />
+		<dubbo:method name="updateByMsgHouseFid" timeout="3000" retries="0" />
+        <dubbo:method name="updateByMsgHouseReadFid" timeout="3000" retries="0" />
+        <dubbo:method name="staticsCountLanImReplyNum" timeout="8000" retries="3" />
+        <dubbo:method name="staticsCountLanImReplySumTime" timeout="8000" retries="3" />
+        <dubbo:method name="taskStaticsCountLanImReplyInfo" timeout="30000" retries="3" />
+        <dubbo:method name="updateByCondition" timeout="3000" retries="0" />
+        <dubbo:method name="queryCurrMsgBook" timeout="3000" retries="3" />
+        <dubbo:method name="queryTwoChatRecord" timeout="3000" retries="3" />
+        <dubbo:method name="queryOneChatRecord" timeout="3000" retries="3" />
+        <dubbo:method name="saveMsgBaseError" timeout="3000" retries="0" />
+        <dubbo:method name="findIMChatRecord" timeout="3000" retries="3" />
+        <dubbo:method name="queryImMsgList" timeout="3000" retries="3" />
+		<dubbo:method name="saveMsgLog" timeout="3000" retries="0" />
+		<dubbo:method name="listImMsgSyncList" timeout="3000" retries="3" />
+		<dubbo:method name="saveMsgOffline" timeout="3000" retries="0" />
+		<dubbo:method name="listChatBoth" timeout="3000" retries="3" />
+		<dubbo:method name="queryUserChatInTwentyFour" timeout="3000" retries="3" />
+		<dubbo:method name="queryLiveness" timeout="3000" retries="3"/>
+    </dubbo:service>
+	
+	<dubbo:service
+		interface="com.ziroom.minsu.services.message.api.inner.MsgHouseService" ref="message.msgHouseServiceProxy">
+		<dubbo:method name="queryAllByPage" timeout="3000" retries="3" />
+		<dubbo:method name="queryLandlordByPage" timeout="3000" retries="3" />
+		<dubbo:method name="queryTenantByPage" timeout="3000" retries="3" />
+		<dubbo:method name="save" timeout="3000" retries="0" />
+		<dubbo:method name="deleteByFid" timeout="3000" retries="0" />
+		<dubbo:method name="queryLandlordList" timeout="3000" retries="3" />
+		<dubbo:method name="queryTenantList" timeout="3000" retries="3" />
+        <dubbo:method name="queryTenantByPage" timeout="3000" retries="3" />
+        <dubbo:method name="queryFriendsUid" timeout="3000" retries="3" />
+        <dubbo:method name="saveImMsg" timeout="3000" retries="0" />
+        <dubbo:method name="queryConsultNumByHouseFid" timeout="3000" retries="3" />
+	</dubbo:service>
+	
+	<dubbo:service
+		interface="com.ziroom.minsu.services.message.api.inner.MsgLableService" ref="message.msgLableServiceProxy">
+		<dubbo:method name="queryByPage" timeout="3000" retries="3" />
+		<dubbo:method name="save" timeout="3000" retries="0" />
+		<dubbo:method name="updateByFid" timeout="3000" retries="0" />
+		<dubbo:method name="queryMsgContentByKey" timeout="3000" retries="3" />
+	</dubbo:service>
+	
+	<dubbo:service
+		interface="com.ziroom.minsu.services.message.api.inner.MsgReplySetService" ref="message.msgReplySetServiceProxy">
+		<dubbo:method name="queryByLanglordFid" timeout="3000" retries="3" />
+		<dubbo:method name="save" timeout="3000" retries="0" />
+		<dubbo:method name="updateByCondition" timeout="3000" retries="0" />
+	</dubbo:service>
+	
+	<dubbo:service
+		interface="com.ziroom.minsu.services.message.api.inner.SysComplainService" ref="message.sysComplainServiceProxy">
+		<dubbo:method name="save" timeout="3000" retries="0" />
+	</dubbo:service>
+	<dubbo:service interface="com.ziroom.minsu.services.message.api.inner.HuanxinImRecordService" ref="message.huanxinImRecordServiceProxy">
+	   <dubbo:method name="sysHuanxinImMes" timeout="3000" retries="0" />
+	   <dubbo:method name="sendImMesToHuanxin" timeout="3000" retries="0" />
+	    <dubbo:method name="queryByPage" timeout="3000" retries="3" />
+	    <dubbo:method name="deactivateImUser" timeout="3000" retries="0" />
+	    <dubbo:method name="activateImUser" timeout="3000" retries="0" />
+	    <dubbo:method name="saveHuanxinImRecord" timeout="3000" retries="0" />
+	    <dubbo:method name="saveHuanxinOffline" timeout="3000" retries="0" />
+	</dubbo:service>
+	
+	<dubbo:service interface="com.ziroom.minsu.services.message.api.inner.StatusConfService" ref="message.statusConfServiceProxy">
+	   <dubbo:method name="getStatusConfByKey" timeout="3000" retries="0" />
+	</dubbo:service>
+
+	<dubbo:service interface="com.ziroom.minsu.services.message.api.inner.MsgCustomizationService" ref="message.msgCustomizationProxy">
+		<dubbo:method name="queryMsgCustomizationByUid" timeout="3000" retries="3" />
+		<dubbo:method name="addMsgCustomization" timeout="3000" retries="0" />
+		<dubbo:method name="updateMsgCustomization" timeout="3000" retries="0" />
+	</dubbo:service>
+
+	<dubbo:service interface="com.ziroom.minsu.services.message.api.inner.MsgFirstAdvisoryService" ref="message.msgFirstAdvisoryServiceProxy">
+		<dubbo:method name="queryByMsgBaseFid" timeout="3000" retries="3" />
+	</dubbo:service>
+
+	<dubbo:service interface="com.ziroom.minsu.services.message.api.inner.MsgAdvisoryFollowupService" ref="message.msgAdvisoryFollowupServiceProxy">
+		<dubbo:method name="save" timeout="3000" retries="0" />
+		<dubbo:method name="getByFid" timeout="3000" retries="3" />
+		<dubbo:method name="getAllByFisrtAdvisoryFid" timeout="3000" retries="3" />
+	</dubbo:service>
+	
+	<dubbo:service interface="com.ziroom.minsu.services.message.api.inner.CallHuanXinImService" ref="message.callHuanXinImServiceProxy">
+		<dubbo:method name="addGroup" timeout="3000" retries="0" />
+		<dubbo:method name="addOneGroupMember" timeout="3000" retries="0" />
+		<dubbo:method name="addManyGroupMember" timeout="3000" retries="0" />
+		<dubbo:method name="queryGroupMemberByPage" timeout="3000" retries="3" />
+		<dubbo:method name="queryAppGroupsByPage" timeout="3000" retries="3" />
+		<dubbo:method name="addGagMember" timeout="3000" retries="0" />
+		<dubbo:method name="removeGagMember" timeout="3000" retries="0" />
+	    <dubbo:method name="addAdminMember" timeout="3000" retries="0" />
+	    <dubbo:method name="deleteAdminMember" timeout="3000" retries="0" />
+	    <dubbo:method name="removeOneGroupMember" timeout="3000" retries="0" />
+	    <dubbo:method name="removeManyGroupMember" timeout="3000" retries="0" />
+	    <dubbo:method name="removeGroupByGroupId" timeout="3000" retries="0" />
+	    <dubbo:method name="updateGroupByGroupId" timeout="3000" retries="0" />
+	    <dubbo:method name="queryGroupInfo" timeout="3000" retries="3" />
+	    <dubbo:method name="queryUserInfoByUids" timeout="3000" retries="3" />
+	    <dubbo:method name="sendImMsg" timeout="3000" retries="0" />
+	    
+	</dubbo:service>
+	
+	<dubbo:service interface="com.ziroom.minsu.services.message.api.inner.HuanxinImManagerService" ref="message.huanxinImManagerServiceProxy">
+		<dubbo:method name="queryGroupMemberByPage" timeout="3000" retries="3" />
+		<dubbo:method name="addGroup" timeout="3000" retries="0" />
+		<dubbo:method name="queryAppGroupsByPage" timeout="3000" retries="3" />
+		<dubbo:method name="addManyGroupMember" timeout="3000" retries="0" />
+	    <dubbo:method name="addGagMember" timeout="3000" retries="0" />
+	    <dubbo:method name="saveMsgHuanxinImLog" timeout="3000" retries="0" />
+	    <dubbo:method name="removeGagMember" timeout="3000" retries="0" />
+	    <dubbo:method name="addAdminMember" timeout="3000" retries="0" />
+	    <dubbo:method name="deleteAdminMember" timeout="3000" retries="0" />
+	    <dubbo:method name="removeGroupMembers" timeout="3000" retries="0" />
+	    <dubbo:method name="removeGroupByGroupId" timeout="3000" retries="0" />
+	    <dubbo:method name="updateGroupByGroupId" timeout="3000" retries="0" />
+	    <dubbo:method name="queryGroupMemberByPageFromMinsu" timeout="3000" retries="3" />
+	    <dubbo:method name="transferGroup" timeout="3000" retries="0" />
+	    <dubbo:method name="saveOrUpdateMsgUserRel" timeout="3000" retries="0" />
+	    <dubbo:method name="queryMsgUserRel" timeout="3000" retries="3" />
+	    <dubbo:method name="dealImYellowPic" timeout="3000" retries="0"/>
+	</dubbo:service>
+	
+	
+	<dubbo:service interface="com.ziroom.minsu.services.message.api.inner.MsgUserLivenessService" ref="message.msgUserLivenessProxy">
+	    <dubbo:method name="syncLivenessTime" timeout="3000" retries="0"/>
+	</dubbo:service>
+</beans>

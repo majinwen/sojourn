@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="house.houseTagDao">
+
+  <!-- 基础map -->
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseTagEntity">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="fid" jdbcType="VARCHAR" property="fid" />
+    <result column="house_base_fid" jdbcType="VARCHAR" property="houseBaseFid" />
+    <result column="room_fid" jdbcType="VARCHAR" property="roomFid" />
+    <result column="rent_way" jdbcType="TINYINT" property="rentWay" />
+    <result column="tag_fid" jdbcType="VARCHAR" property="tagFid" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
+    <result column="is_del" jdbcType="TINYINT" property="isDel" />
+  </resultMap>
+  
+  <!-- 基础字段 -->
+  <sql id="Base_Column_List">
+    id, fid, house_base_fid, room_fid, rent_way, tag_fid, create_date, last_modify_date, 
+    is_del
+  </sql>
+  
+  <!-- fid查询 -->
+  <select id="selectByPrimaryKey" parameterType="string" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_tag
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findHouseTagByParams" parameterType="map" resultType="string">
+    select tag_fid
+    from t_house_tag
+    WHERE 1=1
+      <if test="rentWay !=null ">
+       AND   rent_way = #{rentWay,jdbcType=INTEGER}
+      </if>
+	  <if test="houseBaseFid !=null and houseBaseFid !=''">
+	    AND  `house_base_fid` =  #{houseBaseFid,jdbcType=VARCHAR}
+	  </if>
+     <if test="roomFid != null and roomFid !=''">
+        AND  room_fid = #{roomFid,jdbcType=VARCHAR}
+     </if>
+     <if test="tagType != null">
+        AND  tag_type = #{tagType,jdbcType=INTEGER}
+     </if>
+      
+  </select>
+  <!-- fid查询 -->
+  <insert id="insertHouseTag" parameterType="com.ziroom.minsu.entity.house.HouseTagEntity">
+    insert into t_house_tag
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="fid != null">
+        fid,
+      </if>
+      <if test="houseBaseFid != null">
+        house_base_fid,
+      </if>
+      <if test="roomFid != null">
+        room_fid,
+      </if>
+      <if test="rentWay != null">
+        rent_way,
+      </if>
+      <if test="tagType != null">
+        tag_type,
+      </if>
+      <if test="tagFid != null">
+        tag_fid,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="lastModifyDate != null">
+        last_modify_date,
+      </if>
+      <if test="isDel != null">
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null">
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null">
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null">
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null">
+        #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="tagType != null">
+        #{tagType,jdbcType=TINYINT},
+      </if>
+      <if test="tagFid != null">
+        #{tagFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null">
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.house.HouseTagEntity">
+    update t_house_tag
+    <set>
+      <if test="fid != null">
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null">
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null">
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null">
+        rent_way = #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="tagFid != null">
+        tag_fid = #{tagFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null">
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 删除top房源标签 -->
+  <delete id="delHouseTagByParams"  parameterType="map" >
+  	delete 
+    from t_house_tag
+    WHERE  rent_way = #{rentWay,jdbcType=INTEGER}
+	AND  `house_base_fid` =  #{houseBaseFid,jdbcType=VARCHAR}
+    AND  room_fid = #{roomFid,jdbcType=VARCHAR}
+    AND  tag_type = #{tagType,jdbcType=INTEGER}
+  </delete>
+</mapper>

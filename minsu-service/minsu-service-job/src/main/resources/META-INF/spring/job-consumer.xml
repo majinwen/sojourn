@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015. ziroom.
+  -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 1小时= 360000毫秒 -->
+
+    <!-- 同步当前的位置信息-->
+    <dubbo:reference id="job.CustomerLocationService" timeout="360000" interface="com.ziroom.minsu.services.customer.api.inner.CustomerLocationService" check="false"/>
+
+
+    <!-- 同步Ehr员工接口 1小时-->
+    <dubbo:reference id="job.ehrAccountSyncService" timeout="360000" interface="com.ziroom.minsu.services.basedata.api.inner.EhrAccountSyncService" check="false"/>
+
+    <!-- 评价 30分钟-->
+    <dubbo:reference id="job.evaluateOrderService"  timeout="180000"  interface="com.ziroom.minsu.services.evaluate.api.inner.EvaluateOrderService" check="false"/>
+
+    <!-- 订单 30分钟-->
+    <dubbo:reference id="job.orderCommonService" timeout="180000"  interface="com.ziroom.minsu.services.order.api.inner.OrderCommonService" check="false"/>
+    <dubbo:reference id="job.orderTaskAccountService" timeout="180000"  interface="com.ziroom.minsu.services.order.api.inner.OrderTaskAccountService" check="false"/>
+
+    <dubbo:reference id="job.orderTaskSyncService" timeout="180000" interface="com.ziroom.minsu.services.order.api.inner.OrderTaskSyncService" check="false">
+        <dubbo:method name="syncIncomeData" timeout="180000" retries="0"/>
+        <dubbo:method name="syncPaymentData" timeout="180000" retries="0"/>
+        <dubbo:method name="getNotSyncActivityCount" timeout="180000" retries="3"/>
+        <dubbo:method name="getNotSyncActivityList" timeout="180000" retries="3"/>
+        <dubbo:method name="updateActivityHasSync" timeout="180000" retries="0"/>
+    </dubbo:reference>
+
+
+    <dubbo:reference id="job.orderTaskOrderService" timeout="180000" interface="com.ziroom.minsu.services.order.api.inner.OrderTaskOrderService" check="false">
+        <dubbo:method name="taskRefusedOrder" timeout="30000" retries="0"/>
+        <dubbo:method name="cancelOrderAndUnlockHouse" timeout="30000" retries="0"/>
+        <dubbo:method name="updateOrderStatus" timeout="30000" retries="0"/>
+        <!--<dubbo:method name="sendWeatherMsgForTomorrowOrder" timeout="30000" retries="0"/>-->
+        <dubbo:method name="taskCheckOut" timeout="30000" retries="0"/>
+        <dubbo:method name="taskConfirmOtherFeeLandlord" timeout="30000" retries="0"/>
+        <dubbo:method name="taskConfirmOtherUser" timeout="30000" retries="0"/>
+        <dubbo:method name="taskWatiConfimOrder" timeout="30000" retries="0"/>
+        <dubbo:method name="taskCheckOutRemind" timeout="30000" retries="0"/>
+        <dubbo:method name="taskMaliceOrder" timeout="30000" retries="0"/>
+        <dubbo:method name="checkIfInviteCheckInOrder" timeout="60000" retries="3"/>
+    </dubbo:reference>
+
+
+    <dubbo:reference id="job.orderFinanceService" timeout="180000" interface="com.ziroom.minsu.services.order.api.inner.OrderFinanceService" check="false"/>
+    <dubbo:reference id="job.orderTaskFinanceService" timeout="180000" interface="com.ziroom.minsu.services.order.api.inner.OrderTaskFinanceService" check="false"/>
+
+    <!-- cms 30分钟-->
+	<dubbo:reference id="job.jobActService" timeout="180000" interface="com.ziroom.minsu.services.cms.api.inner.JobActService" check="false"/>
+
+	<dubbo:reference id="job.actCouponService" timeout="180000" interface="com.ziroom.minsu.services.cms.api.inner.ActCouponService" check="false">
+	     <dubbo:method name="pullActivityByMobile" timeout="30000" retries="0"/>
+	</dubbo:reference>
+	<dubbo:reference id="job.inviteService" timeout="180000" interface="com.ziroom.minsu.services.cms.api.inner.InviteService" check="false"/>
+    <dubbo:reference id="job.activityService" timeout="180000" interface="com.ziroom.minsu.services.cms.api.inner.ActivityService" check="false"/>
+    <dubbo:reference id="job.inviteCreateOrderCmsService" timeout="180000" interface="com.ziroom.minsu.services.cms.api.inner.InviteCreateOrderCmsService" check="false"/>
+
+
+
+    <!-- 房源 30分钟-->
+    <dubbo:reference id="job.houseJobService" timeout="180000" interface="com.ziroom.minsu.services.house.api.inner.HouseJobService" check="false"/>
+
+    <!-- 搜索 1小时-->
+    <dubbo:reference id="job.searchService" timeout="360000" interface="com.ziroom.minsu.services.search.api.inner.SearchService" check="false"/>
+    <dubbo:reference id="job.cmsSearchService" timeout="360000" interface="com.ziroom.minsu.services.search.api.inner.CmsSearchService" check="false"/>
+    <dubbo:reference id="job.zrySearchService" timeout="360000" interface="com.ziroom.minsu.services.search.api.inner.ZrySearchService" check="false"/>
+
+
+    <dubbo:reference id="job.customerInfoService" timeout="360000" interface="com.ziroom.minsu.services.customer.api.inner.CustomerInfoService" check="false"/>
+
+    <dubbo:reference id="job.msgBaseService" timeout="360000" interface="com.ziroom.minsu.services.message.api.inner.MsgBaseService" check="false"/>
+
+    <dubbo:reference id="job.staticsService" timeout="360000" interface="com.ziroom.minsu.services.order.api.inner.StaticsService" check="false"/>
+
+    <dubbo:reference id="job.landlordStaticsService" timeout="360000" interface="com.ziroom.minsu.services.customer.api.inner.LandlordStaticsService" check="false"/>
+
+    <dubbo:reference id="job.landlordBehaviorService" timeout="360000" interface="com.ziroom.minsu.services.customer.api.inner.LandlordBehaviorService" check="false"/>
+
+    <dubbo:reference id="job.houseManageService" timeout="360000" interface="com.ziroom.minsu.services.house.api.inner.HouseManageService" check="false"/>
+
+    <dubbo:reference id="job.huanxinImRecordService" timeout="180000" interface="com.ziroom.minsu.services.message.api.inner.HuanxinImRecordService" check="false">
+       <dubbo:method name="sysHuanxinImMes" timeout="30000" retries="0"/>
+        <dubbo:method name="queryByPage" timeout="3000" retries="3" />
+    </dubbo:reference>
+    <dubbo:reference id="job.huanxinImManagerService" timeout="180000" interface="com.ziroom.minsu.services.message.api.inner.HuanxinImManagerService" check="false">
+         <dubbo:method name="dealImYellowPic" retries="0" timeout="360000"/>
+    </dubbo:reference>
+    <!-- 短信模板接口 -->
+    <dubbo:reference id="job.smsTemplateService" timeout="180000" interface="com.ziroom.minsu.services.basedata.api.inner.SmsTemplateService" check="false">
+        <dubbo:method name="sendSmsByCode" timeout="30000" retries="0"/>
+        <dubbo:method name="jpushByCode" timeout="30000" retries="0"/>
+    </dubbo:reference>
+
+    <dubbo:reference id="job.cityTemplateService" timeout="180000" interface="com.ziroom.minsu.services.basedata.api.inner.CityTemplateService" check="false"/>
+
+    <!--获取代理ip地址-->
+    <dubbo:reference id="job.netProxyIpPortService" timeout="180000" interface="com.ziroom.minsu.services.basedata.api.inner.NetProxyIpPortService" check="false"/>
+
+    <!--airbnb房源日历对应接口-->
+    <dubbo:reference id="job.abHouseService" timeout="180000" interface="com.ziroom.minsu.services.house.api.inner.AbHouseService" check="false"/>
+    <!--房源处理-->
+    <dubbo:reference id="job.houseCommonService" timeout="180000" interface="com.ziroom.minsu.services.order.api.inner.HouseCommonService" check="false"/>
+
+
+    <dubbo:reference id="job.shortChainMapService" timeout="180000" interface="com.ziroom.minsu.services.cms.api.inner.ShortChainMapService" check="false"/>
+
+    <dubbo:reference id="job.customerMsgManagerService" timeout="180000" interface="com.ziroom.minsu.services.customer.api.inner.CustomerMsgManagerService" check="false"/>
+
+    <dubbo:reference id="job.activityGiftService" timeout="180000" interface="com.ziroom.minsu.services.cms.api.inner.ActivityGiftService" check="false"/>
+
+    <dubbo:reference id="job.customerBehaviorService" timeout="180000" interface="com.ziroom.minsu.services.customer.api.inner.CustomerBehaviorService" check="false"/>
+
+</beans>

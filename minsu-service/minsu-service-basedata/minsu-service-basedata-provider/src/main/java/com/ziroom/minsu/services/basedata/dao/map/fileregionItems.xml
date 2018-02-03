@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.fileRegionItemsDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.file.FileRegionItemsEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="hot_region_fid" property="hotRegionFid" jdbcType="VARCHAR" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="item_brief" property="itemBrief" jdbcType="VARCHAR" />
+    <result column="item_abstract" property="itemAbstract" jdbcType="VARCHAR" />
+    <result column="item_content" property="itemContent" jdbcType="LONGVARCHAR" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, fid, hot_region_fid, item_name, item_brief, item_abstract,item_content,create_fid, create_date,
+    last_modify_date, is_del
+  </sql>
+<!-- 根据fid查询推荐项内容-->
+  <select id="getRegionItem" resultMap="BaseResultMap" parameterType="string" >
+    select
+    <include refid="Base_Column_List" />
+    from t_file_region_items
+    where fid = #{itemFid,jdbcType=VARCHAR} AND is_del=0
+  </select>
+
+<!-- 根据景点商圈fid查询其所有已存在的推荐项-->
+  <select id="getItemsByHotRegionFid" resultMap="BaseResultMap" parameterType="string" >
+    select
+    <include refid="Base_Column_List" />
+    from t_file_region_items
+    where hot_region_fid = #{hotRegionFid,jdbcType=VARCHAR} AND is_del=0
+  </select>
+
+  <insert id="saveRegionItem" parameterType="com.ziroom.minsu.entity.file.FileRegionItemsEntity" >
+    insert into t_file_region_items
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="hotRegionFid != null" >
+        hot_region_fid,
+      </if>
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      <if test="itemBrief != null" >
+        item_brief,
+      </if>
+      <if test="itemAbstract != null" >
+        item_abstract,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="itemContent != null" >
+        item_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="hotRegionFid != null" >
+        #{hotRegionFid,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemBrief != null" >
+        #{itemBrief,jdbcType=VARCHAR},
+      </if>
+      <if test="itemAbstract != null" >
+        #{itemAbstract,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="itemContent != null" >
+        #{itemContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="upRegionItem" parameterType="com.ziroom.minsu.entity.file.FileRegionItemsEntity" >
+    update t_file_region_items
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="hotRegionFid != null" >
+        hot_region_fid = #{hotRegionFid,jdbcType=VARCHAR},
+      </if>
+      <if test="itemName != null" >
+        item_name = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="itemBrief != null" >
+        item_brief = #{itemBrief,jdbcType=VARCHAR},
+      </if>
+      <if test="itemAbstract != null" >
+        item_abstract = #{itemAbstract,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="itemContent != null" >
+        item_content = #{itemContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+</mapper>

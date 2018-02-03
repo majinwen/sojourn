@@ -1,0 +1,778 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseFollowDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseFollowEntity" >
+    <!--
+    基础map
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+    <result column="audit_status_time" property="auditStatusTime" jdbcType="TIMESTAMP" />
+    <result column="audit_cause" property="auditCause" jdbcType="VARCHAR" />
+    <result column="follow_type" property="followType" jdbcType="TINYINT" />
+    <result column="follow_status" property="followStatus" jdbcType="TINYINT" />
+    <result column="follow_end_cause" property="followEndCause" jdbcType="TINYINT" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  
+  <resultMap id="servicerFollowMap" type="com.ziroom.minsu.entity.house.HouseFollowEntity" >
+    <!--
+    待客服跟进Map
+    -->
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+    <result column="refuse_date" property="auditStatusTime" jdbcType="TIMESTAMP" />
+    <result column="refuse_reason" property="auditCause" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 房东查询map -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.HouseFollowVo" id="landlordMap">
+  	<result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+  </resultMap>
+  
+    <!-- 客服跟进列表查询map -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.HouseFollowVo" id="serverFollowMap">
+  	<result column="fid" property="fid" jdbcType="VARCHAR" />
+  	<result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+  	<result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+  	<result column="house_name" property="houseName" jdbcType="VARCHAR" />
+  	<result column="refuse_reason" property="auditCause" jdbcType="VARCHAR" />
+  	<result column="refuse_mark" property="refuseMark" jdbcType="VARCHAR" />
+  	<result column="first_deploy_date" property="pushDate" jdbcType="TIMESTAMP" />
+  	<result column="refuse_date" property="auditStatusTime" jdbcType="TIMESTAMP" />
+  	<result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+  	<result column="house_status" property="houseStatus" jdbcType="INTEGER" />
+  	<result column="follow_status" property="followStatus" jdbcType="INTEGER" />
+  	<result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+  </resultMap>
+  
+  <!-- 跟进详情查询map -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.HouseFollowVo" id="followDetailMap">
+  	<result column="fid" property="fid" jdbcType="VARCHAR" />
+  	<result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+  	<result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+  	<result column="house_name" property="houseName" jdbcType="VARCHAR" />
+  	<result column="refuse_reason" property="auditCause" jdbcType="VARCHAR" />
+  	<result column="refuse_mark" property="refuseMark" jdbcType="VARCHAR" />
+  	<result column="first_deploy_date" property="pushDate" jdbcType="TIMESTAMP" />
+  	<result column="refuse_date" property="auditStatusTime" jdbcType="TIMESTAMP" />
+  	<result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+  	<result column="house_status" property="houseStatus" jdbcType="INTEGER" />
+  	<result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+  	<result column="follow_status" property="followStatus" jdbcType="INTEGER" />
+  	<collection property="followLogList" column="fid" javaType="ArrayList" select="house.houseFollowLogDao.findHouseFollowLog"></collection>
+  </resultMap>
+  
+
+  <sql id="Base_Column_List" >
+    <!--
+    基础字段
+    -->
+    id, fid, house_base_fid, room_fid, rent_way, audit_status_time, audit_cause, follow_type, 
+    follow_status,follow_end_cause, create_fid, create_date, last_modify_date, is_del
+  </sql>
+  
+  <select id="getHouseFollowByKey" resultMap="BaseResultMap" parameterType="string" >
+    <!--
+    fid查询
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_follow
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  
+
+  <insert id="insertHouseFollow" parameterType="com.ziroom.minsu.entity.house.HouseFollowEntity" >
+    <!--
+    插入房源跟进记录
+    -->
+    insert into t_house_follow
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="auditStatusTime != null" >
+        audit_status_time,
+      </if>
+      <if test="auditCause != null" >
+        audit_cause,
+      </if>
+      <if test="followType != null" >
+        follow_type,
+      </if>
+      <if test="followStatus != null" >
+        follow_status,
+      </if>
+      <if test="followEndCause != null" >
+        follow_end_cause,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="auditStatusTime != null" >
+        #{auditStatusTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditCause != null" >
+        #{auditCause,jdbcType=VARCHAR},
+      </if>
+      <if test="followType != null" >
+        #{followType,jdbcType=TINYINT},
+      </if>
+      <if test="followStatus != null" >
+        #{followStatus,jdbcType=TINYINT},
+      </if>
+      <if test="followEndCause != null" >
+        #{followEndCause,jdbcType=TINYINT},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateHouseFollow" parameterType="com.ziroom.minsu.entity.house.HouseFollowEntity" >
+    <!--
+    更新房源跟进表
+    -->
+    update t_house_follow
+    <set >
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        rent_way = #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="auditStatusTime != null" >
+        audit_status_time = #{auditStatusTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditCause != null" >
+        audit_cause = #{auditCause,jdbcType=VARCHAR},
+      </if>
+      <if test="followType != null" >
+        follow_type = #{followType,jdbcType=TINYINT},
+      </if>
+      <if test="followStatus != null" >
+        follow_status = #{followStatus,jdbcType=TINYINT},
+      </if>
+      <if test="followEndCause != null" >
+        follow_end_cause = #{followEndCause,jdbcType=TINYINT},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 未通过原因非房源品质原因且审核未通过超过12小时Map --> 
+  <resultMap type="com.ziroom.minsu.services.house.entity.HouseFollowVo" id="auditOverTimeMap">
+  	<result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+    <result column="refuse_date" property="auditStatusTime" jdbcType="TIMESTAMP" />
+    <result column="refuse_reason" property="auditCause" jdbcType="VARCHAR" />
+    <result column="refuse_mark" property="refuseMark" jdbcType="VARCHAR" />
+    <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 查询满足客服跟进条件，未生成客服跟进未审核通过房源的记录（条件：未通过原因非房源品质原因且审核未通过超过12小时） -->
+  <select id="findServicerFollowHouseList" parameterType="map" resultMap="auditOverTimeMap">
+  	SELECT hbizm.`house_base_fid`,hbizm.`room_fid`,hbizm.`rent_way`,hbizm.`refuse_date`,hbizm.`refuse_reason`,hbizm.`refuse_mark`,hbm.landlord_uid FROM `t_house_base_msg` hbm
+	LEFT JOIN `t_house_biz_msg` hbizm ON hbm.`fid`=hbizm.house_base_fid
+	WHERE hbm.`house_status`=30 AND hbm.`rent_way`=0 AND hbizm.`rent_way`=0 
+	AND hbizm.`refuse_date`>=#{startDate,jdbcType=TIMESTAMP}
+	AND hbizm.`refuse_date`<![CDATA[ <=]]>#{beforeDate,jdbcType=TIMESTAMP} AND FIND_IN_SET('13',hbizm.`refuse_reason`)=0 AND hbm.`is_del`=0
+	UNION ALL
+	SELECT hbizm.`house_base_fid`,hbizm.`room_fid`,hbizm.`rent_way`,hbizm.`refuse_date`,hbizm.`refuse_reason`,hbizm.`refuse_mark`,hbm.landlord_uid FROM `t_house_room_msg` hrm
+	LEFT JOIN `t_house_base_msg` hbm ON hrm.house_base_fid=hbm.`fid`
+	LEFT JOIN `t_house_biz_msg` hbizm ON hbizm.`room_fid`=hrm.fid
+	LEFT JOIN `t_house_follow` hf ON hf.`room_fid`=hrm.`fid`
+	WHERE hrm.`room_status`=30 AND hbm.`rent_way`=1 AND hbizm.`rent_way`=1 
+	AND hbizm.`refuse_date`>=#{startDate,jdbcType=TIMESTAMP}
+	AND hbizm.`refuse_date`<![CDATA[ <=]]>#{beforeDate,jdbcType=TIMESTAMP} AND FIND_IN_SET('13',hbizm.`refuse_reason`)=0 AND hbm.`is_del`=0
+  </select>
+  
+  <!-- 分页查询房源未审核通过客服跟进房东列表 -->
+  <select id="findServicerFollowLandlordList"  parameterType="com.ziroom.minsu.services.house.dto.HouseFollowDto"  resultMap="landlordMap">
+  	SELECT follow.landlord_uid FROM 
+	(SELECT hbm.`landlord_uid` FROM `t_house_base_msg` hbm
+	LEFT JOIN `t_house_phy_msg` hpm ON hbm.`phy_fid`=hpm.`fid`
+	LEFT JOIN `t_house_biz_msg` hbizm ON hbm.`fid`=hbizm.house_base_fid
+	LEFT JOIN (SELECT * FROM `t_house_follow` WHERE `follow_status` NOT IN(203,301,302)) hf ON hf.`house_base_fid`=hbm.`fid`
+	<if test="isNotLock ==1" >
+		LEFT JOIN t_house_lock thl ON thl.locked_fid=hf.fid
+	</if>
+	<if test="empName != null and empName !=''" >
+		LEFT JOIN t_house_follow_log hfl ON hf.fid=hfl.follow_fid
+	</if>
+	WHERE hbm.`house_status`=30 AND hbm.`rent_way`=0 AND hbizm.`rent_way`=0
+    <if test="houseSn != null and houseSn !=''" >
+		AND hbm.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="followStatus != null" >
+		<if test="followStatus !=101 " >
+			AND hf.follow_status=#{followStatus,jdbcType=TINYINT}
+		</if>
+	</if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hpm.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+		AND hpm.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hpm.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="empName != null and empName !=''" >
+    	AND hfl.follow_emp_name like CONCAT(#{empName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="isNotLock ==1" >
+    	AND (thl.fid IS NULL OR thl.locker_fid=#{operateFid,jdbcType=VARCHAR} OR thl.lock_fail_date<![CDATA[ <]]>#{operateDate,jdbcType=VARCHAR})
+    </if>
+	AND hbizm.`refuse_date`>=#{startDate,jdbcType=TIMESTAMP}
+	AND hbizm.`refuse_date`>#{attacheStartDate,jdbcType=TIMESTAMP}
+	AND hbizm.`refuse_date`<![CDATA[ <=]]>#{beforeDate,jdbcType=TIMESTAMP} AND FIND_IN_SET('13',hbizm.`refuse_reason`)=0 AND hbm.`is_del`=0
+	AND (hf.`fid` IS NULL OR (hf.`rent_way`=0 AND hf.`follow_type`=1 AND hf.`follow_status` IN (101,102) AND hf.`is_del`=0))
+	UNION ALL
+	SELECT hbm.`landlord_uid` FROM `t_house_room_msg` hrm
+	LEFT JOIN `t_house_base_msg` hbm ON hrm.house_base_fid=hbm.`fid`
+	LEFT JOIN `t_house_phy_msg` hpm ON hbm.`phy_fid`=hpm.`fid`
+	LEFT JOIN `t_house_biz_msg` hbizm ON hbizm.`room_fid`=hrm.fid
+	LEFT JOIN (SELECT * FROM `t_house_follow` WHERE `follow_status` NOT IN(203,301,302)) hf ON hf.`room_fid`=hrm.`fid`
+    <if test="isNotLock ==1" >
+		LEFT JOIN t_house_lock thl ON thl.locked_fid=hf.fid
+	</if>
+    <if test="empName != null and empName !=''" >
+		LEFT JOIN t_house_follow_log hfl ON hf.fid=hfl.follow_fid
+	</if>
+	WHERE hrm.`room_status`=30 AND hbm.`rent_way`=1 AND hbizm.`rent_way`=1
+	<if test="houseSn != null and houseSn !=''" >
+		AND hrm.room_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="followStatus != null" >
+		<if test="followStatus !=101 " >
+			AND hf.follow_status=#{followStatus,jdbcType=TINYINT}
+		</if>
+	</if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hpm.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+		AND hpm.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hpm.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="empName != null and empName !=''" >
+    	AND hfl.follow_emp_name like CONCAT(#{empName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="isNotLock ==1" >
+    	AND (thl.fid IS NULL OR thl.locker_fid=#{operateFid,jdbcType=VARCHAR} OR thl.lock_fail_date<![CDATA[ <]]>#{operateDate,jdbcType=VARCHAR})
+    </if>
+	AND hbizm.`refuse_date`>=#{startDate,jdbcType=TIMESTAMP}
+	AND hbizm.`refuse_date`>#{attacheStartDate,jdbcType=TIMESTAMP}
+	AND hbizm.`refuse_date`<![CDATA[ <=]]>#{beforeDate,jdbcType=TIMESTAMP} AND FIND_IN_SET('13',hbizm.`refuse_reason`)=0 AND hbm.`is_del`=0
+	AND (hf.`fid` IS NULL OR (hf.`rent_way`=1 AND hf.`follow_type`=1 AND hf.`follow_status` IN (101,102) AND hf.`is_del`=0))) follow
+	WHERE 1=1
+	<if test="uidStr != null and uidStr !=''" >
+	AND follow.landlord_uid IN(${uidStr})
+	</if>
+	GROUP BY follow.landlord_uid
+  </select>
+  
+  <!-- 条件查询房东下客服跟进房源列表 -->
+  <select id="findServicerFollowHouseListByLandlord" parameterType="com.ziroom.minsu.services.house.dto.HouseFollowDto"  resultMap="serverFollowMap">
+  	SELECT follow.landlord_uid,follow.house_sn,follow.house_name,follow.refuse_reason,follow.refuse_mark,follow.first_deploy_date,follow.refuse_date,follow.city_code,
+  	follow.house_status,follow.fid,follow.rent_way,follow.follow_status FROM 
+  	(SELECT hbm.`landlord_uid`,hbm.`house_sn`,hbm.`house_name`,hbizm.`refuse_reason`,hbizm.`refuse_mark`,hbizm.`first_deploy_date`,hbizm.`refuse_date`,hpm.`city_code`,
+  	hbm.`house_status`,hf.`fid`,hbm.`rent_way`,hf.`follow_status` FROM `t_house_base_msg` hbm
+	LEFT JOIN `t_house_phy_msg` hpm ON hbm.`phy_fid`=hpm.`fid`
+	LEFT JOIN `t_house_biz_msg` hbizm ON hbm.`fid`=hbizm.house_base_fid
+	LEFT JOIN (SELECT * FROM `t_house_follow` WHERE `follow_status` NOT IN(203,301,302)) hf ON hf.`house_base_fid`=hbm.`fid`
+    <if test="isNotLock ==1" >
+		LEFT JOIN t_house_lock thl ON thl.locked_fid=hf.fid
+	</if>
+	<if test="empName != null and empName !=''" >
+		LEFT JOIN t_house_follow_log hfl ON hf.fid=hfl.follow_fid
+	</if>
+	WHERE hbm.`house_status`=30 AND hbm.`rent_way`=0 AND hbizm.`rent_way`=0 
+	<if test="houseSn != null and houseSn !=''" >
+		AND hbm.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="followStatus != null" >
+		<if test="followStatus !=101 " >
+			AND hf.follow_status=#{followStatus,jdbcType=TINYINT}
+		</if>
+	</if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hpm.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+		AND hpm.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hpm.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="empName != null and empName !=''" >
+    	AND hfl.follow_emp_name like CONCAT(#{empName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="isNotLock ==1" >
+    	AND (thl.fid IS NULL OR thl.locker_fid=#{operateFid,jdbcType=VARCHAR} OR thl.lock_fail_date<![CDATA[ <]]>#{operateDate,jdbcType=VARCHAR})
+    </if>
+	AND hbm.`landlord_uid`=#{landlordUid,jdbcType=VARCHAR}
+	AND hbizm.`refuse_date`>=#{startDate,jdbcType=TIMESTAMP}
+	AND hbizm.`refuse_date`>#{attacheStartDate,jdbcType=TIMESTAMP}
+	AND hbizm.`refuse_date`<![CDATA[ <=]]>#{beforeDate,jdbcType=TIMESTAMP}
+	AND FIND_IN_SET('13',hbizm.`refuse_reason`)=0 AND hbm.`is_del`=0
+	AND (hf.`fid` IS NULL OR (hf.`rent_way`=0 AND hf.`follow_type`=1 AND hf.`follow_status` IN (101,102) AND hf.`is_del`=0))
+	UNION ALL
+	SELECT hbm.`landlord_uid`,hrm.room_sn house_sn,hrm.room_name house_name,hbizm.`refuse_reason`,hbizm.`refuse_mark`,hbizm.`first_deploy_date`,hbizm.`refuse_date`,hpm.`city_code`,
+	hrm.`room_status` house_status,hf.`fid`,hbm.`rent_way`,hf.`follow_status` FROM `t_house_room_msg` hrm
+	LEFT JOIN `t_house_base_msg` hbm ON hrm.house_base_fid=hbm.`fid`
+	LEFT JOIN `t_house_phy_msg` hpm ON hbm.`phy_fid`=hpm.`fid`
+	LEFT JOIN `t_house_biz_msg` hbizm ON hbizm.`room_fid`=hrm.fid
+	LEFT JOIN (SELECT * FROM `t_house_follow` WHERE `follow_status` NOT IN(203,301,302)) hf ON hf.`room_fid`=hrm.`fid`
+	<if test="isNotLock ==1" >
+		LEFT JOIN t_house_lock thl ON thl.locked_fid=hf.fid
+	</if>
+    <if test="empName != null and empName !=''" >
+		LEFT JOIN t_house_follow_log hfl ON hf.fid=hfl.follow_fid
+	</if>
+	WHERE hrm.`room_status`=30 AND hbm.`rent_way`=1 AND hbizm.`rent_way`=1
+	<if test="houseSn != null and houseSn !=''" >
+		AND hrm.room_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="followStatus != null" >
+		<if test="followStatus !=101 " >
+			AND hf.follow_status=#{followStatus,jdbcType=TINYINT}
+		</if>
+	</if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hpm.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+		AND hpm.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hpm.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="empName != null and empName !=''" >
+    	AND hfl.follow_emp_name like CONCAT(#{empName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="isNotLock ==1" >
+    	AND (thl.fid IS NULL OR thl.locker_fid=#{operateFid,jdbcType=VARCHAR} OR thl.lock_fail_date<![CDATA[ <]]>#{operateDate,jdbcType=VARCHAR})
+    </if>
+	AND hbm.`landlord_uid`=#{landlordUid,jdbcType=VARCHAR} 
+	AND hbizm.`refuse_date`>=#{startDate,jdbcType=TIMESTAMP}
+	AND hbizm.`refuse_date`>#{attacheStartDate,jdbcType=TIMESTAMP}
+	AND hbizm.`refuse_date`<![CDATA[ <=]]>#{beforeDate,jdbcType=TIMESTAMP}
+	AND FIND_IN_SET('13',hbizm.`refuse_reason`)=0 AND hbm.`is_del`=0
+	AND (hf.`fid` IS NULL OR (hf.`rent_way`=1 AND hf.`follow_type`=1 AND hf.`follow_status` IN (101,102) AND hf.`is_del`=0))) follow
+	GROUP BY follow.landlord_uid,follow.house_sn,follow.house_name,follow.refuse_reason,follow.refuse_mark,follow.first_deploy_date,follow.refuse_date,follow.city_code,
+  	follow.house_status,follow.fid,follow.rent_way,follow.follow_status
+  </select>
+  
+  <!-- 查询整租房源跟进信息 -->
+  <select id="findHouseFollowMsgZ" parameterType="string"  resultMap="servicerFollowMap">
+  	SELECT 
+	  hbizm.`house_base_fid`,
+	  hbizm.`room_fid`,
+	  hbizm.`rent_way`,
+	  hbizm.`refuse_date`,
+	  hbizm.`refuse_reason` 
+	FROM
+	  `t_house_base_msg` hbm 
+	  LEFT JOIN `t_house_biz_msg` hbizm 
+	    ON hbm.`fid` = hbizm.house_base_fid 
+	WHERE hbm.`house_sn`=#{houseSn,jdbcType=VARCHAR} 
+  </select>
+
+	<!--查询房源跟进列表-->
+	<select id="listHouseFollowAll" parameterType="string"  resultMap="servicerFollowMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		t_house_follow
+		  WHERE house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+		  <if test="roomFid != null and roomFid !=''">
+			AND room_fid = #{roomFid,jdbcType=VARCHAR}
+		  </if>
+		  AND rent_way = #{rentWay,jdbcType=TINYINT}
+		<if test="statusList != null and statusList.size > 0">
+			AND follow_status IN
+			<foreach collection="statusList"  item="followStatus" index="index" open="(" separator="," close=")">
+				#{followStatus,jdbcType=TINYINT}
+			</foreach>
+		</if>
+
+	</select>
+  
+  <!-- 查询分组房源跟进信息 -->
+  <select id="findHouseFollowMsgF" parameterType="string"  resultMap="servicerFollowMap">
+	SELECT 
+	  hbizm.`house_base_fid`,
+	  hbizm.`room_fid`,
+	  hbizm.`rent_way`,
+	  hbizm.`refuse_date`,
+	  hbizm.`refuse_reason` 
+	FROM
+	  `t_house_room_msg` hrm 
+	  LEFT JOIN `t_house_base_msg` hbm 
+	    ON hrm.house_base_fid = hbm.`fid` 
+	  LEFT JOIN `t_house_biz_msg` hbizm 
+	    ON hbizm.`room_fid` = hrm.fid 
+	WHERE hrm.`room_sn`=#{roomSn,jdbcType=VARCHAR} 
+  </select>
+  
+  <!-- 查询整租房源跟进详细信息 -->
+  <select id="findHouseFollowDetailZ"  parameterType="string" resultMap="followDetailMap">
+	  SELECT 
+	  hbm.`landlord_uid`,
+	  hbm.`house_sn`,
+	  hbm.`house_name`,
+	  hbizm.`refuse_reason`,
+	  hbizm.`refuse_mark`,
+	  hbizm.`first_deploy_date`,
+	  hbizm.`refuse_date`,
+	  hpm.`city_code`,
+	  hbm.`house_status`,
+	  hf.`fid`,
+	  hbm.`rent_way`,
+	  hf.`follow_status`  
+	FROM
+	  `t_house_base_msg` hbm 
+	  LEFT JOIN `t_house_phy_msg` hpm 
+	    ON hbm.`phy_fid` = hpm.`fid` 
+	  LEFT JOIN `t_house_biz_msg` hbizm 
+	    ON hbm.`fid` = hbizm.house_base_fid 
+	  LEFT JOIN `t_house_follow` hf 
+	    ON hf.`house_base_fid` = hbm.`fid` 
+	WHERE hf.`fid`=#{followFid,jdbcType=VARCHAR} 
+  </select>
+  
+  <!-- 查询分组房源跟进详细信息 -->
+  <select id="findHouseFollowDetailF"  parameterType="string" resultMap="followDetailMap">
+	SELECT 
+	  hbm.`landlord_uid`,
+	  hrm.room_sn house_sn,
+	  hrm.room_name house_name,
+	  hbizm.`refuse_reason`,
+	  hbizm.`refuse_mark`,
+	  hbizm.`first_deploy_date`,
+	  hbizm.`refuse_date`,
+	  hpm.`city_code`,
+	  hrm.`room_status` house_status,
+	  hf.`fid`,
+	  hbm.`rent_way` ,
+	  hf.`follow_status` 
+	FROM
+	  `t_house_room_msg` hrm 
+	  LEFT JOIN `t_house_base_msg` hbm 
+	    ON hrm.house_base_fid = hbm.`fid` 
+	  LEFT JOIN `t_house_phy_msg` hpm 
+	    ON hbm.`phy_fid` = hpm.`fid` 
+	  LEFT JOIN `t_house_biz_msg` hbizm 
+	    ON hbizm.`room_fid` = hrm.fid 
+	  LEFT JOIN `t_house_follow` hf 
+	    ON hf.`room_fid` = hrm.`fid` 
+	WHERE hf.`fid`=#{followFid,jdbcType=VARCHAR} 
+  </select>
+  
+  <!-- 根据房东查询专员跟进列表 -->
+  <select id="findAttacheFollowListByLandlord" parameterType="com.ziroom.minsu.services.house.dto.HouseFollowDto" resultMap="serverFollowMap">
+    SELECT follow.landlord_uid,follow.house_sn,follow.house_name,follow.refuse_reason,follow.refuse_mark,follow.first_deploy_date,follow.refuse_date,follow.city_code,
+  	follow.house_status,follow.fid,follow.rent_way,follow.follow_status FROM
+  	(SELECT hbm.`landlord_uid`,hbm.`house_sn`,hbm.`house_name`,hbizm.`refuse_reason`,hbizm.`refuse_mark`,hbizm.`first_deploy_date`,hbizm.`refuse_date`,hpm.`city_code`,hbm.`house_status`,hf.`fid`,hbm.`rent_way`,hf.`follow_status` 
+	FROM `t_house_follow` hf
+	LEFT JOIN `t_house_base_msg` hbm ON hf.`house_base_fid`=hbm.`fid`
+	LEFT JOIN `t_house_phy_msg` hpm ON hbm.`phy_fid`=hpm.`fid`
+	LEFT JOIN `t_house_biz_msg` hbizm ON hbm.`fid`=hbizm.house_base_fid
+    <if test="isNotLock ==1" >
+		LEFT JOIN t_house_lock thl ON thl.locked_fid=hf.fid
+	</if>
+	<if test="empName != null and empName !=''" >
+		LEFT JOIN t_house_follow_log hfl ON hf.fid=hfl.follow_fid
+	</if>
+	WHERE hf.`rent_way`=0 AND hf.`is_del`=0
+	<if test="houseSn != null and houseSn !=''" >
+		AND hbm.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="followStatus != null" >
+		AND hf.follow_status=#{followStatus,jdbcType=TINYINT}
+	</if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hpm.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+		AND hpm.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hpm.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="empName != null and empName !=''" >
+    	AND hfl.follow_emp_name like CONCAT(#{empName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="isNotLock ==1" >
+    	AND (thl.fid IS NULL OR thl.locker_fid=#{operateFid,jdbcType=VARCHAR} OR thl.lock_fail_date<![CDATA[ <]]>#{operateDate,jdbcType=VARCHAR})
+    </if>
+	AND hbm.`landlord_uid`=#{landlordUid,jdbcType=VARCHAR}
+	AND (hf.`follow_status` IN(103,201,202,104) OR (hf.`follow_status` IN(101,102) AND hf.`audit_status_time`<![CDATA[ <=]]>#{attacheStartDate,jdbcType=TIMESTAMP}))
+	UNION ALL
+	SELECT hbm.`landlord_uid`,hrm.room_sn house_sn,hrm.room_name house_name,hbizm.`refuse_reason`,hbizm.`refuse_mark`,hbizm.`first_deploy_date`,hbizm.`refuse_date`,hpm.`city_code`,hrm.`room_status` house_status,hf.`fid`,hbm.`rent_way`,hf.`follow_status` 
+	FROM `t_house_follow` hf
+	LEFT JOIN `t_house_room_msg` hrm  ON hf.`room_fid`=hrm.fid
+	LEFT JOIN `t_house_base_msg` hbm ON hrm.house_base_fid=hbm.`fid`
+	LEFT JOIN `t_house_phy_msg` hpm ON hbm.`phy_fid`=hpm.`fid`
+	LEFT JOIN `t_house_biz_msg` hbizm ON hbizm.`room_fid`=hrm.fid
+    <if test="isNotLock ==1" >
+		LEFT JOIN t_house_lock thl ON thl.locked_fid=hf.fid
+	</if>
+	<if test="empName != null and empName !=''" >
+		LEFT JOIN t_house_follow_log hfl ON hf.fid=hfl.follow_fid
+	</if>
+	WHERE hf.`rent_way`=1 AND hf.`is_del`=0 
+	<if test="houseSn != null and houseSn !=''" >
+		AND hrm.room_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+	</if>
+    <if test="followStatus != null" >
+		AND hf.follow_status=#{followStatus,jdbcType=TINYINT}
+	</if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hpm.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+		AND hpm.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hpm.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="empName != null and empName !=''" >
+    	AND hfl.follow_emp_name like CONCAT(#{empName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="isNotLock ==1" >
+    	AND (thl.fid IS NULL OR thl.locker_fid=#{operateFid,jdbcType=VARCHAR} OR thl.lock_fail_date<![CDATA[ <]]>#{operateDate,jdbcType=VARCHAR})
+    </if>
+	AND hbm.`landlord_uid`=#{landlordUid,jdbcType=VARCHAR}
+	AND (hf.`follow_status` IN(103,201,202,104) OR (hf.`follow_status` IN(101,102) AND hf.`audit_status_time`<![CDATA[ <=]]>#{attacheStartDate,jdbcType=TIMESTAMP}))) follow
+    GROUP BY follow.landlord_uid,follow.house_sn,follow.house_name,follow.refuse_reason,follow.refuse_mark,follow.first_deploy_date,follow.refuse_date,follow.city_code,
+  	follow.house_status,follow.fid,follow.rent_way,follow.follow_status
+  </select>
+  
+   <!-- 分页查询专员跟进房东列表 -->
+  <select id="findAttacheFollowLandlordList"  parameterType="com.ziroom.minsu.services.house.dto.HouseFollowDto" resultMap="landlordMap">
+  	SELECT follow.landlord_uid FROM 
+	(SELECT hbm.`landlord_uid` 
+	FROM `t_house_follow` hf
+	LEFT JOIN `t_house_base_msg` hbm ON hf.`house_base_fid`=hbm.`fid`
+	<if test="auditCause != null and auditCause != ''">
+	INNER JOIN (
+		SELECT
+			t1.house_base_fid,t1.audit_cause
+		FROM
+			t_house_operate_log t1
+		INNER JOIN (
+			SELECT
+				t2.house_base_fid,
+				MAX(create_date) create_date
+			FROM
+				(
+					SELECT
+						house_base_fid,
+						create_date
+					FROM
+						t_house_operate_log
+					WHERE
+						from_status = 11
+					AND to_status = 30
+					AND room_fid IS NULL
+					ORDER BY
+						create_date DESC
+				) t2
+			GROUP BY
+				t2.house_base_fid
+		) t3
+		WHERE
+			t1.house_base_fid = t3.house_base_fid
+		AND t1.create_date = t3.create_date
+	    AND FIND_IN_SET(#{auditCause,jdbcType=VARCHAR},t1.audit_cause) > 0
+	
+	) t4 ON hbm.fid = t4.house_base_fid
+	</if>
+	<if test="isNotLock ==1" >
+		LEFT JOIN t_house_lock thl ON thl.locked_fid=hf.fid
+	</if>
+	<if test="(nationCode != null and nationCode !='') or (provinceCode != null and provinceCode !='') or (cityCode != null and cityCode !='')">
+		LEFT JOIN `t_house_phy_msg` hpm ON hbm.`phy_fid`=hpm.`fid`
+	</if>
+	<if test="empName != null and empName !=''" >
+		LEFT JOIN t_house_follow_log hfl ON hf.fid=hfl.follow_fid
+	</if>
+	WHERE hf.`rent_way`=0 AND hf.`is_del`=0 
+	<if test="houseSn != null and houseSn !=''" >
+		AND hbm.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="followStatus != null" >
+		AND hf.follow_status=#{followStatus,jdbcType=TINYINT}
+	</if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hpm.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+		AND hpm.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hpm.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="empName != null and empName !=''" >
+    	AND hfl.follow_emp_name like CONCAT(#{empName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="isNotLock ==1" >
+    	AND (thl.fid IS NULL OR thl.locker_fid=#{operateFid,jdbcType=VARCHAR} OR thl.lock_fail_date<![CDATA[ <]]>#{operateDate,jdbcType=VARCHAR})
+    </if>
+	AND (hf.`follow_status` IN(103,201,202,104) OR (hf.`follow_status` IN(101,102) AND hf.`audit_status_time`<![CDATA[ <=]]>#{attacheStartDate,jdbcType=TIMESTAMP}))
+	UNION ALL
+	SELECT hbm.`landlord_uid`
+	FROM `t_house_follow` hf
+	LEFT JOIN `t_house_room_msg` hrm  ON hf.`room_fid`=hrm.fid
+	LEFT JOIN `t_house_base_msg` hbm ON hrm.house_base_fid=hbm.`fid`
+    <if test="isNotLock ==1" >
+		LEFT JOIN t_house_lock thl ON thl.locked_fid=hf.fid
+	</if>
+	<if test="(nationCode != null and nationCode !='') or (provinceCode != null and provinceCode !='') or (cityCode != null and cityCode !='')">
+		LEFT JOIN `t_house_phy_msg` hpm ON hbm.`phy_fid`=hpm.`fid`
+	</if>
+	<if test="empName != null and empName !=''" >
+		LEFT JOIN t_house_follow_log hfl ON hf.fid=hfl.follow_fid
+	</if>
+    <if test="auditCause != null and auditCause != ''">
+	INNER JOIN (
+		SELECT
+			t1.room_fid,
+			t1.audit_cause
+		FROM
+			t_house_operate_log t1
+		INNER JOIN (
+			SELECT
+				t2.room_fid,
+				MAX(create_date) create_date
+			FROM
+				(
+					SELECT
+						room_fid,
+						create_date
+					FROM
+						t_house_operate_log
+					WHERE
+						from_status = 11
+					AND to_status = 30
+					ORDER BY
+						create_date DESC
+				) t2
+			GROUP BY
+				t2.room_fid
+		) t3
+		WHERE
+			t1.room_fid = t3.room_fid
+		AND t1.create_date = t3.create_date
+		AND FIND_IN_SET(#{auditCause,jdbcType=VARCHAR},t1.audit_cause) > 0
+		GROUP BY t1.room_fid,t1.audit_cause
+	) t4 ON hrm.fid = t4.room_fid
+	</if>
+	WHERE hf.`rent_way`=1 AND hf.`is_del`=0 
+	<if test="houseSn != null and houseSn !=''" >
+		AND hrm.room_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+	</if>
+    <if test="followStatus != null" >
+		AND hf.follow_status=#{followStatus,jdbcType=TINYINT}
+	</if>
+	<if test="nationCode != null and nationCode !=''">
+		AND hpm.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode !=''">
+		AND hpm.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hpm.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="empName != null and empName !=''" >
+    	AND hfl.follow_emp_name like CONCAT(#{empName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="isNotLock ==1" >
+    	AND (thl.fid IS NULL OR thl.locker_fid=#{operateFid,jdbcType=VARCHAR} OR thl.lock_fail_date<![CDATA[ <]]>#{operateDate,jdbcType=VARCHAR})
+    </if>
+	AND (hf.`follow_status` IN(103,201,202,104) OR (hf.`follow_status` IN(101,102) AND hf.`audit_status_time`<![CDATA[ <=]]>#{attacheStartDate,jdbcType=TIMESTAMP}))) follow
+	WHERE 1=1
+    <if test="uidStr != null and uidStr !=''" >
+	AND follow.landlord_uid IN(${uidStr})
+	</if>
+    AND follow.landlord_uid IS NOT NULL
+	GROUP BY follow.landlord_uid
+  </select>
+</mapper>

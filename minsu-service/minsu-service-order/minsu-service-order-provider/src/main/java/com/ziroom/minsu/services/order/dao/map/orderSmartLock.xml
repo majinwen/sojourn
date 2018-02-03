@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderSmartLockDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderSmartLockEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="service_id" property="serviceId" jdbcType="VARCHAR" />
+    <result column="password_id" property="passwordId" jdbcType="VARCHAR" />
+    <result column="temp_pswd" property="tempPswd" jdbcType="VARCHAR" />
+    <result column="temp_start_time" property="tempStartTime" jdbcType="TIMESTAMP" />
+    <result column="temp_expired_time" property="tempExpiredTime" jdbcType="TIMESTAMP" />
+    <result column="temp_pswd_status" property="tempPswdStatus" jdbcType="TINYINT" />
+    <result column="dyna_pswd" property="dynaPswd" jdbcType="VARCHAR" />
+    <result column="dyna_num" property="dynaNum" jdbcType="TINYINT" />
+    <result column="dyna_expired_time" property="dynaExpiredTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    osl.id, osl.fid, osl.order_sn, osl.service_id, osl.password_id, osl.temp_pswd, osl.temp_start_time, osl.temp_expired_time, 
+    osl.temp_pswd_status, osl.dyna_pswd, osl.dyna_num, osl.dyna_expired_time, osl.last_modify_date, osl.is_del
+  </sql>
+  
+  <select id="findOrderSmartLockByFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_order_smartlock osl
+    WHERE osl.is_del = 0
+    AND osl.fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findOrderSmartLockByOrderSn" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_order_smartlock osl
+    WHERE osl.is_del = 0
+    AND osl.order_sn = #{orderSn,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="insertOrderSmartLock" parameterType="com.ziroom.minsu.entity.order.OrderSmartLockEntity" >
+    insert into t_order_smartlock
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="serviceId != null" >
+        service_id,
+      </if>
+      <if test="passwordId != null" >
+        password_id,
+      </if>
+      <if test="tempPswd != null" >
+        temp_pswd,
+      </if>
+      <if test="tempStartTime != null" >
+        temp_start_time,
+      </if>
+      <if test="tempExpiredTime != null" >
+        temp_expired_time,
+      </if>
+      <if test="tempPswdStatus != null" >
+        temp_pswd_status,
+      </if>
+      <if test="dynaPswd != null" >
+        dyna_pswd,
+      </if>
+      <if test="dynaNum != null" >
+        dyna_num,
+      </if>
+      <if test="dynaExpiredTime != null" >
+        dyna_expired_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceId != null" >
+        #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordId != null" >
+        #{passwordId,jdbcType=VARCHAR},
+      </if>
+      <if test="tempPswd != null" >
+        #{tempPswd,jdbcType=VARCHAR},
+      </if>
+      <if test="tempStartTime != null" >
+        #{tempStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tempExpiredTime != null" >
+        #{tempExpiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tempPswdStatus != null" >
+        #{tempPswdStatus,jdbcType=TINYINT},
+      </if>
+      <if test="dynaPswd != null" >
+        #{dynaPswd,jdbcType=VARCHAR},
+      </if>
+      <if test="dynaNum != null" >
+        #{dynaNum,jdbcType=TINYINT},
+      </if>
+      <if test="dynaExpiredTime != null" >
+        #{dynaExpiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateOrderSmartLockByFid" parameterType="com.ziroom.minsu.entity.order.OrderSmartLockEntity" >
+    update t_order_smartlock
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null" >
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceId != null" >
+        service_id = #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordId != null" >
+        password_id = #{passwordId,jdbcType=VARCHAR},
+      </if>
+      <if test="tempPswd != null" >
+        temp_pswd = #{tempPswd,jdbcType=VARCHAR},
+      </if>
+      <if test="tempStartTime != null" >
+        temp_start_time = #{tempStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tempExpiredTime != null" >
+        temp_expired_time = #{tempExpiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tempPswdStatus != null" >
+        temp_pswd_status = #{tempPswdStatus,jdbcType=TINYINT},
+      </if>
+      <if test="dynaPswd != null" >
+        dyna_pswd = #{dynaPswd,jdbcType=VARCHAR},
+      </if>
+      <if test="dynaNum != null" >
+        dyna_num = #{dynaNum,jdbcType=TINYINT},
+      </if>
+      <if test="dynaExpiredTime != null" >
+        dyna_expired_time = #{dynaExpiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateOrderSmartLockByOrderSn" parameterType="com.ziroom.minsu.entity.order.OrderSmartLockEntity" >
+    update t_order_smartlock
+    <set >
+      <if test="orderSn != null" >
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceId != null" >
+        service_id = #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordId != null" >
+        password_id = #{passwordId,jdbcType=VARCHAR},
+      </if>
+      <if test="tempPswd != null" >
+        temp_pswd = #{tempPswd,jdbcType=VARCHAR},
+      </if>
+      <if test="tempStartTime != null" >
+        temp_start_time = #{tempStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tempExpiredTime != null" >
+        temp_expired_time = #{tempExpiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tempPswdStatus != null" >
+        temp_pswd_status = #{tempPswdStatus,jdbcType=TINYINT},
+      </if>
+      <if test="dynaPswd != null" >
+        dyna_pswd = #{dynaPswd,jdbcType=VARCHAR},
+      </if>
+      <if test="dynaNum != null" >
+        dyna_num = #{dynaNum,jdbcType=TINYINT},
+      </if>
+      <if test="dynaExpiredTime != null" >
+        dyna_expired_time = #{dynaExpiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where order_sn = #{orderSn,jdbcType=VARCHAR}
+  </update>
+  
+    <update id="updateOrderSmartLockByServiceId" parameterType="com.ziroom.minsu.entity.order.OrderSmartLockEntity" >
+    update t_order_smartlock
+    <set >
+      
+      <if test="passwordId != null" >
+        password_id = #{passwordId,jdbcType=VARCHAR},
+      </if>
+      <if test="tempPswd != null" >
+        temp_pswd = #{tempPswd,jdbcType=VARCHAR},
+      </if>
+      <if test="tempStartTime != null" >
+        temp_start_time = #{tempStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tempExpiredTime != null" >
+        temp_expired_time = #{tempExpiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tempPswdStatus != null" >
+        temp_pswd_status = #{tempPswdStatus,jdbcType=TINYINT},
+      </if>
+      <if test="dynaPswd != null" >
+        dyna_pswd = #{dynaPswd,jdbcType=VARCHAR},
+      </if>
+      <if test="dynaNum != null" >
+        dyna_num = #{dynaNum,jdbcType=TINYINT},
+      </if>
+      <if test="dynaExpiredTime != null" >
+        dyna_expired_time = #{dynaExpiredTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER	},
+      </if>
+    </set>
+    where service_id = #{serviceId,jdbcType=VARCHAR}
+  </update>
+</mapper>

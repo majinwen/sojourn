@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="message.huanxinImRecordDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.message.HuanxinImRecordEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="interface_type" property="interfaceType" jdbcType="VARCHAR" />
+    <result column="created" property="created" jdbcType="TIMESTAMP" />
+    <result column="modified" property="modified" jdbcType="TIMESTAMP" />
+    <result column="timestamp_send" property="timestampSend" jdbcType="TIMESTAMP" />
+    <result column="from_uid" property="fromUid" jdbcType="VARCHAR" />
+    <result column="to_uid" property="toUid" jdbcType="VARCHAR" />
+    <result column="msg_id" property="msgId" jdbcType="VARCHAR" />
+    <result column="chat_type" property="chatType" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="ziroom_flag" property="ziroomFlag" jdbcType="VARCHAR" />
+    <result column="ext" property="ext" jdbcType="VARCHAR" />
+    <result column="msg" property="msg" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="ziroomType" property="ziroomType" jdbcType="INTEGER" />
+    <result column="length" property="length" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="filename" property="filename" jdbcType="VARCHAR" />
+    <result column="file_length" jdbcType="INTEGER" property="fileLength" />
+    <result column="size" jdbcType="VARCHAR" property="size" />
+    <result column="secret" property="secret" jdbcType="VARCHAR" />
+    <result column="lat" property="lat" jdbcType="REAL" />
+    <result column="lng" property="lng" jdbcType="REAL" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+    <result column="is_read" property="isRead" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+      id, fid, uuid, interface_type, created, modified, timestamp_send, from_uid, to_uid, 
+    msg_id, chat_type, create_date, ziroom_flag, ext, msg, type, ziroomType, length, url, filename, 
+    file_length, size, secret, lat, lng, addr, is_del, is_read
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_huanxin_im_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_huanxin_im_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.message.HuanxinImRecordEntity">
+    insert into t_huanxin_im_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="fid != null">
+        fid,
+      </if>
+      <if test="uuid != null">
+        uuid,
+      </if>
+      <if test="interfaceType != null">
+        interface_type,
+      </if>
+      <if test="created != null">
+        created,
+      </if>
+      <if test="modified != null">
+        modified,
+      </if>
+      <if test="timestampSend != null">
+        timestamp_send,
+      </if>
+      <if test="fromUid != null">
+        from_uid,
+      </if>
+      <if test="toUid != null">
+        to_uid,
+      </if>
+      <if test="msgId != null">
+        msg_id,
+      </if>
+      <if test="chatType != null">
+        chat_type,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="ziroomFlag != null">
+        ziroom_flag,
+      </if>
+      <if test="ext != null">
+        ext,
+      </if>
+      <if test="msg != null">
+        msg,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="ziroomType != null">
+        ziroomType,
+      </if>
+      <if test="length != null">
+        length,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="filename != null">
+        filename,
+      </if>
+      <if test="fileLength != null">
+        file_length,
+      </if>
+      <if test="size != null">
+        size,
+      </if>
+      <if test="secret != null">
+        secret,
+      </if>
+      <if test="lat != null">
+        lat,
+      </if>
+      <if test="lng != null">
+        lng,
+      </if>
+      <if test="addr != null">
+        addr,
+      </if>
+      <if test="isDel != null">
+        is_del,
+      </if>
+      <if test="isRead != null">
+        is_read,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null">
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="uuid != null">
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="interfaceType != null">
+        #{interfaceType,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timestampSend != null">
+        #{timestampSend,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fromUid != null">
+        #{fromUid,jdbcType=VARCHAR},
+      </if>
+      <if test="toUid != null">
+        #{toUid,jdbcType=VARCHAR},
+      </if>
+      <if test="msgId != null">
+        #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="chatType != null">
+        #{chatType,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ziroomFlag != null">
+        #{ziroomFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="ext != null">
+        #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null">
+        #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="ziroomType != null">
+        #{ziroomType,jdbcType=INTEGER},
+      </if>
+      <if test="length != null">
+        #{length,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null">
+        #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="fileLength != null">
+        #{fileLength,jdbcType=INTEGER},
+      </if>
+      <if test="size != null">
+        #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="secret != null">
+        #{secret,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null">
+        #{lat,jdbcType=REAL},
+      </if>
+      <if test="lng != null">
+        #{lng,jdbcType=REAL},
+      </if>
+      <if test="addr != null">
+        #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="isRead != null">
+        #{isRead,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByParam" parameterType="com.ziroom.minsu.entity.message.HuanxinImRecordEntity">
+    update t_huanxin_im_record
+    <set>
+      <if test="fid != null">
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="uuid != null">
+        uuid = #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="interfaceType != null">
+        interface_type = #{interfaceType,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        modified = #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timestampSend != null">
+        timestamp_send = #{timestampSend,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fromUid != null">
+        from_uid = #{fromUid,jdbcType=VARCHAR},
+      </if>
+      <if test="toUid != null">
+        to_uid = #{toUid,jdbcType=VARCHAR},
+      </if>
+      <if test="msgId != null">
+        msg_id = #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="chatType != null">
+        chat_type = #{chatType,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ziroomFlag != null">
+        ziroom_flag = #{ziroomFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="ext != null">
+        ext = #{ext,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null">
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="ziroomType != null">
+        ziroomType = #{ziroomType,jdbcType=INTEGER},
+      </if>
+      <if test="length != null">
+        length = #{length,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null">
+        filename = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="fileLength != null">
+        file_length = #{fileLength,jdbcType=INTEGER},
+      </if>
+      <if test="size != null">
+        size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="secret != null">
+        secret = #{secret,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null">
+        lat = #{lat,jdbcType=REAL},
+      </if>
+      <if test="lng != null">
+        lng = #{lng,jdbcType=REAL},
+      </if>
+      <if test="addr != null">
+        addr = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="isRead != null">
+        is_read = #{isRead,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+ 
+   <select id="queryHuanxinImRecordByPage" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.message.dto.MsgSyncRequest" >
+      SELECT <include refid="Base_Column_List" /> FROM ( SELECT <include refid="Base_Column_List" /> FROM `t_huanxin_im_record` t WHERE 1=1 
+      AND  ( t.`from_uid` = #{uid,jdbcType=VARCHAR}  OR t.`to_uid` = #{uid,jdbcType=VARCHAR}) 
+      AND t.chat_type = 'chat'
+      AND t.`timestamp_send` >#{tillDate,jdbcType=TIMESTAMP}
+      AND is_del=0
+      UNION
+      SELECT <include refid="Base_Column_List" /> FROM  `t_huanxin_im_record` recur WHERE recur.to_uid in (
+       SELECT re.`to_uid` FROM `t_huanxin_im_record` re 
+       WHERE re.chat_type = 'groupchat'
+       AND recur.`to_uid` = re.`to_uid`
+       AND re.`from_uid` =  #{uid,jdbcType=VARCHAR} 
+       AND recur.`timestamp_send` >#{tillDate,jdbcType=TIMESTAMP}
+      ))  AS tem ORDER BY timestamp_send
+   
+  </select>
+  
+  
+   <!--    获取用户24小时内聊天记录 -->
+   <select id="queryUserChatInTwentyFour" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.message.dto.PeriodHuanxinRecordRequest" >
+      SELECT <include refid="Base_Column_List" /> FROM `t_huanxin_im_record` t 
+      WHERE t.`timestamp_send`  &lt;=  #{tillDate,jdbcType=TIMESTAMP} AND t.`timestamp_send` &gt;= #{beginDate,jdbcType=TIMESTAMP} 
+      AND  ( t.`from_uid` = #{fromUid,jdbcType=VARCHAR}  AND t.`to_uid` = #{toUid,jdbcType=VARCHAR}) 
+      AND t.chat_type = 'chat'
+      AND t.ziroom_flag = #{ziroomFlag,jdbcType=VARCHAR}
+      UNION
+      SELECT <include refid="Base_Column_List" /> FROM `t_huanxin_im_record` t 
+      WHERE t.`timestamp_send`  &lt;=  #{tillDate,jdbcType=TIMESTAMP} AND t.`timestamp_send` &gt;= #{beginDate,jdbcType=TIMESTAMP} 
+      AND  ( t.`from_uid` = #{toUid,jdbcType=VARCHAR}  AND t.`to_uid` = #{fromUid,jdbcType=VARCHAR}) 
+      AND t.chat_type = 'chat'
+      AND t.ziroom_flag = #{ziroomFlag,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getCountMsgEach" parameterType="map" resultType="long">
+      SELECT COUNT(temp.msg_id) FROM
+	      (SELECT t.msg_id FROM `t_huanxin_im_record` t 
+	      WHERE  ( t.`from_uid` = #{fromUid,jdbcType=VARCHAR}  AND t.`to_uid` = #{toUid,jdbcType=VARCHAR}) 
+	      AND t.chat_type = 'chat'
+	      AND t.ziroom_flag = #{ziroomFlag,jdbcType=VARCHAR}
+	      UNION
+	      SELECT t.msg_id FROM `t_huanxin_im_record` t 
+	      WHERE  ( t.`from_uid` = #{toUid,jdbcType=VARCHAR}  AND t.`to_uid` = #{fromUid,jdbcType=VARCHAR}) 
+	      AND t.chat_type = 'chat'
+	      AND t.ziroom_flag = #{ziroomFlag,jdbcType=VARCHAR}
+	      ) AS temp
+  </select>
+  
+  <select id="getByHuanxinFid" parameterType="string" resultMap="BaseResultMap">
+       SELECT
+       <include refid="Base_Column_List"/>
+       from t_huanxin_im_record
+       where fid = #{huanxinFid,jdbcType=VARCHAR}
+  </select>
+</mapper>

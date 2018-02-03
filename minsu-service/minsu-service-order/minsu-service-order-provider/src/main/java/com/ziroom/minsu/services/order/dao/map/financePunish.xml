@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.financePunishDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.FinancePunishEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="punish_sn" property="punishSn" jdbcType="VARCHAR" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="punish_uid" property="punishUid" jdbcType="VARCHAR" />
+    <result column="punish_type" property="punishType" jdbcType="INTEGER" />
+    <result column="punish_fee" property="punishFee" jdbcType="INTEGER" />
+    <result column="punish_status" property="punishStatus" jdbcType="INTEGER" />
+    <result column="punish_describe" property="punishDescribe" jdbcType="VARCHAR" />
+    <result column="last_pay_time" property="lastPayTime" jdbcType="TIMESTAMP" />
+    <result column="actual_pay_time" property="actualPayTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, punish_sn, order_sn,city_code, punish_uid, punish_type, punish_fee, punish_status, punish_describe, 
+    last_pay_time, actual_pay_time, create_id, create_time, last_modify_date, is_del
+  </sql>
+  
+  <select id="selectByPunishSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_finance_punish
+    WHERE punish_sn = #{punishSn,jdbcType=VARCHAR}
+    AND is_del = 0
+  </select>
+  
+  <select id="getPunishListByCondition" resultMap="BaseResultMap">
+    SELECT 
+	<include refid="Base_Column_List" />
+	FROM t_finance_punish
+       WHERE is_del = 0
+       AND punish_uid = #{punishUid,jdbcType=VARCHAR}
+   </select>
+
+
+
+    <select id="getPunishListByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_finance_punish
+        WHERE is_del = 0
+        AND order_sn = #{orderSn,jdbcType=VARCHAR}
+    </select>
+
+
+    <!-- 获取当前的未支付的过期的 -->
+    <select id="countPunishOverTime" resultType="java.lang.Long" parameterType="map">
+        SELECT
+          COUNT(id)
+        FROM t_finance_punish
+        WHERE  punish_uid = #{landlordUid,jdbcType=VARCHAR}
+        AND last_pay_time >= #{nowTime,jdbcType=TIMESTAMP}
+        AND is_del = 0
+
+    </select>
+
+
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.order.FinancePunishEntity" >
+    insert into t_finance_punish
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="punishSn != null" >
+        punish_sn,
+      </if>
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      
+      <if test="punishUid != null" >
+        punish_uid,
+      </if>
+      <if test="punishType != null" >
+        punish_type,
+      </if>
+      <if test="punishFee != null" >
+        punish_fee,
+      </if>
+      <if test="punishStatus != null" >
+        punish_status,
+      </if>
+      <if test="punishDescribe != null" >
+        punish_describe,
+      </if>
+      <if test="lastPayTime != null" >
+        last_pay_time,
+      </if>
+      <if test="actualPayTime != null" >
+        actual_pay_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="punishSn != null" >
+        #{punishSn,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="punishUid != null" >
+        #{punishUid,jdbcType=VARCHAR},
+      </if>
+      <if test="punishType != null" >
+        #{punishType,jdbcType=INTEGER},
+      </if>
+      <if test="punishFee != null" >
+        #{punishFee,jdbcType=INTEGER},
+      </if>
+      <if test="punishStatus != null" >
+        #{punishStatus,jdbcType=INTEGER},
+      </if>
+      <if test="punishDescribe != null" >
+        #{punishDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="lastPayTime != null" >
+        #{lastPayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualPayTime != null" >
+        #{actualPayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPunishSn" parameterType="com.ziroom.minsu.entity.order.FinancePunishEntity" >
+    update t_finance_punish
+    <set >
+      <if test="orderSn != null" >
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="punishUid != null" >
+        punish_uid = #{punishUid,jdbcType=VARCHAR},
+      </if>
+      <if test="punishType != null" >
+        punish_type = #{punishType,jdbcType=INTEGER},
+      </if>
+      <if test="punishFee != null" >
+        punish_fee = #{punishFee,jdbcType=INTEGER},
+      </if>
+      <if test="punishStatus != null" >
+        punish_status = #{punishStatus,jdbcType=INTEGER},
+      </if>
+      <if test="punishDescribe != null" >
+        punish_describe = #{punishDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="lastPayTime != null" >
+        last_pay_time = #{lastPayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualPayTime != null" >
+        actual_pay_time = #{actualPayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where punish_sn = #{punishSn,jdbcType=VARCHAR}
+  </update>
+  
+
+</mapper>

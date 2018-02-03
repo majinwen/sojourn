@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="search.orderDbInfoDao" >
+
+
+
+    <!-- 获取当前的房源的审核通过时间 -->
+    <select id="getLocksByHouseFid" resultType="java.util.Date"  parameterType="java.lang.String" >
+        SELECT
+        lock_time
+        FROM t_base_house_lock
+        WHERE  house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND lock_time >= DATE_FORMAT(NOW(),'%y-%m-%d')
+        AND rent_way = 0
+        AND is_del = 0 
+    </select>
+    
+    <!-- 获取房间的锁定信息信息（已经支付或者房东锁定） -->
+    <select id="getLocksByHouseFidPaid" resultType="java.util.Date"  parameterType="java.lang.String" >
+        SELECT
+        lock_time
+        FROM t_base_house_lock
+        WHERE  house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND lock_time >= DATE_FORMAT(NOW(),'%y-%m-%d')
+        AND rent_way = 0
+        AND is_del = 0
+        AND ( pay_status = 1 OR lock_type = 2 OR lock_type = 3 )
+    </select>
+
+
+    <!-- 获取房间的锁定信息信息 -->
+    <select id="getLocksByRoomFid" resultType="java.util.Date"  parameterType="java.lang.String" >
+        SELECT
+        lock_time
+        FROM t_base_house_lock
+        WHERE  room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND lock_time >= DATE_FORMAT(NOW(),'%y-%m-%d')
+        AND rent_way = 1
+        AND is_del = 0
+    </select>
+    
+    <!-- 获取房间的锁定信息信息 （已经支付或者房东锁定）-->
+    <select id="getLocksByRoomFidPaid" resultType="java.util.Date"  parameterType="java.lang.String" >
+        SELECT
+        lock_time
+        FROM t_base_house_lock
+        WHERE  room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND lock_time >= DATE_FORMAT(NOW(),'%y-%m-%d')
+        AND rent_way = 1
+        AND is_del = 0
+        AND ( pay_status = 1 OR lock_type = 2 OR lock_type = 3 )
+    </select>
+
+
+
+    <!--获取当前房源的订单数量 -->
+    <select id="countHouseOrder" resultType="java.lang.Long"  parameterType="map">
+        SELECT  COUNT(t.id)
+          FROM  t_order t
+            INNER JOIN t_order_house_snapshot s ON t.order_sn = s.order_sn
+        WHERE  s.house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND s.rent_way = 0
+    </select>
+
+
+
+    <!--获取当前房源的订单数量 有效 -->
+    <select id="countHouseOrderEffective" resultType="java.lang.Long"  parameterType="map">
+        SELECT  COUNT(t.id)
+        FROM  t_order t
+        INNER JOIN t_order_house_snapshot s ON t.order_sn = s.order_sn
+        WHERE  s.house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND s.rent_way = 0
+        AND t.order_status in (40,41, 50,51, 60, 61,70,71)
+    </select>
+
+
+
+    <!--获取当前房间的订单数量 有效 -->
+    <select id="countRoomOrderEffective" resultType="java.lang.Long"  parameterType="map">
+        SELECT  COUNT(t.id)
+        FROM  t_order t
+        INNER JOIN t_order_house_snapshot s ON t.order_sn = s.order_sn
+        WHERE  s.room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND s.rent_way = 1
+        AND t.order_status in (40,41, 50,51, 60, 61,70,71)
+    </select>
+
+
+
+    <!--获取有效的订单的当前排名 -->
+    <select id="countHouseEffectiveByEffect" resultType="java.lang.Long"  parameterType="java.lang.Long">
+        SELECT
+          COUNT(1)
+        FROM
+          (SELECT
+            house_fid,
+            room_fid,
+            rent_way,
+            COUNT(t.order_sn) AS num
+          FROM
+            t_order_house_snapshot t
+            INNER JOIN t_order o
+              ON t.order_sn = o.order_sn
+          WHERE o.order_status IN  (40,41, 50,51, 60, 61,70,71)
+          GROUP BY house_fid,
+            room_fid,
+            rent_way)tmp
+          WHERE tmp.num  <![CDATA[ > ]]>  #{effectNum,jdbcType=INTEGER}
+    </select>
+
+
+    <!--获取有效的订单的房源数量 -->
+    <select id="countHouseEffective" resultType="java.lang.Long" >
+        SELECT
+          COUNT(1)
+        FROM
+          (SELECT
+            house_fid,
+            room_fid,
+            rent_way,
+            COUNT(t.order_sn) AS num
+          FROM
+            t_order_house_snapshot t
+            INNER JOIN t_order o
+              ON t.order_sn = o.order_sn
+          WHERE o.order_status IN (40,41, 50,51, 60, 61,70,71)
+          GROUP BY house_fid,
+            room_fid,
+            rent_way)tmp
+    </select>
+
+
+
+    <!--获取当前房间的订单数量 -->
+    <select id="countRoomOrder" resultType="java.lang.Long"  parameterType="map">
+        SELECT  COUNT(t.id)
+        FROM  t_order t
+        INNER JOIN t_order_house_snapshot s ON t.order_sn = s.order_sn
+        WHERE  s.room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND s.rent_way = 1
+    </select>
+
+
+
+
+    <!--获取当前房源的最新修改日历时间时间 -->
+    <select id="getHouseCalendarFreshTime" resultType="java.util.Date"  parameterType="java.lang.String">
+        SELECT create_time
+        FROM  t_base_house_lock t
+        WHERE t.house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND rent_way = 0
+        AND lock_type = 2
+        ORDER BY create_time DESC
+        LIMIT 1
+    </select>
+
+    <!--获取当前房间的最新修改日历时间时间 -->
+    <select id="getRoomCalendarFreshTime" resultType="java.util.Date"  parameterType="java.lang.String">
+        SELECT create_time
+        FROM  t_base_house_lock t
+        WHERE t.room_fid = #{roomFId,jdbcType=VARCHAR}
+        AND rent_way = 1
+        AND lock_type = 2
+        ORDER BY create_time DESC
+        LIMIT 1
+    </select>
+
+
+
+
+    <!--获取当前房源的订单的评价信息-->
+    <select id="countHouseOrderEval" resultType="java.lang.Long"  parameterType="map">
+        SELECT  COUNT(t.id)
+        FROM  t_order t
+        INNER JOIN t_order_house_snapshot s ON t.order_sn = s.order_sn
+        WHERE  s.house_fid = #{houseFid,jdbcType=VARCHAR}
+        AND s.rent_way = 0
+        AND t.order_status in (40,41, 50,51, 60, 61,70,71)
+    </select>
+
+
+
+    <!--获取当前房间的评价信息 -->
+    <select id="countRoomOrderEval" resultType="java.lang.Long"  parameterType="map">
+        SELECT  COUNT(t.id)
+        FROM  t_order t
+        INNER JOIN t_order_house_snapshot s ON t.order_sn = s.order_sn
+        WHERE  s.room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND s.rent_way = 1
+        AND t.order_status in (40,41, 50,51, 60, 61,70,71)
+    </select>
+
+
+
+
+
+    <!--获取当前房源的订单的评价比例-->
+    <select id="getHouseEvalRate" resultType="com.ziroom.minsu.services.search.vo.WeightEvalVo"  parameterType="java.lang.String">
+        SELECT
+          SUM(tmp.evl) AS evlNum,
+          SUM(tmp.orderCount) AS orderNum
+        FROM
+          (SELECT
+            2 AS orderCount,
+           CASE WHEN t.eva_status = 111  THEN 2
+             WHEN t.eva_status = 101  THEN 1
+             WHEN t.eva_status = 110  THEN 1
+              ELSE 0
+            END AS evl
+          FROM
+            t_order t
+            INNER JOIN t_order_house_snapshot s ON t.order_sn = s.order_sn
+          WHERE  s.house_fid = #{houseFid,jdbcType=VARCHAR}
+            AND s.rent_way = 0
+            AND t.order_status IN (70, 71)) tmp
+    </select>
+
+
+
+    <!--获取当前房间的评价信息比例 -->
+    <select id="getRoomEvalRate" resultType="com.ziroom.minsu.services.search.vo.WeightEvalVo"  parameterType="java.lang.String">
+        SELECT
+          SUM(tmp.evl) AS evlNum,
+          SUM(tmp.orderCount) AS orderNum
+        FROM
+          (SELECT
+            1 AS orderCount,
+            CASE WHEN t.eva_status = 111  THEN 2
+             WHEN t.eva_status = 101  THEN 1
+             WHEN t.eva_status = 110  THEN 1
+              ELSE 0
+            END AS evl
+          FROM
+            t_order t
+            INNER JOIN t_order_house_snapshot s ON t.order_sn = s.order_sn
+          WHERE  s.room_fid = #{roomFid,jdbcType=VARCHAR}
+            AND s.rent_way = 1
+            AND t.order_status IN (70, 71)) tmp
+    </select>
+    
+    <!--获取总的评价数量 -->
+     <select id="countOrderEvalAll" resultType="java.lang.Long" >
+       SELECT COUNT(1) from (
+		  SELECT COUNT(1) num,s.house_fid  sn FROM t_order t 
+			INNER JOIN t_order_house_snapshot s 
+				ON t.order_sn = s.order_sn 
+				WHERE t.order_status IN (70, 71) 
+				GROUP BY s.house_fid,s.rent_way 
+		) tmp   
+     </select>
+     
+      <!--获取房源总的评价数量的排名 -->
+     <select id="countHouseOrderEvalAllRank" resultType="java.lang.Long"  parameterType="java.lang.String" >
+	   SELECT COUNT(1)+1 from (
+		  SELECT COUNT(1) num,s.house_fid  sn FROM t_order t 
+			INNER JOIN t_order_house_snapshot s 
+				ON t.order_sn = s.order_sn 
+				WHERE t.order_status IN (70, 71) 
+				GROUP BY s.house_fid,s.rent_way    				
+				ORDER BY num DESC
+		) tmp WHERE tmp.num <![CDATA[ > ]]> (
+			SELECT COUNT(1) FROM t_order t 
+				INNER JOIN t_order_house_snapshot s 
+					ON t.order_sn = s.order_sn 
+					WHERE t.order_status IN (70, 71)
+					AND s.house_fid = #{houseFid,jdbcType=VARCHAR}
+		      		AND s.rent_way = 0
+		      	)
+     
+     </select>
+     
+      <!--获取房间总的评价数量的排名 -->
+     <select id="countRoomOrderEvalAllRank" resultType="java.lang.Long"  parameterType="java.lang.String" >
+     
+        SELECT COUNT(1)+1 from (
+		  SELECT COUNT(1) num,s.house_fid  sn FROM t_order t 
+			INNER JOIN t_order_house_snapshot s 
+				ON t.order_sn = s.order_sn 
+				WHERE t.order_status IN (70, 71) 
+				GROUP BY s.house_fid,s.rent_way    				
+				ORDER BY num DESC
+		) tmp WHERE tmp.num >(
+			SELECT COUNT(1) FROM t_order t 
+				INNER JOIN t_order_house_snapshot s 
+					ON t.order_sn = s.order_sn 
+					WHERE t.order_status IN (70, 71)
+					AND s.room_fid = #{roomFid,jdbcType=VARCHAR}
+		      		AND s.rent_way = 1
+		      	)
+     </select>
+     
+     
+     
+
+    <!--获取当前房源的订单的数量-->
+    <select id="getHouseOrderRate" resultType="com.ziroom.minsu.services.search.vo.WeightOrderNumVo"  parameterType="java.lang.String">
+       SELECT
+          SUM(tmp.order_count) AS orderCount,
+          SUM(tmp.wait_count) AS waitCount,
+          SUM(tmp.time_refuse) AS timeRefuse,
+          SUM(tmp.land_refuse) AS landRefuse,
+          SUM(tmp.cancle_order_count) AS cancleOrderCount,
+          SUM(tmp.paid_order_count) AS paidOrderCount
+        FROM
+          (
+            SELECT
+            1 AS order_count,
+            CASE WHEN t.order_status = 10  THEN 1
+              ELSE 0
+            END AS wait_count,
+            CASE WHEN t.order_status = 31  THEN 1
+              ELSE 0
+            END AS land_refuse,
+            CASE WHEN t.order_status = 35  THEN 1
+              ELSE 0
+            END AS time_refuse,
+            CASE WHEN t.order_status = 38 OR t.order_status = 73 THEN 1
+              ELSE 0
+            END AS cancle_order_count,
+            CASE WHEN t.pay_status = 1 THEN 1
+              ELSE 0
+            END AS paid_order_count
+          FROM
+            t_order t
+            INNER JOIN t_order_house_snapshot s
+              ON t.order_sn = s.order_sn
+            WHERE  s.house_fid = #{houseFid,jdbcType=VARCHAR}
+            AND s.rent_way = 0
+          ) tmp    
+          
+          
+    </select>
+
+
+
+    <!--获取当前房间的订单的数量 -->
+    <select id="getRoomOrderRate" resultType="com.ziroom.minsu.services.search.vo.WeightOrderNumVo"  parameterType="java.lang.String">
+        SELECT
+          SUM(tmp.order_count) AS orderCount,
+          SUM(tmp.wait_count) AS waitCount,
+          SUM(tmp.time_refuse) AS timeRefuse,
+          SUM(tmp.land_refuse) AS landRefuse,
+          SUM(tmp.cancle_order_count) AS cancleOrderCount,
+          SUM(tmp.paid_order_count) AS paidOrderCount
+        FROM
+          (
+            SELECT
+            1 AS order_count,
+            CASE WHEN t.order_status = 10  THEN 1
+              ELSE 0
+            END AS wait_count,
+            CASE WHEN t.order_status = 31  THEN 1
+              ELSE 0
+            END AS land_refuse,
+            CASE WHEN t.order_status = 35  THEN 1
+              ELSE 0
+            END AS time_refuse,
+            CASE WHEN t.order_status = 38 OR t.order_status = 73 THEN 1
+              ELSE 0
+            END AS cancle_order_count,
+            CASE WHEN t.pay_status = 1 THEN 1
+              ELSE 0
+            END AS paid_order_count
+          FROM
+            t_order t
+            INNER JOIN t_order_house_snapshot s
+              ON t.order_sn = s.order_sn
+          WHERE  s.room_fid = #{roomFid,jdbcType=VARCHAR}
+             AND s.rent_way = 1
+          ) tmp
+    </select>
+
+    <!--获取当前房源的接受东单的平均时间-->
+    <select id="getHouseAvgAcceptTime" resultType="java.lang.Double"  parameterType="java.lang.String">
+        SELECT  AVG(TIMESTAMPDIFF(MINUTE,t.create_time,l.create_date))
+        FROM  t_order t
+        INNER JOIN t_order_log l ON t.order_sn = l.order_sn AND l.to_status = 20
+        INNER JOIN t_order_house_snapshot s
+            ON t.order_sn = s.order_sn
+        WHERE  s.house_fid = #{houseFid,jdbcType=VARCHAR}
+            AND s.rent_way = 0
+    </select>
+
+    <!--获取当前房间接受东单的平均时间-->
+    <select id="getRoomAvgAcceptTime" resultType="java.lang.Double"  parameterType="java.lang.String">
+        SELECT  AVG(TIMESTAMPDIFF(MINUTE,t.create_time,l.create_date))
+        FROM  t_order t
+        INNER JOIN t_order_log l ON t.order_sn = l.order_sn AND l.to_status = 20
+        INNER JOIN t_order_house_snapshot s
+        ON t.order_sn = s.order_sn
+        WHERE  s.room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND s.rent_way = 1
+    </select>
+    
+    <!--获取房源或者房间60天内的确认的订单数-->
+    <select id="getAcceptOrder60DaysCount" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1) FROM `t_order` od LEFT JOIN `t_order_house_snapshot` odsp ON od.`order_sn` = odsp.`order_sn` 
+		WHERE od.`is_del`='0' AND DATE_SUB(CURDATE(), INTERVAL 60 DAY ) &lt;= od.`create_time` 
+		AND (odsp.`order_type` ='1' OR od.`order_status` IN('20','33','37','40','41','50','51','60','61','70','71','72','73'))
+		<if test="houseFid !=null and houseFid !=''">  
+       		AND odsp.`house_fid`=#{houseFid,jdbcType=VARCHAR}
+    	</if>
+    	<if test="roomFid !=null and roomFid !=''">  
+       		AND odsp.`room_fid`=#{roomFid,jdbcType=VARCHAR}
+    	</if>
+    	<if test="rentWay !=null">  
+       		AND odsp.`rent_way`=#{rentWay,jdbcType=INTEGER}
+    	</if>
+		  
+    </select>
+    
+    <!--获取房源或者房间60天内所有的订单数-->
+    <select id="getOrder60DaysCount" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1) FROM `t_order` od LEFT JOIN `t_order_house_snapshot` odsp ON od.`order_sn` = odsp.`order_sn` 
+		WHERE od.`is_del`='0' AND DATE_SUB(CURDATE(), INTERVAL 60 DAY ) &lt;= od.`create_time` 
+		<if test="houseFid !=null and houseFid !=''">  
+       		AND odsp.`house_fid`=#{houseFid,jdbcType=VARCHAR}
+    	</if>
+    	<if test="roomFid !=null and roomFid !=''">  
+       		AND odsp.`room_fid`=#{roomFid,jdbcType=VARCHAR}
+    	</if>
+    	<if test="rentWay !=null">  
+       		AND odsp.`rent_way`=#{rentWay,jdbcType=INTEGER}
+    	</if>
+    </select>
+
+</mapper>

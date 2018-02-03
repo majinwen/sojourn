@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.userActEmptyDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.UserActEmptyEntity">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="fid" property="fid" jdbcType="VARCHAR" />
+        <result column="customer_mobile" property="customerMobile" jdbcType="VARCHAR" />
+        <result column="uid" property="uid" jdbcType="VARCHAR" />
+        <result column="act_sn" property="actSn" jdbcType="VARCHAR" />
+        <result column="group_sn" property="groupSn" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, fid, customer_mobile, uid, act_sn, group_sn, create_time
+    </sql>
+
+
+    <!-- 当前电话在当前活动的领取数量-->
+    <select id="countByMobileAndActSn" resultType="java.lang.Long"  parameterType="map">
+        SELECT
+        COUNT(1)
+        FROM t_user_act_empty
+        WHERE customer_mobile = #{customerMobile,jdbcType=VARCHAR}
+        AND  act_sn = #{actSn,jdbcType=VARCHAR}
+    </select>
+
+
+    <!-- 当前电话在当前活动的领取数量-->
+    <select id="countByMobileAndGroupSn" resultType="java.lang.Long"  parameterType="map">
+        SELECT
+        COUNT(1)
+        FROM t_user_act_empty
+        WHERE customer_mobile = #{customerMobile,jdbcType=VARCHAR}
+        AND  group_sn = #{groupSn,jdbcType=VARCHAR}
+    </select>
+
+
+
+    <insert id="saveUserEmpty" parameterType="com.ziroom.minsu.entity.cms.UserActEmptyEntity" >
+        insert into t_user_act_empty
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+
+            <if test="fid != null" >
+                fid,
+            </if>
+            <if test="customerMobile != null" >
+                customer_mobile,
+            </if>
+            <if test="uid != null" >
+                uid,
+            </if>
+            <if test="actSn != null" >
+                act_sn,
+            </if>
+            <if test="groupSn != null" >
+                group_sn,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="fid != null" >
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="customerMobile != null" >
+                #{customerMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="uid != null" >
+                #{uid,jdbcType=VARCHAR},
+            </if>
+            <if test="actSn != null" >
+                #{actSn,jdbcType=VARCHAR},
+            </if>
+            <if test="groupSn != null" >
+                #{groupSn,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

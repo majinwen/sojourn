@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="search.houseDbInfoDao" >
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.services.search.vo.HouseDbInfoVo" >
+        <!-- 基础map -->
+        <id column="fid" property="houseFid" jdbcType="VARCHAR" />
+        <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+        <result column="house_name" property="houseName" jdbcType="VARCHAR" />
+        <result column="room_name" property="roomName" jdbcType="VARCHAR" />
+        <result column="room_type" property="roomType" jdbcType="INTEGER" />
+        <result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+        <result column="room_sn" property="roomSn" jdbcType="VARCHAR" />
+        <result column="house_area" property="houseArea" jdbcType="VARCHAR" />
+        <result column="room_area" property="roomArea" jdbcType="VARCHAR" />
+        <result column="house_addr" property="houseAddr" jdbcType="VARCHAR" />
+        <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+        <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+        <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+        <result column="house_channel" property="houseChannel" jdbcType="TINYINT" />
+        <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+        <result column="intact_rate" property="intactRate" jdbcType="TINYINT" />
+        <result column="order_type" property="orderType" jdbcType="TINYINT" />
+        <result column="lease_price" property="leasePrice" jdbcType="INTEGER" />
+        <result column="room_price" property="roomPrice" jdbcType="INTEGER" />
+        <result column="till_date" property="tillDate" jdbcType="TIMESTAMP" />
+        <result column="min_day" property="minDay" jdbcType="INTEGER" />
+        <result column="room_min_day" property="roomMinDay" jdbcType="INTEGER" />
+        <!--<result column="max_day" property="maxDay" jdbcType="INTEGER" />-->
+        <result column="room_num" property="roomNum" jdbcType="INTEGER" />
+        <result column="toilet_num" property="toiletNum" jdbcType="INTEGER" />
+        <result column="balcony_num" property="balconyNum" jdbcType="INTEGER" />
+        <result column="is_toilet" property="isToilet" jdbcType="INTEGER" />
+        <result column="is_balcony" property="isBalcony" jdbcType="INTEGER" />
+        <result column="house_check_in_limit" property="houseCheckInLimit" jdbcType="INTEGER" />
+        <result column="room_check_in_limit" property="roomCheckInLimit" jdbcType="INTEGER" />
+        <result column="order_type" property="orderType" jdbcType="INTEGER" />
+        <result column="room_order_type" property="roomOrderType" jdbcType="INTEGER" />
+        <result column="user_uid" property="userUid" jdbcType="VARCHAR" />
+        <result column="user_tel" property="userTel" jdbcType="VARCHAR" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="refresh_date" property="refreshDate" jdbcType="TIMESTAMP" />
+        <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+        <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+        <result column="is_together_landlord" property="isHezhu" jdbcType="INTEGER" />
+        <result column="house_weight" property="houseWeight" jdbcType="INTEGER" />
+        <result column="room_weight" property="roomWeight" jdbcType="INTEGER" />
+        <result column="house_status" property="houseStatus" jdbcType="INTEGER" />
+        <result column="room_status" property="roomStatus" jdbcType="INTEGER" />
+		<result column="house_type" property="houseType" jdbcType="INTEGER" />
+        <result column="house_default_pic_fid" property="houseDefaultPicFid" jdbcType="VARCHAR" />
+        <result column="house_old_default_pic_fid" property="houseOldDefaultPicFid" jdbcType="VARCHAR" />
+        <result column="room_default_pic_fid" property="roomDefaultPicFid" jdbcType="VARCHAR" />
+        <result column="room_old_default_pic_fid" property="roomOldDefaultPicFid" jdbcType="VARCHAR" />
+        <result column="house_quality_grade" property="houseQualityGrade" jdbcType="VARCHAR" />
+        <result column="is_top50_online" property="isTop50Online" jdbcType="INTEGER" /> 
+        <result column="top50_list_room_fid" property="top50ListRoomFid" jdbcType="VARCHAR" />
+        
+    </resultMap>
+
+
+
+    <resultMap id="configMap" type="com.ziroom.minsu.services.search.vo.ConfigVo" >
+        <result column="dic_code" property="code" jdbcType="VARCHAR" />
+        <result column="dic_val" property="value" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <resultMap id="priceMap" type="com.ziroom.minsu.services.search.vo.HousePriceVo" >
+        <!-- 基础map -->
+        <result column="house_base_fid" property="houseFid" jdbcType="VARCHAR" />
+        <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+        <result column="set_time" property="setTime" jdbcType="VARCHAR" />
+        <result column="price_val" property="price" jdbcType="VARCHAR" />
+
+    </resultMap>
+
+
+    <!-- 床数量map -->
+    <resultMap type="com.ziroom.minsu.services.search.vo.BedNumVo"  id="bedNumMap">
+        <result column="bed_type" jdbcType="INTEGER" property="bedType" />
+        <result column="bedNum" jdbcType="INTEGER" property="bedNum" />
+    </resultMap>
+
+
+
+    <!-- 获取当前的房间的审核通过时间 -->
+    <select id="getRoomPassDate" resultType="java.util.Date"  parameterType="java.lang.String">
+        SELECT
+        create_date
+        FROM t_house_operate_log
+        WHERE
+        room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND to_status = 40
+        ORDER BY create_date DESC
+        LIMIT 1
+    </select>
+
+
+    <!-- 获取当前的房源的审核通过时间 -->
+    <select id="getHousePassDate" resultType="java.util.Date"   parameterType="java.lang.String">
+        SELECT
+        create_date
+        FROM t_house_operate_log
+        WHERE
+        house_base_fid = #{houseFid,jdbcType=VARCHAR}
+        AND room_fid IS NULL
+        AND to_status = 40
+        ORDER BY create_date DESC
+        LIMIT 1
+    </select>
+
+
+
+    <!-- 获取当前的房源的week价格 -->
+    <select id="getHouseWeekPrices" resultMap="priceMap"  parameterType="java.lang.String">
+        SELECT
+        house_base_fid,
+        room_fid,
+        set_week as set_time,
+        price_val
+        FROM t_house_price_week_conf
+        WHERE
+        house_base_fid = #{houseFid,jdbcType=VARCHAR}
+        AND (room_fid IS NULL OR room_fid = '')
+        AND is_del = 0
+        AND is_valid = 1
+    </select>
+
+
+
+    <!-- 获取当前的房间的价格 -->
+    <select id="getRoomWeekPrices" resultMap="priceMap"  parameterType="java.lang.String">
+        SELECT
+        house_base_fid,
+        room_fid,
+        set_week AS set_time,
+        price_val
+        FROM t_house_price_week_conf
+        WHERE
+        room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND is_del = 0
+        AND is_valid = 1
+    </select>
+
+
+    <!-- 获取当前的房源的价格 -->
+    <select id="getHousePrices" resultMap="priceMap"  parameterType="java.lang.String">
+        SELECT
+        house_base_fid,
+        room_fid,
+        set_time,
+        price_val
+        FROM t_house_price_conf
+        WHERE
+        house_base_fid = #{houseFid,jdbcType=VARCHAR}
+        AND room_fid is NULL
+        AND set_time >= CURDATE()
+        AND is_del = 0
+    </select>
+
+
+
+
+
+
+    <!-- 获取当前的房间的价格 -->
+    <select id="getRoomPrices" resultMap="priceMap"  parameterType="java.lang.String">
+        SELECT
+        house_base_fid,
+        room_fid,
+        set_time,
+        price_val
+        FROM t_house_price_conf
+        WHERE
+        room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND set_time >= CURDATE()
+        AND is_del = 0
+    </select>
+
+
+    <!-- 获取整租的图片信息 -->
+    <select id="testtest" resultType="com.ziroom.minsu.services.search.vo.HousePicVo"  parameterType="map">
+        SELECT
+        pic.pic_base_url AS picUrl,
+        pic.pic_suffix AS picSuffix
+        FROM
+        t_house_pic_msg pic
+        WHERE
+        id in <foreach collection="listIds" item="item" index="index"
+                       open="(" separator="," close=")">#{item}</foreach>
+    </select>
+
+
+    <!-- 获取整租的图片信息 -->
+    <select id="getHousePicInfo" resultType="com.ziroom.minsu.services.search.vo.HousePicVo"  parameterType="java.lang.String">
+        SELECT
+          pic.pic_base_url AS picUrl,
+          pic.pic_suffix AS picSuffix
+        FROM
+          t_house_pic_msg pic
+        WHERE pic.is_default = 1
+          AND pic.audit_status = 1
+          AND pic.is_del = 0
+          AND pic.house_base_fid = #{houseFid,jdbcType=VARCHAR}
+        ORDER BY pic.create_date DESC
+        LIMIT 1
+    </select>
+
+
+    <!-- 获取图片信息 -->
+    <select id="getPicByFid" resultType="com.ziroom.minsu.services.search.vo.HousePicVo"  parameterType="java.lang.String">
+        SELECT
+        pic.pic_base_url AS picUrl,
+        pic.pic_suffix AS picSuffix
+        FROM
+        t_house_pic_msg pic
+        WHERE pic.fid = #{fid,jdbcType=VARCHAR}
+        AND pic.audit_status = 1
+        AND pic.is_del = 0
+        LIMIT 1
+    </select>
+
+
+    <!-- 获取图片信息 -->
+    <select id="getPicByFidForce" resultType="com.ziroom.minsu.services.search.vo.HousePicVo"  parameterType="java.lang.String">
+        SELECT
+        pic.pic_base_url AS picUrl,
+        pic.pic_suffix AS picSuffix
+        FROM
+        t_house_pic_msg pic
+        WHERE pic.fid = #{fid,jdbcType=VARCHAR}
+        LIMIT 1
+    </select>
+
+    <!-- 获取合租的图片信息 -->
+    <select id="getRoomPicInfo" resultType="com.ziroom.minsu.services.search.vo.HousePicVo"  parameterType="java.lang.String">
+        SELECT
+         pic.pic_base_url AS picUrl,
+          pic.pic_suffix AS picSuffix
+        FROM
+        t_house_pic_msg pic
+        WHERE pic.is_default = 1
+        AND pic.audit_status = 1
+        AND pic.is_del = 0
+        AND pic.room_fid = #{roomFid,jdbcType=VARCHAR}
+        ORDER BY pic.create_date DESC
+        LIMIT 1
+    </select>
+
+
+    <!-- 获取数据库的信息 -->
+    <select id="getHouseConfig" resultMap="configMap"  parameterType="java.lang.String">
+      SELECT
+        dic_code,dic_val
+      FROM  t_house_conf_msg
+
+      WHERE house_base_fid = #{houseFid,jdbcType=VARCHAR}
+    </select>
+
+
+
+
+
+    <!-- 获取楼盘信息 -->
+    <select id="getCommunityInfo" resultType="com.ziroom.minsu.services.search.vo.CommunityInfo"  >
+        SELECT
+            DISTINCT
+            phy.fid AS id,
+            phy.community_name AS communityName,
+            phy.building_street AS houseStreet,
+            phy.building_around_desc AS house_aroundDesc
+        FROM t_house_phy_msg phy
+            INNER JOIN t_house_base_msg ba ON ba.phy_fid = phy.fid
+        WHERE ba.house_status IN (20,40)
+
+    </select>
+
+
+
+
+    <!-- 获取数据库的信息 -->
+    <select id="getHouseDbInfoForPage" resultMap="BaseResultMap"  parameterType="com.ziroom.minsu.services.search.dto.CreatIndexRequest">
+        SELECT
+            base.fid,
+            room.fid AS room_fid,
+            base.house_name,
+            base.house_area,
+            base.house_sn,
+            room.room_area,
+            room.room_name,
+            room.room_type,
+            room.room_sn,
+            base.house_addr,
+            base.rent_way,
+            base.house_channel,
+            base.intact_rate,
+            base.landlord_uid,
+            base.house_weight,
+            room.room_weight,
+            base.house_status,
+            room.room_status,
+            phy.city_code,
+            phy.area_code,
+            base.lease_price,
+            room.room_price,
+            base.till_date,
+            ext.order_type AS 'order_type' ,
+            roomext.order_type AS 'room_order_type' ,
+            ext.min_day AS 'min_day',
+            roomext.min_day AS 'room_min_day'  ,
+            ext.check_in_limit AS house_check_in_limit,
+            room.check_in_limit AS room_check_in_limit,
+            ext.is_together_landlord,
+            base.room_num,
+            base.toilet_num,
+            base.balcony_num,
+            base.refresh_date,
+            base.house_type,
+            phy.longitude,
+            phy.latitude,
+            ext.default_pic_fid AS house_default_pic_fid,
+            ext.old_default_pic_fid AS house_old_default_pic_fid,
+            room.default_pic_fid AS room_default_pic_fid,
+            room.old_default_pic_fid AS room_old_default_pic_fid,
+            CASE WHEN ext.house_quality_grade = 'TOP' THEN 'A'
+            ELSE ext.house_quality_grade   END AS house_quality_grade,
+			CASE WHEN tp.top_status = '1' THEN '1' ELSE '0' END AS is_top50_online,
+			tp.room_fid AS top50_list_room_fid
+        FROM
+        t_house_base_msg base
+        LEFT JOIN t_house_base_ext ext
+        ON base.fid = ext.house_base_fid
+        LEFT JOIN t_house_phy_msg phy
+        ON base.phy_fid = phy.fid
+        LEFT JOIN t_house_room_msg room
+        ON room.house_base_fid = base.fid
+        LEFT JOIN t_house_room_ext roomext ON roomext.room_fid=room.fid
+        LEFT JOIN t_house_top tp ON tp.house_base_fid = base.fid
+        WHERE (base.house_status = 40 or room.room_status=40)
+        AND base.till_date <![CDATA[ > ]]>  NOW()
+        AND base.is_del = 0
+        <if test="areaCode != null and areaCode != ''">
+            AND phy.area_code = #{areaCode,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+
+    <!-- 获取数据库的信息 -->
+    <select id="getHouseDbInfoByHouseFid" resultMap="BaseResultMap"  parameterType="java.lang.String" >
+
+       SELECT
+            base.fid,
+            room.fid AS room_fid,
+            base.house_name,
+            base.house_area,
+            base.house_sn,
+            room.room_area,
+            room.room_name,
+            room.room_type,
+            room.room_sn,
+            base.house_addr,
+            base.rent_way,
+            base.house_channel,
+            base.intact_rate,
+            base.landlord_uid,
+            base.house_weight,
+            room.room_weight,
+            base.house_status,
+            room.room_status,
+            phy.city_code,
+            phy.area_code,
+            base.lease_price,
+            room.room_price,
+            base.till_date,
+            ext.order_type AS 'order_type' ,
+            roomext.order_type AS 'room_order_type' ,
+            ext.min_day AS 'min_day',
+            roomext.min_day AS 'room_min_day'  ,
+            ext.check_in_limit AS house_check_in_limit,
+            room.check_in_limit AS room_check_in_limit,
+            ext.is_together_landlord,
+            base.room_num,
+            base.toilet_num,
+            base.balcony_num,
+            base.refresh_date,
+            base.house_type,
+            phy.longitude,
+            phy.latitude,
+            ext.default_pic_fid AS house_default_pic_fid,
+            ext.old_default_pic_fid AS house_old_default_pic_fid,
+            room.default_pic_fid AS room_default_pic_fid,
+            room.old_default_pic_fid AS room_old_default_pic_fid,
+			CASE WHEN ext.house_quality_grade = 'TOP' THEN 'A'
+            ELSE ext.house_quality_grade   END AS house_quality_grade,
+			CASE WHEN tp.top_status = '1' THEN '1' ELSE '0' END AS is_top50_online,
+			tp.room_fid AS top50_list_room_fid
+        FROM
+          t_house_base_msg base
+          LEFT JOIN t_house_base_ext ext
+            ON base.fid = ext.house_base_fid
+          LEFT JOIN t_house_phy_msg phy
+            ON base.phy_fid = phy.fid
+          LEFT JOIN t_house_room_msg room
+            ON room.house_base_fid = base.fid
+          LEFT JOIN t_house_room_ext roomext ON roomext.room_fid=room.fid
+          LEFT JOIN t_house_top tp ON tp.house_base_fid = base.fid 
+        WHERE  base.fid = #{houseFid,jdbcType=VARCHAR}
+          AND (base.house_status = 40 or room.room_status=40)
+          AND base.till_date <![CDATA[ > ]]>  NOW()
+          AND base.is_del = 0
+
+    </select>
+
+
+
+    <!-- 获取房源的子房间信息 -->
+    <select id="getRoomsByHouseFid" resultType="java.lang.String"  parameterType="java.lang.String" >
+        SELECT
+            CONCAT(fid,'_',room_name) AS room
+        FROM t_house_room_msg
+        WHERE house_base_fid = #{houseFid,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 获取房源的服务信息 -->
+    <select id="getHouseServices" resultType="java.lang.String"  parameterType="java.lang.String" >
+       SELECT
+            dic_code
+        FROM  t_house_conf_msg
+        WHERE house_base_fid = #{houseFid,jdbcType=VARCHAR}
+        AND dic_code LIKE 'ProductRulesEnum002%'
+        AND dic_val = 1
+    </select>
+
+
+    <!-- 获取房间的服务信息 -->
+    <select id="getRoomServices" resultType="java.lang.String"  parameterType="java.lang.String" >
+        SELECT
+        dic_code
+        FROM  t_house_conf_msg
+        WHERE room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND dic_code LIKE 'ProductRulesEnum002%'
+        AND dic_val = 1
+    </select>
+
+
+    <!-- 获取房间的服务信息 -->
+    <select id="getHouseStatusByHouseFid" resultType="java.lang.Integer"  parameterType="java.lang.String" >
+        SELECT
+        house_status
+        FROM  t_house_base_msg
+        WHERE fid = #{houseFid,jdbcType=VARCHAR}
+        limit 1
+    </select>
+
+    <!-- 获取当前的房源的浏览量 -->
+    <select id="getHousePv" resultType="java.lang.Integer"  parameterType="java.lang.String" >
+        SELECT
+        house_pv
+        FROM  t_house_statistics_msg
+        WHERE house_base_fid = #{houseFid,jdbcType=VARCHAR}
+        AND rent_way = 0
+        limit 1
+    </select>
+
+
+    <!-- 获取当前的房间的浏览量 -->
+    <select id="getRoomPv" resultType="java.lang.Integer"  parameterType="java.lang.String" >
+        SELECT
+        house_pv
+        FROM  t_house_statistics_msg
+        WHERE room_fid = #{roomFid,jdbcType=VARCHAR}
+        AND rent_way = 1
+        limit 1
+    </select>
+
+
+
+    <!-- 当前的所有的pv -->
+    <select id="countPvAll"  resultType="java.lang.Long"  >
+        SELECT COUNT(id)  FROM t_house_statistics_msg
+    </select>
+
+
+    <!-- 当前的pv的值 -->
+    <select id="countPvByPv"  resultType="java.lang.Long"   parameterType="java.lang.Integer" >
+        SELECT COUNT(id)  FROM t_house_statistics_msg
+        WHERE house_pv  <![CDATA[ >= ]]> #{housePv,jdbcType=INTEGER}
+    </select>
+
+
+
+    <!-- 查询房源下相同规格床数量 -->
+    <select id="getBedNumByHouseFid"  parameterType="java.lang.String"  resultMap="bedNumMap">
+        SELECT bed_type,COUNT(id) bedNum FROM t_house_bed_msg
+        WHERE
+         house_base_fid=#{houseFid,jdbcType=VARCHAR}
+         AND is_del=0
+        GROUP BY bed_type
+    </select>
+
+
+    <!-- 查询room下相同规格床数量 -->
+    <select id="getBedNumByRoomFid"  parameterType="java.lang.String"  resultMap="bedNumMap">
+        SELECT bed_type,COUNT(id) bedNum FROM t_house_bed_msg
+        WHERE
+        room_fid=#{roomFid,jdbcType=VARCHAR}
+        AND is_del=0
+        GROUP BY bed_type
+    </select>
+    
+    <!-- 查询城市下已经上架的房源类型 -->
+    <select id="getHouseTypeByCityCode"  parameterType="java.lang.String"  resultType="java.lang.Integer">
+         SELECT DISTINCT(hb.house_type) FROM t_house_base_msg hb 
+         	RIGHT JOIN t_house_phy_msg hp 
+         		ON hb.phy_fid=hp.fid 
+         		WHERE hb.house_type IS NOT NULL 
+         			AND hp.city_code=#{cityCode,jdbcType=VARCHAR}
+         			AND hb.house_status=40
+    </select>
+
+	<!-- 獲取當前房源、房間的熱度 -->
+	<select id="getHouseCurrentHot"  resultType="java.lang.Integer"  parameterType="com.ziroom.minsu.services.search.dto.HouseCurrentStatsDto"  >
+	
+		 SELECT	IFNULL(SUM((hsm.trade_num*<![CDATA[ #{tradeNumWeight,jdbcType=INTEGER} ]]>+hsm.consult_num*<![CDATA[ #{consultNumWeight,jdbcType=INTEGER} ]]>)),0) hot
+          FROM t_house_stats_day_msg hsm 
+          WHERE hsm.is_del=0 
+			AND DATE_SUB(CURDATE(), INTERVAL <![CDATA[ #{days,jdbcType=INTEGER} ]]> DAY ) <![CDATA[  <= ]]> hsm.stats_date   
+			AND hsm.house_fid=#{houseFid,jdbcType=VARCHAR} AND hsm.rent_way=#{rentWay,jdbcType=INTEGER} 
+    </select>
+    
+    <!-- 獲取當前城市的熱度 -->
+	<select id="getAllCityCurrentHot"  resultType="java.util.Map" parameterType="com.ziroom.minsu.services.search.dto.HouseCurrentStatsDto"  >
+		 SELECT	hsm.city_code cityCode,IFNULL(SUM((hsm.trade_num*<![CDATA[ #{tradeNumWeight,jdbcType=INTEGER} ]]>+hsm.consult_num*<![CDATA[ #{consultNumWeight,jdbcType=INTEGER} ]]>)),0) hot
+          FROM t_house_stats_day_msg hsm 
+          WHERE hsm.is_del=0 
+			AND DATE_SUB(CURDATE(), INTERVAL <![CDATA[ #{days,jdbcType=INTEGER} ]]> DAY ) <![CDATA[  <= ]]> hsm.stats_date   
+			GROUP BY hsm.city_code 
+    </select>
+   
+   <!-- 獲取靈活定價或者長租折扣配置 --> 
+   <select id="getFlexiblePriceORLongTermLeaseDiscountConf"  parameterType="java.util.Map" resultType="java.lang.String"  >
+		SELECT CONCAT(hcm.dic_code,',',hcm.dic_val) FROM t_house_conf_msg hcm 
+			WHERE hcm.is_del=0 AND hcm.dic_code LIKE CONCAT(#{dicCodeLike,jdbcType=VARCHAR},'%') AND hcm.dic_val !=-1 AND hcm.dic_val !=0
+			AND hcm.dic_code !='ProductRulesEnum020001'
+			<if test="houseBaseFid != null and houseBaseFid !=''" >
+		        AND hcm.house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+		    </if>
+		    <if test="roomFid != null and roomFid !=''" >
+		        AND hcm.room_fid=#{roomFid,jdbcType=VARCHAR}
+		    </if>		 
+   </select> 
+   
+   <!-- 查询设置的今日特惠 -->
+   <select id="getTonightDiscountList"  parameterType="java.util.Map" resultType="com.ziroom.minsu.entity.house.TonightDiscountEntity"  >
+		 
+	SELECT  
+		tdis.house_fid AS houseFid,
+		tdis.room_fid AS roomFid,
+		tdis.rent_way AS rentWay,
+		tdis.discount AS discount,
+		tdis.discount_date AS discountDate,
+		tdis.start_time AS startTime,
+		tdis.end_time AS endTime	
+    FROM  t_house_tonight_discount tdis 
+    WHERE tdis.is_del='0' 
+    <if test="houseBaseFid != null and houseBaseFid !=''" >
+        AND tdis.house_fid=#{houseBaseFid,jdbcType=VARCHAR}
+    </if>
+    <if test="roomFid != null and roomFid !=''" >
+        AND tdis.room_fid=#{roomFid,jdbcType=VARCHAR}
+    </if>
+    <if test="now != null" >
+	    AND DATE_FORMAT(tdis.discount_date,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') 
+    </if>
+    ORDER BY tdis.discount_date DESC 
+		 
+   </select> 
+   
+   <!-- top50房源个性化标签 --> 
+   <select id="getHouseTagFids"  parameterType="java.util.Map" resultType="java.lang.String"  >
+		 SELECT t.`tag_fid` FROM `t_house_tag` t 
+		 WHERE t.`is_del`='0' 
+		 <if test="houseBaseFid != null and houseBaseFid !=''" >
+	        AND t.`house_base_fid` =#{houseBaseFid,jdbcType=VARCHAR}
+	     </if> 
+   </select> 
+   
+   <!-- 房源或者房间状态 -->
+   <select id="getHouseOrRoomStatus"  parameterType="java.util.Map" resultType="java.lang.Integer"  >
+   	<if test="rentWay != null and rentWay ==1 " >
+	    SELECT  hroom.room_status AS hstatus FROM `t_house_room_msg` hroom WHERE hroom.`fid` = #{roomFid,jdbcType=VARCHAR} limit 1
+	</if>
+	<if test="rentWay != null and rentWay ==0" >
+		SELECT  hmsg.house_status  AS hstatus FROM `t_house_base_msg` hmsg WHERE hmsg.`fid` = #{houseBaseFid,jdbcType=VARCHAR} limit 1
+	</if>
+   </select> 
+   
+  <!-- top50 文章标题 --> 
+  <select id="getTop50ArticleTitle"  parameterType="java.util.Map" resultType="java.lang.String"  >
+   	 SELECT topcolu.`column_content` 
+   	 	FROM `t_house_top` htop LEFT JOIN `t_house_top_column` topcolu ON htop.`fid` = topcolu.`house_top_fid` 
+		WHERE topcolu.`is_del` = '0' AND topcolu.`column_type` = '103' AND htop.`top_status` = '1' AND htop.`is_del`='0'
+		<if test="houseBaseFid != null and houseBaseFid !=''" >
+	        AND htop.`house_base_fid`= #{houseBaseFid,jdbcType=VARCHAR}
+	     </if>
+	     <!-- 
+	     <if test="roomFid != null and roomFid !=''" >
+	        AND htop.`room_fid`= #{roomFid,jdbcType=VARCHAR}
+	     </if>
+	     AND htop.`rent_way`=  #{rentWay,jdbcType=INTEGER}		
+	      -->
+		ORDER BY topcolu.`last_modify_date` DESC LIMIT 1
+  </select> 
+  
+  <!-- 查询房源的序号 -->
+  <select id="getHouseIndexbyLand"  resultType="java.util.Map" parameterType="java.lang.String"  >
+   SELECT hmsg.`fid` AS fid,(@idx:=@idx+1) AS idx FROM `t_house_base_msg` hmsg,(SELECT @idx:=0) AS idt  
+	WHERE hmsg.`is_del`='0' AND hmsg.`house_status`='40' AND hmsg.`landlord_uid` = #{landlordUid,jdbcType=VARCHAR}
+	 	AND hmsg.till_date <![CDATA[ > ]]>  NOW()
+	ORDER BY hmsg.`last_modify_date` DESC   
+  </select>
+   
+  <!-- 查询房间的序号  -->
+  <select id="getRoomIndexbyHouse"  resultType="java.util.Map" parameterType="java.lang.String"  >
+   SELECT room.`fid` AS fid ,(@idx:=@idx+1) AS idx FROM `t_house_room_msg` room ,(SELECT @idx:=0) AS idt ,`t_house_base_msg` hmsg
+	WHERE room.house_base_fid =hmsg.fid  AND room.`is_del`='0' AND room.`room_status`='40'
+	AND room.`house_base_fid` = #{houseBaseFid,jdbcType=VARCHAR}
+	AND hmsg.till_date <![CDATA[ > ]]>  NOW()
+	ORDER BY room.`last_modify_date` DESC    
+  </select>
+   
+
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="search.evaluateDbDao" >
+
+
+
+    <!-- 获取数据库的信息 -->
+    <select id="getCustomerInfo" resultType="com.ziroom.minsu.services.search.vo.CustomerDbInfoVo"  parameterType="java.lang.String">
+      SELECT
+         b.real_name AS realName,
+         b.nick_name AS nickName,
+         m.pic_base_url AS headUrl,
+         m.pic_suffix AS picSuffix
+      FROM t_customer_base_msg b
+        LEFT JOIN t_customer_pic_msg m ON b.uid = m.uid AND m.pic_type = 3 AND m.is_del = 0
+      WHERE b.uid = #{uid,jdbcType=VARCHAR}
+      limit 1
+    </select>
+
+
+
+    <!-- 获取数据库的信息 -->
+    <select id="getCustomerCollect" resultType="java.lang.String"  parameterType="java.lang.String">
+        SELECT
+          CONCAT(house_fid, '_', rent_way)
+        FROM t_customer_collection
+        WHERE uid = #{uid,jdbcType=VARCHAR}
+        AND is_del = 0
+    </select>
+
+
+    <select id="getBrandLandLordList" resultType="com.ziroom.minsu.services.search.vo.BrandLandlordVo" parameterType="java.lang.String" >
+      SELECT bl.landlord_uid AS landlordUid,
+      	bm.brand_sn AS brandsn FROM t_brand_landlord bl 
+      	LEFT JOIN t_brand_base_msg bm ON bl.brand_base_fid = bm.fid 
+      	WHERE bm.is_del = 0 
+      	<if test="uid !=null and uid !='' ">
+      		AND bl.landlord_uid = #{uid,jdbcType=VARCHAR}
+      	</if>
+      	
+    </select>
+
+</mapper>

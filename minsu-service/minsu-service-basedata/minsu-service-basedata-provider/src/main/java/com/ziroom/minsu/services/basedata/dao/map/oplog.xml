@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.opLogDao" >
+
+  <!--  插入后台log -->
+  <insert id="insertOpLogEntity" parameterType="com.ziroom.minsu.entity.sys.OpLogEntity" >
+    insert into `t_sys_op_log` (fid, op_employee_id, op_employee_name, op_employee_code, op_app_no, op_url)
+	values (#{fid,jdbcType=VARCHAR}, #{opEmployeeId,jdbcType=VARCHAR},
+			#{opEmployeeName,jdbcType=VARCHAR}, #{opEmployeeCode,jdbcType=VARCHAR}, #{opAppNo,jdbcType=INTEGER}, #{opUrl,jdbcType=VARCHAR})
+  </insert>
+  
+  
+  <!--操作日志列表查询-->
+  <select id="findOpLogByCondition" resultType="com.ziroom.minsu.services.basedata.entity.OpLogVo" parameterType="com.ziroom.minsu.services.basedata.dto.OpLogRequest" >
+  	SELECT 
+		tsol.`op_employee_id` AS opEmployeeId,
+		tsol.`op_employee_name` AS opEmployeeName,
+		tsol.`op_employee_code` AS opEmployeeCode,
+		(CASE tsol.op_app_no WHEN  1 THEN '报表系统' WHEN 2 THEN 'troy系统' ELSE '其他系统' END) AS opAppName,
+		tsol.`op_url` AS opUrl,
+		tsol.`create_time` AS createTime
+	FROM 
+	`t_sys_op_log` tsol
+	<where>
+		<if test="opUrl != null and opUrl != ''">
+			AND tsol.`op_url` = #{opUrl,jdbcType=VARCHAR}
+		</if>
+		<if test="empCode != null and empCode != ''">
+			AND tsol.`op_employee_code` = #{empCode,jdbcType=VARCHAR}
+		</if>
+		<if test="empName != null and empName != ''">
+			AND tsol.`op_employee_name` = #{empName,jdbcType=VARCHAR}
+		</if>
+	</where>
+ </select>
+  
+</mapper>

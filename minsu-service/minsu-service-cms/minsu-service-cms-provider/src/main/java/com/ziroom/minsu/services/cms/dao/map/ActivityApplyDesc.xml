@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.ActivityApplyDescDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityApplyDescEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="activity_apply_fid" property="activityApplyFid" jdbcType="VARCHAR" />
+    <result column="customer_introduce" property="customerIntroduce" jdbcType="VARCHAR" />
+    <result column="house_story" property="houseStory" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, activity_apply_fid, customer_introduce, house_story, create_time, last_modify_date, 
+    is_del
+  </sql> 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_activity_apply_desc
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_activity_apply_desc
+    where id = #{id,jdbcType=INTEGER}
+  </delete> 
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.cms.ActivityApplyDescEntity" >
+    insert into t_activity_apply_desc (id, fid, activity_apply_fid, 
+      customer_introduce, house_story, create_time, 
+      last_modify_date, is_del)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{activityApplyFid,jdbcType=VARCHAR}, 
+      #{customerIntroduce,jdbcType=VARCHAR}, #{houseStory,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{isDel,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.cms.ActivityApplyDescEntity" >
+    insert into t_activity_apply_desc
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="activityApplyFid != null" >
+        activity_apply_fid,
+      </if>
+      <if test="customerIntroduce != null" >
+        customer_introduce,
+      </if>
+      <if test="houseStory != null" >
+        house_story,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="activityApplyFid != null" >
+        #{activityApplyFid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerIntroduce != null" >
+        #{customerIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="houseStory != null" >
+        #{houseStory,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.cms.ActivityApplyDescEntity" >
+    update t_activity_apply_desc
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="activityApplyFid != null" >
+        activity_apply_fid = #{activityApplyFid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerIntroduce != null" >
+        customer_introduce = #{customerIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="houseStory != null" >
+        house_story = #{houseStory,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.cms.ActivityApplyDescEntity" >
+    update t_activity_apply_desc
+    set fid = #{fid,jdbcType=VARCHAR},
+      activity_apply_fid = #{activityApplyFid,jdbcType=VARCHAR},
+      customer_introduce = #{customerIntroduce,jdbcType=VARCHAR},
+      house_story = #{houseStory,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

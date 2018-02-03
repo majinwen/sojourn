@@ -1,0 +1,716 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.activityDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="act_sn" property="actSn" jdbcType="VARCHAR" />
+    <result column="group_sn" property="groupSn" jdbcType="VARCHAR"/>
+    <result column="service_line" property="serviceLine" jdbcType="INTEGER"/>
+    <result column="customer_type" property="customerType" jdbcType="INTEGER"/>
+    <result column="sign_type" property="signType" jdbcType="INTEGER"/>
+    <result column="is_stack" property="isStack" jdbcType="INTEGER"/>
+    <result column="act_name" property="actName" jdbcType="VARCHAR" />
+    <result column="act_source" property="actSource" jdbcType="INTEGER" />
+    <result column="act_status" property="actStatus" jdbcType="INTEGER" />
+    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="act_cost_type" property="actCostType" jdbcType="INTEGER"/>
+    <result column="act_kind" property="actKind" jdbcType="INTEGER" />
+    <result column="act_type" property="actType" jdbcType="INTEGER" />
+    <result column="act_limit" property="actLimit" jdbcType="INTEGER" />
+    <result column="times" property="times" jdbcType="INTEGER" />
+    <result column="act_max" property="actMax" jdbcType="INTEGER" />
+    <result column="act_cut" property="actCut" jdbcType="INTEGER" />
+    <result column="act_start_time" property="actStartTime" jdbcType="TIMESTAMP" />
+    <result column="act_end_time" property="actEndTime" jdbcType="TIMESTAMP" />
+    <result column="is_coupon" property="isCoupon" jdbcType="INTEGER" />
+    <result column="is_check_time" property="isCheckTime" jdbcType="INTEGER" />
+    <result column="check_in_time" property="checkInTime" jdbcType="TIMESTAMP" />
+    <result column="check_out_time" property="checkOutTime" jdbcType="TIMESTAMP" />
+    <result column="is_limit_house" property="isLimitHouse" jdbcType="INTEGER"/>
+
+    <result column="group_user_fid" property="groupUserFid" jdbcType="VARCHAR"/>
+    <result column="group_house_fid" property="groupHouseFid" jdbcType="VARCHAR"/>
+
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="ActivityVoMap" type="com.ziroom.minsu.entity.cms.ActivityVo" extends="BaseResultMap">
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, act_sn,service_line,customer_type,sign_type,is_stack, act_name, act_source, act_status, role_code,act_cost_type,
+    act_kind, act_type, act_limit, times,
+    act_max, act_cut, act_start_time, act_end_time, is_coupon, is_check_time, check_in_time,
+    check_out_time,group_user_fid,group_house_fid, create_id, create_time, last_modify_date,
+    is_del,group_sn,is_limit_house
+  </sql>
+  
+  <sql id="ActivityVo_Column" >
+    id, act_sn, act_name, act_source, act_status, role_code, act_kind, act_type, 
+    act_limit,times, act_max, act_cut, act_start_time, act_end_time, is_check_time, is_coupon, check_in_time,
+    check_out_time, create_id, create_time, last_modify_date, is_del,group_sn,service_line
+  </sql>
+
+
+
+    <sql id="ActivityVo_Column_ac" >
+        ac.id,
+        ac.act_sn,
+        ac.group_sn,
+        ac.act_name,
+        ac.act_source,
+        ac.act_status,
+        ac.role_code,
+        ac.act_kind, 
+        ac.act_type,
+        ac.act_limit,
+        ac.times,
+        ac.act_max,
+        ac.act_cut,
+        ac.act_start_time,
+        ac.act_end_time,
+        ac.is_check_time,
+        ac.is_coupon,
+        ac.check_in_time,
+        ac.check_out_time,
+        ac.create_id,
+        ac.create_time,
+        ac.last_modify_date,
+        ac.is_del,
+        ac.service_line
+    </sql>
+
+  
+  <!-- 根据活动号查询活动 -->
+  <select id="selectByActSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_activity
+    WHERE act_sn = #{actSn,jdbcType=VARCHAR}
+    AND is_del=0
+  </select>
+  
+  <!-- 根据活动组号查询活动 -->
+  <select id="selectByGroupSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_activity
+    WHERE group_sn = #{groupSn,jdbcType=VARCHAR}
+    AND is_del=0
+    AND act_status = 2
+    limit 1
+  </select>
+  <!--根据活动组号查询所有有效的活动-->
+  <select id="listActivityByGroupSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_activity
+    WHERE group_sn = #{groupSn,jdbcType=VARCHAR}
+    AND act_start_time <![CDATA[ <= ]]> NOW()
+    AND act_end_time >= NOW()
+    AND act_status = 2
+    AND is_del=0
+  </select>
+
+
+  <!-- 查询正在进行中的返现户活动 -->
+  <select id="getCashbackListOk" resultMap="BaseResultMap" parameterType="map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_activity
+    WHERE is_del=0
+    AND act_start_time <![CDATA[ <= ]]> NOW()
+    AND act_end_time >= NOW()
+    AND act_status = 2
+    AND act_type = 23
+    AND act_kind = 2
+  </select>
+
+
+  <!-- 查询当前所有的返现户活动 -->
+  <select id="getCashbackListAll" resultMap="ActivityVoMap" parameterType="map" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_activity
+    WHERE is_del=0
+    AND act_type = 23
+    AND act_kind = 2
+  </select>
+
+
+  <!-- 获取当前的免佣金的活动 -->
+  <select id="getSeedActivityLast" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_activity
+    WHERE is_del=0
+    AND act_status = 2
+    AND act_kind = 2
+    AND act_type = 20
+    AND act_start_time <![CDATA[ <= ]]> NOW()
+    AND act_end_time >= NOW()
+    ORDER  BY create_time DESC
+    limit 1
+  </select>
+
+  
+  <!-- 查询有效的活动列表 -->
+  <select id="getUnderwayActivityList" resultMap="ActivityVoMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_activity
+    WHERE is_del=0
+    AND act_status IN
+    <foreach collection="actStatusList" item="actStatus" index="index" open="(" separator="," close=")">
+    	#{actStatus,jdbcType=INTEGER}
+    </foreach>
+    AND act_start_time <![CDATA[ <= ]]> NOW() 
+    AND act_end_time >= NOW()
+    AND act_kind = 2
+    AND act_type IN (20,23,25)
+  </select>
+
+
+    <!-- 分页查询活动信息  -->
+    <select id="getActivityVoListByCondictionByCity" resultMap="ActivityVoMap" parameterType="com.ziroom.minsu.services.cms.dto.ActivityInfoRequest" >
+        SELECT DISTINCT
+        <include refid="ActivityVo_Column_ac" />
+        FROM t_activity ac
+        LEFT JOIN t_activity_city ci on ac.act_sn = ci.act_sn
+        WHERE ac.is_del=0
+        AND
+        (
+        ci.city_code = 0
+        OR
+        ci.city_code = #{cityCode,jdbcType=VARCHAR}
+        )
+        <if test="actSn != null and actSn != ''">
+          AND act_sn = #{actSn,jdbcType=VARCHAR}
+        </if>
+        <if test="actName != null and actName != ''">
+            AND act_name = #{actName,jdbcType=VARCHAR}
+        </if>
+        <if test="createTimeStart != null and createTimeStart != ''">
+            AND act_start_time >= #{createTimeStart,jdbcType=VARCHAR}
+        </if>
+        <if test="createTimeEnd != null and createTimeEnd != ''">
+            AND act_end_time &lt;= #{createTimeEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="actType != null and actType != ''">
+            AND act_type = #{actType,jdbcType=VARCHAR}
+        </if>
+        <if test="actStatus != null and actStatus != ''">
+            AND act_status = #{actStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="roleCode != null and roleCode != ''">
+            AND role_code = #{roleCode,jdbcType=VARCHAR}
+        </if>
+        <if test="actKind != null and actKind != ''">
+            AND act_kind = #{actKind,jdbcType=VARCHAR}
+        </if>
+        <if test="groupSn != null and groupSn != ''">
+            AND group_sn = #{groupSn,jdbcType=VARCHAR}
+        </if>
+      <if test="serviceLine != null and serviceLine != ''">
+        AND service_line = #{serviceLine,jdbcType=VARCHAR}
+      </if>
+        ORDER BY ac.id DESC
+    </select>
+
+
+
+
+    <!-- 分页查询活动信息  -->
+  <select id="getActivityVoListByCondiction" resultMap="ActivityVoMap" parameterType="com.ziroom.minsu.services.cms.dto.ActivityInfoRequest" >
+    SELECT 
+    <include refid="ActivityVo_Column" />
+    FROM t_activity
+    WHERE is_del=0
+    <if test="cityCode != null and cityCode != ''">
+        AND city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="actSn != null and actSn != ''">
+      AND act_sn = #{actSn,jdbcType=VARCHAR}
+    </if>
+    <if test="actName != null and actName != ''">
+        AND act_name = #{actName,jdbcType=VARCHAR}
+    </if>
+    <if test="createTimeStart != null and createTimeStart != ''">
+        AND act_start_time >= #{createTimeStart,jdbcType=VARCHAR}
+    </if>
+    <if test="createTimeEnd != null and createTimeEnd != ''">
+        AND act_end_time &lt;= #{createTimeEnd,jdbcType=VARCHAR}
+    </if>
+    <if test="actType != null and actType != ''">
+        AND act_type = #{actType,jdbcType=VARCHAR}
+    </if>
+    <if test="actStatus != null and actStatus != ''">
+        AND act_status = #{actStatus,jdbcType=VARCHAR}
+    </if>
+    <if test="roleCode != null and roleCode != ''">
+        AND role_code = #{roleCode,jdbcType=VARCHAR}
+    </if>
+    <if test="actKind != null and actKind != ''">
+         AND act_kind = #{actKind,jdbcType=VARCHAR}
+    </if>
+    <if test="groupSn != null and groupSn != ''">
+         AND group_sn = #{groupSn,jdbcType=VARCHAR}
+    </if>
+    <if test="serviceLine != null and serviceLine != ''">
+      AND service_line = #{serviceLine,jdbcType=VARCHAR}
+    </if>
+    ORDER BY id DESC
+  </select>
+
+
+
+  <!-- 当前活动正在生成中 -->
+  <update id="updateAcCouponIng" parameterType="map" >
+    UPDATE t_activity
+    SET is_coupon = 3
+    WHERE
+     act_sn = #{actSn,jdbcType=VARCHAR}
+     AND is_coupon IN (1,2)
+     AND is_del = 0
+  </update>
+
+
+  <!-- 启动活动 -->
+  <update id="updateIsCouponStatus" parameterType="map" >
+      UPDATE t_activity
+      SET is_coupon = #{isCoupon,jdbcType=INTEGER}
+      WHERE is_del = 0
+      AND act_sn = #{actSn,jdbcType=VARCHAR}
+  </update>
+
+
+  <!-- 启动活动 -->
+  <update id="enableActivity" parameterType="map" >
+    UPDATE t_activity
+    SET act_status = #{actStatus,jdbcType=INTEGER}
+    WHERE is_del = 0
+    AND act_status = #{oldStatus,jdbcType=INTEGER}
+    AND act_sn = #{actSn,jdbcType=VARCHAR}
+  </update>
+  
+
+  <insert id="saveActivity" parameterType="com.ziroom.minsu.entity.cms.ActivityEntity" >
+    insert into t_activity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="actSn != null" >
+        act_sn,
+      </if>
+      <if test="actName != null" >
+        act_name,
+      </if>
+      <if test="serviceLine != null">
+        service_line,
+      </if>
+      <if test="customerType != null">
+        customer_type,
+      </if>
+      <if test="signType != null">
+        sign_type,
+      </if>
+      <if test="isStack != null">
+        is_stack,
+      </if>
+      <if test="actSource != null" >
+        act_source,
+      </if>
+      <if test="actStatus != null" >
+        act_status,
+      </if>
+      <if test="roleCode != null" >
+        role_code,
+      </if>
+      <if test="actCostType != null">
+        act_cost_type,
+      </if>
+      <if test="actKind != null" >
+        act_kind,
+      </if>
+      <if test="actType != null" >
+        act_type,
+      </if>
+      <if test="actLimit != null" >
+        act_limit,
+      </if>
+      <if test="times != null" >
+        times,
+      </if>
+      <if test="actMax != null" >
+        act_max,
+      </if>
+      <if test="actCut != null" >
+        act_cut,
+      </if>
+      <if test="actStartTime != null" >
+        act_start_time,
+      </if>
+      <if test="actEndTime != null" >
+        act_end_time,
+      </if>
+      <if test="isCheckTime != null" >
+        is_check_time,
+      </if>
+      <if test="checkInTime != null" >
+        check_in_time,
+      </if>
+      <if test="checkOutTime != null" >
+        check_out_time,
+      </if>
+      <if test="groupUserFid != null">
+        group_user_fid,
+      </if>
+      <if test="groupHouseFid != null">
+        group_house_fid,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="isCoupon != null" >
+          is_coupon,
+      </if>
+      <if test="groupSn != null" >
+          group_sn,
+      </if>
+      <if test="isLimitHouse != null" >
+        is_limit_house,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="actSn != null" >
+        #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="actName != null" >
+        #{actName,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceLine != null">
+        #{serviceLine,jdbcType=INTEGER},
+      </if>
+      <if test="customerType != null">
+        #{customerType,jdbcType=INTEGER},
+      </if>
+      <if test="signType != null">
+        #{signType,jdbcType=INTEGER},
+      </if>
+      <if test="isStack != null">
+        #{isStack,jdbcType=INTEGER},
+      </if>
+      <if test="actSource != null" >
+        #{actSource,jdbcType=INTEGER},
+      </if>
+      <if test="actStatus != null" >
+        #{actStatus,jdbcType=INTEGER},
+      </if>
+      <if test="roleCode != null" >
+        #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="actCostType != null">
+        #{actCostType,jdbcType=INTEGER},
+      </if>
+      <if test="actKind != null" >
+        #{actKind,jdbcType=INTEGER},
+      </if>
+      <if test="actType != null" >
+        #{actType,jdbcType=INTEGER},
+      </if>
+      <if test="actLimit != null" >
+        #{actLimit,jdbcType=INTEGER},
+      </if>
+      <if test="times != null" >
+        #{times,jdbcType=INTEGER},
+      </if>
+      <if test="actMax != null" >
+        #{actMax,jdbcType=INTEGER},
+      </if>
+      <if test="actCut != null" >
+        #{actCut,jdbcType=INTEGER},
+      </if>
+      <if test="actStartTime != null" >
+        #{actStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actEndTime != null" >
+        #{actEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCheckTime != null" >
+        #{isCheckTime,jdbcType=INTEGER},
+      </if>
+      <if test="checkInTime != null" >
+        #{checkInTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkOutTime != null" >
+        #{checkOutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="groupUserFid != null">
+        #{groupUserFid,jdbcType=VARCHAR},
+      </if>
+      <if test="groupHouseFid != null">
+        #{groupHouseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+       <if test="isCoupon != null" >
+          #{isCoupon,jdbcType=INTEGER},
+       </if>
+       <if test="groupSn != null" >
+           #{groupSn,jdbcType=VARCHAR},
+       </if>
+      <if test="isLimitHouse != null" >
+        #{isLimitHouse,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByActivitySn" parameterType="com.ziroom.minsu.entity.cms.ActivityEntity" >
+    update t_activity
+    <set >
+      <if test="actSn != null" >
+        act_sn = #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="actName != null" >
+        act_name = #{actName,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceLine != null">
+        service_line = #{serviceLine,jdbcType=INTEGER},
+      </if>
+      <if test="customerType != null">
+        customer_type = #{customerType,jdbcType=INTEGER},
+      </if>
+      <if test="signType != null">
+        sign_type = #{signType,jdbcType=INTEGER},
+      </if>
+      <if test="isStack != null">
+        is_stack = #{isStack,jdbcType=INTEGER},
+      </if>
+      <if test="actSource != null" >
+        act_source = #{actSource,jdbcType=INTEGER},
+      </if>
+      <if test="actStatus != null" >
+        act_status = #{actStatus,jdbcType=INTEGER},
+      </if>
+      <if test="roleCode != null" >
+        role_code = #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="actKind != null" >
+        act_kind = #{actKind,jdbcType=INTEGER},
+      </if>
+      <if test="actType != null" >
+        act_type = #{actType,jdbcType=INTEGER},
+      </if>
+      <if test="actLimit != null" >
+        act_limit = #{actLimit,jdbcType=INTEGER},
+      </if>
+      <if test="times != null" >
+        #{times,jdbcType=INTEGER},
+      </if>
+      <if test="actMax != null" >
+        act_max = #{actMax,jdbcType=INTEGER},
+      </if>
+      <if test="actCut != null" >
+        act_cut = #{actCut,jdbcType=INTEGER},
+      </if>
+      <if test="actStartTime != null" >
+        act_start_time = #{actStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actEndTime != null" >
+        act_end_time = #{actEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCheckTime != null" >
+        is_check_time = #{isCheckTime,jdbcType=INTEGER},
+      </if>
+      <if test="checkInTime != null" >
+        check_in_time = #{checkInTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkOutTime != null" >
+        check_out_time = #{checkOutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isLimitHouse != null" >
+        is_limit_house = #{isLimitHouse,jdbcType=INTEGER},
+      </if>
+      <if test="groupUserFid != null">
+        group_user_fid = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="groupHouseFid != null">
+        group_house_fid = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+        <if test="isCoupon != null" >
+            is_coupon = #{isCoupon,jdbcType=INTEGER},
+        </if>
+    </set>
+    where act_sn = #{actSn,jdbcType=VARCHAR}
+  </update>
+  
+
+  <update id="updateCouponActBySn" parameterType="com.ziroom.minsu.entity.cms.ActivityEntity" >
+    update t_activity
+    <set >
+      act_limit = #{actLimit,jdbcType=INTEGER},
+      act_max = #{actMax,jdbcType=INTEGER},
+      act_cut = #{actCut,jdbcType=INTEGER},
+      check_in_time = #{checkInTime,jdbcType=TIMESTAMP},
+      check_out_time = #{checkOutTime,jdbcType=TIMESTAMP},
+      group_sn = #{groupSn,jdbcType=INTEGER},
+      <if test="actName != null" >
+        act_name = #{actName,jdbcType=VARCHAR},
+      </if>
+
+      <if test="customerType != null">
+        customer_type = #{customerType,jdbcType=INTEGER},
+      </if>
+      <if test="signType != null">
+        sign_type = #{signType,jdbcType=INTEGER},
+      </if>
+      <if test="isStack != null">
+        is_stack = #{isStack,jdbcType=INTEGER},
+      </if>
+      <if test="actSource != null" >
+        act_source = #{actSource,jdbcType=INTEGER},
+      </if>
+      <if test="actStatus != null" >
+        act_status = #{actStatus,jdbcType=INTEGER},
+      </if>
+      <if test="roleCode != null" >
+        role_code = #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="actKind != null" >
+        act_kind = #{actKind,jdbcType=INTEGER},
+      </if>
+      <if test="actType != null" >
+        act_type = #{actType,jdbcType=INTEGER},
+      </if>
+      <if test="actLimit != null" >
+        act_limit = #{actLimit,jdbcType=INTEGER},
+      </if>
+        <if test="times != null">
+        times = #{times,jdbcType=INTEGER},
+      </if>
+      <if test="actMax != null" >
+        act_max = #{actMax,jdbcType=INTEGER},
+      </if>
+      <if test="actCut != null" >
+        act_cut = #{actCut,jdbcType=INTEGER},
+      </if>
+      <if test="actStartTime != null" >
+        act_start_time = #{actStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actEndTime != null" >
+        act_end_time = #{actEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isCheckTime != null" >
+        is_check_time = #{isCheckTime,jdbcType=INTEGER},
+      </if>
+      <if test="isLimitHouse != null" >
+        is_limit_house = #{isLimitHouse,jdbcType=INTEGER},
+      </if>
+      <if test="groupUserFid != null">
+          group_user_fid = #{groupUserFid,jdbcType=VARCHAR},
+      </if>
+      <if test="groupHouseFid != null">
+          group_house_fid = #{groupHouseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="isCoupon != null" >
+          is_coupon = #{isCoupon,jdbcType=INTEGER},
+      </if>
+    </set>
+    where act_sn = #{actSn,jdbcType=VARCHAR}
+  </update>
+
+
+  <!-- 获取首单立减活动详情 -->
+  <select id="getSDLJActivityInfo" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_activity
+    WHERE is_del=0
+    AND act_kind = 2
+    AND act_type = 25
+    AND act_start_time <![CDATA[ <= ]]> NOW()
+    AND act_end_time >= NOW()
+    ORDER  BY create_time DESC
+    limit 1
+  </select>
+
+  <!--自如寓查询活动-->
+  <select id="listSuitActForZrp" resultMap="BaseResultMap"
+          parameterType="com.ziroom.minsu.services.cms.dto.ZrpActRequest">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    t_activity t
+    WHERE t.`service_line` = 2
+    AND t.`act_status` = 2
+    AND (t.`customer_type` = 0 OR t.`customer_type` = #{customerType,jdbcType=INTEGER})
+    AND (t.`sign_type` = 0 OR t.`sign_type` = #{signType,jdbcType=INTEGER})
+    AND t.act_start_time <![CDATA[ <= ]]> NOW()
+    AND t.act_end_time >= NOW()
+    AND t.`is_del` = 0
+  </select>
+
+  <select id="listUserGroupActForZrp" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    t_activity
+    WHERE service_line = 2
+    AND act_status = 2
+    AND act_start_time <![CDATA[ <= ]]> NOW()
+    AND act_end_time >= NOW()
+    AND is_del = 0
+    AND group_user_fid = #{fid,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

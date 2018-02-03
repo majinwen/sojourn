@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.financePenaltyLogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.FinancePenaltyLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="penalty_sn" property="penaltySn" jdbcType="VARCHAR" />
+    <result column="from_status" property="fromStatus" jdbcType="INTEGER" />
+    <result column="to_status" property="toStatus" jdbcType="INTEGER" />
+    <result column="from_fee" property="fromFee" jdbcType="INTEGER" />
+    <result column="to_fee" property="toFee" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+    <result column="emp_code" property="empCode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, penalty_sn, from_status, to_status, from_fee, to_fee, remark, emp_name,
+    emp_code, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_finance_penalty_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_finance_penalty_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.order.FinancePenaltyLogEntity" >
+    insert into t_finance_penalty_log (id, fid, penalty_sn,
+    from_status, to_status, from_fee,
+    to_fee, remark, emp_name,
+    emp_code, create_time)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{penaltySn,jdbcType=VARCHAR},
+    #{fromStatus,jdbcType=INTEGER}, #{toStatus,jdbcType=INTEGER}, #{fromFee,jdbcType=INTEGER},
+    #{toFee,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{empName,jdbcType=VARCHAR},
+    #{empCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.order.FinancePenaltyLogEntity" >
+    insert into t_finance_penalty_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="penaltySn != null" >
+        penalty_sn,
+      </if>
+      <if test="fromStatus != null" >
+        from_status,
+      </if>
+      <if test="toStatus != null" >
+        to_status,
+      </if>
+      <if test="fromFee != null" >
+        from_fee,
+      </if>
+      <if test="toFee != null" >
+        to_fee,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="empName != null" >
+        emp_name,
+      </if>
+      <if test="empCode != null" >
+        emp_code,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="penaltySn != null" >
+        #{penaltySn,jdbcType=VARCHAR},
+      </if>
+      <if test="fromStatus != null" >
+        #{fromStatus,jdbcType=INTEGER},
+      </if>
+      <if test="toStatus != null" >
+        #{toStatus,jdbcType=INTEGER},
+      </if>
+      <if test="fromFee != null" >
+        #{fromFee,jdbcType=INTEGER},
+      </if>
+      <if test="toFee != null" >
+        #{toFee,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="empName != null" >
+        #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empCode != null" >
+        #{empCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.order.FinancePenaltyLogEntity" >
+    update t_finance_penalty_log
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="penaltySn != null" >
+        penalty_sn = #{penaltySn,jdbcType=VARCHAR},
+      </if>
+      <if test="fromStatus != null" >
+        from_status = #{fromStatus,jdbcType=INTEGER},
+      </if>
+      <if test="toStatus != null" >
+        to_status = #{toStatus,jdbcType=INTEGER},
+      </if>
+      <if test="fromFee != null" >
+        from_fee = #{fromFee,jdbcType=INTEGER},
+      </if>
+      <if test="toFee != null" >
+        to_fee = #{toFee,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="empName != null" >
+        emp_name = #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empCode != null" >
+        emp_code = #{empCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.order.FinancePenaltyLogEntity" >
+    update t_finance_penalty_log
+    set fid = #{fid,jdbcType=VARCHAR},
+      penalty_sn = #{penaltySn,jdbcType=VARCHAR},
+      from_status = #{fromStatus,jdbcType=INTEGER},
+      to_status = #{toStatus,jdbcType=INTEGER},
+      from_fee = #{fromFee,jdbcType=INTEGER},
+      to_fee = #{toFee,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      emp_name = #{empName,jdbcType=VARCHAR},
+      emp_code = #{empCode,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

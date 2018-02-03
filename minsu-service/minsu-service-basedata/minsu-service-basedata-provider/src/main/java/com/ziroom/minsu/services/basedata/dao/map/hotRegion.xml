@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.hotRegionDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.conf.HotRegionEntity" >
+    <!--  -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="nation_code" property="nationCode" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+    <result column="hot" property="hot" jdbcType="INTEGER" />
+    <result column="radii" property="radii" jdbcType="INTEGER" />
+    <result column="region_status" property="regionStatus" jdbcType="INTEGER" />
+    <result column="region_type" property="regionType" jdbcType="INTEGER" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="is_file" property="isFile" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="google_longitude" property="googleLongitude" jdbcType="DOUBLE" />
+    <result column="google_latitude" property="googleLatitude" jdbcType="DOUBLE" />
+  </resultMap>
+
+  <resultMap id="RegionExtMap" type="com.ziroom.minsu.services.basedata.entity.RegionExtVo" extends="BaseResultMap" >
+    <!--  tchr.`fid`,tchr.`area_code`,tchr.`region_name`,tchr.`longitude`,tchr.`latitude`,
+    tchr.`hot`,tchr.`region_status`,tfr.`hot_region_brief`,tfr.`hot_region_content`-->
+    <result column="hot_region_brief" property="hotRegionBrief" jdbcType="VARCHAR" />
+    <result column="hot_region_content" property="hotRegionContent" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    <!--  -->
+    thr.id, thr.fid, thr.nation_code, thr.province_code, thr.city_code, thr.area_code,thr.region_name, thr.hot, thr.radii, thr.region_status,
+    thr.region_type, thr.longitude, thr.latitude,thr.google_longitude, thr.google_latitude, thr.create_date, thr.last_modify_date, thr.create_fid, thr.is_del, thr.is_file
+  </sql>
+
+  <!-- 分页查询景点商圈列表 -->
+  <select id="findHotRegionListByPage" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.basedata.dto.HotRegionRequest" >
+    <!--  -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_conf_hot_region thr
+    where thr.is_del = 0
+    <if test="nationCode != null and nationCode != ''">
+      and thr.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode != ''">
+      and thr.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+    <if test="cityCode != null and cityCode != ''">
+      and thr.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="regionName != null and regionName != ''">
+      and thr.region_name like CONCAT(#{regionName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="regionType != null">
+      and thr.region_type = #{regionType,jdbcType=INTEGER}
+    </if>
+    <if test="radii != null">
+      and thr.radii = #{radii,jdbcType=INTEGER}
+    </if>
+    order by thr.create_date desc
+  </select>
+  
+  <select id="findHotRegionByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!-- 根据景点商圈业务fid条件查询 -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_conf_hot_region thr
+    where thr.fid = #{fid,jdbcType=VARCHAR}
+    and thr.is_del = 0
+    limit 1
+  </select>
+  
+  <!-- 根据城市code查询已建立档案的景点商圈列表 -->
+  <select id="getListWithFileByCityCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!-- 根据景点商圈业务fid条件查询 -->
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_conf_hot_region thr
+    WHERE thr.city_code = #{cityCode,jdbcType=VARCHAR}
+    AND thr.is_file = 1
+    AND thr.is_del = 0
+  </select>
+  
+  <!-- 查询含有有效半径的景点商圈列表(radii>0) -->
+  <select id="findHotRegionsWithValidRadii" resultMap="BaseResultMap" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_conf_hot_region thr
+    WHERE thr.radii > 0
+    AND thr.is_del = 0
+  </select>
+
+  <!-- 查询景点商圈以及其描述和内容(城市档案)-->
+  <select id="getRegionExtVoByRegionFid" parameterType="java.lang.String" resultMap="RegionExtMap" >
+    SELECT tchr.`fid`,tchr.`area_code`,tchr.radii,tchr.`region_name`,tchr.`longitude`,tchr.`latitude`,tchr.`google_longitude`,tchr.`google_latitude`,tchr.`hot`,tchr.`region_status`,tfr.`hot_region_brief`,tfr.`hot_region_content`
+    FROM `t_conf_hot_region` tchr
+    LEFT JOIN `t_file_region` tfr ON tchr.`fid`=tfr.`hot_region_fid`
+    WHERE  tchr.`is_file`='1' AND tchr.`is_del`='0'
+     AND tchr.fid = #{regionFid,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 获取景点商圈信息 -->
+  <select id="getCircleByFid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    <!--  -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_conf_hot_region
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <!-- 获取景点商圈列表 -->
+  <select id="getHotRegionList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    <!--  -->
+    select
+    <include refid="Base_Column_List" />
+    from t_conf_hot_region
+  </select>
+
+  <insert id="insertHotRegion" parameterType="com.ziroom.minsu.entity.conf.HotRegionEntity" >
+    <!-- -->
+    insert into t_conf_hot_region
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="nationCode != null" >
+        nation_code,
+      </if>
+      <if test="provinceCode != null" >
+        province_code,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="areaCode != null" >
+        area_code,
+      </if>
+      <if test="regionName != null" >
+        region_name,
+      </if>
+      <if test="hot != null" >
+        hot,
+      </if>
+      <if test="radii != null" >
+        radii,
+      </if>
+      <if test="regionStatus != null" >
+        region_status,
+      </if>
+      <if test="regionType != null" >
+        region_type,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="isFile != null" >
+        is_file,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+       <if test="googleLongitude != null" >
+        google_longitude,
+      </if>
+      <if test="googleLatitude != null" >
+        google_latitude,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="nationCode != null" >
+        #{nationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="regionName != null" >
+        #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="hot != null" >
+        #{hot,jdbcType=INTEGER},
+      </if>
+      <if test="radii != null" >
+        #{radii,jdbcType=INTEGER},
+      </if>
+      <if test="regionStatus != null" >
+        #{regionStatus,jdbcType=INTEGER},
+      </if>
+      <if test="regionType != null" >
+        #{regionType,jdbcType=INTEGER},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="isFile != null" >
+        #{isFile,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+       <if test="googleLongitude != null" >
+        #{googleLongitude,jdbcType=DOUBLE},
+      </if>
+      <if test="googleLatitude != null" >
+        #{googleLatitude,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateHotRegionByFid" parameterType="com.ziroom.minsu.entity.conf.HotRegionEntity" >
+    <!--  -->
+    update t_conf_hot_region
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="nationCode != null" >
+        nation_code = #{nationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        province_code = #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        area_code = #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="regionName != null" >
+        region_name = #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="hot != null" >
+        hot = #{hot,jdbcType=INTEGER},
+      </if>
+      <if test="radii != null" >
+        radii = #{radii,jdbcType=INTEGER},
+      </if>
+      <if test="regionStatus != null" >
+        region_status = #{regionStatus,jdbcType=INTEGER},
+      </if>
+      <if test="regionType != null" >
+        region_type = #{regionType,jdbcType=INTEGER},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="isFile != null" >
+        is_file = #{isFile,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+       <if test="googleLongitude != null" >
+        google_longitude = #{googleLongitude,jdbcType=DOUBLE},
+      </if>
+      <if test="googleLatitude != null" >
+        google_latitude = #{googleLatitude,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

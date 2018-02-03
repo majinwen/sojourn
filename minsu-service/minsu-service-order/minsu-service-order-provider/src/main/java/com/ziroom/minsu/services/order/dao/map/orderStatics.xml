@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderStaticsDao" >
+
+    <!-- 统计当前订单的数量-->
+    <select id="staticsLandOrderCountInfo" resultType="com.ziroom.minsu.services.order.dto.OrderLandlordStaticsDto"  parameterType="map">
+
+        select
+        sum(lanOrderNum) as lanOrderNum,
+        sum(acceptOrderNum) as acceptOrderNum,
+        sum(lanRefuseOrderNum) as lanRefuseOrderNum,
+        sum(sysRefuseOrderNum) as sysRefuseOrderNum,
+        sum(canEvaNum) as canEvaNum,
+        sum(landlordEvaedNum) as landlordEvaedNum,
+        sum(tenantEvaedNum) as tenantEvaedNum,
+        sum(waitLandlordEvaNum) as waitLandlordEvaNum,
+        sum(waitTenantEvaNum) as waitTenantEvaNum
+        from(
+        SELECT
+        1 AS lanOrderNum,
+        CASE
+        WHEN t.order_status = 10 THEN 0
+        WHEN t.eva_status = 31 THEN 0
+        WHEN t.eva_status = 35 THEN 0
+        ELSE 1
+        END AS acceptOrderNum,
+
+        CASE
+        WHEN t.eva_status = 31 THEN 1
+        ELSE 0
+        END AS lanRefuseOrderNum,
+
+        CASE
+        WHEN t.eva_status = 33 THEN 1
+        WHEN t.eva_status = 35 THEN 1
+        ELSE 0
+        END AS sysRefuseOrderNum,
+
+        CASE
+        WHEN t.eva_status = 100 THEN 1
+        WHEN t.eva_status = 101 THEN 1
+        WHEN t.eva_status = 110 THEN 1
+        WHEN t.eva_status = 111 THEN 1
+        ELSE 0
+        END AS canEvaNum,
+
+        CASE
+        WHEN t.eva_status = 110 THEN 1
+        WHEN t.eva_status = 111 THEN 1
+        ELSE 0
+        END AS landlordEvaedNum,
+
+        CASE
+        WHEN t.eva_status = 101 THEN 1
+        WHEN t.eva_status = 111 THEN 1
+        ELSE 0
+        END AS tenantEvaedNum,
+
+        CASE
+        WHEN t.eva_status = 100 THEN 1
+        WHEN t.eva_status = 101 THEN 1
+        ELSE 0
+        END AS waitLandlordEvaNum,
+
+        CASE
+        WHEN t.eva_status = 100 THEN 1
+        WHEN t.eva_status = 110 THEN 1
+        ELSE 0
+        END AS waitTenantEvaNum
+        FROM
+        minsu_order_db.t_order t
+        WHERE  t.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+        AND t.is_del = 0
+        )tmp
+    </select>
+
+</mapper>

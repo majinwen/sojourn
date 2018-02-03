@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseUpdateFieldAuditNewlogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseUpdateFieldAuditNewlogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="field_audit_statu" property="fieldAuditStatu" jdbcType="INTEGER" />
+    <result column="field_path" property="fieldPath" jdbcType="VARCHAR" />
+    <result column="field_desc" property="fieldDesc" jdbcType="VARCHAR" />
+    <result column="creater_fid" property="createrFid" jdbcType="VARCHAR" />
+    <result column="creater_type" property="createrType" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, house_fid, rent_way, room_fid, field_audit_statu, field_path, field_desc, creater_fid, creater_type, create_date,
+    last_modify_date
+  </sql>
+
+  <!-- 根据fid查询 -->
+  <select id="findHouseUpdateFieldAuditNewlogByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_update_field_audit_newlog
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+
+  <resultMap id="HouseFieldAuditLogMap" type="com.ziroom.minsu.services.house.entity.HouseFieldAuditLogVo" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="auditStatus" property="auditStatus" jdbcType="INTEGER" />
+    <result column="fieldPath" property="fieldPath" jdbcType="VARCHAR" />
+    <result column="fieldDesc" property="fieldDesc" jdbcType="VARCHAR" />
+    <result column="createFid" property="createFid" jdbcType="VARCHAR" />
+    <result column="createType" property="createType" jdbcType="INTEGER" />
+    <result column="houseFid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="roomFid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="rentWay" property="rentWay" jdbcType="INTEGER" />
+    <result column="fieldPathKey" property="fieldPathKey" jdbcType="VARCHAR" />
+    <result column="sourceType" property="sourceType" jdbcType="INTEGER" />
+    <result column="oldValue" property="oldValue" jdbcType="VARCHAR" />
+    <result column="newValue" property="newValue" jdbcType="VARCHAR" />
+    <result column="isText" property="isText" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!-- 根据条件查询 获取审核记录综合信息-->
+  <select id="findHouseUpdateFieldAuditNewlogByCondition" resultMap="HouseFieldAuditLogMap" parameterType="com.ziroom.minsu.entity.house.HouseUpdateFieldAuditNewlogEntity" >
+    SELECT
+    t1.`id` AS id,
+    t1.`fid` AS fid,
+    t1.`field_audit_statu` AS auditStatus,
+    t1.`field_path` AS fieldPath,
+    t1.`field_desc` AS fieldDesc,
+    t1.`creater_fid` AS createFid,
+    t1.`creater_type` AS createType,
+    t2.`house_fid` AS houseFid,
+    t2.`room_fid` AS roomFid,
+    t2.`rent_way` AS rentWay,
+    t2.`field_path_key` AS fieldPathKey,
+    t2.`source_type` AS sourceType,
+    t2.`is_text` AS isText,
+    t2.`remark` AS remark,
+    CASE t2.`is_text` WHEN 0 THEN t2.old_value ELSE t3.old_value END AS oldValue,
+    CASE t2.`is_text` WHEN 0 THEN t2.new_value ELSE t3.new_value END AS newValue
+    FROM
+    `t_house_update_field_audit_newlog` t1
+    LEFT JOIN
+        (SELECT
+        thuhl.`id`,
+        thuhl.`fid`,
+        thuhl.`house_fid`,
+        thuhl.`room_fid`,
+        thuhl.`rent_way`,
+        thuhl.`field_path`,
+        thuhl.`field_path_key`,
+        thuhl.`field_desc`,
+        thuhl.`source_type`,
+        thuhl.`old_value`,
+        thuhl.`new_value`,
+        thuhl.`is_text`,
+        thuhl.`remark`,
+        thuhl.`creater_fid`,
+        thuhl.`creater_type`,
+        thuhl.`create_date`,
+        thuhl.`last_modify_date`
+        FROM
+        (SELECT
+        t.`field_path_key`,
+        MAX(t.`create_date`) create_date
+        FROM
+        `t_house_update_history_log` t
+        GROUP BY t.`field_path_key`) tt
+        JOIN `t_house_update_history_log` thuhl
+        WHERE tt.field_path_key = thuhl.`field_path_key`
+        AND tt.create_date = thuhl.`create_date`) t2
+    ON t1.`fid` = t2.`field_path_key`
+    LEFT JOIN `t_house_update_history_ext_log` t3
+    ON t2.`fid` = t3.`fid`
+    where
+      t1.house_fid = #{houseFid,jdbcType=VARCHAR}
+      <if test="rentWay == 1">
+      AND (t1.room_fid = #{roomFid,jdbcType=VARCHAR} OR t1.room_fid = '' OR  t1.room_fid IS NULL)
+      </if>
+      <if test="fieldAuditStatu!=null">
+        AND t1.field_audit_statu = #{fieldAuditStatu,jdbcType=INTEGER}
+      </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_house_update_field_audit_newlog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="saveHouseUpdateFieldAuditNewlog" parameterType="com.ziroom.minsu.entity.house.HouseUpdateFieldAuditNewlogEntity" >
+    insert ignore into t_house_update_field_audit_newlog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseFid != null" >
+        house_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="roomFid != null and roomFid!=''" >
+        room_fid,
+      </if>
+      <if test="fieldAuditStatu != null" >
+        field_audit_statu,
+      </if>
+      <if test="fieldPath != null" >
+        field_path,
+      </if>
+      <if test="fieldDesc != null" >
+        field_desc,
+      </if>
+      <if test="createrFid != null" >
+        creater_fid,
+      </if>
+      <if test="createrType != null" >
+        creater_type,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseFid != null" >
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="roomFid != null  and roomFid!=''" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldAuditStatu != null" >
+        #{fieldAuditStatu,jdbcType=INTEGER},
+      </if>
+      <if test="fieldPath != null" >
+        #{fieldPath,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldDesc != null" >
+        #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createrFid != null" >
+        #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        #{createrType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <!-- 根据fid更新 -->
+  <update id="updateHouseUpdateFieldAuditNewlogByFid" parameterType="com.ziroom.minsu.entity.house.HouseUpdateFieldAuditNewlogEntity" >
+    update t_house_update_field_audit_newlog
+    <set >
+     
+      <if test="fieldAuditStatu != null" >
+        field_audit_statu = #{fieldAuditStatu,jdbcType=INTEGER},
+      </if>
+      <if test="fieldDesc != null" >
+        field_desc = #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createrFid != null" >
+        creater_fid = #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        creater_type = #{createrType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 根据条件更新 -->
+  <update id="updateHouseUpdateFieldAuditNewlogByCondition" parameterType="com.ziroom.minsu.entity.house.HouseUpdateFieldAuditNewlogEntity" >
+    update t_house_update_field_audit_newlog
+    <set >
+      <if test="fieldAuditStatu != null" >
+        field_audit_statu = #{fieldAuditStatu,jdbcType=INTEGER},
+      </if>
+      <if test="fieldDesc != null" >
+        field_desc = #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createrFid != null" >
+        creater_fid = #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        creater_type = #{createrType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where
+      house_fid = #{houseFid,jdbcType=VARCHAR}
+      <if test="rentWay == 1">
+        AND (room_fid = #{roomFid,jdbcType=VARCHAR} OR room_fid = '' OR  room_fid IS NULL)
+      </if>
+  </update>
+
+  <!-- 根据id更新 -->
+  <update id="updateHouseUpdateFieldAuditNewlogById" parameterType="com.ziroom.minsu.entity.house.HouseUpdateFieldAuditNewlogEntity" >
+    update t_house_update_field_audit_newlog
+    <set >
+      <if test="fieldAuditStatu != null" >
+        field_audit_statu = #{fieldAuditStatu,jdbcType=INTEGER},
+      </if>
+      <if test="fieldDesc != null" >
+        field_desc = #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="createrFid != null" >
+        creater_fid = #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        creater_type = #{createrType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where
+      id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

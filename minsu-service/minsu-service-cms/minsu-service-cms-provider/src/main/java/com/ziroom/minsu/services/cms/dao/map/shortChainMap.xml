@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.shortChainMapDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ShortChainMapEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="unique_code" property="uniqueCode" jdbcType="VARCHAR" />
+    <result column="original_link" property="originalLink" jdbcType="VARCHAR" />
+    <result column="short_link" property="shortLink" jdbcType="VARCHAR" />
+    <result column="check_code" property="checkCode" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, unique_code, original_link, short_link, check_code, create_date, create_id, is_del
+  </sql>
+  
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_short_chain_map
+    where id = #{id,jdbcType=INTEGER}
+    and is_del = 0
+  </select>
+  
+  <select id="findByUniqueCode" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_short_chain_map
+    where unique_code = #{uniqueCode,jdbcType=VARCHAR}
+    and is_del = 0
+  </select>
+  
+  <select id="findByCheckCode" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_short_chain_map
+    where check_code = #{checkCode,jdbcType=VARCHAR}
+    and is_del = 0
+  </select>
+  
+  <insert id="insertShortChainMapEntity" parameterType="com.ziroom.minsu.entity.cms.ShortChainMapEntity" useGeneratedKeys="true" keyProperty="id">
+    insert into t_short_chain_map
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uniqueCode != null" >
+        unique_code,
+      </if>
+      <if test="originalLink != null" >
+        original_link,
+      </if>
+      <if test="shortLink != null" >
+        short_link,
+      </if>
+      <if test="checkCode != null" >
+        check_code,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueCode != null" >
+        #{uniqueCode,jdbcType=VARCHAR},
+      </if>
+      <if test="originalLink != null" >
+        #{originalLink,jdbcType=VARCHAR},
+      </if>
+      <if test="shortLink != null" >
+        #{shortLink,jdbcType=VARCHAR},
+      </if>
+      <if test="checkCode != null" >
+        #{checkCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateById" parameterType="com.ziroom.minsu.entity.cms.ShortChainMapEntity" >
+    update t_short_chain_map
+    <set >
+      <if test="uniqueCode != null" >
+        unique_code = #{uniqueCode,jdbcType=VARCHAR},
+      </if>
+      <if test="originalLink != null" >
+        original_link = #{originalLink,jdbcType=VARCHAR},
+      </if>
+      <if test="shortLink != null" >
+        short_link = #{shortLink,jdbcType=VARCHAR},
+      </if>
+      <if test="checkCode != null" >
+        check_code = #{checkCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

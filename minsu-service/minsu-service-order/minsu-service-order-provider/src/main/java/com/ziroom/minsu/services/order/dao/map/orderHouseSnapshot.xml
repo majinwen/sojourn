@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.houseSnapshotDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderHouseSnapshotEntity" >
+    <!--  基本map  -->
+      <id column="id" property="id" jdbcType="INTEGER" />
+      <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+      <result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+      <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+      <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+      <result column="bed_fid" property="bedFid" jdbcType="VARCHAR" />
+      <result column="house_name" property="houseName" jdbcType="VARCHAR" />
+      <result column="room_name" property="roomName" jdbcType="VARCHAR" />
+      <result column="bed_sn" property="bedSn" jdbcType="VARCHAR" />
+      <result column="house_addr" property="houseAddr" jdbcType="VARCHAR" />
+      <result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
+      <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+      <result column="order_type" property="orderType" jdbcType="TINYINT" />
+      <result column="price" property="price" jdbcType="INTEGER" />
+      <result column="clean_money" property="cleanMoney" jdbcType="INTEGER" />
+      <result column="discount_rules_code" property="discountRulesCode" jdbcType="VARCHAR" />
+      <result column="deposit_rules_code" property="depositRulesCode" jdbcType="VARCHAR" />
+      <result column="check_out_rules_code" property="checkOutRulesCode" jdbcType="VARCHAR" />
+      <result column="check_in_time" property="checkInTime" jdbcType="VARCHAR" />
+      <result column="check_out_time" property="checkOutTime" jdbcType="VARCHAR" />
+      <result column="is_lock" property="isLock" jdbcType="INTEGER" />
+  </resultMap>
+
+
+  <resultMap type="com.ziroom.minsu.services.order.entity.HouseSnapshotVo" id="HouseSnapshotMap" extends="BaseResultMap">
+        <result column="order_status" jdbcType="TINYINT" property="orderStatus" />
+        <result column="pay_status" jdbcType="TINYINT" property="payStatus" />
+        <result column="eva_status" jdbcType="TINYINT" property="evaStatus" />
+        <result column="landlord_name" jdbcType="VARCHAR" property="landlordName" />
+        <result column="user_tel" jdbcType="VARCHAR" property="userTel" />
+         <result column="user_uid" jdbcType="VARCHAR" property="userUid" />
+         <result column="landlordUid" jdbcType="VARCHAR" property="landlordUid" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="people_num" jdbcType="INTEGER" property="peopleNum" />
+         <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!-- 基本列字段  -->
+      id, order_sn,house_sn, house_fid, room_fid, bed_fid, house_name, room_name, bed_sn, house_addr,
+      pic_url, rent_way, order_type, price,clean_money, discount_rules_code, deposit_rules_code,
+      check_out_rules_code, check_in_time, check_out_time,is_lock
+  </sql>
+  
+   <sql id="Mutil_Column_List" >
+    <!-- 基本列字段  -->
+      sn.id, sn.order_sn, sn.house_sn, sn.house_fid, sn.room_fid, sn.bed_fid, sn.house_name, sn.room_name, sn.bed_sn, sn.house_addr,
+      sn.pic_url,t.user_uid,t.landlord_uid, sn.rent_way, sn.order_type, sn.price, sn.clean_money,sn.discount_rules_code, sn.deposit_rules_code,
+      sn.check_out_rules_code, sn.check_in_time, sn.check_out_time,t.order_status,t.pay_status,t.eva_status,
+      t.landlord_name,t.user_tel,t.user_name,t.people_num,t.start_time,t.end_time,is_lock
+  </sql>
+
+    <select id="findHouseSnapshotByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        <!-- 查询房源快照 -->
+        select
+        <include refid="Base_Column_List" />
+        from t_order_house_snapshot
+        where order_sn = #{orderSn,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="findHouseSnapshotByOrder" resultMap="HouseSnapshotMap" parameterType="map">
+      <!-- 查询订单快照 -->
+	   SELECT <include refid="Mutil_Column_List"/> FROM `t_order` t
+	   INNER JOIN `t_order_house_snapshot` sn ON t.`order_sn` = sn.`order_sn`
+	   WHERE 1=1
+        <!-- 支持用户查看  一个用户 的所有订单 -->
+        <if test="userUid != null and userUid != ''">
+            AND t.user_uid=#{userUid,jdbcType=VARCHAR}
+        </if>
+
+        <if test="landlordUid != null and landlordUid != ''">
+            AND t.landlord_uid=#{landlordUid,jdbcType=VARCHAR}
+        </if>
+         <!-- 订单状态 -->
+        <if test="orderStatus != null">
+            AND t.order_status=#{orderStatus,jdbcType=INTEGER}
+        </if>
+        
+         <!-- 订单编号    -->
+        <if test="orderSn != null and orderSn != ''">
+            AND t.order_sn=#{orderSn,jdbcType=VARCHAR}
+        </if>
+        <!-- 评价状态 -->
+        <if test="listEvaStatus != null">
+            <if test="listEvaStatus.size > 0">
+                  AND t.eva_status in
+                <foreach collection="listEvaStatus"  item="evaStatus" open="(" separator="," close=")">
+                    #{evaStatus,jdbcType=INTEGER}
+                </foreach>
+            </if>
+        </if>
+        <!-- 订单状态 -->
+        <if test="listOrderStatus != null">
+            <if test="listOrderStatus.size > 0">
+                  AND t.order_status in
+                <foreach collection="listOrderStatus"  item="orderStatus" open="(" separator="," close=")">
+                    #{orderStatus,jdbcType=INTEGER}
+                </foreach>
+            </if>
+        </if>
+         <!-- 是否删除-->
+        <if test="isDel != null">
+            AND t.is_del=#{isDel,jdbcType=INTEGER}
+        </if>
+        
+        <if test="requestType != null and requestType ==1">
+        <!-- 请求类型  1:房东 2：房客  -->
+        	<if test="evaType !=null and evaType ==1">
+	        <!-- 评价类型  1=待评价  2=已评价-->
+		        AND t.eva_status in (100,101)
+		        AND t.order_status &gt;= 50
+		        AND (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(t.real_end_time)) &lt; 24*60*60* #{limitDay,jdbcType=INTEGER}
+	        </if>
+	        <if test="evaType !=null and evaType ==2">
+	        <!-- 评价类型  1=待评价  2=已评价-->
+	        	AND (
+		            (t.eva_status in (111,110))
+		            or
+		            (t.order_status &gt;= 50 and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(t.real_end_time)) &gt;= 24*60*60* #{limitDay,jdbcType=INTEGER} )
+		        ) 
+	        
+	        </if>        
+        </if>
+        
+        <if test="requestType != null and requestType ==2">
+        <!-- 请求类型  1:房东 2：房客  -->
+        	<if test="evaType !=null and evaType ==1">
+	        <!-- 评价类型  1=待评价  2=已评价-->
+	         	AND t.eva_status in (100,110) 
+	        	AND (
+		            (t.order_status in (40,41))
+		            or
+		            (t.order_status &gt;= 50 and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(t.real_end_time)) &lt; 24*60*60* #{limitDay,jdbcType=INTEGER} )
+		        )	        
+	        </if>
+	        <if test="evaType !=null and evaType ==2">
+	        <!-- 评价类型  1=待评价  2=已评价-->
+		       AND (
+	            (t.eva_status in (111,101))
+	            or
+	            (t.order_status &gt;= 50 and (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(t.real_end_time)) &gt;= 24*60*60* #{limitDay,jdbcType=INTEGER} )
+	           )
+	        
+	        </if> 
+        
+        </if> 
+        
+        ORDER BY t.`last_modify_date` DESC
+    </select>
+
+  <select id="selectByCondition" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    <!--
+      查询房源快照
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_order_house_snapshot
+    where order_sn = #{orderSn,jdbcType=VARCHAR}
+    <if test="houseFid != null">
+      AND house_fid = #{houseFid,jdbcType=VARCHAR}
+    </if>
+    <if test="roomFid != null">
+      AND room_fid = #{roomFid,jdbcType=VARCHAR}
+    </if>
+    <if test="bedFid != null">
+      AND bed_fid = #{bedFid,jdbcType=VARCHAR}
+    </if>  
+  </select>
+  
+  
+  <insert id="insertHouseSnapshot" parameterType="com.ziroom.minsu.entity.order.OrderHouseSnapshotEntity" >
+    <!-- 插入房源快照-->
+      insert into t_order_house_snapshot
+      <trim prefix="(" suffix=")" suffixOverrides="," >
+
+          <if test="orderSn != null" >
+              order_sn,
+          </if>
+          <if test="houseSn != null" >
+              house_sn,
+          </if>
+          <if test="houseFid != null" >
+              house_fid,
+          </if>
+          <if test="roomFid != null" >
+              room_fid,
+          </if>
+          <if test="bedFid != null" >
+              bed_fid,
+          </if>
+          <if test="houseName != null" >
+              house_name,
+          </if>
+          <if test="roomName != null" >
+              room_name,
+          </if>
+          <if test="bedSn != null" >
+              bed_sn,
+          </if>
+          <if test="houseAddr != null" >
+              house_addr,
+          </if>
+          <if test="picUrl != null" >
+              pic_url,
+          </if>
+          <if test="rentWay != null" >
+              rent_way,
+          </if>
+          <if test="orderType != null" >
+              order_type,
+          </if>
+          <if test="price != null" >
+              price,
+          </if>
+          <if test="cleanMoney != null" >
+              clean_money,
+          </if>
+          <if test="discountRulesCode != null" >
+              discount_rules_code,
+          </if>
+          <if test="depositRulesCode != null" >
+              deposit_rules_code,
+          </if>
+          <if test="checkOutRulesCode != null" >
+              check_out_rules_code,
+          </if>
+          <if test="checkInTime != null" >
+              check_in_time,
+          </if>
+          <if test="checkOutTime != null" >
+              check_out_time,
+          </if>
+          <if test="isLock != null" >
+              is_lock,
+          </if>
+
+
+      </trim>
+      <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+          <if test="orderSn != null" >
+              #{orderSn,jdbcType=VARCHAR},
+          </if>
+          <if test="houseSn != null" >
+              #{houseSn,jdbcType=VARCHAR},
+          </if>
+
+          <if test="houseFid != null" >
+              #{houseFid,jdbcType=VARCHAR},
+          </if>
+          <if test="roomFid != null" >
+              #{roomFid,jdbcType=VARCHAR},
+          </if>
+          <if test="bedFid != null" >
+              #{bedFid,jdbcType=VARCHAR},
+          </if>
+          <if test="houseName != null" >
+              #{houseName,jdbcType=VARCHAR},
+          </if>
+          <if test="roomName != null" >
+              #{roomName,jdbcType=VARCHAR},
+          </if>
+          <if test="bedSn != null" >
+              #{bedSn,jdbcType=VARCHAR},
+          </if>
+          <if test="houseAddr != null" >
+              #{houseAddr,jdbcType=VARCHAR},
+          </if>
+          <if test="picUrl != null" >
+              #{picUrl,jdbcType=VARCHAR},
+          </if>
+          <if test="rentWay != null" >
+              #{rentWay,jdbcType=TINYINT},
+          </if>
+          <if test="orderType != null" >
+              #{orderType,jdbcType=TINYINT},
+          </if>
+          <if test="price != null" >
+              #{price,jdbcType=INTEGER},
+          </if>
+          <if test="cleanMoney != null" >
+              #{cleanMoney,jdbcType=INTEGER},
+          </if>
+          <if test="discountRulesCode != null" >
+              #{discountRulesCode,jdbcType=VARCHAR},
+          </if>
+          <if test="depositRulesCode != null" >
+              #{depositRulesCode,jdbcType=VARCHAR},
+          </if>
+          <if test="checkOutRulesCode != null" >
+              #{checkOutRulesCode,jdbcType=VARCHAR},
+          </if>
+          <if test="checkInTime != null" >
+              #{checkInTime,jdbcType=VARCHAR},
+          </if>
+          <if test="checkOutTime != null" >
+              #{checkOutTime,jdbcType=VARCHAR},
+          </if>
+          <if test="isLock != null" >
+              #{isLock,jdbcType=INTEGER},
+          </if>
+      </trim>
+
+  </insert>
+
+
+    <!-- 当前房源已经安装成功订单锁 -->
+    <update id="installLockByOrderSn"   parameterType="map" >
+      UPDATE  t_order_house_snapshot
+      SET is_lock = 1
+      WHERE order_sn  = #{orderSn,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 统计三小时内新增的当前的恶意下单数量 -->
+    <select id="findMaliceOrder" resultType="com.ziroom.minsu.entity.base.MinsuEleEntity" parameterType="map" >
+        select  tmp.house_sn AS eleKey,num AS eleValue
+          from (select h.house_sn,count(1) as num , max(t.`last_modify_date`) AS last_modify_date from `t_order_house_snapshot`  h
+                  inner join t_order t on h.order_sn = t.order_sn
+                    where  h.house_sn is not NULL
+                          and t.order_sn like CONCAT(#{preTime,jdbcType=VARCHAR},'%')
+                          AND t.pay_status = 1
+                    group by h.house_sn) tmp
+         where tmp.num >= #{num,jdbcType=INTEGER}
+           AND tmp.last_modify_date >= #{tillTime,jdbcType=TIMESTAMP}
+           ORDER BY tmp.num DESC
+    </select>
+
+</mapper>

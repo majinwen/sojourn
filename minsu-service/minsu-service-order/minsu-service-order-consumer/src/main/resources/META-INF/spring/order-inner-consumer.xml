@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015. ziroom.
+  -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+<dubbo:reference id="order.orderCommonService" interface="com.ziroom.minsu.services.order.api.inner.OrderCommonService" check="false"/>
+<dubbo:reference id="order.orderUserService" interface="com.ziroom.minsu.services.order.api.inner.OrderUserService" check="false"/>
+<dubbo:reference id="order.commissionerOrderService" interface="com.ziroom.minsu.services.order.api.inner.CommissionerOrderService" check="false"/>
+<dubbo:reference id="order.orderFinanceService" interface="com.ziroom.minsu.services.order.api.inner.OrderFinanceService" check="false"/>
+<dubbo:reference id="order.orderLoadlordService" interface="com.ziroom.minsu.services.order.api.inner.OrderLoadlordService" check="false"/>
+<dubbo:reference id="order.orderPayService" interface="com.ziroom.minsu.services.order.api.inner.OrderPayService" check="false"/>
+<dubbo:reference id="order.billManageService" interface="com.ziroom.minsu.services.finance.api.inner.BillManageService" check="false"/>
+<dubbo:reference id="order.financeCallBackServiceService" interface="com.ziroom.minsu.services.order.api.inner.FinanceCallBackServiceService" check="false"/>
+
+
+<dubbo:reference id="order.orderTaskOrderService" interface="com.ziroom.minsu.services.order.api.inner.OrderTaskOrderService" check="false"/>
+<dubbo:reference id="order.orderTaskAccountService" interface="com.ziroom.minsu.services.order.api.inner.OrderTaskAccountService" check="false"/>
+<dubbo:reference id="order.orderTaskSyncService" interface="com.ziroom.minsu.services.order.api.inner.OrderTaskSyncService" check="false"/>
+<dubbo:reference id="order.orderTaskFinanceService" interface="com.ziroom.minsu.services.order.api.inner.OrderTaskFinanceService" check="false"/>
+<dubbo:reference id="order.logTestService" interface="com.ziroom.minsu.services.order.api.inner.LogTestService" check="false"/>
+
+<dubbo:reference id="order.orderSmartLockService" interface="com.ziroom.minsu.services.order.api.inner.OrderSmartLockService" check="false"/>
+<dubbo:reference id="order.orderRemarkService" interface="com.ziroom.minsu.services.order.api.inner.OrderRemarkService" check="false"/>
+<dubbo:reference id="order.profitService" interface="com.ziroom.minsu.services.order.api.inner.ProfitService" check="false"/>
+<dubbo:reference id="order.staticsService" interface="com.ziroom.minsu.services.order.api.inner.StaticsService" check="false"/>
+<dubbo:reference id="order.customerServeService" interface="com.ziroom.minsu.services.order.api.inner.CustomerServeService" check="false"/>
+
+<dubbo:reference id="order.financeCashbackService" interface="com.ziroom.minsu.services.order.api.inner.FinanceCashbackService" check="false"/>
+
+<dubbo:reference id="order.orderToPayService" interface="com.ziroom.minsu.services.order.api.inner.OrderToPayService" check="false"/>
+
+<dubbo:reference id="order.houseCommonService" interface="com.ziroom.minsu.services.order.api.inner.HouseCommonService" check="false"/>
+
+<dubbo:reference id="order.orderFollowService" interface="com.ziroom.minsu.services.order.api.inner.OrderFollowService" check="false"/>
+<dubbo:reference id="order.cancelOrderService" interface="com.ziroom.minsu.services.order.api.inner.CancelOrderService" check="false"/>
+<dubbo:reference id="order.orderPenaltyService" interface="com.ziroom.minsu.services.order.api.inner.OrderPenaltyService" check="false"/>
+</beans>

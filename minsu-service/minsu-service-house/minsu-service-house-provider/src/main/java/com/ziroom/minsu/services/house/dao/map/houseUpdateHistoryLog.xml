@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseUpdateHistoryLogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseUpdateHistoryLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+    <result column="field_path" property="fieldPath" jdbcType="VARCHAR" />
+    <result column="field_path_key" property="fieldPathKey" jdbcType="VARCHAR" />
+    <result column="field_desc" property="fieldDesc" jdbcType="VARCHAR" />
+    <result column="source_type" property="sourceType" jdbcType="INTEGER" />
+    <result column="old_value" property="oldValue" jdbcType="VARCHAR" />
+    <result column="new_value" property="newValue" jdbcType="VARCHAR" />
+    <result column="is_text" property="isText" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="creater_fid" property="createrFid" jdbcType="VARCHAR" />
+    <result column="creater_type" property="createrType" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, house_fid, room_fid, rent_way, field_path, field_path_key, field_desc, source_type, 
+    old_value, new_value, is_text, remark, creater_fid, creater_type, create_date, last_modify_date
+  </sql>
+  <select id="findListHouseUpdateHistoryLogByKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT  hi.id, hi.fid, hi.house_fid, hi.room_fid, hi.rent_way, hi.field_path, hi.field_path_key, hi.field_desc, hi.source_type, 
+    CASE hi.`is_text` WHEN 0 THEN hi.old_value ELSE ex.old_value END  AS  old_value,CASE hi.`is_text` WHEN 0 THEN hi.new_value ELSE ex.new_value END AS new_value, hi.is_text, remark, hi.creater_fid, hi.creater_type, hi.create_date, hi.last_modify_date   FROM   t_house_update_history_log  hi
+    LEFT JOIN `t_house_update_history_ext_log` ex ON hi.`fid`  = ex.fid
+    where field_path_key = #{fieldPathKey,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询当前房源 最新一条修改记录 -->
+   <select id="findLastOneByKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT  hi.id, hi.fid, hi.house_fid, hi.room_fid, hi.rent_way, hi.field_path, hi.field_path_key, hi.field_desc, hi.source_type, 
+    CASE hi.`is_text` WHEN 0 THEN hi.old_value ELSE ex.old_value END  AS  old_value,CASE hi.`is_text` WHEN 0 THEN hi.new_value ELSE ex.new_value END AS new_value, hi.is_text, remark, hi.creater_fid, hi.creater_type, hi.create_date, hi.last_modify_date   FROM   t_house_update_history_log  hi
+    LEFT JOIN `t_house_update_history_ext_log` ex ON hi.`fid`  = ex.fid
+    where field_path_key = #{fieldPathKey,jdbcType=VARCHAR} ORDER BY create_date DESC LIMIT 1;
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_house_update_history_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.house.HouseUpdateHistoryLogEntity" >
+    insert into t_house_update_history_log (id, fid, house_fid, 
+      room_fid, rent_way, field_path, 
+      field_path_key, field_desc, source_type, 
+      old_value, new_value, is_text, 
+      remark, creater_fid, creater_type, 
+      create_date, last_modify_date)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{houseFid,jdbcType=VARCHAR}, 
+      #{roomFid,jdbcType=VARCHAR}, #{rentWay,jdbcType=INTEGER}, #{fieldPath,jdbcType=VARCHAR}, 
+      #{fieldPathKey,jdbcType=VARCHAR}, #{fieldDesc,jdbcType=VARCHAR}, #{sourceType,jdbcType=INTEGER}, 
+      #{oldValue,jdbcType=VARCHAR}, #{newValue,jdbcType=VARCHAR}, #{isText,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{createrFid,jdbcType=VARCHAR}, #{createrType,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{lastModifyDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="saveHouseUpdateHistoryLog" parameterType="com.ziroom.minsu.entity.house.HouseUpdateHistoryLogEntity" >
+    insert into t_house_update_history_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseFid != null" >
+        house_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="fieldPath != null" >
+        field_path,
+      </if>
+      <if test="fieldPathKey != null" >
+        field_path_key,
+      </if>
+      <if test="fieldDesc != null" >
+        field_desc,
+      </if>
+      <if test="sourceType != null" >
+        source_type,
+      </if>
+      <if test="oldValue != null" >
+        old_value,
+      </if>
+      <if test="newValue != null" >
+        new_value,
+      </if>
+      <if test="isText != null" >
+        is_text,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createrFid != null" >
+        creater_fid,
+      </if>
+      <if test="createrType != null" >
+        creater_type,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseFid != null" >
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="fieldPath != null" >
+        #{fieldPath,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldPathKey != null" >
+        #{fieldPathKey,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldDesc != null" >
+        #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceType != null" >
+        #{sourceType,jdbcType=INTEGER},
+      </if>
+      <if test="oldValue != null" >
+        #{oldValue,jdbcType=VARCHAR},
+      </if>
+      <if test="newValue != null" >
+        #{newValue,jdbcType=VARCHAR},
+      </if>
+      <if test="isText != null" >
+        #{isText,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createrFid != null" >
+        #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        #{createrType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.house.HouseUpdateHistoryLogEntity" >
+    update t_house_update_history_log
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseFid != null" >
+        house_fid = #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        rent_way = #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="fieldPath != null" >
+        field_path = #{fieldPath,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldPathKey != null" >
+        field_path_key = #{fieldPathKey,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldDesc != null" >
+        field_desc = #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceType != null" >
+        source_type = #{sourceType,jdbcType=INTEGER},
+      </if>
+      <if test="oldValue != null" >
+        old_value = #{oldValue,jdbcType=VARCHAR},
+      </if>
+      <if test="newValue != null" >
+        new_value = #{newValue,jdbcType=VARCHAR},
+      </if>
+      <if test="isText != null" >
+        is_text = #{isText,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createrFid != null" >
+        creater_fid = #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        creater_type = #{createrType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.house.HouseUpdateHistoryLogEntity" >
+    update t_house_update_history_log
+    set fid = #{fid,jdbcType=VARCHAR},
+      house_fid = #{houseFid,jdbcType=VARCHAR},
+      room_fid = #{roomFid,jdbcType=VARCHAR},
+      rent_way = #{rentWay,jdbcType=INTEGER},
+      field_path = #{fieldPath,jdbcType=VARCHAR},
+      field_path_key = #{fieldPathKey,jdbcType=VARCHAR},
+      field_desc = #{fieldDesc,jdbcType=VARCHAR},
+      source_type = #{sourceType,jdbcType=INTEGER},
+      old_value = #{oldValue,jdbcType=VARCHAR},
+      new_value = #{newValue,jdbcType=VARCHAR},
+      is_text = #{isText,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      creater_fid = #{createrFid,jdbcType=VARCHAR},
+      creater_type = #{createrType,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2011 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	<dubbo:provider filter="catFilter"></dubbo:provider>
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.ActivityFullService" ref="cms.activityFullProxy">
+        <dubbo:method name="generateCouponByActSn" timeout="13000" retries="0"/>
+        <dubbo:method name="generateCouponByActSnExt" timeout="13000" retries="0"/>
+        <dubbo:method name="getCouponFullList" timeout="6000" retries="3"/>
+    </dubbo:service>
+
+
+	<dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.ActCouponService" ref="cms.actCouponProxy">
+        <dubbo:method name="getDefaultCouponByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="getCouponBySn" timeout="3000" retries="3"/>
+        <dubbo:method name="getCouponListByActSn" timeout="3000" retries="3"/>
+        <dubbo:method name="getActCouponUserVoByCouponSn" timeout="3000" retries="3"/>
+        <dubbo:method name="bindCoupon" timeout="3000" retries="0"/>
+        <dubbo:method name="bindCouponByMobile" timeout="3000" retries="0"/>
+        <dubbo:method name="exchangeGroup" timeout="3000" retries="0"/>
+        <dubbo:method name="syncCouponStatus" timeout="3000" retries="0"/>
+        <dubbo:method name="pullActivityByMobile" timeout="3000" retries="0"/>
+        <dubbo:method name="checkActivityByMobile" timeout="3000" retries="3"/>
+        <dubbo:method name="getNoExchangeCountByGroupSn" timeout="3000" retries="3"/>
+        <dubbo:method name="hasChanceToGetCoupon" timeout="3000" retries="3"/>
+        <dubbo:method name="listOneMonthExpireUidByGroupSnPage" timeout="3000" retries="3"/>
+        <!--多个号码处理 时间较长-->
+        <dubbo:method name="bindCouponByPhoneNums" timeout="10000" retries="3"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.JobActService" ref="cms.jobActProxy">
+        <dubbo:method name="couponExpireStatus" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+    
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.ActivityService" ref="cms.activityProxy">
+        <dubbo:method name="getCashbackList" timeout="3000" retries="3"/>
+    	<dubbo:method name="getActivityBySn" timeout="3000" retries="3"/>
+    	<dubbo:method name="getUnderwayActivityList" timeout="3000" retries="3"/>
+        <dubbo:method name="getRealUnderwayActivityList" timeout="3000" retries="3"/>
+        <dubbo:method name="getActivityVoListByCondiction" timeout="3000" retries="3"/>
+        <dubbo:method name="saveActivity" timeout="3000" retries="0"/>
+        <dubbo:method name="updateActCoupon" timeout="3000" retries="0"/>
+        <dubbo:method name="updateByActivity" timeout="3000" retries="0"/>
+        <dubbo:method name="enableActivity" timeout="3000" retries="0"/>
+        <dubbo:method name="saveGiftActivity" timeout="3000" retries="0"/>
+        <dubbo:method name="updateGiftAcByActivity" timeout="3000" retries="0"/>
+        <dubbo:method name="getSDLJActivityInfo" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.ActivityApplyService" ref="cms.activityApplyProxy">
+    	<dubbo:method name="saveApply" timeout="3000" retries="0"/>
+    	<dubbo:method name="applyList" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+     <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.ActivityGiftService" ref="cms.activityGiftProxy">
+    	<dubbo:method name="queryActivityGifyByPage" timeout="3000" retries="3"/>
+    	<dubbo:method name="cancelFreeCommission" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.ActivityGroupService" ref="cms.activityGroupProxy">
+        <dubbo:method name="getGroupByPage" timeout="3000" retries="3"/>
+        <dubbo:method name="getAllGroup" timeout="3000" retries="3"/>
+        <dubbo:method name="getGroupBySN" timeout="3000" retries="3"/>
+        <dubbo:method name="insertActivityGroupEntity" timeout="3000" retries="0"/>
+        <dubbo:method name="updateActivityGroupEntity" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.ActivityRecordService" ref="cms.activityRecordProxy">
+    	<dubbo:method name="saveActivityRecord" timeout="3000" retries="0"/>
+    	<dubbo:method name="queryAcRecordInfoByPage" timeout="3000" retries="3"/>
+        <dubbo:method name="saveFreeComm" timeout="3000" retries="0"/>
+        <dubbo:method name="updateAddress" timeout="3000" retries="0"/>
+        <dubbo:method name="checkActivity4Record" timeout="3000" retries="3"/>
+        <dubbo:method name="exchangeActivity4Record" timeout="3000" retries="3"/>
+        <dubbo:method name="getFive" timeout="3000" retries="3"/>
+        <dubbo:method name="checkFree" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.ActivityGiftItemService" ref="cms.activityGiftItemProxy">
+    	<dubbo:method name="saveGiftItem" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.ActivityGiftService" ref="cms.activityGiftProxy">
+    	<dubbo:method name="queryActivityGifyByPage" timeout="3000" retries="3"/>
+    	<dubbo:method name="getLandFreeComm" timeout="3000" retries="3"/>
+    	<dubbo:method name="insertActivityGiftEntity" timeout="3000" retries="0"/>
+    	<dubbo:method name="queryActivityGifyByFid" timeout="3000" retries="3"/>
+    	<dubbo:method name="updateActivityGiftEntity" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.ShortChainMapService" ref="cms.shortChainMapProxy">
+    	<dubbo:method name="generateShortLink" timeout="3000" retries="0"/>
+    	<dubbo:method name="findShortChainMapByUniqueCode" timeout="3000" retries="3"/>
+    	<dubbo:method name="getMinsuHomeJump" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.InviteService" ref="cms.inviteProxy">
+    	<dubbo:method name="getInviteByCode" timeout="3000" retries="3"/>
+    	<dubbo:method name="getInviteByUid" timeout="3000" retries="3"/>
+    	<dubbo:method name="accept" timeout="3000" retries="0"/>
+    	<dubbo:method name="getUnCouponList" timeout="6000" retries="3"/>
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.CityFileService" ref="cms.CityFileProxy">
+    	<dubbo:method name="columnTemplateList" timeout="3000" retries="3"/>
+    	<dubbo:method name="insertColumnTemplate" timeout="3000" retries="0"/>
+    	<dubbo:method name="getColumnTemplateByFid" timeout="3000" retries="3"/>
+    	<dubbo:method name="updateColumnTemplate" timeout="3000" retries="0"/>
+    	<dubbo:method name="columnCityList" timeout="3000" retries="3"/>
+    	<dubbo:method name="insertColumnCity" timeout="3000" retries="0"/>
+    	<dubbo:method name="getColumnCityByFid" timeout="3000" retries="3"/>
+    	<dubbo:method name="updateColumnCity" timeout="3000" retries="0"/>
+    	<dubbo:method name="findAllRegTemplate" timeout="3000" retries="3"/>
+    	<dubbo:method name="columnRegionList" timeout="3000" retries="3"/>
+    	<dubbo:method name="insertColumnRegion" timeout="3000" retries="0"/>
+    	<dubbo:method name="initUpColumnRegion" timeout="3000" retries="3"/>
+    	<dubbo:method name="updateColumnRegion" timeout="3000" retries="0"/>
+    	<dubbo:method name="delColumnRegion" timeout="3000" retries="0"/>
+    	<dubbo:method name="getCityRegionsByCityCode" timeout="3000" retries="3"/>
+    	<dubbo:method name="findColumnRegionUpVoListByCityFid" timeout="3000" retries="3"/>
+	</dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.NpsService" ref="cms.npsProxy">
+        <dubbo:method name="getNps" timeout="3000" retries="3"/>
+        <dubbo:method name="getNpsAttendForPage" timeout="3000" retries="3"/>
+        <dubbo:method name="getNpsForPage" timeout="3000" retries="3"/>
+        <dubbo:method name="saveNpsAttend" timeout="3000" retries="0"/>
+        <dubbo:method name="editNpsStatus" timeout="3000" retries="0"/>
+        <dubbo:method name="calculateNPS" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.ActivityChristmasApplyService" ref="cms.activityChristmasApplyProxy">
+        <dubbo:method name="apply" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.MobileCouponService" ref="cms.mobileCouponProxy">
+        <dubbo:method name="pullActCouponByMobile" timeout="3000" retries="0"/>
+        <dubbo:method name="pullGroupCouponByMobile" timeout="3000" retries="0"/>
+        <dubbo:method name="pullGroupCouponByUid" timeout="3000" retries="0"/>
+        <dubbo:method name="pullActCouponByUid" timeout="3000" retries="0"/>
+        <dubbo:method name="pullGroupCouponByUidRank" timeout="3000" retries="0"/>
+        <dubbo:method name="pullGroupCouponByMobileRank" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.UserActEmptyService" ref="cms.userActEmptyProxy">
+        <dubbo:method name="saveUserEmpty" timeout="3000" retries="0"/>
+        <dubbo:method name="countEmptyByMobileAndGroupSn" timeout="3000" retries="3"/>
+        <dubbo:method name="countEmptyEmptyByMobileAndActSn" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.ActivityRemindLogService" ref="cms.activityRemindLogProxy">
+        <dubbo:method name="insertActivityRemindLogIgnore" timeout="3000" retries="0"/>
+        <dubbo:method name="deleteActivityRemindLogByUid" timeout="3000" retries="0"/>
+        <dubbo:method name="queryRemindUidInfoByPage" timeout="3000" retries="3"/>
+        <dubbo:method name="updateSendTimesRunTimeByUid" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.GroupService" ref="cms.groupServiceProxy">
+        <dubbo:method name="listGroupByType" timeout="3000" retries="3"/>
+        <dubbo:method name="saveGroup" timeout="3000" retries="0"/>
+        <dubbo:method name="deleteGroup" timeout="3000" retries="0"/>
+        <dubbo:method name="listHouseRelByPage" timeout="3000" retries="3"/>
+        <dubbo:method name="addHouseRelBatch" timeout="3000" retries="0"/>
+        <dubbo:method name="deleteHouseRel" timeout="3000" retries="0"/>
+        <dubbo:method name="userAddGroupAct" timeout="6000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.cms.api.inner.InviteCreateOrderCmsService" ref="cms.inviteCreateOrderCmsProxy">
+        <dubbo:method name="getInviterDetail" timeout="3000" retries="3"/>    
+        <dubbo:method name="getOrInitInviteCode" timeout="3000" retries="0"/>    
+        <dubbo:method name="getCouponList" timeout="3000" retries="3"/>    
+        <dubbo:method name="pointsExchange" timeout="3000" retries="0"/>    
+    </dubbo:service>
+
+</beans>

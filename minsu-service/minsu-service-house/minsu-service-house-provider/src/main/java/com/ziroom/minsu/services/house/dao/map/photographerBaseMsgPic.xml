@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="photographer.photographerBaseMsgPicDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.photographer.PhotographerBaseMsgPicEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="photographer_uid" property="photographerUid" jdbcType="VARCHAR" />
+    <result column="pic_type" property="picType" jdbcType="TINYINT" />
+    <result column="pic_name" property="picName" jdbcType="VARCHAR" />
+    <result column="pic_base_url" property="picBaseUrl" jdbcType="VARCHAR" />
+    <result column="pic_suffix" property="picSuffix" jdbcType="VARCHAR" />
+    <result column="pic_server_uuid" property="picServerUuid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, fid, photographer_uid, pic_type, pic_name, pic_base_url, pic_suffix, pic_server_uuid, 
+    create_date, last_modify_date, is_del
+  </sql>
+  
+  <select id="findPhotogPicByUidAndType" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.house.photog.dto.PhotogPicDto" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_photographer_base_msg_pic
+    WHERE photographer_uid = #{photographerUid,jdbcType=VARCHAR}
+    AND pic_type = #{picType,jdbcType=INTEGER}
+    AND is_del = 0
+    LIMIT 1
+  </select>
+  
+  <!-- 注意:本条sql在photographer.photographerBaseMsgDao中也有使用,不要轻易修改 -->
+  <select id="findPhotogPicListByUid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_photographer_base_msg_pic
+    WHERE photographer_uid = #{photographerUid,jdbcType=VARCHAR}
+    AND is_del = 0
+  </select>
+  
+  <insert id="savePhotographerBaseMsgPic" parameterType="com.ziroom.minsu.entity.photographer.PhotographerBaseMsgPicEntity" >
+    insert into t_photographer_base_msg_pic
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="photographerUid != null" >
+        photographer_uid,
+      </if>
+      <if test="picType != null" >
+        pic_type,
+      </if>
+      <if test="picName != null" >
+        pic_name,
+      </if>
+      <if test="picBaseUrl != null" >
+        pic_base_url,
+      </if>
+      <if test="picSuffix != null" >
+        pic_suffix,
+      </if>
+      <if test="picServerUuid != null" >
+        pic_server_uuid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="photographerUid != null" >
+        #{photographerUid,jdbcType=VARCHAR},
+      </if>
+      <if test="picType != null" >
+        #{picType,jdbcType=TINYINT},
+      </if>
+      <if test="picName != null" >
+        #{picName,jdbcType=VARCHAR},
+      </if>
+      <if test="picBaseUrl != null" >
+        #{picBaseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="picSuffix != null" >
+        #{picSuffix,jdbcType=VARCHAR},
+      </if>
+      <if test="picServerUuid != null" >
+        #{picServerUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updatePhotographerBaseMsgPicByFid" parameterType="com.ziroom.minsu.entity.photographer.PhotographerBaseMsgPicEntity" >
+    update t_photographer_base_msg_pic
+    <set >
+      <if test="photographerUid != null" >
+        photographer_uid = #{photographerUid,jdbcType=VARCHAR},
+      </if>
+      <if test="picType != null" >
+        pic_type = #{picType,jdbcType=TINYINT},
+      </if>
+      <if test="picName != null" >
+        pic_name = #{picName,jdbcType=VARCHAR},
+      </if>
+      <if test="picBaseUrl != null" >
+        pic_base_url = #{picBaseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="picSuffix != null" >
+        pic_suffix = #{picSuffix,jdbcType=VARCHAR},
+      </if>
+      <if test="picServerUuid != null" >
+        pic_server_uuid = #{picServerUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+</mapper>

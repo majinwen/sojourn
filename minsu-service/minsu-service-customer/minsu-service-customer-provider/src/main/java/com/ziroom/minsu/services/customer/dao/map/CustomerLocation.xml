@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="customer.customerLocationDao" >
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.customer.CustomerLocationEntity" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="fid" property="fid" jdbcType="VARCHAR" />
+        <result column="uid" property="uid" jdbcType="VARCHAR" />
+        <result column="imsi" property="imsi" jdbcType="VARCHAR" />
+        <result column="phone_model" property="phoneModel" jdbcType="VARCHAR" />
+        <result column="device_no" property="deviceNo" jdbcType="VARCHAR" />
+        <result column="device_ip" property="deviceIp" jdbcType="INTEGER" />
+        <result column="version_code" property="versionCode" jdbcType="VARCHAR" />
+        <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+        <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+        <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+        <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="syn_status" property="synStatus" jdbcType="INTEGER" />
+        <result column="location_type" property="locationType" jdbcType="INTEGER" />
+        <result column="serial_number" property="serialNumber" jdbcType="VARCHAR" />
+        <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+        <result column="google_longitude" property="googleLongitude" jdbcType="DOUBLE" />
+        <result column="google_latitude" property="googleLatitude" jdbcType="DOUBLE" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, fid, uid,imei, imsi, phone_model, device_no, device_ip, version_code, longitude, latitude,google_longitude, google_latitude,city_code,city_name,
+        create_date,syn_status,location_type,serial_number,rent_way
+    </sql>
+
+
+    <!-- 修改状态 -->
+    <update id="updateStatusByFid" parameterType="map" >
+        <!-- 直-->
+        update t_customer_location
+        set syn_status = #{synStatus,jdbcType=INTEGER}
+        where fid = #{fid,jdbcType=VARCHAR}
+    </update>
+
+
+
+
+    <!-- 获取需要更新的数据 -->
+    <select id="countIpLocation" resultType="java.lang.Long" >
+      SELECT
+         COUNT(1)
+        from t_customer_location
+        WHERE device_ip > 0
+        AND syn_status = 0
+        AND (
+        longitude IS NULL
+        OR latitude IS NULL
+        OR city_name IS NULL
+        )
+    </select>
+
+
+
+    <select id="getIpLocation" resultMap="BaseResultMap"  >
+        select
+        <include refid="Base_Column_List" />
+        from t_customer_location
+        WHERE device_ip > 0
+        AND syn_status = 0
+        AND (
+            longitude IS NULL
+            OR latitude IS NULL
+            OR city_name IS NULL
+        )
+        limit  #{limit,jdbcType=INTEGER}
+    </select>
+
+
+    <select id="getCustomerLocationOneHasUid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from t_customer_location
+        where  uid = #{uid,jdbcType=VARCHAR}
+        <!-- AND  TIMESTAMPDIFF(MINUTE,create_date,NOW())  <![CDATA[ <= ]]> 60 -->
+        AND create_date <![CDATA[ >= ]]> NOW()-INTERVAL 60 MINUTE
+        ORDER BY id DESC
+        limit 1
+    </select>
+
+
+    <select id="getCustomerLocationOneHasDevice" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from t_customer_location
+        where  device_no = #{deviceNo,jdbcType=VARCHAR}
+        <!-- AND  TIMESTAMPDIFF(MINUTE,create_date,NOW())  <![CDATA[ <= ]]> 60 -->
+        AND create_date <![CDATA[ >= ]]> NOW()-INTERVAL 60 MINUTE
+        ORDER BY id DESC
+        limit 1
+    </select>
+
+    <update id="updateCustomerLocation" parameterType="com.ziroom.minsu.entity.customer.CustomerLocationEntity" >
+        update t_customer_location
+        <set >
+            <if test="longitude != null" >
+                longitude = #{longitude,jdbcType=DOUBLE},
+            </if>
+            <if test="latitude != null" >
+                latitude = #{latitude,jdbcType=DOUBLE},
+            </if>
+            <if test="cityCode != null" >
+                city_code = #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="cityName != null" >
+                city_name = #{cityName,jdbcType=VARCHAR},
+            </if>
+            <if test="synStatus != null" >
+                syn_status = #{synStatus,jdbcType=INTEGER},
+            </if>
+              <if test="googleLongitude != null" >
+                google_longitude = #{googleLongitude,jdbcType=DOUBLE},
+            </if>
+            <if test="googleLatitude != null" >
+                google_latitude = #{googleLatitude,jdbcType=DOUBLE},
+            </if>
+        </set>
+        where fid = #{fid,jdbcType=VARCHAR}
+    </update>
+
+
+
+    <!-- 保存当前的经纬度-->
+    <insert id="saveCustomerLocation" parameterType="com.ziroom.minsu.entity.customer.CustomerLocationEntity" >
+        insert into t_customer_location
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="fid != null" >
+                fid,
+            </if>
+            <if test="uid != null" >
+                uid,
+            </if>
+            <if test="appName != null">
+				app_name,
+			</if>
+			<if test="channelName != null">
+				channel_name,
+			</if>
+			<if test="osVersion != null">
+				os_version,
+			</if>
+			<if test="imei != null">
+				imei,
+			</if>
+            <if test="imsi != null" >
+                imsi,
+            </if>
+            <if test="phoneModel != null" >
+                phone_model,
+            </if>
+            <if test="deviceNo != null" >
+                device_no,
+            </if>
+            <if test="deviceIp != null" >
+                device_ip,
+            </if>
+            <if test="versionCode != null" >
+                version_code,
+            </if>
+            <if test="longitude != null" >
+                longitude,
+            </if>
+            <if test="latitude != null" >
+                latitude,
+            </if>
+            <if test="cityCode != null" >
+                city_code,
+            </if>
+            <if test="cityName != null" >
+                city_name,
+            </if>
+            <if test="createDate != null" >
+                create_date,
+            </if>
+            <if test="locationType != null" >
+                location_type,
+            </if>
+            <if test="synStatus != null" >
+                syn_status,
+            </if>
+            <if test="serialNumber !=null">
+				serial_number,
+			</if>
+			<if test="rentWay !=null">
+				rent_way,
+			</if>
+			<if test="googleLongitude != null" >
+                google_longitude,
+            </if>
+            <if test="googleLatitude != null" >
+                google_latitude,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+            <if test="fid != null" >
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="uid != null" >
+                #{uid,jdbcType=VARCHAR},
+            </if>
+            <if test="appName != null" >
+                #{appName,jdbcType=VARCHAR},
+            </if>
+            <if test="channelName != null" >
+                #{channelName,jdbcType=VARCHAR},
+            </if>
+            <if test="osVersion != null" >
+                #{osVersion,jdbcType=VARCHAR},
+            </if>
+            <if test="imei != null" >
+                #{imei,jdbcType=VARCHAR},
+            </if>
+            <if test="imsi != null" >
+                #{imsi,jdbcType=VARCHAR},
+            </if>
+            <if test="phoneModel != null" >
+                #{phoneModel,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceNo != null" >
+                #{deviceNo,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceIp != null" >
+                #{deviceIp,jdbcType=INTEGER},
+            </if>
+            <if test="versionCode != null" >
+                #{versionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="longitude != null" >
+                #{longitude,jdbcType=REAL},
+            </if>
+            <if test="latitude != null" >
+                #{latitude,jdbcType=REAL},
+            </if>
+            <if test="cityCode != null" >
+                #{cityCode,jdbcType=VARCHAR},
+            </if>
+            <if test="cityName != null" >
+                #{cityName,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null" >
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="locationType != null" >
+                #{locationType,jdbcType=INTEGER},
+            </if>
+            <if test="synStatus != null" >
+                #{synStatus,jdbcType=INTEGER},
+            </if>
+            <if test="serialNumber !=null">
+				#{serialNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="rentWay !=null">
+				 #{rentWay,jdbcType=INTEGER},
+			</if>
+			<if test="googleLongitude != null" >
+                #{googleLongitude,jdbcType=REAL},
+            </if>
+            <if test="googleLatitude != null" >
+                #{googleLatitude,jdbcType=REAL},
+            </if>
+            
+        </trim>
+    </insert>
+
+
+</mapper>

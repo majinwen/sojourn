@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.subwayLineDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.conf.SubwayLineEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="line_name" property="lineName" jdbcType="VARCHAR" />
+    <result column="nation_code" property="nationCode" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  
+  <resultMap id="BaseResultLineVoMap" type="com.ziroom.minsu.services.basedata.entity.SubwayLineVo">
+  	<result column="line_fid" property="lineFid" jdbcType="VARCHAR" />
+  	<result column="line_name" property="lineName" jdbcType="VARCHAR" />
+  	<result column="station_fid" property="stationFid" jdbcType="VARCHAR" />
+  	<result column="station_name" property="stationName" jdbcType="VARCHAR" />
+  	<result column="station_longitude" property="stationLongitude" jdbcType="DOUBLE" />
+    <result column="station_latitude" property="stationLatitude" jdbcType="DOUBLE" />
+    <result column="out_fid" property="outFid" jdbcType="VARCHAR" />
+    <result column="out_name" property="outName" jdbcType="VARCHAR" />
+    <result column="out_longitude" property="outLongitude" jdbcType="DOUBLE" />
+    <result column="out_latitude" property="outLatitude" jdbcType="DOUBLE" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, fid, line_name, nation_code, province_code, city_code, sort, create_fid, create_time, 
+    last_modify_date, is_del
+  </sql>
+  
+  <select id="findSubwayLineInfoByPage" resultMap="BaseResultLineVoMap" parameterType="com.ziroom.minsu.services.basedata.dto.SubwayLineRequest" >
+	  SELECT sl.fid line_fid, sl.line_name,
+	  		 ss.fid station_fid, ss.station_name, ss.longitude station_longitude, ss.latitude station_latitude, 
+	  		 so.fid out_fid, so.out_name, so.longitude out_longitude, so.latitude out_latitude  
+	  		 FROM t_biz_subway_line sl
+	LEFT JOIN t_biz_subway_station ss ON sl.fid=ss.line_fid AND sl.is_del = 0 AND ss.is_del = 0
+	LEFT JOIN t_biz_subway_out so ON ss.fid=so.station_fid AND so.is_del = 0
+	<where>
+	<if test="nationCode != null and nationCode != ''">
+      and sl.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode != ''">
+      and sl.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+    <if test="cityCode != null and cityCode != ''">
+      and sl.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="lineFid != null and lineFid != ''">
+      and sl.fid = #{lineFid,jdbcType=VARCHAR}
+    </if>
+    <if test="lineName != null and lineName != ''">
+      and sl.line_name like CONCAT(#{lineName,jdbcType=VARCHAR},'%' ) 
+    </if>
+    <if test="stationFid != null and stationFid != ''">
+      and ss.fid = #{stationFid,jdbcType=VARCHAR}
+    </if>
+    <if test="stationName != null and stationName != ''">
+      and ss.station_name like CONCAT(#{stationName,jdbcType=VARCHAR},'%' ) 
+    </if>
+    </where>
+    ORDER BY sl.sort, ss.sort, so.sort
+  </select>
+  
+  
+  <select id="findSubwayLineByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_biz_subway_line sl
+    where sl.fid = #{fid,jdbcType=VARCHAR}
+    and sl.is_del = 0
+    limit 1
+  </select>
+  
+  <select id="findSubwayLine" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.entity.conf.SubwayLineEntity" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_biz_subway_line sl
+    where sl.is_del = 0
+    <if test="fid != null and fid != ''">
+      and sl.fid = #{fid,jdbcType=VARCHAR}
+    </if>
+    <if test="nationCode != null and nationCode != ''">
+      and sl.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+    <if test="provinceCode != null and provinceCode != ''">
+      and sl.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+    <if test="cityCode != null and cityCode != ''">
+      and sl.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="lineName != null and lineName != ''">
+      and sl.line_name = #{lineName,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <insert id="insertSubwayLine" parameterType="com.ziroom.minsu.entity.conf.SubwayLineEntity" >
+    insert into t_biz_subway_line
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="lineName != null" >
+        line_name,
+      </if>
+      <if test="nationCode != null" >
+        nation_code,
+      </if>
+      <if test="provinceCode != null" >
+        province_code,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="lineName != null" >
+        #{lineName,jdbcType=VARCHAR},
+      </if>
+      <if test="nationCode != null" >
+        #{nationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateSubwayLineByFid" parameterType="com.ziroom.minsu.entity.conf.SubwayLineEntity" >
+    update t_biz_subway_line
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="lineName != null" >
+        line_name = #{lineName,jdbcType=VARCHAR},
+      </if>
+      <if test="nationCode != null" >
+        nation_code = #{nationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        province_code = #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+  
+  
+</mapper>

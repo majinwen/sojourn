@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseSmartlockDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseSmartlockEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="service_id" property="serviceId" jdbcType="VARCHAR" />
+    <result column="update_password" property="updatePassword" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="password_status" property="passwordStatus" jdbcType="TINYINT" />
+    <result column="permission_begin" property="permissionBegin" jdbcType="TIMESTAMP" />
+    <result column="permission_end" property="permissionEnd" jdbcType="TIMESTAMP" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, house_base_fid, room_fid, service_id, update_password, password, password_status, 
+    permission_begin, permission_end, create_date, last_modify_date, is_del
+  </sql>
+  
+  <select id="findHouseSmartlock" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.entity.house.HouseSmartlockEntity" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_smartlock
+    WHERE 
+    1 =1 
+    <if test="fid != null" >
+       AND fid = #{fid,jdbcType=VARCHAR}
+    </if>
+   	<if test="houseBaseFid != null" >
+       AND house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+     </if>
+     <if test="roomFid != null" >
+       AND room_fid = #{roomFid,jdbcType=VARCHAR}
+     </if>
+     <if test="serviceId != null" >
+       AND service_id = #{serviceId,jdbcType=VARCHAR}
+     </if>
+      <if test="updatePassword != null" >
+       AND update_password = #{updatePassword,jdbcType=VARCHAR}
+     </if>
+     <if test="password != null" >
+       AND password = #{password,jdbcType=VARCHAR}
+     </if>
+     <if test="passwordStatus != null" >
+       AND password_status = #{passwordStatus,jdbcType=TINYINT}
+     </if>
+       AND is_del = 0
+  </select>
+  
+  
+  <insert id="insertHouseSmartlock" parameterType="com.ziroom.minsu.entity.house.HouseSmartlockEntity" >
+    insert into t_house_smartlock
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="serviceId != null" >
+        service_id,
+      </if>
+      <if test="updatePassword != null" >
+        update_password,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="passwordStatus != null" >
+        password_status,
+      </if>
+      <if test="permissionBegin != null" >
+        permission_begin,
+      </if>
+      <if test="permissionEnd != null" >
+        permission_end,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceId != null" >
+        #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatePassword != null" >
+        #{updatePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordStatus != null" >
+        #{passwordStatus,jdbcType=TINYINT},
+      </if>
+      <if test="permissionBegin != null" >
+        #{permissionBegin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="permissionEnd != null" >
+        #{permissionEnd,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <update id="updateByfid" parameterType="com.ziroom.minsu.entity.house.HouseSmartlockEntity" >
+    update t_house_smartlock
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceId != null" >
+        service_id = #{serviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatePassword != null" >
+        update_password = #{updatePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordStatus != null" >
+        password_status = #{passwordStatus,jdbcType=TINYINT},
+      </if>
+      <if test="permissionBegin != null" >
+        permission_begin = #{permissionBegin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="permissionEnd != null" >
+        permission_end = #{permissionEnd,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+ 
+</mapper>

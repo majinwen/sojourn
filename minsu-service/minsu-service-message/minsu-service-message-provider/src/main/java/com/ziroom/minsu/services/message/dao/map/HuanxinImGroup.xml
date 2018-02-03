@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="message.huanxinImGroupDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.message.HuanxinImGroupEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="is_public" property="isPublic" jdbcType="INTEGER" />
+    <result column="membersonly" property="membersonly" jdbcType="INTEGER" />
+    <result column="allowinvites" property="allowinvites" jdbcType="INTEGER" />
+    <result column="maxusers" property="maxusers" jdbcType="INTEGER" />
+    <result column="affiliations_count" property="affiliationsCount" jdbcType="INTEGER" />
+    <result column="invite_need_confirm" property="inviteNeedConfirm" jdbcType="INTEGER" />
+    <result column="owner" property="owner" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="groupResultMap" type="com.ziroom.minsu.services.message.entity.GroupVo"  extends="BaseResultMap">
+      <id column="is_default" property="isDefault" jdbcType="INTEGER" />
+      <result column="project_bid" property="projectBid" jdbcType="VARCHAR" />
+      <result column="op_bid" property="opBid" jdbcType="VARCHAR" />
+      <result column="op_type" property="opType" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, group_id, name, description, is_public, membersonly, allowinvites, maxusers, 
+    affiliations_count, invite_need_confirm, owner, create_date, last_modify_date, is_del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_huanxin_im_group
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_huanxin_im_group
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.message.HuanxinImGroupEntity" >
+    insert into t_huanxin_im_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="isPublic != null" >
+        is_public,
+      </if>
+      <if test="membersonly != null" >
+        membersonly,
+      </if>
+      <if test="allowinvites != null" >
+        allowinvites,
+      </if>
+      <if test="maxusers != null" >
+        maxusers,
+      </if>
+      <if test="affiliationsCount != null" >
+        affiliations_count,
+      </if>
+      <if test="inviteNeedConfirm != null" >
+        invite_need_confirm,
+      </if>
+      <if test="owner != null" >
+        owner,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isPublic != null" >
+        #{isPublic,jdbcType=INTEGER},
+      </if>
+      <if test="membersonly != null" >
+        #{membersonly,jdbcType=INTEGER},
+      </if>
+      <if test="allowinvites != null" >
+        #{allowinvites,jdbcType=INTEGER},
+      </if>
+      <if test="maxusers != null" >
+        #{maxusers,jdbcType=INTEGER},
+      </if>
+      <if test="affiliationsCount != null" >
+        #{affiliationsCount,jdbcType=INTEGER},
+      </if>
+      <if test="inviteNeedConfirm != null" >
+        #{inviteNeedConfirm,jdbcType=INTEGER},
+      </if>
+      <if test="owner != null" >
+        #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByGroupId" parameterType="com.ziroom.minsu.entity.message.HuanxinImGroupEntity" >
+    update t_huanxin_im_group
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isPublic != null" >
+        is_public = #{isPublic,jdbcType=INTEGER},
+      </if>
+      <if test="membersonly != null" >
+        membersonly = #{membersonly,jdbcType=INTEGER},
+      </if>
+      <if test="allowinvites != null" >
+        allowinvites = #{allowinvites,jdbcType=INTEGER},
+      </if>
+      <if test="maxusers != null" >
+        maxusers = #{maxusers,jdbcType=INTEGER},
+      </if>
+      <if test="affiliationsCount != null" >
+        affiliations_count = #{affiliationsCount,jdbcType=INTEGER},
+      </if>
+      <if test="inviteNeedConfirm != null" >
+        invite_need_confirm = #{inviteNeedConfirm,jdbcType=INTEGER},
+      </if>
+      <if test="owner != null" >
+        owner = #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where group_id = #{groupId,jdbcType=VARCHAR}
+  </update>
+  
+   <select id="queryGroupByPage" resultMap="groupResultMap" parameterType="com.ziroom.minsu.services.message.dto.GroupDto" >
+  
+    SELECT     gr.id, gr.group_id, gr.name, gr.description, gr.is_public, gr.membersonly, gr.allowinvites, gr.maxusers, 
+    gr.affiliations_count, gr.invite_need_confirm, gr.owner, gr.create_date, gr.last_modify_date, gr.is_del , zry.`project_bid`,
+    zry.`op_bid`,zry.`op_type`,zry.`is_default`
+    FROM `t_huanxin_im_group` gr 
+   INNER JOIN `t_zry_project_group` zry ON gr.`group_id` = zry.`group_id`
+      WHERE 1=1
+      AND gr.is_del=0
+      AND zry.`is_del` = 0
+    <if test="projectBid != null and projectBid !=''" >
+      AND zry.`project_bid` = #{projectBid,jdbcType=VARCHAR}
+     </if>
+     <if test="name != null and name !=''" >
+     AND gr.name like CONCAT(#{name,jdbcType=VARCHAR},'%')
+     </if>
+     <if test="opBid != null and opBid !=''" >
+     AND zry.`op_bid` = #{opBid,jdbcType=VARCHAR} 
+     </if>
+  </select>
+  
+    <select id="queryDefaultGroupByProBid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT gr.id, gr.group_id, gr.name, gr.description, gr.is_public, gr.membersonly, gr.allowinvites, gr.maxusers, 
+    gr.affiliations_count, gr.invite_need_confirm, gr.owner, gr.create_date, gr.last_modify_date, gr.is_del FROM `t_zry_project_group` zry 
+	INNER JOIN `t_huanxin_im_group` gr ON zry.`group_id` = gr.`group_id` 
+	WHERE zry.`project_bid` = #{projectBid,jdbcType=VARCHAR}
+	AND zry.`is_default` = 0
+	AND zry.`is_del` = 0
+	AND gr.`is_del` = 0 limit 1
+  </select>
+
+  <select id="queryGroupByGroupId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_huanxin_im_group
+    where group_id = #{groupId,jdbcType=VARCHAR}
+  </select>
+</mapper>

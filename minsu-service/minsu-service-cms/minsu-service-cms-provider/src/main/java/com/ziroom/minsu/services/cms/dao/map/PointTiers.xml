@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.pointTiersDao" >
+   <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.PointTiersEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="tiers_type" property="tiersType" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="points" property="points" jdbcType="INTEGER" />
+    <result column="min_num" property="minNum" jdbcType="INTEGER" />
+    <result column="max_num" property="maxNum" jdbcType="INTEGER" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, tiers_type, sort, points, min_num, max_num, create_id, create_time, last_modify_date, 
+    is_del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_point_tiers
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+    <insert id="insertPointTiers" parameterType="com.ziroom.minsu.entity.cms.PointTiersEntity" >
+        insert into t_point_tiers
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="fid != null" >
+                fid,
+            </if>
+            <if test="tiersType != null" >
+                tiers_type,
+            </if>
+            <if test="sort != null" >
+                sort,
+            </if>
+             <if test="points != null" >
+                points,
+            </if>
+            <if test="minNum != null" >
+                min_num,
+            </if>
+            <if test="maxNum != null" >
+                max_num,
+            </if>
+            <if test="createId != null" >
+                create_id,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="lastModifyDate != null" >
+                last_modify_date,
+            </if>
+            <if test="isDel != null" >
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="fid != null" >
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="tiersType != null" >
+                #{tiersType,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null" >
+                #{sort,jdbcType=INTEGER},
+            </if>
+             <if test="points != null" >
+                #{points,jdbcType=INTEGER},
+            </if>
+            <if test="minNum != null" >
+                #{minNum,jdbcType=INTEGER},
+            </if>
+            <if test="maxNum != null" >
+                #{maxNum,jdbcType=INTEGER},
+            </if>
+            <if test="createId != null" >
+                #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null" >
+                #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null" >
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updatePointTiersByFid" parameterType="com.ziroom.minsu.entity.cms.PointTiersEntity" >
+        update t_point_tiers
+        <set >
+            <if test="tiersType != null" >
+                tiers_type = #{tiersType,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null" >
+                sort = #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="points != null" >
+                points = #{points,jdbcType=INTEGER},
+            </if>
+            <if test="minNum != null" >
+                min_num = #{minNum,jdbcType=INTEGER},
+            </if>
+            <if test="maxNum != null" >
+                max_num = #{maxNum,jdbcType=INTEGER},
+            </if>
+            <if test="createId != null" >
+                create_id = #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null" >
+                last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null" >
+                is_del = #{isDel,jdbcType=INTEGER},
+            </if>
+        </set>
+        where fid = #{fid,jdbcType=VARCHAR}
+    </update>
+
+     <!--   根据总人数和活动类别查询积分档位 -->
+	 <select id="getPointTiersByParam" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from t_point_tiers
+	    where 
+	    tiers_type = #{tiersType}
+	    AND min_num <![CDATA[ <= ]]> #{sumPerson}
+	    AND max_num <![CDATA[ >= ]]> #{sumPerson}
+	    AND is_del=0
+	  </select>
+
+</mapper>

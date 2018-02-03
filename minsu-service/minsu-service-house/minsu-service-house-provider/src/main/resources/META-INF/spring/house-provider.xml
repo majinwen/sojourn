@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2011 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	<dubbo:provider filter="catFilter"></dubbo:provider>
+    <dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HouseManageService" ref="house.houseManageServiceProxy">
+	   	<dubbo:method name="refreshHouse" timeout="3000" retries="0"/>
+	   	<dubbo:method name="houseList" timeout="3000" retries="3"/>
+	   	<dubbo:method name="houseRoomList" timeout="3000" retries="3"/>
+	   	<dubbo:method name="upDownHouse" timeout="3000" retries="0"/>
+	   	<dubbo:method name="upDownHouseRoom" timeout="3000" retries="0"/>
+	   	<dubbo:method name="leaseCalendar" timeout="3000" retries="3"/>
+	   	<dubbo:method name="setSpecialPrice" timeout="3000" retries="0"/>
+	   	<dubbo:method name="houseDetail" timeout="3000" retries="3"/>
+	   	<dubbo:method name="findOrderNeedHouseVo" timeout="3000" retries="3"/>
+	   	<dubbo:method name="findOrderNeedHouseVoPlus" timeout="3000" retries="3"/>
+	   	<dubbo:method name="modifyHouseLeaseType" timeout="3000" retries="0"/>
+	   	<dubbo:method name="communityNameList" timeout="3000" retries="3"/>
+	   	<dubbo:method name="searchHouseRoomList" timeout="3000" retries="3"/>
+	   	<dubbo:method name="searchLandlordRevenue" timeout="3000" retries="3"/>
+	   	<dubbo:method name="searchHouseRevenueListByLandlordUid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="searchMonthRevenueListByHouseBaseFid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="searchMonthRevenueList" timeout="3000" retries="3"/>
+	   	<dubbo:method name="getHouseListByHouseSns" timeout="3000" retries="3"/>
+	   	<dubbo:method name="getRoomListByRoomSns" timeout="3000" retries="3"/>
+	   	<dubbo:method name="checkHouseOrRoom" timeout="3000" retries="3"/>
+	   	<dubbo:method name="searchHouseBaseMsgByLandlorduid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="searchLandlordHouseList" timeout="3000" retries="3"/>
+	   	<dubbo:method name="bindSmartLock" timeout="3000" retries="0"/>
+	   	<dubbo:method name="saveHouseSmartlock" timeout="3000" retries="0"/>
+	   	<dubbo:method name="updateHouseSmartlock" timeout="3000" retries="0"/>
+	   	<dubbo:method name="findHouseSmartlock" timeout="3000" retries="3"/>
+	   	<dubbo:method name="countHouseRoomNum" timeout="4000" retries="3"/>
+	   	<dubbo:method name="updateHouseBaseOpSeq" timeout="3000" retries="0"/>
+		<dubbo:method name="findWeekPriceByFid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="updateHousePriceWeekListByFid" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+    <!-- 特洛伊房源管理 -->
+    <dubbo:service interface="com.ziroom.minsu.services.house.api.inner.TroyHouseMgtService" ref="house.troyHouseMgtServiceProxy">
+	   	<dubbo:method name="findHouseBaseByHouseSn" timeout="3000" retries="3"/>
+	   	<dubbo:method name="searchHouseMsgList" timeout="5000" retries="3"/>
+        <dubbo:method name="searchHouseDetailByFid" timeout="3000" retries="3"/>
+        <dubbo:method name="searchRoomDetailByFid" timeout="3000" retries="3"/>
+        <dubbo:method name="forceDownHouse" timeout="3000" retries="0"/>
+        <dubbo:method name="forceDownRoom" timeout="3000" retries="0"/>
+        <dubbo:method name="approveHouseInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="approveRoomInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="unApproveHouseInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="unApproveRoomInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="approveHousePic" timeout="3000" retries="0"/>
+        <dubbo:method name="approveRoomPic" timeout="3000" retries="0"/>
+        <dubbo:method name="unApproveHousePic" timeout="3000" retries="0"/>
+        <dubbo:method name="unApproveRoomPic" timeout="3000" retries="0"/>
+        <!-- <dubbo:method name="searchRoomOperateLogList" timeout="3000" retries="3"/> -->
+        <dubbo:method name="searchHouseOperateLogList" timeout="3000" retries="3"/>
+        <dubbo:method name="searchHousePhyMsgList" timeout="3000" retries="3"/>
+        <dubbo:method name="updateHouseBasePhyFid" timeout="3000" retries="0"/>
+        <dubbo:method name="updateHousePhyMsg" timeout="3000" retries="0"/>
+        <dubbo:method name="searchHouseConfListByFidAndCode" timeout="3000" retries="3"/>
+        <dubbo:method name="housePicAuditList" timeout="3000" retries="3"/>
+        <dubbo:method name="searchPicUnapproveedHouseList" timeout="3000" retries="3"/>
+        <dubbo:method name="approveModifiedPic" timeout="3000" retries="0"/>
+        <dubbo:method name="findHousePicCountByType" timeout="3000" retries="3"/>
+        <dubbo:method name="batchEditHouseWeight" timeout="3000" retries="0"/>
+        <dubbo:method name="houseInput" timeout="6000" retries="0"/>
+        <dubbo:method name="updateHouseBaseMsg" timeout="3000" retries="0"/>
+        <dubbo:method name="reIssueHouse" timeout="3000" retries="0"/>
+        <dubbo:method name="reIssueRoom" timeout="3000" retries="0"/>
+        <dubbo:method name="upHouseMsg" timeout="3000" retries="0"/>
+        <dubbo:method name="findNoAuditHousePicList" timeout="3000" retries="3"/>
+        <dubbo:method name="delNoAuditHousePic" timeout="3000" retries="0"/>
+        <dubbo:method name="auditHousePic" timeout="3000" retries="0"/>
+        <dubbo:method name="getHouseCityVoByFids" timeout="3000" retries="3"/>
+        <dubbo:method name="approveHouseQuality" timeout="3000" retries="0"/>
+        <dubbo:method name="approveRoomQuality" timeout="3000" retries="0"/>
+        <dubbo:method name="unApproveHouseQuality" timeout="3000" retries="0"/>
+        <dubbo:method name="unApproveRoomQuality" timeout="3000" retries="0"/>
+        <dubbo:method name="findHouseFidByAuth" timeout="3000" retries="0"/>
+		<dubbo:method name="findHouseRoomMsgByRoomSn" timeout="3000" retries="3"/>
+		<dubbo:method name="sendRabbitMq" timeout="3000" retries="0"/>
+		<dubbo:method name="getHouseOrRoomNameList" timeout="3000" retries="3"/>
+		<dubbo:method name="getHouseUpdateFieldAuditNewlogByCondition" timeout="3000" retries="3"/>
+		<dubbo:method name="updateHouseUpdateFieldAuditNewlogById" timeout="3000" retries="0"/>
+		<dubbo:method name="updateHousePicMsg" timeout="3000" retries="0"/>
+		<dubbo:method name="approveGroundingHouseInfo" timeout="3000" retries="0"/>
+		<dubbo:method name="searchUpateHouseMsgList" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <!-- 房源发布流程 -->
+    <dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HouseIssueService" ref="house.houseIssueServiceProxy">
+    	<dubbo:method name="searchHouseBaseMsgByFid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="saveHouseBaseMsg" timeout="3000" retries="0"/>
+	   	<dubbo:method name="updateHouseBaseMsg" timeout="3000" retries="0"/>
+    	<dubbo:method name="searchHousePhyMsgByHouseBaseFid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="mergeHousePhyMsg" timeout="3000" retries="0"/>
+    	<dubbo:method name="searchHouseBaseExtAndHouseConfList" timeout="3000" retries="3"/>
+	   	<dubbo:method name="mergeHouseBaseExtAndHouseConfList" timeout="3000" retries="0"/>
+    	<dubbo:method name="searchRoomListByHouseBaseFid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="updateHouseBaseAndRoomList" timeout="3000" retries="0"/>
+    	<dubbo:method name="searchHouseRoomMsgByFid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="deleteHouseRoomMsgByFid" timeout="3000" retries="0"/>
+	   	<dubbo:method name="mergeHouseRoomMsg" timeout="3000" retries="0"/>
+        <dubbo:method name="mergeCheckHouseRoomMsg" timeout="3000" retries="0"/>
+        <dubbo:method name="deleteCheckHouseRoomMsgByFid" timeout="3000" retries="0"/>
+    	<dubbo:method name="searchBedListByRoomFid" timeout="3000" retries="3"/>
+    	<dubbo:method name="searchHouseBedMsgByFid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="deleteHouseBedMsgByFid" timeout="3000" retries="0"/>
+	   	<dubbo:method name="mergeHouseBedMsg" timeout="3000" retries="0"/>
+    	<dubbo:method name="searchHouseBaseMsgAndHouseDesc" timeout="3000" retries="3"/>
+	   	<dubbo:method name="updateHouseBaseMsgAndHouseDesc" timeout="3000" retries="0"/>
+	   	<dubbo:method name="updateHouseBaseMsgAndMergeHouseDesc" timeout="3000" retries="0"/>
+	   	<dubbo:method name="saveHousePicMsgList" timeout="3000" retries="0"/>
+	   	<dubbo:method name="searchHousePicMsgList" timeout="3000" retries="3"/>
+	   	<dubbo:method name="searchHousePicMsgByFid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="deleteHousePicMsgByFid" timeout="3000" retries="0"/>
+	   	<dubbo:method name="delAllHousePicMsgByFid" timeout="3000" retries="0"/>
+	   	<dubbo:method name="searchHouseBaseAndExtByFid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="updateHouseBaseAndExt" timeout="3000" retries="0"/>
+	   	<dubbo:method name="issueHouse" timeout="3000" retries="0"/>
+	   	<dubbo:method name="searchHouseDescAndBaseExt" timeout="3000" retries="3"/>
+	   	<dubbo:method name="updateHouseDescAndBaseExt" timeout="3000" retries="0"/>
+        <dubbo:method name="updateHouseDefaultPic" timeout="3000" retries="0"/>
+        <dubbo:method name="isDefaultPic" timeout="3000" retries="3"/>
+        <dubbo:method name="findHouseInputDetail" timeout="3000" retries="3"/>
+        <dubbo:method name="findHouseFacilityAndService" timeout="3000" retries="3"/>
+        <dubbo:method name="updateHouseInputDetail" timeout="3000" retries="0"/>
+        <dubbo:method name="updateHouseInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="mergeHouseBaseAndPhyAndExt" timeout="3000" retries="0"/>
+        <dubbo:method name="updateHouseConf" timeout="3000" retries="0"/>
+        <dubbo:method name="findDefaultPic" timeout="3000" retries="3"/>
+        <dubbo:method name="deleteHouseOrRoomByFid" timeout="3000" retries="0"/>
+        <dubbo:method name="cancleHouseOrRoomByFid" timeout="3000" retries="0"/>
+        <dubbo:method name="issueHouseInDetail" timeout="3000" retries="0"/>
+        <dubbo:method name="findOperateLogList" timeout="3000" retries="3"/>
+        <dubbo:method name="findGapAndFlexPrice" timeout="3000" retries="3"/>
+		<dubbo:method name="saveHouseConfList" timeout="3000" retries="0"/>
+		<dubbo:method name="updateHouseRoomMsg" timeout="3000" retries="0"/>
+		<dubbo:method name="updateHouseConfList" timeout="3000" retries="0"/>
+		<dubbo:method name="saveOrUpHouseConf" timeout="3000" retries="0"/>
+        <dubbo:method name="updateHouseAndDelRoom" timeout="3000" retries="0"/>
+        <dubbo:method name="mergeRoomAndBedList" timeout="3000" retries="0"/>
+        <dubbo:method name="houseStatusSituation" timeout="3000" retries="3"/>
+        <dubbo:method name="saveRoomBedZ" timeout="3000" retries="0"/>
+        <dubbo:method name="releaseHouse" timeout="3000" retries="0"/>
+        <dubbo:method name="countBedNumByHouseFid" timeout="3000" retries="3"/>
+        <dubbo:method name="houseInfoSituation" timeout="3000" retries="3"/>
+        <dubbo:method name="findHouseDeposit" timeout="3000" retries="0"/>
+        <dubbo:method name="searchHousePicMsgListByHouseFid" timeout="3000" retries="0"/>
+        <dubbo:method name="getHouseBaseExtByHouseBaseFid" timeout="3000" retries="3"/>
+        <dubbo:method name="updateHouseBaseExtByHouseBaseFid" timeout="3000" retries="0"/>
+        <dubbo:method name="updateSelectHouseRules" timeout="3000" retries="0"/>
+        <dubbo:method name="findDefaultPicListInfo" timeout="3000" retries="3"/>
+        <dubbo:method name="isSetDefaultPic" timeout="3000" retries="3"/>
+        <dubbo:method name="searchRoomByRoomFid" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+      <!-- 房源详情 -->
+    <dubbo:service interface="com.ziroom.minsu.services.house.api.inner.TenantHouseService" ref="house.tenantHouseServiceProxy">
+	   	<dubbo:method name="houseDetail" timeout="5000" retries="3"/>
+	   	<dubbo:method name="houseListDetail" timeout="5000" retries="3"/>
+        <dubbo:method name="statisticalPv" timeout="5000" retries="3"/>
+        <dubbo:method name="findStatisticalPv" timeout="5000" retries="3"/>
+        <dubbo:method name="findHouseDetail" timeout="5000" retries="3"/>
+        <dubbo:method name="findHoseDesc" timeout="5000" retries="3"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HouseJobService" ref="house.houseJobServiceProxy">
+	   	<dubbo:method name="houseAuditLimit" timeout="3000" retries="0"/>
+	   	<dubbo:method name="roomAuditLimit" timeout="3000" retries="0"/>
+	   	<dubbo:method name="houseDayRevenueStatistics" timeout="3000" retries="0"/>
+	   	<dubbo:method name="houseDayRevenueStatisticsByInfo" timeout="3000" retries="0"/>
+	   	<dubbo:method name="houseMonthRevenueStatistics" timeout="3000" retries="0"/>
+	   	<dubbo:method name="noticeLanDFBHouseMsg" timeout="5000" retries="0"/>
+    </dubbo:service>
+    
+    <!-- 房源商机 -->
+    <dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HouseBusinessService" ref="house.houseBusinessServiceProxy">
+	   	<dubbo:method name="houseBusinessList" timeout="3000" retries="3"/>
+	   	<dubbo:method name="findDtGuardCodeByLandlord" timeout="3000" retries="3"/>
+	   	<dubbo:method name="insertHouseBusiness" timeout="3000" retries="0"/>
+	    <dubbo:method name="findHouseBusinessDetailByFid" timeout="3000" retries="3"/>
+	    <dubbo:method name="updateHouseBusiness" timeout="3000" retries="0"/>
+	    <dubbo:method name="delHouseBusiness" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HouseGuardService" ref="house.houseGuardServiceProxy">
+	   	<dubbo:method name="searchHouseGuardList" timeout="3000" retries="3"/>
+	   	<dubbo:method name="searchHouseGuardDetail" timeout="3000" retries="3"/>
+	   	<dubbo:method name="searchHouseGuardLogList" timeout="3000" retries="3"/>
+	   	<dubbo:method name="batchMergeHouseGuardRel" timeout="3000" retries="0"/>
+	   	<dubbo:method name="findHouseGuardRelByCondition" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+	<!-- PC提供者相关方法 -->
+	<dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HousePCService" ref="house.housePCServiceProxy">
+	   	<dubbo:method name="countHouseAndRoomNumByUid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="getCalendarHouseList" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <!-- PC提供者发布房源相关方法 -->
+	<dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HouseIssuePcService" ref="house.houseIssueServicePcProxy">
+	   	<dubbo:method name="insertOrUpdateHouseLocation" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+    <!-- 预约摄影师 接口 -->
+    <dubbo:service interface="com.ziroom.minsu.services.house.api.inner.TroyPhotogBookService" ref="photographer.troyPhotogBookServiceProxy">
+	   	<dubbo:method name="findNeedPhotographerHouse" timeout="3000" retries="3"/>
+	    <dubbo:method name="bookHousePhotographer" timeout="3000" retries="0"/>
+	     <dubbo:method name="updatePhotographerBookOrderBySn" timeout="3000" retries="0"/>
+	     <dubbo:method name="findPhotographerBookOrder" timeout="3000" retries="0"/>
+	     <dubbo:method name="findPhotogOrderDetail" timeout="3000" retries="3"/>
+	     <dubbo:method name="findHouseBizReason" timeout="3000" retries="3"/>
+	     <dubbo:method name="findLogs" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <!-- 摄影师管理 接口 -->
+    <dubbo:service interface="com.ziroom.minsu.services.house.api.inner.PhotogMgtService" ref="photog.photogMgtServiceProxy">
+	   	<dubbo:method name="findPhotographerListByPage" timeout="3000" retries="3"/>
+	    <dubbo:method name="insertPhotographerMsg" timeout="3000" retries="0"/>
+	   	<dubbo:method name="findPhotographerMsgByUid" timeout="3000" retries="3"/>
+	    <dubbo:method name="updatePhotographerMsg" timeout="3000" retries="0"/>
+	    <dubbo:method name="findPhotogPicByUidAndType" timeout="3000" retries="3"/>
+	    <dubbo:method name="updatePhotographerPicMsg" timeout="3000" retries="0"/>
+	    <dubbo:method name="insertPhotographerPicMsg" timeout="3000" retries="0"/>
+    </dubbo:service>
+    
+    <!-- 房源实勘 接口  -->
+    <dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HouseSurveyService" ref="house.houseSurveyServiceProxy">
+	   	<dubbo:method name="findSurveyHouseListByPage" timeout="3000" retries="3"/>
+	   	<dubbo:method name="findHouseSurveyMsgByHouseFid" timeout="3000" retries="3"/>
+	    <dubbo:method name="insertHouseSurveyMsg" timeout="3000" retries="0"/>
+	    <dubbo:method name="updateHouseSurveyMsg" timeout="3000" retries="0"/>
+	   	<dubbo:method name="findHouseSurveyPicMsgByFid" timeout="3000" retries="3"/>
+	   	<dubbo:method name="findSurveyPicListByType" timeout="3000" retries="3"/>
+	    <dubbo:method name="saveSurveyPicMsgList" timeout="3000" retries="0"/>
+	    <dubbo:method name="updateHouseSurveyPicMsg" timeout="3000" retries="0"/>
+	   	<dubbo:method name="findPicCountByType" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <!-- 房源跟进接口 -->
+    <dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HouseFollowService" ref="house.houseFollowServiceProxy">
+    	<dubbo:method name="findServicerFollowHouseList" timeout="3000" retries="3"/>
+    	<dubbo:method name="lockAndSaveHouseFollow" timeout="3000" retries="0"/>
+    	<dubbo:method name="houseFollowDetail" timeout="3000" retries="3"/>
+    	<dubbo:method name="insertFollowLog" timeout="3000" retries="0"/>
+    	<dubbo:method name="findAttacheFollowHouseList" timeout="3000" retries="3"/>
+    </dubbo:service>
+    
+    <!-- top房源接口 -->
+    <dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HouseTopService" ref="house.houseTopServiceProxy">
+    	<dubbo:method name="topHouseListData" timeout="3000" retries="3"/>
+    	<dubbo:method name="insertTopHouse" timeout="3000" retries="0"/>
+    	<dubbo:method name="houseTopDetail" timeout="3000" retries="3"/>
+    	<dubbo:method name="updateHouseTop" timeout="3000" retries="0"/>
+    	<dubbo:method name="updateHouseTopColumn" timeout="3000" retries="0"/>
+    	<dubbo:method name="houseTopOnlineOrDownline" timeout="3000" retries="0"/>
+    	<dubbo:method name="houseTopSortExchange" timeout="3000" retries="0"/>
+    	<dubbo:method name="houseTopSortFloatOrSink" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+	<!-- 同步日历接口 -->
+	<dubbo:service interface="com.ziroom.minsu.services.house.api.inner.AbHouseService" ref="house.abHouseServiceProxy">
+		<dubbo:method name="saveHouseCalendar" timeout="3000" retries="0"/>
+		<dubbo:method name="saveHouseRelate" timeout="3000" retries="0"/>
+		<dubbo:method name="listHouseRelateVoByPage" timeout="3000" retries="3"/>
+		<dubbo:method name="findHouseRelateByFid" timeout="3000" retries="3"/>
+		<dubbo:method name="asySaveHouseCalendar" timeout="3000" retries="0"/>
+		<dubbo:method name="findAbHouseByHouse" timeout="3000" retries="3"/>
+	</dubbo:service>
+
+	<!-- 今日特价接口 -->
+	<dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HouseTonightDiscountService" ref="house.tonightDiscountServiceProxy">
+		<dubbo:method name="findTonightDiscountByCondition" timeout="3000" retries="3"/>
+		<dubbo:method name="setHouseTodayDiscount" timeout="3000" retries="0"/>
+		<dubbo:method name="findRemindLandlordUid" timeout="3000" retries="3"/>
+	</dubbo:service>
+	
+    <!-- 原生发布房源接口 -->
+	<dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HouseIssueAppService" ref="house.houseIssueAppServiceProxy">
+		<dubbo:method name="searchHousePhyAndExt" timeout="3000" retries="3"/>
+		<dubbo:method name="saveHousePhyAndExt" timeout="3000" retries="0"/>
+		<dubbo:method name="searchHouseCheckInMsg" timeout="3000" retries="3"/>
+		<dubbo:method name="saveHouseCheckInMsg" timeout="3000" retries="0"/>
+		<dubbo:method name="saveHouseDescAndBaseInfoEntire" timeout="3000" retries="0"/>
+		<dubbo:method name="saveHouseDescAndBaseInfoSublet" timeout="3000" retries="0"/>
+		<dubbo:method name="saveHouseOrRoomPriceForModify" timeout="3000" retries="0"/>
+		<dubbo:method name="updateRoomNumAndRoomMsg" timeout="3000" retries="0"/>
+	</dubbo:service>
+	
+	<!-- 房源修改 日志接口-->
+	<dubbo:service interface="com.ziroom.minsu.services.house.api.inner.HouseUpdateHistoryLogService" ref="house.houseUpdateHistoryLogServiceProxy">
+		<dubbo:method name="saveHistoryLog" timeout="3000" retries="0"/>
+		<dubbo:method name="findWaitUpdateHouseInfo" timeout="3000" retries="0"/>
+	</dubbo:service>
+</beans>

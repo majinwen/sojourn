@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.housePriceWeekConfDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HousePriceWeekConfEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="bed_fid" property="bedFid" jdbcType="VARCHAR" />
+    <result column="set_week" property="setWeek" jdbcType="INTEGER" />
+    <result column="price_val" property="priceVal" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_uid" property="createUid" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" /> 
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    hpwc.id, hpwc.fid, hpwc.house_base_fid, hpwc.room_fid, hpwc.bed_fid, hpwc.set_week, hpwc.price_val, hpwc.create_date, hpwc.last_modify_date, 
+    hpwc.create_uid, hpwc.is_del, hpwc.is_valid
+  </sql>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_price_week_conf hpwc
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <insert id="insertHousePriceWeekConf" parameterType="com.ziroom.minsu.entity.house.HousePriceWeekConfEntity" >
+    insert into t_house_price_week_conf
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="bedFid != null" >
+        bed_fid,
+      </if>
+      <if test="setWeek != null" >
+        set_week,
+      </if>
+      <if test="priceVal != null" >
+        price_val,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="createUid != null" >
+        create_uid,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if> 
+      <if test="isValid != null" >
+        is_valid,
+      </if> 
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null" >
+        #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="setWeek != null" >
+        #{setWeek,jdbcType=INTEGER},
+      </if>
+      <if test="priceVal != null" >
+        #{priceVal,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if> 
+      <if test="isValid != null" >
+        #{isValid,jdbcType=INTEGER},
+      </if> 
+    </trim>
+  </insert>
+ 
+  <update id="updateHousePriceWeekConfByFid" parameterType="com.ziroom.minsu.entity.house.HousePriceWeekConfEntity" >
+    update t_house_price_week_conf
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="priceVal != null" >
+        price_val = #{priceVal,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if> 
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=INTEGER},
+      </if> 
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询某天的特殊价格 -->
+  <select id="findHousePriceWeekConfByDateHouseFid"  parameterType="com.ziroom.minsu.services.house.dto.LeaseCalendarDto" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM t_house_price_week_conf hpwc
+	WHERE hpwc.is_del=0
+	AND hpwc.is_valid = 1
+	AND hpwc.set_week=(WEEKDAY(#{nowDate,jdbcType=TIMESTAMP})+1) 
+	<if test="houseBaseFid!=null and houseBaseFid!=''">
+	AND hpwc.house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+	</if>
+	<if test="houseRoomFid!=null and houseRoomFid!=''">
+	AND hpwc.room_fid=#{houseRoomFid,jdbcType=VARCHAR}
+	</if>
+	ORDER BY hpwc.create_date DESC,hpwc.last_modify_date DESC
+	LIMIT 1
+  </select>
+
+  <!-- 查询房源或者房间的特殊价格列表(只为订单提供服务，查询有效的) -->
+  <select id="findValidHousePriceWeekConfList"  parameterType="com.ziroom.minsu.services.house.dto.LeaseCalendarDto" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM t_house_price_week_conf hpwc
+    WHERE hpwc.is_del=0
+    <if test="houseBaseFid!=null and houseBaseFid!=''">
+      AND hpwc.house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+    </if>
+    <if test="houseRoomFid!=null and houseRoomFid!=''">
+      AND hpwc.room_fid=#{houseRoomFid,jdbcType=VARCHAR}
+    </if>
+      AND hpwc.is_valid =1
+    ORDER BY hpwc.create_date DESC,hpwc.last_modify_date DESC
+  </select>
+
+  <!-- 查询房源或者房间的特殊价格列表 -->
+  <select id="findHousePriceWeekConfListByHouseFid"  parameterType="com.ziroom.minsu.services.house.dto.LeaseCalendarDto" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM t_house_price_week_conf hpwc
+	WHERE hpwc.is_del=0 
+	<if test="houseBaseFid!=null and houseBaseFid!=''">
+	 AND hpwc.house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+	</if>
+	<if test="houseRoomFid!=null and houseRoomFid!=''">
+	 AND hpwc.room_fid=#{houseRoomFid,jdbcType=VARCHAR}
+	</if> 
+	<if test="isValid!=null">
+	 AND hpwc.is_valid =#{isValid,jdbcType=INTEGER}
+	</if>
+	ORDER BY hpwc.create_date DESC,hpwc.last_modify_date DESC
+  </select>
+   
+  
+  <!-- 删除房源或者房间的特殊价格 -->
+  <update id="delHousePriceWeekConfByHouseFid" parameterType="com.ziroom.minsu.entity.house.HousePriceWeekConfEntity" >
+    update t_house_price_week_conf hpwc
+    <set >
+       hpwc.is_del =1 
+    </set>
+    where hpwc.is_del =0 
+    <if test="houseBaseFid!=null and houseBaseFid!=''">
+	AND hpwc.house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+	</if>
+	<if test="roomFid!=null and roomFid!=''">
+	AND hpwc.room_fid=#{roomFid,jdbcType=VARCHAR}
+	</if> 
+  </update> 
+  
+  <!-- 按照fid删除特殊价格 -->
+  <update id="delHousePriceWeekConfByFid" parameterType="com.ziroom.minsu.entity.house.HousePriceWeekConfEntity" >
+    update t_house_price_week_conf hpwc
+    <set >
+       hpwc.is_del =1 
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update> 
+  
+  <!-- 合租转整租删除合租周末价格配置-->
+  <delete id="delRoomPriceWeekByHouseBaseFid"  parameterType="map">
+  	DELETE FROM `t_house_price_week_conf`
+	WHERE house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+	AND room_fid IS NOT NULL
+  </delete> 
+</mapper>

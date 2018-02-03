@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="order.paramDao">
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderParamEntity">
+    <!--
+      基本map
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="fid" jdbcType="VARCHAR" property="fid" />
+    <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+    <result column="par_code" jdbcType="VARCHAR" property="parCode" />
+    <result column="par_value_code" jdbcType="VARCHAR" property="parValueCode" />
+    <result column="par_value" jdbcType="VARCHAR" property="parValue" />
+    <result column="create_fid" jdbcType="VARCHAR" property="createFid" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List">
+    <!--
+      基本列
+    -->
+    p.id, p.fid, p.order_sn, p.par_code, p.par_value_code, p.par_value, p.create_fid, p.create_time, p.last_modify_date, 
+    p.is_del
+  </sql>
+
+    <!-- 根据订单编号查询 -->
+    <select id="findParamByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from t_order_param p
+        where p.is_del = 0
+          AND p.order_sn = #{orderSn,jdbcType=VARCHAR}
+    </select>
+
+
+    <update id="updateParamByFid" parameterType="map">
+      UPDATE t_order_param
+      SET par_value = #{parValue,jdbcType=VARCHAR}
+      WHERE fid = #{fid,jdbcType=VARCHAR}
+
+    </update>
+
+
+    <!-- 根据订单编号查询 -->
+    <select id="findParamByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from t_order_param p
+        where p.is_del = 0
+        AND p.order_sn = #{orderSn,jdbcType=VARCHAR}
+        AND p.par_code =  #{code,jdbcType=VARCHAR}
+    </select>
+
+  <select id="selectByCondiction" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!--
+      根据订单编号查询
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_order_param p
+     where p.is_del = 0 
+     <if test="orderSn!=null">
+      AND p.order_sn = #{orderSn,jdbcType=VARCHAR}
+     </if>
+     <if test="parCode!=null">
+      AND p.par_code = #{parCode,jdbcType=VARCHAR}
+     </if>
+   </select>
+  
+  <insert id="insertParam" parameterType="com.ziroom.minsu.entity.order.OrderParamEntity">
+    <!--
+      插入  订单参数配置
+    -->
+    insert into t_order_param
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="fid != null">
+        fid,
+      </if>
+      <if test="orderSn != null">
+        order_sn,
+      </if>
+      <if test="parCode != null">
+        par_code,
+      </if>
+      <if test="parValueCode != null">
+        par_value_code,
+      </if>
+      <if test="parValue != null">
+        par_value,
+      </if>
+      <if test="createFid != null">
+        create_fid,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="lastModifyDate != null">
+        last_modify_date,
+      </if>
+      <if test="isDel != null">
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null">
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null">
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="parCode != null">
+        #{parCode,jdbcType=VARCHAR},
+      </if>
+       <if test="parValueCode != null">
+        #{parValueCode,jdbcType=VARCHAR},
+      </if>
+      <if test="parValue != null">
+        #{parValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null">
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null">
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+ 
+ <update id="updateByFid" parameterType="com.ziroom.minsu.entity.order.OrderParamEntity">
+    <!--
+      根据订单编号更新
+    -->
+    update t_order_param
+    <set>
+      <if test="fid != null">
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="parCode != null">
+        par_code = #{parCode,jdbcType=VARCHAR},
+      </if>
+      <if test="parValue != null">
+        par_value = #{parValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null">
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null">
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>

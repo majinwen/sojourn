@@ -1,0 +1,788 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.actCouponDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActCouponEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_sn" property="groupSn" jdbcType="VARCHAR" />
+    <result column="act_sn" property="actSn" jdbcType="VARCHAR" />
+    <result column="coupon_sn" property="couponSn" jdbcType="VARCHAR" />
+    <result column="coupon_name" property="couponName" jdbcType="VARCHAR" />
+    <result column="coupon_status" property="couponStatus" jdbcType="INTEGER" />
+    <result column="coupon_source" property="couponSource" jdbcType="INTEGER" />
+    <result column="act_user" property="actUser" jdbcType="VARCHAR" />
+    <result column="act_type" property="actType" jdbcType="INTEGER" />
+    <result column="act_limit" property="actLimit" jdbcType="INTEGER" />
+    <result column="times" property="times" jdbcType="INTEGER" />
+    <result column="act_max" property="actMax" jdbcType="INTEGER" />
+    <result column="act_cut" property="actCut" jdbcType="INTEGER" />
+    <result column="coupon_start_time" property="couponStartTime" jdbcType="TIMESTAMP" />
+    <result column="coupon_end_time" property="couponEndTime" jdbcType="TIMESTAMP" />
+    <result column="check_in_time" property="checkInTime" jdbcType="TIMESTAMP" />
+    <result column="check_out_time" property="checkOutTime" jdbcType="TIMESTAMP" />
+    <result column="is_limit_house" property="isLimitHouse" jdbcType="INTEGER" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="ActCouponUserVoMap" type="com.ziroom.minsu.entity.cms.ActCouponUserEntity" extends="BaseResultMap">
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="customer_mobile" property="customerMobile" jdbcType="VARCHAR" />
+    <result column="used_time" property="usedTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="ActCouponInfoUserVoMap" type="com.ziroom.minsu.services.cms.entity.ActCouponInfoUserVo" extends="BaseResultMap">
+  	<result column="act_name" property="actName" jdbcType="VARCHAR" />
+    <result column="act_source" property="actSource" jdbcType="INTEGER" />
+    <result column="act_status" property="actStatus" jdbcType="INTEGER" />
+    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="act_type" property="actType" jdbcType="INTEGER" />
+    <result column="act_limit" property="actLimit" jdbcType="INTEGER" />
+      <result column="times" property="times" jdbcType="INTEGER" />
+    <result column="act_max" property="actMax" jdbcType="INTEGER" />
+    <result column="act_cut" property="actCut" jdbcType="INTEGER" />
+    <result column="act_start_time" property="actStartTime" jdbcType="TIMESTAMP" />
+    <result column="act_end_time" property="actEndTime" jdbcType="TIMESTAMP" />
+    <result column="is_check_time" property="isCheckTime" jdbcType="INTEGER" />
+    
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="customer_mobile" property="customerMobile" jdbcType="VARCHAR" />
+    <result column="used_time" property="usedTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+   <resultMap id="uidMap" type="com.ziroom.minsu.services.cms.entity.CouponUserUidVo">
+       <result column="uid" property="uid" jdbcType="VARCHAR" />
+   </resultMap>
+
+  <sql id="Base_Column_List" >
+    id,group_sn, act_sn, coupon_sn, coupon_name, coupon_status, coupon_source, act_user, act_type,
+    act_limit,times, act_max, act_cut, coupon_start_time, coupon_end_time, check_in_time, check_out_time,is_limit_house,
+    create_id, create_time, last_modify_date, is_del
+  </sql>
+  
+  <sql id="Coupon_Column_List" >
+    ac.id, ac.act_sn, ac.coupon_sn, ac.coupon_name, ac.coupon_status, ac.coupon_source, ac.act_user, 
+    ac.act_type, ac.act_limit,ac.times, ac.act_max, ac.act_cut, ac.coupon_start_time, ac.coupon_end_time, ac.check_in_time,
+    ac.check_out_time, ac.is_limit_house, ac.create_id, ac.create_time, ac.last_modify_date, ac.is_del
+  </sql>
+  
+  <sql id="BaseVo_Column_List" >
+    ac.id, ac.act_sn, ac.coupon_sn, ac.coupon_name, ac.coupon_status, ac.coupon_source, ac.act_user,
+    ac.act_type, ac.act_limit,ac.times, ac.act_max, ac.act_cut, ac.coupon_start_time, ac.coupon_end_time,  ac.check_in_time,
+    ac.check_out_time, ac.is_limit_house, ac.create_id, ac.create_time, ac.last_modify_date, ac.is_del,
+    oc.uid,oc.order_sn, oc.customer_mobile, oc.used_time
+  </sql>
+
+    <sql id="BaseVo_Column_Mobile_List" >
+        ac.id, ac.act_sn, ac.coupon_sn, ac.coupon_name, ac.coupon_status, ac.coupon_source, ac.act_user,
+        ac.act_type, ac.act_limit,ac.times, ac.act_max, ac.act_cut, ac.coupon_start_time, ac.coupon_end_time,  ac.check_in_time,
+        ac.check_out_time, ac.is_limit_house, ac.create_id, ac.create_time, ac.last_modify_date, ac.is_del,
+    </sql>
+<!-- ,
+        oc.uid,oc.order_sn,oc.used_time,lo.customer_mobile -->
+  
+  <sql id="CouponInfoVo_Column_List" >
+  	c.id, c.act_sn, c.coupon_sn, c.coupon_name, c.coupon_status, c.coupon_source, c.act_user, 
+    c.act_type, c.act_limit,c.act_max, c.act_cut, c.coupon_start_time, c.coupon_end_time, c.check_in_time,
+    c.check_out_time, c.is_limit_house, c.create_id, c.create_time, c.last_modify_date, c.is_del,
+    a.act_name, a.act_source, a.act_status, a.role_code, a.act_type, a.act_limit, a.times,
+    a.act_max, a.act_cut, a.act_start_time, a.act_end_time, a.is_check_time,
+    d.uid, d.customer_mobile, d.used_time
+  </sql>
+
+    <!-- 通过优惠券获取优惠券信息 -->
+  <select id="selectBySn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_act_coupon
+    WHERE coupon_sn = #{couponSn,jdbcType=VARCHAR}
+    AND is_del = 0
+  </select>
+
+  <!-- 通过活动编号获取优惠券信息 -->
+  <select id="getCouponListByActSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_act_coupon
+    WHERE act_sn = #{actSn,jdbcType=VARCHAR}
+    AND is_del = 0
+  </select>
+
+
+    <!-- 通过活动编号获取所有优惠券信息 -->
+    <select id="getCouponListAllByActSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM t_act_coupon
+        WHERE act_sn = #{actSn,jdbcType=VARCHAR}
+        AND is_del = 0
+    </select>
+
+    <!--通过组号获取已经领取优惠券,还有1个月过期的uid-->
+    <select id="getOneMonthExpireCouponUidByGroupSN" resultMap="uidMap" parameterType="java.lang.String" >
+    SELECT
+     DISTINCT t2.`uid`
+      FROM
+      t_act_coupon t
+      INNER JOIN t_user_coupon t2
+        ON t.`coupon_sn` = t2.`coupon_sn`
+      WHERE t.coupon_status = 2
+      AND DATE_FORMAT(t.`coupon_end_time`, '%Y-%m-%d') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH),'%Y-%m-%d')
+      AND t.`group_sn` = #{groupSn,jdbcType=VARCHAR}
+    </select>
+
+  
+  <!-- 获取用户当前活动下的优惠券信息 -->
+  <select id="getCouponListByActUid" resultMap="BaseResultMap" parameterType="map" >
+    SELECT
+    <include refid="Coupon_Column_List" />
+    FROM t_act_coupon ac, t_user_coupon oc
+    WHERE ac.coupon_sn = oc.coupon_sn
+    AND ac.act_sn = #{actSn,jdbcType=VARCHAR}
+    AND oc.uid = #{uid,jdbcType=VARCHAR}
+    AND ac.is_del = 0
+    AND oc.is_del = 0
+  </select>
+
+
+
+    <!-- 获取用户当前活动下的可用优惠券信息 -->
+    <select id="getCouponListOkByUid" resultMap="ActCouponUserVoMap"  parameterType="com.ziroom.minsu.services.cms.dto.OutCouponRequest" >
+        SELECT
+        DISTINCT
+        <include refid="Coupon_Column_List" />
+        FROM t_act_coupon ac
+        INNER JOIN t_user_coupon oc
+        ON ac.coupon_sn = oc.coupon_sn
+        INNER JOIN t_activity_city ci
+        ON ac.act_sn = ci.act_sn
+        WHERE  oc.uid = #{uid,jdbcType=VARCHAR}
+        AND ac.coupon_status IN (1,2)
+        AND ac.coupon_start_time <![CDATA[ <= ]]>  NOW()
+        AND ac.coupon_end_time <![CDATA[ >= ]]>  NOW()
+        AND ac.is_del = 0
+        AND oc.is_del = 0
+        ORDER BY  ac.create_time DESC
+    </select>
+
+
+    <!-- 获取用户当前活动下的所有优惠券信息 -->
+    <select id="getCouponListAllByUid" resultMap="ActCouponUserVoMap"  parameterType="com.ziroom.minsu.services.cms.dto.OutCouponRequest" >
+        SELECT
+        DISTINCT
+        <include refid="Coupon_Column_List" />
+        FROM t_act_coupon ac
+        INNER JOIN t_user_coupon oc
+        ON ac.coupon_sn = oc.coupon_sn
+        INNER JOIN t_activity_city ci
+        ON ac.act_sn = ci.act_sn
+        WHERE  oc.uid = #{uid,jdbcType=VARCHAR}
+        AND ac.coupon_status IN (1,2,5)
+        AND ac.is_del = 0
+        AND oc.is_del = 0
+        ORDER BY  ac.create_time DESC
+    </select>
+
+    <!-- 获取用户当前活动下的可用优惠券信息 -->
+    <select id="getCouponListTimeOutByUid" resultMap="ActCouponUserVoMap"  parameterType="com.ziroom.minsu.services.cms.dto.OutCouponRequest" >
+        SELECT
+        DISTINCT
+        <include refid="Coupon_Column_List" />
+        FROM t_act_coupon ac
+        INNER JOIN t_user_coupon oc
+        ON ac.coupon_sn = oc.coupon_sn
+        INNER JOIN t_activity_city ci
+        ON ac.act_sn = ci.act_sn
+        WHERE  oc.uid = #{uid,jdbcType=VARCHAR}
+
+        AND (
+          ac.coupon_status = 5
+          OR
+          ac.coupon_start_time <![CDATA[ >= ]]>  NOW()
+        )
+        AND ac.is_del = 0
+        AND oc.is_del = 0
+        ORDER BY  ac.create_time DESC
+    </select>
+
+
+    <!-- 获取当前用户的优惠券 -->
+    <select id="getCouponListCheckByUidDefault" resultMap="ActCouponUserVoMap" parameterType="com.ziroom.minsu.services.cms.dto.CheckCouponRequest" >
+        SELECT
+        DISTINCT
+        <include refid="BaseVo_Column_List" />
+        FROM t_act_coupon ac
+        INNER JOIN t_user_coupon oc
+        ON ac.coupon_sn = oc.coupon_sn
+        INNER JOIN t_activity_city ci
+        ON ac.act_sn = ci.act_sn
+
+        WHERE  oc.uid = #{uid,jdbcType=VARCHAR}
+            AND ac.coupon_status IN (1,2)
+            AND
+            (
+                ci.city_code = 0
+                OR
+                ci.city_code = #{cityCode,jdbcType=VARCHAR}
+            )
+
+        <if test="houseSn != null and houseSn != ''">
+            AND(
+            ac.is_limit_house = 0
+            OR
+            EXISTS (SELECT 1 FROM t_activity_house ah where ac.act_sn = ah.act_sn AND ah.house_sn = #{houseSn,jdbcType=VARCHAR})
+            )
+        </if>
+        <if test="cityCode != null and cityCode != ''">
+            AND EXISTS (SELECT 1 FROM t_activity_city city where ac.act_sn = city.act_sn AND  city.city_code in  ('0',#{cityCode,jdbcType=VARCHAR}))
+        </if>
+
+            AND ac.coupon_start_time <![CDATA[ <= ]]>  NOW()
+            AND ac.coupon_end_time <![CDATA[ >= ]]>  NOW()
+            AND ac.is_del = 0
+            AND oc.is_del = 0
+
+        ORDER BY  ac.act_cut DESC,ac.coupon_end_time  ASC
+    </select>
+
+
+
+    <!-- 获取用户当前活动下的所有优惠券信息 -->
+    <select id="getCouponListCheckByUid" resultMap="ActCouponUserVoMap" parameterType="com.ziroom.minsu.services.cms.dto.CheckCouponRequest" >
+        SELECT
+          DISTINCT
+        <include refid="Coupon_Column_List" />
+        FROM t_act_coupon ac
+            INNER JOIN t_user_coupon oc
+              ON ac.coupon_sn = oc.coupon_sn
+            INNER JOIN t_activity_city ci
+              ON ac.act_sn = ci.act_sn
+        WHERE  oc.uid = #{uid,jdbcType=VARCHAR}
+            AND ac.coupon_status IN (1,2)
+            AND
+            (
+              ac.act_limit = 0
+            OR
+              ac.act_limit <![CDATA[ <= ]]>  #{price,jdbcType=VARCHAR}
+            )
+            AND
+            (
+                ci.city_code = 0
+                OR
+                ci.city_code = #{cityCode,jdbcType=VARCHAR}
+            )
+        <if test="houseSn != null and houseSn != ''">
+            AND(
+            ac.is_limit_house = 0
+            OR
+            EXISTS (SELECT 1 FROM t_activity_house ah where ac.act_sn = ah.act_sn AND ah.house_sn = #{houseSn,jdbcType=VARCHAR})
+            )
+        </if>
+
+        <if test="cityCode != null and cityCode != ''">
+            AND EXISTS (SELECT 1 FROM t_activity_city city where ac.act_sn = city.act_sn AND  city.city_code in  ('0',#{cityCode,jdbcType=VARCHAR}))
+        </if>
+
+            AND ac.coupon_start_time <![CDATA[ <= ]]>  NOW()
+            AND ac.coupon_end_time <![CDATA[ >= ]]>  NOW()
+            AND ac.is_del = 0
+            AND oc.is_del = 0
+            ORDER BY  ac.create_time DESC
+    </select>
+
+    <!-- 获取用户当前活动下的所有优惠券信息 -->
+    <select id="getCouponListOverTimeByUid" resultMap="BaseResultMap" parameterType="map" >
+        SELECT
+        <include refid="Coupon_Column_List" />
+        FROM t_act_coupon ac, t_user_coupon oc
+        WHERE ac.coupon_sn = oc.coupon_sn
+        AND oc.uid = #{uid,jdbcType=VARCHAR}
+        AND ac.coupon_status = 5
+        AND ac.is_del = 0
+        AND oc.is_del = 0
+    </select>
+
+
+
+    <!-- 通过优惠券号获取 优惠券信息、绑定信息 -->
+    <select id="getCouponFullList" resultMap="ActCouponUserVoMap" parameterType="com.ziroom.minsu.services.cms.dto.ActCouponRequest" >
+        SELECT
+        <include refid="BaseVo_Column_Mobile_List" />
+        (SELECT uid FROM t_user_coupon oc WHERE ac.coupon_sn = oc.coupon_sn AND oc.is_del = 0) AS uid,
+        (SELECT order_sn FROM t_user_coupon oc WHERE ac.coupon_sn = oc.coupon_sn AND oc.is_del = 0) AS order_sn,
+        (SELECT used_time FROM t_user_coupon oc WHERE ac.coupon_sn = oc.coupon_sn AND oc.is_del = 0) AS used_time,
+        (SELECT customer_mobile FROM t_coupon_mobile_log lo WHERE ac.coupon_sn = lo.coupon_sn) AS customer_mobile
+        FROM t_act_coupon ac
+        
+        WHERE  ac.is_del = 0
+
+        <if test="actSn != null and actSn != ''">
+            AND ac.act_sn = #{actSn,jdbcType=VARCHAR}
+        </if>
+
+        <if test="couponSn != null and couponSn != ''">
+            AND ac.coupon_sn = #{couponSn,jdbcType=VARCHAR}
+        </if>
+
+        <if test="couponName != null and couponName != ''">
+            AND ac.coupon_name  like CONCAT(#{couponName,jdbcType=VARCHAR},'%')
+        </if>
+
+        <if test="couponStatus != null and couponStatus != ''">
+            AND ac.coupon_status = #{couponStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="uid != null and uid != ''">
+            AND ac.`coupon_sn` in (SELECT oc.`coupon_sn` FROM t_user_coupon oc WHERE oc.`uid` = #{uid,jdbcType=VARCHAR})
+        </if>
+        <if test="orderSn != null and orderSn != ''">
+            AND ac.`coupon_sn` = (SELECT oc.`coupon_sn` FROM t_user_coupon oc WHERE oc.`order_sn` = #{orderSn,jdbcType=VARCHAR})
+        </if>
+
+        <if test="customerMobile != null and customerMobile != ''">
+            AND ac.`coupon_sn` in (SELECT lo.`coupon_sn` FROM t_coupon_mobile_log lo WHERE lo.`customer_mobile` = #{customerMobile,jdbcType=VARCHAR})
+        </if>
+        ORDER BY ac.id DESC
+    </select>
+
+<!-- 通过优惠券号获取 优惠券信息、绑定信息 
+    <select id="getCouponFullList" resultMap="ActCouponUserVoMap" parameterType="com.ziroom.minsu.services.cms.dto.ActCouponRequest" >
+        SELECT
+        <include refid="BaseVo_Column_Mobile_List" />
+        FROM t_act_coupon ac
+        LEFT JOIN t_user_coupon oc ON ac.coupon_sn = oc.coupon_sn and oc.is_del = 0
+        LEFT JOIN t_coupon_mobile_log lo ON ac.coupon_sn = lo.coupon_sn
+        WHERE  ac.is_del = 0
+
+        <if test="actSn != null and actSn != ''">
+            AND ac.act_sn = #{actSn,jdbcType=VARCHAR}
+        </if>
+
+        <if test="couponSn != null and couponSn != ''">
+            AND ac.coupon_sn = #{couponSn,jdbcType=VARCHAR}
+        </if>
+
+        <if test="couponName != null and couponName != ''">
+            AND ac.coupon_name  like CONCAT(#{couponName,jdbcType=VARCHAR},'%')
+        </if>
+
+        <if test="couponStatus != null and couponStatus != ''">
+            AND ac.coupon_status = #{couponStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="uid != null and uid != ''">
+            AND oc.uid = #{uid,jdbcType=VARCHAR}
+        </if>
+        <if test="orderSn != null and orderSn != ''">
+            AND oc.order_sn = #{orderSn,jdbcType=VARCHAR}
+        </if>
+
+        <if test="customerMobile != null and customerMobile != ''">
+            AND lo.customer_mobile = #{customerMobile,jdbcType=VARCHAR}
+        </if>
+        ORDER BY ac.id DESC
+    </select>
+-->
+
+
+    <!-- 通过优惠券号获取 优惠券信息、绑定信息 -->
+  <select id="getActCouponUserVoByCouponSn" resultMap="ActCouponUserVoMap" parameterType="java.lang.String" >
+  	SELECT 
+    <include refid="BaseVo_Column_List" />
+    FROM t_act_coupon ac
+    LEFT JOIN t_user_coupon oc ON ac.coupon_sn = oc.coupon_sn and oc.is_del = 0
+    WHERE ac.coupon_sn = #{couponSn,jdbcType=VARCHAR}
+    AND ac.is_del = 0
+  </select>
+  
+  <!-- 通过优惠券号获取 活动信息 、优惠券信息-->
+  <select id="getActCouponInfoVoByCouponSn" resultMap="ActCouponInfoUserVoMap" parameterType="java.lang.String" >
+	SELECT <include refid="CouponInfoVo_Column_List" /> 
+	FROM t_activity a, t_activity_ext_coupon b, t_act_coupon c LEFT JOIN t_user_coupon d ON c.coupon_sn=d.coupon_sn AND d.is_del = 0
+	WHERE a.act_sn = b.act_sn
+	AND b.act_sn = c.act_sn
+	AND c.coupon_sn = #{couponSn,jdbcType=VARCHAR}
+	AND a.is_del = 0
+	AND b.is_del = 0
+  </select>
+  
+  
+  
+  <!-- 获取已过期未使用的优惠券count -->
+  <select id="getExpireCount" resultType="java.lang.Long">
+    SELECT 
+    COUNT(id)
+    FROM t_act_coupon
+    WHERE is_del = 0
+    AND coupon_status IN
+    <foreach collection="couponStatusList"  item="status" open="(" separator="," close=")">
+        #{status,jdbcType=INTEGER}
+    </foreach>
+    AND coupon_end_time <![CDATA[ < ]]> NOW()
+  </select>
+  
+  <!-- 修改优惠券过期  -->
+  <update id="updateExpireList" parameterType="map" >
+    UPDATE t_act_coupon
+    SET coupon_status = #{couponStatus,jdbcType=INTEGER}
+    WHERE 
+     1=1
+     AND coupon_end_time <![CDATA[ < ]]> NOW()
+     AND coupon_end_time  <![CDATA[ >= ]]>ADDDATE(NOW(),-10) 
+     AND coupon_status IN
+    <foreach collection="couponStatusList"  item="status" open="(" separator="," close=")">
+        #{status,jdbcType=INTEGER}
+    </foreach>
+     AND  is_del = 0
+ 
+    LIMIT #{limit,jdbcType=INTEGER} 
+  </update>
+  
+
+  <!-- 标志优惠券无效 -->
+  <delete id="deleteBySn" parameterType="java.lang.Integer" >
+    update t_act_coupon
+    SET is_del = 1
+    WHERE coupon_sn = #{couponSn,jdbcType=VARCHAR}
+  </delete>
+
+
+    <!-- 保存优惠券信息 -->
+  <insert id="saveCoupon" parameterType="com.ziroom.minsu.entity.cms.ActCouponEntity" >
+    insert into t_act_coupon
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="actSn != null" >
+        act_sn,
+      </if>
+        <if test="groupSn != null" >
+            group_sn,
+        </if>
+      <if test="couponSn != null" >
+        coupon_sn,
+      </if>
+        <if test="randSn != null" >
+            rand_sn,
+        </if>
+      <if test="couponName != null" >
+        coupon_name,
+      </if>
+      <if test="couponStatus != null" >
+        coupon_status,
+      </if>
+      <if test="couponSource != null" >
+        coupon_source,
+      </if>
+      <if test="actUser != null" >
+        act_user,
+      </if>
+      <if test="actType != null" >
+        act_type,
+      </if>
+      <if test="actLimit != null" >
+        act_limit,
+      </if>
+        <if test="times != null" >
+            times,
+        </if>
+      <if test="actMax != null" >
+        act_max,
+      </if>
+      <if test="actCut != null" >
+        act_cut,
+      </if>
+      <if test="couponStartTime != null" >
+        coupon_start_time,
+      </if>
+      <if test="couponEndTime != null" >
+        coupon_end_time,
+      </if>
+      <if test="checkInTime != null" >
+        check_in_time,
+      </if>
+      <if test="checkOutTime != null" >
+        check_out_time,
+      </if>
+      <if test="isLimitHouse != null" >
+        is_limit_house,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="actSn != null" >
+        #{actSn,jdbcType=VARCHAR},
+      </if>
+        <if test="groupSn != null" >
+            #{groupSn,jdbcType=VARCHAR},
+        </if>
+      <if test="couponSn != null" >
+        #{couponSn,jdbcType=VARCHAR},
+      </if>
+        <if test="randSn != null" >
+            #{randSn,jdbcType=VARCHAR},
+        </if>
+
+      <if test="couponName != null" >
+        #{couponName,jdbcType=VARCHAR},
+      </if>
+      <if test="couponStatus != null" >
+        #{couponStatus,jdbcType=INTEGER},
+      </if>
+      <if test="couponSource != null" >
+        #{couponSource,jdbcType=INTEGER},
+      </if>
+      <if test="actUser != null" >
+        #{actUser,jdbcType=VARCHAR},
+      </if>
+      <if test="actType != null" >
+        #{actType,jdbcType=INTEGER},
+      </if>
+      <if test="actLimit != null" >
+        #{actLimit,jdbcType=INTEGER},
+      </if>
+        <if test="times != null" >
+            #{times,jdbcType=INTEGER},
+        </if>
+      <if test="actMax != null" >
+        #{actMax,jdbcType=INTEGER},
+      </if>
+      <if test="actCut != null" >
+        #{actCut,jdbcType=INTEGER},
+      </if>
+      <if test="couponStartTime != null" >
+        #{couponStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="couponEndTime != null" >
+        #{couponEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkInTime != null" >
+        #{checkInTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkOutTime != null" >
+        #{checkOutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isLimitHouse != null" >
+        #{isLimitHouse,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+
+
+    <!-- 更改优惠券状态 -->
+    <update id="updateCouponMobile"  parameterType="map" >
+        update t_act_coupon
+       SET coupon_status = 6
+        WHERE coupon_sn = #{couponSn,jdbcType=VARCHAR}
+        AND coupon_status = 1
+    </update>
+
+
+    <!-- 更改优惠券状态为已领取 -->
+    <update id="updateCouponMobileStatus"  parameterType="map" >
+        update t_act_coupon
+        SET coupon_status = #{couponStatus,jdbcType=INTEGER}
+        WHERE coupon_sn = #{couponSn,jdbcType=VARCHAR}
+        AND coupon_status = #{oldCouponStatus,jdbcType=INTEGER}
+    </update>
+
+
+
+  <!-- 更改优惠券状态 -->
+  <update id="updateCoupon" parameterType="com.ziroom.minsu.entity.cms.ActCouponEntity" >
+    update t_act_coupon
+    <set >
+      <if test="actSn != null" >
+        act_sn = #{actSn,jdbcType=VARCHAR},
+      </if>
+      <!-- <if test="couponSn != null" >
+        coupon_sn = #{couponSn,jdbcType=VARCHAR},
+      </if> -->
+      <if test="couponName != null" >
+        coupon_name = #{couponName,jdbcType=VARCHAR},
+      </if>
+      <if test="couponStatus != null" >
+        coupon_status = #{couponStatus,jdbcType=INTEGER},
+      </if>
+      <if test="couponSource != null" >
+        coupon_source = #{couponSource,jdbcType=INTEGER},
+      </if>
+      <if test="actUser != null" >
+        act_user = #{actUser,jdbcType=VARCHAR},
+      </if>
+      <if test="actType != null" >
+        act_type = #{actType,jdbcType=INTEGER},
+      </if>
+      <if test="actLimit != null" >
+        act_limit = #{actLimit,jdbcType=INTEGER},
+      </if>
+      <if test="actMax != null" >
+        act_max = #{actMax,jdbcType=INTEGER},
+      </if>
+      <if test="actCut != null" >
+        act_cut = #{actCut,jdbcType=INTEGER},
+      </if>
+      <if test="couponStartTime != null" >
+        coupon_start_time = #{couponStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="couponEndTime != null" >
+        coupon_end_time = #{couponEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkInTime != null" >
+        check_in_time = #{checkInTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkOutTime != null" >
+        check_out_time = #{checkOutTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isLimitHouse != null" >
+          is_limit_house = #{isLimitHouse,jdbcType=INTEGER},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE coupon_sn = #{couponSn,jdbcType=VARCHAR}
+    <if test="oldStatus != null" >
+      AND coupon_status = #{oldStatus,jdbcType=INTEGER}
+    </if>
+  </update>
+
+
+
+
+    <select id="getCountUserGroupUidNum" resultType="java.lang.Long" parameterType="map">
+        SELECT count(1) FROM t_user_coupon tu
+          INNER JOIN t_act_coupon ta ON tu.coupon_sn = ta.coupon_sn
+        WHERE tu.uid = #{uid,jdbcType=VARCHAR}
+        AND ta.group_sn = #{groupSn,jdbcType=VARCHAR}
+        AND ta.is_del = 0
+        AND tu.is_del = 0
+    </select>
+
+  <select id="countUserActCou" resultType="java.lang.Long" parameterType="map">
+    SELECT count(*) FROM t_user_coupon tu
+    LEFT JOIN t_act_coupon ta
+    ON tu.coupon_sn = ta.coupon_sn
+    WHERE tu.uid = #{uid,jdbcType=VARCHAR}
+    AND ta.act_sn = #{actSn,jdbcType=VARCHAR}
+    AND ta.is_del = 0
+    AND tu.is_del = 0
+  </select>
+
+  <select id="getOneActCou" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT  <include refid="Base_Column_List" />
+    FROM t_act_coupon USE INDEX (IDX_t_act_coupon_act_sn)
+    WHERE act_sn=#{actSn,jdbcType=VARCHAR}
+    AND coupon_status = 1
+    AND is_del = 0
+    LIMIT 1 FOR UPDATE
+</select>
+
+    <select id="getOneActCouByGroupSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT  co.id, co.act_sn, co.coupon_sn, co.coupon_name, co.coupon_status, co.coupon_source, co.act_user, co.act_type,
+            co.act_limit,co.times, co.act_max, co.act_cut, co.coupon_start_time, co.coupon_end_time, co.check_in_time, co.check_out_time,
+            co.create_id, co.create_time, co.last_modify_date, co.is_del
+        from t_act_coupon co
+        inner join t_activity ac on  ac.act_sn = co.act_sn
+        where
+         co.group_sn = #{groupSn,jdbcType=VARCHAR}
+        AND ac.act_status = 2 
+        AND co.coupon_status = 1
+        AND co.is_del = 0
+        AND ac.act_start_time <![CDATA[ <= ]]> NOW() and ac.act_end_time >= NOW()
+        LIMIT 1
+    </select>
+
+    <select id="getActCouByGroupSnAndActList" resultMap="BaseResultMap" parameterType="map" >
+        SELECT  co.id, co.act_sn, co.coupon_sn, co.coupon_name, co.coupon_status, co.coupon_source, co.act_user, co.act_type,
+        co.act_limit,co.times, co.act_max, co.act_cut, co.coupon_start_time, co.coupon_end_time, co.check_in_time, co.check_out_time,
+        co.create_id, co.create_time, co.last_modify_date, co.is_del
+        from t_act_coupon co
+        inner join t_activity ac on  ac.act_sn = co.act_sn
+        where
+        co.group_sn = #{groupSn,jdbcType=VARCHAR}
+        AND co.act_sn IN
+        <foreach collection="actSns"  item="actSn" open="(" separator="," close=")">
+            #{actSn,jdbcType=VARCHAR}
+        </foreach>
+        AND co.coupon_status = 1
+        AND co.is_del = 0
+        AND ac.act_status = 2 and ac.act_start_time <![CDATA[ <= ]]> NOW() and ac.act_end_time >= NOW()
+        LIMIT 1
+    </select>
+
+    <select id="getNoExchangeCountByGroupSn" resultType="java.lang.Long" parameterType="map">
+        SELECT count(1) FROM t_act_coupon cou
+
+        inner join t_activity ac on cou.`act_sn` = ac.`act_sn`
+        WHERE  cou.group_sn = #{groupSn,jdbcType=VARCHAR}
+        AND ac.act_status = 2
+        AND ac.act_start_time <![CDATA[ <= ]]>  NOW()
+        AND ac.act_end_time <![CDATA[ >= ]]>  NOW()
+        AND ac.is_del = 0
+        AND cou.coupon_status = 1
+
+    </select>
+
+
+    <select id="getAvailableCouponByActSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT  <include refid="Base_Column_List" />
+        FROM t_act_coupon
+        WHERE act_sn=#{actSn,jdbcType=VARCHAR}
+        AND coupon_status = 1
+        AND is_del = 0
+        LIMIT 1
+    </select>
+
+
+
+    <select id="countAvaliableCouponByActSn" resultType="java.lang.Long" parameterType="java.lang.String" >
+        SELECT count(1) FROM t_act_coupon cou
+        inner join t_activity ac on cou.`act_sn` = ac.`act_sn`
+        WHERE  cou.act_sn = #{actSn,jdbcType=VARCHAR}
+        AND ac.act_status = 2
+        AND ac.is_del = 0
+        AND cou.coupon_status = 1
+    </select>
+
+    <!-- 通过优惠券获取优惠券的actsn和status -->
+    <select id="selectActSnStatusByCouponSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        SELECT
+        coupon_sn,act_sn,coupon_status
+        FROM t_act_coupon
+        WHERE coupon_sn = #{couponSn,jdbcType=VARCHAR}
+        AND is_del = 0
+    </select>
+</mapper>

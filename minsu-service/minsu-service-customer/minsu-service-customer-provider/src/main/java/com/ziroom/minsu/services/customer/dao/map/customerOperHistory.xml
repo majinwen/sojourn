@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="customer.customerOperHistoryDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.customer.CustomerOperHistoryEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="oper_uid" property="operUid" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="audit_before_status" property="auditBeforeStatus" jdbcType="TINYINT" />
+    <result column="audit_after_status" property="auditAfterStatus" jdbcType="TINYINT" />
+    <result column="oper_remark" property="operRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, uid, oper_uid, create_time, audit_before_status, audit_after_status, oper_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_customer_oper_history
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据客户Uid查询历史记录 -->
+  <select id="selectCustomerHistoryByUid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_customer_oper_history
+    where uid = #{uid,jdbcType=VARCHAR} 
+    order by create_time desc
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_customer_oper_history
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.customer.CustomerOperHistoryEntity" >
+    insert into t_customer_oper_history (id, fid, uid, 
+      oper_uid, create_time, audit_before_status, 
+      audit_after_status, oper_remark)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{uid,jdbcType=VARCHAR}, 
+      #{operUid,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{auditBeforeStatus,jdbcType=TINYINT}, 
+      #{auditAfterStatus,jdbcType=TINYINT}, #{operRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.customer.CustomerOperHistoryEntity" >
+    insert into t_customer_oper_history
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="operUid != null" >
+        oper_uid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="auditBeforeStatus != null" >
+        audit_before_status,
+      </if>
+      <if test="auditAfterStatus != null" >
+        audit_after_status,
+      </if>
+      <if test="operRemark != null" >
+        oper_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="operUid != null" >
+        #{operUid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditBeforeStatus != null" >
+        #{auditBeforeStatus,jdbcType=TINYINT},
+      </if>
+      <if test="auditAfterStatus != null" >
+        #{auditAfterStatus,jdbcType=TINYINT},
+      </if>
+      <if test="operRemark != null" >
+        #{operRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.customer.CustomerOperHistoryEntity" >
+    update t_customer_oper_history
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="operUid != null" >
+        oper_uid = #{operUid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditBeforeStatus != null" >
+        audit_before_status = #{auditBeforeStatus,jdbcType=TINYINT},
+      </if>
+      <if test="auditAfterStatus != null" >
+        audit_after_status = #{auditAfterStatus,jdbcType=TINYINT},
+      </if>
+      <if test="operRemark != null" >
+        oper_remark = #{operRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.customer.CustomerOperHistoryEntity" >
+    update t_customer_oper_history
+    set fid = #{fid,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=VARCHAR},
+      oper_uid = #{operUid,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      audit_before_status = #{auditBeforeStatus,jdbcType=TINYINT},
+      audit_after_status = #{auditAfterStatus,jdbcType=TINYINT},
+      oper_remark = #{operRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getIsAuditPassIn30Days" resultMap="BaseResultMap" parameterType="map">
+    SELECT 
+    <include refid="Base_Column_List"/>
+    FROM t_customer_oper_history
+    WHERE uid = #{uid,jdbcType=VARCHAR}
+    AND audit_before_status = #{auditBeforeStatus,jdbcType=TINYINT}
+    AND audit_after_status = #{auditAfterStatus,jdbcType=TINYINT}
+    AND DATE_SUB(CURDATE(), INTERVAL 30 DAY ) &lt;= `create_time`  
+  </select>
+</mapper>

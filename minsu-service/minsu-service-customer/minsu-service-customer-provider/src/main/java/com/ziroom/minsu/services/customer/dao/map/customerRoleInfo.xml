@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="customer.customerRoleInfoDao" >
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.customer.CustomerRoleEntity" >
+        <!-- 基础map -->
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="fid" property="fid" jdbcType="VARCHAR" />
+        <result column="uid" property="uid" jdbcType="VARCHAR" />
+        <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+        <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+        <result column="is_frozen" property="isFrozen" jdbcType="INTEGER" />
+        <result column="is_life" property="isLife" jdbcType="INTEGER" />
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+        <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    </resultMap>
+
+
+
+
+    <sql id="info_List" >
+        <!-- 试图列表 -->
+        re.id,
+        re.fid,
+        re.uid,
+        re.role_code,
+        ro.role_name,
+        re.is_frozen,
+        ro.is_life,
+        ro.start_time,
+        ro.end_time,
+        re.create_date,
+        re.last_modify_date,
+        re.is_del
+    </sql>
+
+
+    <select id="getCustomerRoleByType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        <!-- 获取当前用户的有效角色 -->
+        select DISTINCT
+        <include refid="info_List" />
+        FROM
+        t_customer_role ro
+        INNER JOIN t_customer_resource re
+        ON ro.role_code = re.role_code
+        WHERE re.uid = #{uid,jdbcType=VARCHAR}
+        AND ro.role_code = #{roleType,jdbcType=VARCHAR}
+        AND re.is_del = 0
+        AND ro.is_del = 0
+        AND
+        (
+        ro.is_life = 1
+        OR
+        (
+        ro.is_life = 0
+        <![CDATA[
+                     AND ro.start_time <=  NOW()
+                     AND ro.end_time >= NOW()
+                 ]]>
+        )
+        )
+        ORDER BY re.last_modify_date DESC
+        limit 1
+    </select>
+
+
+
+    <select id="getCustomerRolesInfoByUid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        <!-- 获取当前用户的有效角色 -->
+        select DISTINCT
+        <include refid="info_List" />
+        FROM
+        t_customer_role ro
+        INNER JOIN t_customer_resource re
+        ON ro.role_code = re.role_code
+        WHERE re.uid = #{uid,jdbcType=VARCHAR}
+        AND re.is_del = 0
+        AND re.is_frozen = 0
+        AND ro.is_del = 0
+        AND
+        (
+            ro.is_life = 1
+            OR
+            (
+                  ro.is_life = 0
+                  <![CDATA[
+                     AND ro.start_time <=  NOW()
+                     AND ro.end_time >= NOW()
+                 ]]>
+            )
+        )
+    </select>
+
+
+    <select id="getCustomerRolesInfoByUidS" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        <!-- 获取当前用户的有效角色 没有是否冻结-->
+        select DISTINCT
+        <include refid="info_List" />
+        FROM
+        t_customer_role ro
+        INNER JOIN t_customer_resource re
+        ON ro.role_code = re.role_code
+        WHERE re.uid = #{uid,jdbcType=VARCHAR}
+        AND re.is_del = 0
+        AND ro.is_del = 0
+        AND
+        (
+        ro.is_life = 1
+        OR
+        (
+        ro.is_life = 0
+        <![CDATA[
+                     AND ro.start_time <=  NOW()
+                     AND ro.end_time >= NOW()
+                 ]]>
+        )
+        )
+    </select>
+
+</mapper>

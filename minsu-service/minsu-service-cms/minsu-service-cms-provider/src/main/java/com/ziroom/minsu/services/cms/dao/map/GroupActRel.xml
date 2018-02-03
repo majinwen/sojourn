@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.groupActRelDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.GroupActRelEntity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="fid" property="fid" jdbcType="VARCHAR"/>
+        <result column="act_sn" property="actSn" jdbcType="VARCHAR"/>
+        <result column="group_fid" property="groupFid" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP"/>
+        <result column="is_del" property="isDel" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,fid, act_sn, group_fid, create_date,last_modify_date,
+        is_del
+    </sql>
+
+    <!--逻辑删除-->
+    <update id="delGroupRelByActSn" parameterType="string">
+        UPDATE t_group_act_rel
+        SET is_del = 1
+        WHERE act_sn = #{actSn,jdbcType=VARCHAR}
+    </update>
+
+    <select id="listGroupActRelByActSn" resultMap="BaseResultMap" parameterType="string">
+        select
+        <include refid="Base_Column_List"/>
+        from t_group_act_rel
+        where act_sn = #{actSn,jdbcType=VARCHAR}
+        AND is_del = 0
+    </select>
+
+    <insert id="insert" parameterType="com.ziroom.minsu.entity.cms.GroupActRelEntity">
+        insert into t_group_act_rel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="actSn != null">
+                act_sn,
+            </if>
+            <if test="groupFid != null">
+                group_fid,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="lastModifyDate != null">
+                last_modify_date,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="fid != null">
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="actSn != null">
+                #{actSn,jdbcType=VARCHAR},
+            </if>
+            <if test="groupFid != null">
+                #{groupFid,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null">
+                #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.cms.GroupActRelEntity">
+        update t_group_act_rel
+        <set>
+            <if test="actSn != null">
+                act_sn = #{actSn,jdbcType=VARCHAR},
+            </if>
+            <if test="groupFid != null">
+                group_fid = #{groupFid,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.housePriceConfDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HousePriceConfEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="bed_fid" property="bedFid" jdbcType="VARCHAR" />
+    <result column="set_time" property="setTime" jdbcType="TIMESTAMP" />
+    <result column="price_val" property="priceVal" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_uid" property="createUid" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    hpc.id, hpc.fid, hpc.house_base_fid, hpc.room_fid, hpc.bed_fid, hpc.set_time, hpc.price_val, hpc.create_date, hpc.last_modify_date, 
+    hpc.create_uid, hpc.is_del
+  </sql>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_price_conf hpc
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 根据房间fid删除房间日价格 配置-->
+  <update id="deleteHousePriceConfByRoomFid" parameterType="map" >
+  	update t_house_price_conf hpc set hpc.is_del = 1
+  	where hpc.room_fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据房源fid删除房源价格配置 -->
+  <update id="deleteHousePriceConfByHouseFid" parameterType="map" >
+  	update t_house_price_conf hpc set hpc.is_del = 1
+  	where hpc.house_base_fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <insert id="insertHousePriceConf" parameterType="com.ziroom.minsu.entity.house.HousePriceConfEntity" >
+    insert into t_house_price_conf
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="bedFid != null" >
+        bed_fid,
+      </if>
+      <if test="setTime != null" >
+        set_time,
+      </if>
+      <if test="priceVal != null" >
+        price_val,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="createUid != null" >
+        create_uid,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null" >
+        #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="setTime != null" >
+        #{setTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="priceVal != null" >
+        #{priceVal,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+ 
+  <update id="updateHousePriceConfByFid" parameterType="com.ziroom.minsu.entity.house.HousePriceConfEntity" >
+    update t_house_price_conf
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null" >
+        bed_fid = #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="setTime != null" >
+        set_time = #{setTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="priceVal != null" >
+        price_val = #{priceVal,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUid != null" >
+        create_uid = #{createUid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 特殊时间map -->
+  <resultMap type="com.ziroom.minsu.services.house.entity.SpecialPriceVo" id="specialPriceMap">
+  	<result column="set_time" property="setDate" jdbcType="TIMESTAMP" />
+  	<result column="price_val" property="setPrice" jdbcType="INTEGER" />
+  	<result column="fid" property="fid" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 查询特殊价格 -->
+  <select id="findSpecialPrice"  parameterType="com.ziroom.minsu.services.house.dto.LeaseCalendarDto" resultMap="specialPriceMap">
+  	SELECT price_val,set_time,fid FROM t_house_price_conf 
+	WHERE is_del=0
+	<if test="startDate!=null">
+	AND set_time>=#{startDate,jdbcType=TIMESTAMP}
+	</if>
+	<if test="endDate!=null">
+	<![CDATA[ AND set_time<=#{endDate,jdbcType=TIMESTAMP}]]>
+	</if>
+	<if test="houseBaseFid!=null">
+	AND house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+	</if>
+	<if test="houseRoomFid!=null">
+	AND room_fid=#{houseRoomFid,jdbcType=VARCHAR}
+	</if>
+	<if test="bedFid!=null">
+	AND bed_fid=#{bedFid,jdbcType=VARCHAR}
+	</if>
+	<if test="startDate==null">
+		AND set_time>=#{nowDate,jdbcType=TIMESTAMP}
+	</if>
+  </select>
+  
+  <!-- 查询日期特殊价格是否存在 -->
+  <select id="findHousePriceConfByDate"  parameterType="com.ziroom.minsu.services.house.dto.HousePriceConfDto" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> 
+  	FROM t_house_price_conf hpc
+	WHERE hpc.is_del=0
+	AND hpc.set_time=#{setTime,jdbcType=TIMESTAMP}
+	<if test="houseBaseFid!=null and roomFid==null">
+	AND hpc.house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+    AND hpc.room_fid IS NULL
+	</if>
+	<if test="roomFid!=null">
+	AND hpc.room_fid=#{roomFid,jdbcType=VARCHAR}
+	</if>
+	ORDER BY hpc.create_date
+	LIMIT 1
+  </select>
+  
+   <!-- 根据fid删除房源价格配置 -->
+  <update id="deleteHousePriceConfByFid" parameterType="map" >
+  	update t_house_price_conf hpc set hpc.is_del = 1
+  	where hpc.fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+    <!-- 查询房东最后一次修改日历时间 -->
+  <select id="getLastModifyCalendarDate" parameterType="map" resultType="java.util.Date" > 
+	SELECT MAX(lst.days) last_modify_date FROM 
+		(SELECT MAX(hpc.`last_modify_date`) days FROM `t_house_price_conf` hpc 
+			RIGHT JOIN `t_house_base_msg` hbm ON hpc.`house_base_fid`=hbm.`fid`
+			 WHERE hpc.`is_del`=0 AND hbm.`landlord_uid`=#{landlordUid,jdbcType=VARCHAR}
+		UNION 
+			SELECT MAX(hpwc.`last_modify_date`) days FROM `t_house_price_week_conf` hpwc RIGHT JOIN `t_house_base_msg` hbm ON hpwc.`house_base_fid`=hbm.`fid`
+			 WHERE hpwc.`is_del`=0 AND hbm.`landlord_uid`=#{landlordUid,jdbcType=VARCHAR}
+			 
+	   UNION 
+		SELECT  MAX(hbm.`last_modify_date`) days from `t_house_base_msg` hbm WHERE hbm.`is_del`=0 AND hbm.`landlord_uid`=#{landlordUid,jdbcType=VARCHAR}
+		) lst 
+  </select>
+  
+</mapper>

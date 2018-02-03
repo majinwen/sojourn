@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd ">
+
+	<context:component-scan base-package="com.ziroom.minsu" />
+	<context:component-scan base-package="com.asura"/>
+    <!--
+	<context:property-placeholder location="classpath:jdbc.properties,classpath:rabbit.properties,classpath:application.properties" ignore-unresolvable="true" />
+       -->
+    <context:property-placeholder location="classpath*:*.properties" ignore-unresolvable="true" />
+	<!-- 启用 aspectj 动 态代理 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+    <bean id="search.messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>classpath:message/search-validator</value>
+                <value>classpath:message/search-message</value>
+                <value>classpath:org/hibernate/validator/ValidationMessages</value>
+            </list>
+        </property>
+        <property name="useCodeAsDefaultMessage" value="false"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="cacheSeconds" value="60"/>
+    </bean>
+
+
+	<!--数据源配置 -->
+	<!-- cat监控 -->
+    <bean id="stat-filter" class="com.ziroom.platform.tesla.druid.filter.CatStatFilter" />
+    <!--数据源配置 -->
+    <bean id="minsusearch.druid" abstract="true">
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${druid.initialSize}"/>
+        <property name="minIdle" value="${druid.minIdle}"/>
+        <property name="maxActive" value="${druid.maxActive}"/>
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${druid.maxWait}"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}" />
+
+        <property name="testWhileIdle" value="${druid.testWhileIdle}" />
+        <property name="testOnBorrow" value="${druid.testOnBorrow}" />
+        <property name="testOnReturn" value="${druid.testOnReturn}" />
+
+        <!-- log4j 或者 slf4j, 根据具体项目所用的log依赖选择 -->
+        <property name="filters" value="slf4j"/>
+        <property name="proxyFilters">
+            <list>
+                <ref bean="stat-filter" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- house 数据库 -->
+    <bean id="searchHouse.datasource.S" parent="minsusearch.druid"
+          class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${druid.jdbc.mysql.driverClassName}"/>
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${jdbc.house.url.slave}"/>
+        <property name="username" value="${jdbc.house.username.slave}"/>
+        <property name="password" value="${jdbc.house.password.slave}"/>
+        <property name="validationQuery" value="${druid.mysql.validationQuery}" />
+    </bean>
+
+     <bean id="searchHouse.sqlSessionFactory.S" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="searchHouse.datasource.S"/>
+    	<property name="mapperLocations" value="classpath*:com/ziroom/minsu/services/house/dao/map/*.xml"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+    </bean>
+
+    
+     <bean id="searchHouse.writeSqlSessionTemplate.S" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="searchHouse.sqlSessionFactory.S"/>
+    </bean>
+    
+    <bean id="searchHouse.MybatisDaoContext" class="com.asura.framework.dao.mybatis.base.MybatisDaoContext">
+        <property name="readSqlSessionTemplate" ref="searchHouse.writeSqlSessionTemplate.S"></property>
+    </bean>
+
+
+
+
+    <!-- order 数据库 -->
+    <bean id="searchOrder.datasource.S" parent="minsusearch.druid"
+          class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${druid.jdbc.mysql.driverClassName}"/>
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${jdbc.order.url.slave}"/>
+        <property name="username" value="${jdbc.order.username.slave}"/>
+        <property name="password" value="${jdbc.order.password.slave}"/>
+        <property name="validationQuery" value="${druid.mysql.validationQuery}" />
+    </bean>
+
+    <bean id="searchOrder.sqlSessionFactory.S" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="searchOrder.datasource.S"/>
+        <property name="mapperLocations" value="classpath*:com/ziroom/minsu/services/order/dao/map/*.xml"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+    </bean>
+
+
+    <bean id="searchOrder.writeSqlSessionTemplate.S" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="searchOrder.sqlSessionFactory.S"/>
+    </bean>
+
+    <bean id="searchOrder.MybatisDaoContext" class="com.asura.framework.dao.mybatis.base.MybatisDaoContext">
+        <property name="readSqlSessionTemplate" ref="searchOrder.writeSqlSessionTemplate.S"></property>
+    </bean>
+
+
+
+
+    <!-- bae 数据库 -->
+    <bean id="searchBase.datasource.S" parent="minsusearch.druid"
+          class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${druid.jdbc.mysql.driverClassName}"/>
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${jdbc.basedata.url.slave}"/>
+        <property name="username" value="${jdbc.basedata.username.slave}"/>
+        <property name="password" value="${jdbc.basedata.password.slave}"/>
+        <property name="validationQuery" value="${druid.mysql.validationQuery}" />
+    </bean>
+
+    <bean id="searchBase.sqlSessionFactory.S" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="searchBase.datasource.S"/>
+        <property name="mapperLocations" value="classpath*:com/ziroom/minsu/services/basedata/dao/map/*.xml"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+    </bean>
+
+
+    <bean id="searchBase.writeSqlSessionTemplate.S" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="searchBase.sqlSessionFactory.S"/>
+    </bean>
+
+    <bean id="searchBase.MybatisDaoContext" class="com.asura.framework.dao.mybatis.base.MybatisDaoContext">
+        <property name="readSqlSessionTemplate" ref="searchBase.writeSqlSessionTemplate.S"></property>
+    </bean>
+
+
+    <!-- evaluate 数据库 -->
+    <bean id="searchEvaluate.datasource.S" parent="minsusearch.druid"
+          class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${druid.jdbc.mysql.driverClassName}"/>
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${jdbc.evaluate.url.slave}"/>
+        <property name="username" value="${jdbc.evaluate.username.slave}"/>
+        <property name="password" value="${jdbc.evaluate.password.slave}"/>
+        <property name="validationQuery" value="${druid.mysql.validationQuery}" />
+    </bean>
+
+    <bean id="searchEvaluate.sqlSessionFactory.S" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="searchEvaluate.datasource.S"/>
+        <property name="mapperLocations" value="classpath*:com/ziroom/minsu/services/evaluate/dao/map/*.xml"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+    </bean>
+
+
+    <bean id="searchEvaluate.writeSqlSessionTemplate.S" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="searchEvaluate.sqlSessionFactory.S"/>
+    </bean>
+
+    <bean id="searchEvaluate.MybatisDaoContext" class="com.asura.framework.dao.mybatis.base.MybatisDaoContext">
+        <property name="readSqlSessionTemplate" ref="searchEvaluate.writeSqlSessionTemplate.S"></property>
+    </bean>
+
+
+
+    <!-- customer 数据库 -->
+    <bean id="searchCustomer.datasource.S" parent="minsusearch.druid"
+          class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${druid.jdbc.mysql.driverClassName}"/>
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${jdbc.customer.url.slave}"/>
+        <property name="username" value="${jdbc.customer.username.slave}"/>
+        <property name="password" value="${jdbc.customer.password.slave}"/>
+        <property name="validationQuery" value="${druid.mysql.validationQuery}" />
+    </bean>
+
+    <bean id="searchCustomer.sqlSessionFactory.S" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="searchCustomer.datasource.S"/>
+        <property name="mapperLocations" value="classpath*:com/ziroom/minsu/services/customer/dao/map/*.xml"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+    </bean>
+
+
+    <bean id="searchCustomer.writeSqlSessionTemplate.S" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="searchCustomer.sqlSessionFactory.S"/>
+    </bean>
+
+    <bean id="searchCustomer.MybatisDaoContext" class="com.asura.framework.dao.mybatis.base.MybatisDaoContext">
+        <property name="readSqlSessionTemplate" ref="searchCustomer.writeSqlSessionTemplate.S"></property>
+    </bean>
+
+
+
+    <!-- message 数据库 -->
+    <bean id="searchMessage.datasource.S" parent="minsusearch.druid"
+          class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${druid.jdbc.mysql.driverClassName}"/>
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${jdbc.message.url.slave}"/>
+        <property name="username" value="${jdbc.message.username.slave}"/>
+        <property name="password" value="${jdbc.message.password.slave}"/>
+        <property name="validationQuery" value="${druid.mysql.validationQuery}" />
+    </bean>
+
+    <bean id="searchMessage.sqlSessionFactory.S" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="searchMessage.datasource.S"/>
+        <property name="mapperLocations" value="classpath*:com/ziroom/minsu/services/message/dao/map/*.xml"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+    </bean>
+
+
+    <bean id="searchMessage.writeSqlSessionTemplate.S" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="searchMessage.sqlSessionFactory.S"/>
+    </bean>
+
+    <bean id="searchMessage.MybatisDaoContext" class="com.asura.framework.dao.mybatis.base.MybatisDaoContext">
+        <property name="readSqlSessionTemplate" ref="searchMessage.writeSqlSessionTemplate.S"></property>
+    </bean>
+
+</beans>

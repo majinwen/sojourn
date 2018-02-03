@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="customer.customerResourceDao" >
+
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.customer.CustomerResourceEntity" >
+        <!-- 基础map -->
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="fid" property="fid" jdbcType="VARCHAR" />
+        <result column="uid" property="uid" jdbcType="VARCHAR" />
+        <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+        <result column="is_frozen" property="isFrozen" jdbcType="INTEGER" />
+        <result column="is_ban" property="isBan" jdbcType="INTEGER" />
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+        <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+        <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    </resultMap>
+
+
+
+    <sql id="Base_Column_List" >
+        <!-- 基础列表 -->
+        id, fid,uid, role_code,  is_frozen,is_ban, create_date,
+        last_modify_date, is_del
+    </sql>
+
+
+    <!--  更新冻结状态 -->
+    <update id="updateCustomerResourceFrozen" parameterType="map" >
+        <!-- 保存用户角色信息 -->
+        update t_customer_resource
+        <set >
+            <if test="isFrozen != null" >
+                is_frozen = #{isFrozen,jdbcType=INTEGER},
+            </if>
+            <if test="isBan != null" >
+                is_ban = #{isBan,jdbcType=INTEGER},
+            </if>
+        </set>
+        WHERE fid = #{fid,jdbcType=VARCHAR}
+    </update>
+
+    <update id="cancelOrderFrozenBanCustomerRole" parameterType="map" >
+        <!-- 保存用户角色信息 -->
+        update t_customer_resource
+        SET  is_frozen = #{isFrozen,jdbcType=INTEGER}
+        WHERE fid = #{fid,jdbcType=VARCHAR}
+    </update>
+
+    <!--  更新is_frozen和is_ban状态为1 -->
+    <update id="frozenRoleInOneYear" parameterType="map" >
+        update t_customer_resource
+        SET  is_frozen = #{isFrozen,jdbcType=INTEGER},is_ban = #{isBan,jdbcType=INTEGER}
+        WHERE fid = #{fid,jdbcType=VARCHAR}
+    </update>
+
+    <insert id="insertCustomerResource" parameterType="com.ziroom.minsu.entity.customer.CustomerResourceEntity" >
+        <!-- 保存用户角色信息 -->
+        insert into t_customer_resource
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+
+            <if test="fid != null" >
+                fid,
+            </if>
+            <if test="uid != null" >
+                uid,
+            </if>
+            <if test="roleCode != null" >
+                role_code,
+            </if>
+
+            <if test="isFrozen != null" >
+                is_frozen,
+            </if>
+            <if test="isBan != null" >
+                is_ban,
+            </if>
+            <if test="createDate != null" >
+                create_date,
+            </if>
+            <if test="lastModifyDate != null" >
+                last_modify_date,
+            </if>
+            <if test="isDel != null" >
+                is_del,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+            <if test="fid != null" >
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="uid != null" >
+                #{uid,jdbcType=VARCHAR},
+            </if>
+            <if test="roleCode != null" >
+                #{roleCode,jdbcType=VARCHAR},
+            </if>
+
+            <if test="isFrozen != null" >
+                #{isFrozen,jdbcType=INTEGER},
+            </if>
+            <if test="isBan != null" >
+                #{isBan,jdbcType=INTEGER},
+            </if>
+            <if test="createDate != null" >
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastModifyDate != null" >
+                #{lastModifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null" >
+                #{isDel,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    
+   <!-- 根据uid获取所有角色 -->
+   <select id="getAllRolesByUid" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+		FROM t_customer_resource
+		WHERE uid = #{uid}
+		and is_del = 0
+   </select>
+</mapper>

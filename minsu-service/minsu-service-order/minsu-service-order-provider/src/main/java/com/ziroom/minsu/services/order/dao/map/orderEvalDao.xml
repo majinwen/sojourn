@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderEvalDao" >
+
+
+    <!--同步当前订单的初评状态 -->
+    <update id="updatePjStatuByOrderSn"  parameterType="map">
+        UPDATE t_order
+        SET
+        eva_status = #{evlPjStatus,jdbcType=INTEGER}
+        WHERE 1=1
+        <!-- 订单状态 -->
+        <if test="listOrderSn != null">
+            <if test="listOrderSn.size > 0">
+                AND order_sn in
+                <foreach collection="listOrderSn"  item="orderSn" open="(" separator="," close=")">
+                    #{orderSn,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </if>
+    </update>
+
+
+    <!-- 获取当前用户待评价的订单数量 -->
+    <select id="countUserWaitEvaNumAll" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1)  FROM t_order
+        WHERE user_uid = #{userUid,jdbcType=VARCHAR}
+        AND eva_status in (100,110)
+        AND (
+            (order_status in (40,41) )
+                OR
+            (order_status &gt;= 50 AND order_status <![CDATA[< ]]> 73 AND (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(real_end_time)) &lt; 24*60*60* #{limitDay,jdbcType=INTEGER} )
+        )
+        
+    </select>
+
+
+    <!-- 获取当前用户待评价的订单数量 -->
+    <select id="countLandWaitEvaNumAll" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(1)  FROM t_order
+        WHERE landlord_uid = #{landUid,jdbcType=VARCHAR}
+        AND eva_status in (100,101) 
+        AND order_status  &gt;= 50 AND order_status <![CDATA[< ]]> 73 AND (UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(real_end_time)) &lt; 24*60*60* #{limitDay,jdbcType=INTEGER}
+         
+    </select>
+
+
+
+</mapper>

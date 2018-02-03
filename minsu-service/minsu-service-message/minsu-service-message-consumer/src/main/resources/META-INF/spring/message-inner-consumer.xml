@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015. ziroom.
+  -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+<!-- <dubbo:reference id="evaluate.evaluateOrderService" interface="com.ziroom.minsu.services.evaluate.api.inner.EvaluateOrderService" check="false"/> -->
+<dubbo:reference id="message.sysMsgService" interface="com.ziroom.minsu.services.message.api.inner.SysMsgService" check="false"/>
+
+<dubbo:reference id="message.sysMsgManagerService" interface="com.ziroom.minsu.services.message.api.inner.SysMsgManagerService" check="false"/>
+
+<dubbo:reference id="message.msgBaseService" interface="com.ziroom.minsu.services.message.api.inner.MsgBaseService" check="false"/>
+<dubbo:reference id="message.msgHouseService" interface="com.ziroom.minsu.services.message.api.inner.MsgHouseService" check="false"/>
+<dubbo:reference id="message.msgLableService" interface="com.ziroom.minsu.services.message.api.inner.MsgLableService" check="false"/>
+<dubbo:reference id="message.msgReplySetService" interface="com.ziroom.minsu.services.message.api.inner.MsgReplySetService" check="false"/>
+<dubbo:reference id="message.sysComplainService" interface="com.ziroom.minsu.services.message.api.inner.SysComplainService" check="false"/>
+<dubbo:reference id="message.huanxinImRecordService" interface="com.ziroom.minsu.services.message.api.inner.HuanxinImRecordService" check="false"/>
+
+<dubbo:reference id="message.statusConfService" interface="com.ziroom.minsu.services.message.api.inner.StatusConfService" check="false"/>
+<dubbo:reference id="message.msgCustomizationService" interface="com.ziroom.minsu.services.message.api.inner.MsgCustomizationService" check="false"/>
+<dubbo:reference id="message.msgFirstAdvisoryService" interface="com.ziroom.minsu.services.message.api.inner.MsgFirstAdvisoryService" check="false"/>
+<dubbo:reference id="message.msgAdvisoryFollowupService" interface="com.ziroom.minsu.services.message.api.inner.MsgAdvisoryFollowupService" check="false"/>
+<dubbo:reference id="message.callHuanXinImService" interface="com.ziroom.minsu.services.message.api.inner.CallHuanXinImService" check="false"/>
+<dubbo:reference id="message.huanxinImManagerService" interface="com.ziroom.minsu.services.message.api.inner.HuanxinImManagerService" check="false"/>
+<dubbo:reference id="message.msgUserLivenessService" interface="com.ziroom.minsu.services.message.api.inner.MsgUserLivenessService" check="false"/>
+</beans>

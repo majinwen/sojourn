@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseGuardLogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseGuardLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="guard_rel_fid" property="guardRelFid" jdbcType="VARCHAR" />
+    <result column="old_guard_code" property="oldGuardCode" jdbcType="VARCHAR" />
+    <result column="old_guard_name" property="oldGuardName" jdbcType="VARCHAR" />
+    <result column="old_push_code" property="oldPushCode" jdbcType="VARCHAR" />
+    <result column="old_push_name" property="oldPushName" jdbcType="VARCHAR" />
+    <result column="creater_fid" property="createrFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    hgl.id, hgl.fid, hgl.guard_rel_fid, hgl.old_guard_code, hgl.old_guard_name, 
+    hgl.old_push_code, hgl.old_push_name, hgl.creater_fid, hgl.create_date
+  </sql>
+  
+  <select id="findHouseGuardLogByFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_guard_log hgl
+    WHERE hgl.fid = #{fid,jdbcType=VARCHAR}
+    ORDER BY hgl.create_date desc
+  </select>
+  
+  <select id="findHouseGuardLogByHouseGuardFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_guard_log hgl
+    WHERE hgl.guard_rel_fid = #{houseGuardFid,jdbcType=VARCHAR}
+    ORDER BY hgl.create_date desc
+  </select>
+  
+  <insert id="insertHouseGuardLog" parameterType="com.ziroom.minsu.entity.house.HouseGuardLogEntity" >
+    insert into t_house_guard_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="guardRelFid != null" >
+        guard_rel_fid,
+      </if>
+      <if test="oldGuardCode != null" >
+        old_guard_code,
+      </if>
+      <if test="oldGuardName != null" >
+        old_guard_name,
+      </if>
+      <if test="oldPushCode != null" >
+        old_push_code,
+      </if>
+      <if test="oldPushName != null" >
+        old_push_name,
+      </if>
+      <if test="createrFid != null" >
+        creater_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="guardRelFid != null" >
+        #{guardRelFid,jdbcType=VARCHAR},
+      </if>
+      <if test="oldGuardCode != null" >
+        #{oldGuardCode,jdbcType=VARCHAR},
+      </if>
+      <if test="oldGuardName != null" >
+        #{oldGuardName,jdbcType=VARCHAR},
+      </if>
+      <if test="oldPushCode != null" >
+        #{oldPushCode,jdbcType=VARCHAR},
+      </if>
+      <if test="oldPushName != null" >
+        #{oldPushName,jdbcType=VARCHAR},
+      </if>
+      <if test="createrFid != null" >
+        #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

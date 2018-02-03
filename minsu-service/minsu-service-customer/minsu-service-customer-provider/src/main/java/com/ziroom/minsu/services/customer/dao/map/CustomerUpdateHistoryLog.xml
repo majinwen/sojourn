@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="customer.customerUpdateHistoryLogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.customer.CustomerUpdateHistoryLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="field_path_key" property="fieldPathKey" jdbcType="VARCHAR" />
+    <result column="field_desc" property="fieldDesc" jdbcType="VARCHAR" />
+    <result column="field_path" property="fieldPath" jdbcType="VARCHAR" />
+    <result column="source_type" property="sourceType" jdbcType="INTEGER" />
+    <result column="old_value" property="oldValue" jdbcType="VARCHAR" />
+    <result column="new_value" property="newValue" jdbcType="VARCHAR" />
+    <result column="is_text" property="isText" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="creater_fid" property="createrFid" jdbcType="VARCHAR" />
+    <result column="creater_type" property="createrType" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, uid, field_path_key, field_desc, field_path, source_type, old_value, new_value, 
+    is_text, remark, creater_fid, creater_type, create_date, last_modify_date
+  </sql>
+  <select id="selectByUid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_customer_update_history_log
+    where uid = #{uid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_customer_update_history_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.customer.CustomerUpdateHistoryLogEntity" >
+    insert into t_customer_update_history_log (id, fid, uid, 
+      field_path_key, field_desc, field_path, 
+      source_type, old_value, new_value, 
+      is_text, remark, creater_fid, 
+      creater_type, create_date, last_modify_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{uid,jdbcType=VARCHAR}, 
+      #{fieldPathKey,jdbcType=VARCHAR}, #{fieldDesc,jdbcType=VARCHAR}, #{fieldPath,jdbcType=VARCHAR}, 
+      #{sourceType,jdbcType=INTEGER}, #{oldValue,jdbcType=VARCHAR}, #{newValue,jdbcType=VARCHAR}, 
+      #{isText,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createrFid,jdbcType=VARCHAR}, 
+      #{createrType,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{lastModifyDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.customer.CustomerUpdateHistoryLogEntity" >
+    insert into t_customer_update_history_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="fieldPathKey != null" >
+        field_path_key,
+      </if>
+      <if test="fieldDesc != null" >
+        field_desc,
+      </if>
+      <if test="fieldPath != null" >
+        field_path,
+      </if>
+      <if test="sourceType != null" >
+        source_type,
+      </if>
+      <if test="oldValue != null" >
+        old_value,
+      </if>
+      <if test="newValue != null" >
+        new_value,
+      </if>
+      <if test="isText != null" >
+        is_text,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createrFid != null" >
+        creater_fid,
+      </if>
+      <if test="createrType != null" >
+        creater_type,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldPathKey != null" >
+        #{fieldPathKey,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldDesc != null" >
+        #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldPath != null" >
+        #{fieldPath,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceType != null" >
+        #{sourceType,jdbcType=INTEGER},
+      </if>
+      <if test="oldValue != null" >
+        #{oldValue,jdbcType=VARCHAR},
+      </if>
+      <if test="newValue != null" >
+        #{newValue,jdbcType=VARCHAR},
+      </if>
+      <if test="isText != null" >
+        #{isText,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createrFid != null" >
+        #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        #{createrType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.customer.CustomerUpdateHistoryLogEntity" >
+    update t_customer_update_history_log
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldPathKey != null" >
+        field_path_key = #{fieldPathKey,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldDesc != null" >
+        field_desc = #{fieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldPath != null" >
+        field_path = #{fieldPath,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceType != null" >
+        source_type = #{sourceType,jdbcType=INTEGER},
+      </if>
+      <if test="oldValue != null" >
+        old_value = #{oldValue,jdbcType=VARCHAR},
+      </if>
+      <if test="newValue != null" >
+        new_value = #{newValue,jdbcType=VARCHAR},
+      </if>
+      <if test="isText != null" >
+        is_text = #{isText,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createrFid != null" >
+        creater_fid = #{createrFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createrType != null" >
+        creater_type = #{createrType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.entity.customer.CustomerUpdateHistoryLogEntity" >
+    update t_customer_update_history_log
+    set fid = #{fid,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=VARCHAR},
+      field_path_key = #{fieldPathKey,jdbcType=VARCHAR},
+      field_desc = #{fieldDesc,jdbcType=VARCHAR},
+      field_path = #{fieldPath,jdbcType=VARCHAR},
+      source_type = #{sourceType,jdbcType=INTEGER},
+      old_value = #{oldValue,jdbcType=VARCHAR},
+      new_value = #{newValue,jdbcType=VARCHAR},
+      is_text = #{isText,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      creater_fid = #{createrFid,jdbcType=VARCHAR},
+      creater_type = #{createrType,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getFieldAuditNewLogByParam" parameterType="map" resultType="com.ziroom.minsu.services.customer.dto.CustomerFieldAuditVo">
+      SELECT
+    t1.`id` AS id,
+    t1.`fid` AS fid,
+    t1.`uid` AS uid,
+    t1.`field_audit_statu` AS auditStatus,
+    t1.`field_path` AS fieldPath,
+    t1.`field_desc` AS fieldDesc,
+    t1.`creater_fid` AS createFid,
+    t1.`creater_type` AS createType,   
+    t2.`field_path_key` AS fieldPathKey,
+    t2.`source_type` AS sourceType,
+    t2.`is_text` AS isText,
+    t2.`remark` AS remark,
+    CASE t2.`is_text` WHEN 0 THEN t2.old_value ELSE t3.old_value END AS oldValue,
+    CASE t2.`is_text` WHEN 0 THEN t2.new_value ELSE t3.new_value END AS newValue
+    FROM
+    `t_customer_update_field_audit_newlog` t1
+    LEFT JOIN
+        (SELECT
+        tcuhl.`id`,
+        tcuhl.`fid`,
+        tcuhl.`uid`,
+        tcuhl.`field_path`,
+        tcuhl.`field_path_key`,
+        tcuhl.`field_desc`,
+        tcuhl.`source_type`,
+        tcuhl.`old_value`,
+        tcuhl.`new_value`,
+        tcuhl.`is_text`,
+        tcuhl.`remark`,
+        tcuhl.`creater_fid`,
+        tcuhl.`creater_type`,
+        tcuhl.`create_date`,
+        tcuhl.`last_modify_date`
+        FROM
+        (SELECT
+        t.`field_path_key`,
+        MAX(t.`create_date`) create_date
+        FROM
+        `t_customer_update_history_log` t
+        GROUP BY t.`field_path_key`) tt
+        JOIN `t_customer_update_history_log` tcuhl
+        WHERE tt.field_path_key = tcuhl.`field_path_key`
+        AND tt.create_date = tcuhl.`create_date`) t2
+    ON t1.`fid` = t2.`field_path_key`
+    LEFT JOIN `t_customer_update_history_ext_log` t3
+    ON t2.`fid` = t3.`fid`
+    <where>
+      t1.uid = #{uid,jdbcType=VARCHAR}
+      <if test="fieldAuditStatu != null">
+        AND t1.field_audit_statu = #{fieldAuditStatu,jdbcType=INTEGER}
+      </if>
+    </where>  
+  </select>
+</mapper>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.activityFreeDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityFreeEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="free_type" property="freeType" jdbcType="INTEGER" />
+    <result column="act_code" property="actCode" jdbcType="VARCHAR" />
+    <result column="act_name" property="actName" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, fid, uid, free_type, act_code, act_name, start_time, end_time, create_id, create_time, 
+    last_modify_date, is_del
+  </sql>
+
+
+
+  <select id="getFive" resultMap="BaseResultMap" parameterType="string" >
+    select
+    <include refid="Base_Column_List" />
+    from t_activity_free
+    where uid = #{uid,jdbcType=VARCHAR}
+    AND  is_del = 0
+    limit 1
+  </select>
+
+
+  <select id="getByUidAndCode" resultMap="BaseResultMap" parameterType="map" >
+    select
+    <include refid="Base_Column_List" />
+    from t_activity_free
+    where uid = #{uid,jdbcType=VARCHAR}
+    AND act_code = #{actCode,jdbcType=INTEGER}
+    AND  is_del = 0
+    limit 1
+  </select>
+
+
+  <select id="getByUidAndType" resultMap="BaseResultMap" parameterType="map" >
+    select
+    <include refid="Base_Column_List" />
+    from t_activity_free
+    where uid = #{uid,jdbcType=VARCHAR}
+    AND free_type = #{freeType,jdbcType=INTEGER}
+    AND start_time <![CDATA[ <= ]]>  NOW()
+    AND end_time <![CDATA[ >= ]]>  NOW()
+    AND  is_del = 0
+    limit 1
+  </select>
+
+
+  <select id="getLastByUidFuther" resultMap="BaseResultMap" parameterType="string" >
+    select
+    <include refid="Base_Column_List" />
+    from t_activity_free
+    where uid = #{uid,jdbcType=VARCHAR}
+    AND end_time <![CDATA[ >= ]]>  NOW()
+    AND  is_del = 0
+    ORDER BY end_time DESC
+    limit 1
+  </select>
+
+  <select id="getByUid" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_activity_free
+    where uid = #{uid,jdbcType=VARCHAR}
+    AND start_time <![CDATA[ <= ]]>  NOW()
+    AND end_time <![CDATA[ >= ]]>  NOW()
+    AND  is_del = 0
+    ORDER BY end_time DESC
+    limit 1
+  </select>
+
+
+
+  <insert id="save" parameterType="com.ziroom.minsu.entity.cms.ActivityFreeEntity" >
+    insert into t_activity_free
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="freeType != null" >
+        free_type,
+      </if>
+      <if test="actCode != null" >
+        act_code,
+      </if>
+      <if test="actName != null" >
+        act_name,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="freeType != null" >
+        #{freeType,jdbcType=INTEGER},
+      </if>
+      <if test="actCode != null" >
+        #{actCode,jdbcType=VARCHAR},
+      </if>
+      <if test="actName != null" >
+        #{actName,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByUid" parameterType="com.ziroom.minsu.entity.cms.ActivityFreeEntity" >
+    update t_activity_free
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="freeType != null" >
+        free_type = #{freeType,jdbcType=INTEGER},
+      </if>
+      <if test="actCode != null" >
+        act_code = #{actCode,jdbcType=VARCHAR},
+      </if>
+      <if test="actName != null" >
+        act_name = #{actName,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

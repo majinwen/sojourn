@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.financePayIncomeRelDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.FinancePayIncomeRelEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pv_sn" property="pvSn" jdbcType="VARCHAR" />
+    <result column="pv_order_sn" property="pvOrderSn" jdbcType="VARCHAR" />
+    <result column="income_sn" property="incomeSn" jdbcType="VARCHAR" />
+    <result column="tran_fee" property="tranFee" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pv_sn,pv_order_sn,income_sn,tran_fee,create_time, is_del
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_finance_pay_income_rel
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.order.FinancePayIncomeRelEntity" >
+    insert into t_finance_pay_income_rel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="pvSn != null" >
+        pv_sn,
+      </if>
+      <if test="pvOrderSn != null" >
+        pv_order_sn,
+      </if>
+      <if test="incomeSn != null" >
+        income_sn,
+      </if>
+      <if test="tranFee != null" >
+        tran_fee,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="pvSn != null" >
+        #{pvSn,jdbcType=VARCHAR},
+      </if>
+      <if test="pvOrderSn != null" >
+        #{pvOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="incomeSn != null" >
+        #{incomeSn,jdbcType=VARCHAR},
+      </if>
+      <if test="tranFee != null" >
+        #{tranFee,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>

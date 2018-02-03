@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.employeeDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.sys.EmployeeEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="emp_code" property="empCode" jdbcType="VARCHAR" />
+    <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+    <result column="emp_sex" property="empSex" jdbcType="INTEGER" />
+    <result column="emp_mail" property="empMail" jdbcType="VARCHAR" />
+    <result column="emp_mobile" property="empMobile" jdbcType="VARCHAR" />
+    <result column="emp_valid" property="empValid" jdbcType="TINYINT" />
+    <result column="post_code" property="postCode" jdbcType="VARCHAR" />
+    <result column="post_name" property="postName" jdbcType="VARCHAR" />
+    <result column="depart_code" property="departCode" jdbcType="VARCHAR" />
+    <result column="depart_name" property="departName" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="ehr_city_code" property="ehrCityCode" jdbcType="VARCHAR" />
+    <result column="center_code" property="centerCode" jdbcType="VARCHAR" />
+    <result column="center" property="center" jdbcType="VARCHAR" />
+    <result column="group_code" property="groupCode" jdbcType="VARCHAR" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="brance_company_code" property="branceCompanyCode" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+   id, fid, emp_code, emp_name, emp_sex, emp_mail, emp_mobile, emp_valid, post_code, 
+    post_name, depart_code, depart_name, city_code, is_del, create_date, last_modify_date, 
+    create_fid, ehr_city_code, center_code, center, group_code, group_name, brance_company_code
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_sys_employee
+    where id = #{id,jdbcType=VARCHAR} ;
+  </select>
+  
+  <!-- 查询同步员工数据 -->
+   <select id="selectByEmployCodeAndStatus" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_sys_employee
+    where  emp_valid = 0 AND is_del = 0 AND emp_code = #{empCode,jdbcType=INTEGER} LIMIT 1
+  </select>
+  
+  <!-- 查询同步员工数据 -->
+   <select id="selectByEmployFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_sys_employee
+    where  emp_valid = 0 AND is_del = 0 AND fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 分页查询员工信息 -->
+  <select id="findEmployeeForPage" parameterType="com.ziroom.minsu.services.basedata.dto.EmployeeRequest" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from t_sys_employee
+    where is_del=0
+    and emp_valid = 0
+    <if test="empCode != null and empCode != ''" >
+      and emp_code LIKE CONCAT(#{empCode,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="empName != null and empName != ''" >
+      and emp_name LIKE CONCAT(#{empName,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="empMobile != null and empMobile != ''" >
+      and emp_mobile LIKE CONCAT(#{empMobile,jdbcType=VARCHAR}, '%')
+    </if>
+  </select>
+  
+  <!-- 查询员工信息 -->
+  <select id="findEmployeeList" parameterType="com.ziroom.minsu.services.basedata.dto.EmployeeRequest" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from t_sys_employee
+    where is_del=0
+    and emp_valid = 0
+    <if test="empCode != null and empCode != ''" >
+      and emp_code LIKE CONCAT(#{empCode,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="empName != null and empName != ''" >
+      and emp_name LIKE CONCAT(#{empName,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="empMobile != null and empMobile != ''" >
+      and emp_mobile LIKE CONCAT(#{empMobile,jdbcType=VARCHAR}, '%')
+    </if>
+  </select>
+  
+ <!-- 同步员工 -->
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.sys.EmployeeEntity" >
+    insert into t_sys_employee
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="empCode != null" >
+        emp_code,
+      </if>
+      <if test="empName != null" >
+        emp_name,
+      </if>
+      <if test="empSex != null" >
+        emp_sex,
+      </if>
+      <if test="empMail != null" >
+        emp_mail,
+      </if>
+      <if test="empMobile != null" >
+        emp_mobile,
+      </if>
+      <if test="empValid != null" >
+        emp_valid,
+      </if>
+      <if test="postCode != null" >
+        post_code,
+      </if>
+      <if test="postName != null" >
+        post_name,
+      </if>
+      <if test="departCode != null" >
+        depart_code,
+      </if>
+      <if test="departName != null" >
+        depart_name,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="ehrCityCode != null" >
+        ehr_city_code,
+      </if>
+      <if test="centerCode != null" >
+        center_code,
+      </if>
+      <if test="center != null" >
+        center,
+      </if>
+      <if test="groupCode != null" >
+        group_code,
+      </if>
+      <if test="groupName != null" >
+        group_name,
+      </if>
+      <if test="branceCompanyCode != null" >
+        brance_company_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="empCode != null" >
+        #{empCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empName != null" >
+        #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empSex != null" >
+        #{empSex,jdbcType=INTEGER},
+      </if>
+      <if test="empMail != null" >
+        #{empMail,jdbcType=VARCHAR},
+      </if>
+      <if test="empMobile != null" >
+        #{empMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="empValid != null" >
+        #{empValid,jdbcType=TINYINT},
+      </if>
+      <if test="postCode != null" >
+        #{postCode,jdbcType=VARCHAR},
+      </if>
+      <if test="postName != null" >
+        #{postName,jdbcType=VARCHAR},
+      </if>
+      <if test="departCode != null" >
+        #{departCode,jdbcType=VARCHAR},
+      </if>
+      <if test="departName != null" >
+        #{departName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="ehrCityCode != null" >
+        #{ehrCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="centerCode != null" >
+        #{centerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="center != null" >
+        #{center,jdbcType=VARCHAR},
+      </if>
+      <if test="groupCode != null" >
+        #{groupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null" >
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="branceCompanyCode != null" >
+        #{branceCompanyCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+ 
+  
+  <!-- 更新同步员工数据 -->
+  <update id="updateByfid" parameterType="com.ziroom.minsu.entity.sys.EmployeeEntity" >
+    update t_sys_employee
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="empCode != null" >
+        emp_code = #{empCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empName != null" >
+        emp_name = #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="empSex != null" >
+        emp_sex = #{empSex,jdbcType=INTEGER},
+      </if>
+      <if test="empMail != null" >
+        emp_mail = #{empMail,jdbcType=VARCHAR},
+      </if>
+      <if test="empMobile != null" >
+        emp_mobile = #{empMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="empValid != null" >
+        emp_valid = #{empValid,jdbcType=TINYINT},
+      </if>
+      <if test="postCode != null" >
+        post_code = #{postCode,jdbcType=VARCHAR},
+      </if>
+      <if test="postName != null" >
+        post_name = #{postName,jdbcType=VARCHAR},
+      </if>
+      <if test="departCode != null" >
+        depart_code = #{departCode,jdbcType=VARCHAR},
+      </if>
+      <if test="departName != null" >
+        depart_name = #{departName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="ehrCityCode != null" >
+        ehr_city_code = #{ehrCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="centerCode != null" >
+        center_code = #{centerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="center != null" >
+        center = #{center,jdbcType=VARCHAR},
+      </if>
+      <if test="groupCode != null" >
+        group_code = #{groupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="groupName != null" >
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="branceCompanyCode != null" >
+        brance_company_code = #{branceCompanyCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+</mapper>

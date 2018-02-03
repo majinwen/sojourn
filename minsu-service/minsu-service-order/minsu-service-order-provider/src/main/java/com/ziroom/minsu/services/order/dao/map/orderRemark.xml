@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderRemarkDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderRemarkEntity" >
+    <!--
+     
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="remark_content" property="remarkContent" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, fid, order_sn, remark_content, uid, create_time, is_del
+  </sql>
+  
+  <select id="countByOrderSn" resultType="java.lang.Long" parameterType="map" >
+    SELECT COUNT(id)
+    FROM t_order_remark
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR} 
+    AND uid = #{uid,jdbcType=VARCHAR} 
+    AND is_del = 0
+  </select>
+  
+  <select id="selectByOrderSn" resultMap="BaseResultMap" parameterType="map"  >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_order_remark
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND uid = #{uid,jdbcType=VARCHAR} 
+    AND is_del =0
+  </select>
+  
+  <update id="deleteByFid" parameterType="map"  >
+    update  t_order_remark
+    set is_del = 1
+    where fid = #{fid,jdbcType=VARCHAR}
+    AND uid=#{uid,jdbcType=VARCHAR}
+  </update>
+  
+  <insert id="insertRemarkEntity" parameterType="com.ziroom.minsu.entity.order.OrderRemarkEntity" >
+    insert into t_order_remark
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="remarkContent != null" >
+        remark_content,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="remarkContent != null" >
+        #{remarkContent,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+ </mapper>

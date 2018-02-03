@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.financeCashbackDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.FinanceCashbackEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="cashback_sn" property="cashbackSn" jdbcType="VARCHAR" />
+    <result column="cashback_status" property="cashbackStatus" jdbcType="INTEGER" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="pv_sn" property="pvSn" jdbcType="VARCHAR" />
+    <result column="fill_sn" property="fillSn" jdbcType="VARCHAR" />
+    <result column="act_sn" property="actSn" jdbcType="VARCHAR" />
+    <result column="receive_type" property="receiveType" jdbcType="INTEGER" />
+    <result column="receive_uid" property="receiveUid" jdbcType="VARCHAR" />
+    <result column="total_fee" property="totalFee" jdbcType="INTEGER" />
+    <result column="apply_remark" property="applyRemark" jdbcType="VARCHAR" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
+  
+  <resultMap type="com.ziroom.minsu.services.order.entity.AuditCashbackVo" id="AuditCashbackVoMap" extends="BaseResultMap">
+  </resultMap>
+  
+  
+  
+  
+  <sql id="Base_Column_List" >
+    tfc.id, tfc.cashback_sn, tfc.cashback_status, tfc.order_sn, tfc.pv_sn, tfc.fill_sn, tfc.act_sn, tfc.receive_type, 
+    tfc.receive_uid, tfc.total_fee, tfc.apply_remark, tfc.create_id, tfc.create_time, tfc.last_modify_date,tfc.is_del
+  </sql>
+  
+  
+  <select id="queryByCashbackSn" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_finance_cashback tfc
+    WHERE cashback_sn = #{cashbackSn,jdbcType=VARCHAR}
+    AND is_del = 0
+    LIMIT 1
+  </select>
+  
+  <select id="queryByOrderSnFillSn" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_finance_cashback tfc
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND fill_sn = #{fillSn,jdbcType=VARCHAR}
+    AND is_del = 0
+    LIMIT 1
+  </select>
+  
+  <select id="queryByCashbackSns" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_finance_cashback tfc
+    WHERE cashback_sn in
+	<foreach collection="cashbackSns"  item="cashbackSn" open="(" separator="," close=")">
+		#{cashbackSn,jdbcType=VARCHAR}
+    </foreach>
+    AND is_del = 0
+  </select>
+  
+  <!-- 根据条件分页查询（PS:和下面sumFeeByCondition查询条件保持一致） -->
+  <select id="queryByCondition" resultMap="AuditCashbackVoMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_finance_cashback tfc
+    <where>
+		<if test="cashbackSn != null and cashbackSn != ''">
+			AND cashback_sn = #{cashbackSn,jdbcType=VARCHAR}
+		</if>
+		<if test="orderSn != null and orderSn != ''">
+			AND order_sn = #{orderSn,jdbcType=VARCHAR}
+		</if>
+		<if test="cashbackStatus != null and cashbackStatus != ''">
+			AND cashback_status = #{cashbackStatus,jdbcType=INTEGER}
+		</if>
+		<if test="actSn != null and actSn != ''">
+			AND act_sn = #{actSn,jdbcType=VARCHAR}
+		</if>
+		<if test="receiveType != null and receiveType != ''">
+			AND receive_type = #{receiveType,jdbcType=INTEGER}
+		</if>
+		<if test="receiveUidList != null and receiveUidList.size > 0">
+			AND receive_uid in
+			<foreach collection="receiveUidList"  item="receiveUid" open="(" separator="," close=")">
+				#{receiveUid,jdbcType=VARCHAR}
+	        </foreach>
+		</if>
+		<if test="operTimeStart != null and operTimeStart != ''">
+			AND EXISTS 
+			(SELECT 1 FROM t_finance_cashback_log t WHERE tfc.cashback_sn=t.cashback_sn AND t.to_status IN (20, 30) AND t.create_date>=#{operTimeStart,jdbcType=VARCHAR})
+		</if>
+		<if test="operTimeEnd != null and operTimeEnd != ''">
+			AND EXISTS 
+			(SELECT 1 FROM t_finance_cashback_log t WHERE tfc.cashback_sn=t.cashback_sn AND t.to_status IN (20, 30) AND t.create_date &lt;=#{operTimeEnd,jdbcType=VARCHAR})
+		</if>
+		<if test="createTimeStart != null and createTimeStart != ''">
+			AND create_time <![CDATA[ >= ]]> #{createTimeStart,jdbcType=VARCHAR}
+		</if>
+		<if test="createTimeEnd != null and createTimeEnd != ''">
+			AND create_time <![CDATA[ <= ]]> #{createTimeEnd,jdbcType=VARCHAR}
+		</if>
+		AND is_del = 0
+    </where>
+    ORDER BY id DESC
+  </select>
+  <!-- 根据条件计算总金额（PS:和上面queryByCondition查询条件保持一致） -->
+  <select id="sumFeeByCondition" resultType="long" parameterType="com.ziroom.minsu.services.order.dto.AuditCashbackQueryRequest" >
+    SELECT IFNULL(SUM(total_fee),0) FROM t_finance_cashback tfc
+    <where>
+		<if test="cashbackSn != null and cashbackSn != ''">
+			AND cashback_sn = #{cashbackSn,jdbcType=VARCHAR}
+		</if>
+		<if test="orderSn != null and orderSn != ''">
+			AND order_sn = #{orderSn,jdbcType=VARCHAR}
+		</if>
+		<if test="cashbackStatus != null and cashbackStatus != ''">
+			AND cashback_status = #{cashbackStatus,jdbcType=INTEGER}
+		</if>
+		<if test="actSn != null and actSn != ''">
+			AND act_sn = #{actSn,jdbcType=VARCHAR}
+		</if>
+		<if test="receiveType != null and receiveType != ''">
+			AND receive_type = #{receiveType,jdbcType=INTEGER}
+		</if>
+		<if test="receiveUidList != null and receiveUidList.size > 0">
+			AND receive_uid in
+			<foreach collection="receiveUidList"  item="receiveUid" open="(" separator="," close=")">
+				#{receiveUid,jdbcType=VARCHAR}
+	        </foreach>
+		</if>
+		<if test="operTimeStart != null and operTimeStart != ''">
+			AND EXISTS 
+			(SELECT 1 FROM t_finance_cashback_log t WHERE tfc.cashback_sn=t.cashback_sn AND t.to_status IN (20, 30) AND t.create_date>=#{operTimeStart,jdbcType=VARCHAR})
+		</if>
+		<if test="operTimeEnd != null and operTimeEnd != ''">
+			AND EXISTS 
+			(SELECT 1 FROM t_finance_cashback_log t WHERE tfc.cashback_sn=t.cashback_sn AND t.to_status IN (20, 30) AND t.create_date &lt;=#{operTimeEnd,jdbcType=VARCHAR})
+		</if>
+		<if test="createTimeStart != null and createTimeStart != ''">
+			AND create_time <![CDATA[ >= ]]> #{createTimeStart,jdbcType=VARCHAR}
+		</if>
+		<if test="createTimeEnd != null and createTimeEnd != ''">
+			AND create_time <![CDATA[ <= ]]> #{createTimeEnd,jdbcType=VARCHAR}
+		</if>
+		AND is_del = 0
+    </where>
+  </select>
+  
+  
+  <select id="countByOrderSn" resultType="long" parameterType="map" >
+    SELECT COUNT(id) FROM t_finance_cashback
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}    
+  </select>
+  
+   <select id="countByOrderSnNew" resultType="long" parameterType="map" >
+    SELECT COUNT(id) FROM t_finance_cashback
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR} AND is_del = 0    
+  </select>
+  
+  
+  <update id="auditCashbackStatus" parameterType="map" >
+    UPDATE t_finance_cashback
+    SET cashback_status = #{cashbackStatus,jdbcType=INTEGER},
+    pv_sn = #{pvSn,jdbcType=VARCHAR},
+    fill_sn = #{fillSn,jdbcType=VARCHAR}
+    WHERE cashback_sn = #{cashbackSn,jdbcType=VARCHAR}
+    AND cashback_status = #{oldCashbackStatus,jdbcType=INTEGER}
+  </update>
+  
+  <update id="rejectCashbackStatus" parameterType="map" >
+    UPDATE t_finance_cashback
+    SET cashback_status = #{cashbackStatus,jdbcType=INTEGER},
+    pv_sn = #{pvSn,jdbcType=VARCHAR}
+    WHERE cashback_sn = #{cashbackSn,jdbcType=VARCHAR}
+    AND cashback_status = #{oldCashbackStatus,jdbcType=INTEGER}
+  </update>
+  
+
+  <insert id="insert" parameterType="com.ziroom.minsu.entity.order.FinanceCashbackEntity" >
+    insert into t_finance_cashback
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cashbackSn != null" >
+        cashback_sn,
+      </if>
+      <if test="cashbackStatus != null" >
+        cashback_status,
+      </if>
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="pvSn != null" >
+        pv_sn,
+      </if>
+      <if test="fillSn != null" >
+        fill_sn,
+      </if>
+      <if test="actSn != null" >
+        act_sn,
+      </if>
+      <if test="receiveType != null" >
+        receive_type,
+      </if>
+      <if test="receiveUid != null" >
+        receive_uid,
+      </if>
+      <if test="totalFee != null" >
+        total_fee,
+      </if>
+      <if test="applyRemark != null" >
+        apply_remark,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cashbackSn != null" >
+        #{cashbackSn,jdbcType=VARCHAR},
+      </if>
+      <if test="cashbackStatus != null" >
+        #{cashbackStatus,jdbcType=INTEGER},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="pvSn != null" >
+        #{pvSn,jdbcType=VARCHAR},
+      </if>
+      <if test="fillSn != null" >
+        #{fillSn,jdbcType=VARCHAR},
+      </if>
+      <if test="actSn != null" >
+        #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveType != null" >
+        #{receiveType,jdbcType=INTEGER},
+      </if>
+      <if test="receiveUid != null" >
+        #{receiveUid,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFee != null" >
+        #{totalFee,jdbcType=INTEGER},
+      </if>
+      <if test="applyRemark != null" >
+        #{applyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="com.ziroom.minsu.entity.order.FinanceCashbackEntity" >
+    update t_finance_cashback
+    <set >
+      <if test="cashbackSn != null" >
+        cashback_sn = #{cashbackSn,jdbcType=VARCHAR},
+      </if>
+      <if test="cashbackStatus != null" >
+        cashback_status = #{cashbackStatus,jdbcType=INTEGER},
+      </if>
+      <if test="orderSn != null" >
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="pvSn != null" >
+        pv_sn = #{pvSn,jdbcType=VARCHAR},
+      </if>
+      <if test="fillSn != null" >
+        fill_sn = #{fillSn,jdbcType=VARCHAR},
+      </if>
+      <if test="actSn != null" >
+        act_sn = #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveType != null" >
+        receive_type = #{receiveType,jdbcType=INTEGER},
+      </if>
+      <if test="receiveUid != null" >
+        receive_uid = #{receiveUid,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFee != null" >
+        total_fee = #{totalFee,jdbcType=INTEGER},
+      </if>
+      <if test="applyRemark != null" >
+        apply_remark = #{applyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createId != null" >
+        create_id = #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据条件分页查询（PS:和下面sumFeeByCondition查询条件保持一致） 权限相关-->
+  <select id="specialQueryByCondition" resultMap="AuditCashbackVoMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_finance_cashback tfc
+    LEFT JOIN `t_order` torder ON tfc.`order_sn`=torder.`order_sn`
+	LEFT JOIN `t_order_house_snapshot` tohs ON torder.`order_sn`=tohs.`order_sn`
+    <where>
+		<if test="cashbackSn != null and cashbackSn != ''">
+			AND tfc.cashback_sn = #{cashbackSn,jdbcType=VARCHAR}
+		</if>
+		<if test="orderSn != null and orderSn != ''">
+			AND tfc.order_sn = #{orderSn,jdbcType=VARCHAR}
+		</if>
+		<if test="cashbackStatus != null and cashbackStatus != ''">
+			AND tfc.cashback_status = #{cashbackStatus,jdbcType=INTEGER}
+		</if>
+		<if test="actSn != null and actSn != ''">
+			AND tfc.act_sn = #{actSn,jdbcType=VARCHAR}
+		</if>
+		<if test="receiveType != null and receiveType != ''">
+			AND tfc.receive_type = #{receiveType,jdbcType=INTEGER}
+		</if>
+		<if test="receiveUidList != null and receiveUidList.size > 0">
+			AND tfc.receive_uid in
+			<foreach collection="receiveUidList"  item="receiveUid" open="(" separator="," close=")">
+				#{receiveUid,jdbcType=VARCHAR}
+	        </foreach>
+		</if>
+		<if test="operTimeStart != null and operTimeStart != ''">
+			AND EXISTS 
+			(SELECT 1 FROM t_finance_cashback_log t WHERE tfc.cashback_sn=t.cashback_sn AND t.to_status IN (20, 30) AND t.create_date>=#{operTimeStart,jdbcType=VARCHAR})
+		</if>
+		<if test="operTimeEnd != null and operTimeEnd != ''">
+			AND EXISTS 
+			(SELECT 1 FROM t_finance_cashback_log t WHERE tfc.cashback_sn=t.cashback_sn AND t.to_status IN (20, 30) AND t.create_date &lt;=#{operTimeEnd,jdbcType=VARCHAR})
+		</if>
+		<if test="createTimeStart != null and createTimeStart != ''">
+			AND tfc.create_time <![CDATA[ >= ]]> #{createTimeStart,jdbcType=VARCHAR}
+		</if>
+		<if test="createTimeEnd != null and createTimeEnd != ''">
+			AND tfc.create_time <![CDATA[ <= ]]> #{createTimeEnd,jdbcType=VARCHAR}
+		</if>
+		<if test="houseFids != null and houseFids.size > 0">
+            AND tohs.house_fid in
+            <foreach collection="houseFids" item="houseFid" open="(" separator="," close=")">
+                #{houseFid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+		AND tfc.is_del = 0
+    </where>
+    ORDER BY id DESC
+  </select>
+  
+  <!-- 根据条件计算总金额（PS:和上面queryByCondition查询条件保持一致） 权限相关-->
+  <select id="specialSumFeeByCondition" resultType="long" parameterType="map" >
+    SELECT IFNULL(SUM(tfc.total_fee),0)
+    FROM t_finance_cashback tfc
+    LEFT JOIN `t_order` torder ON tfc.`order_sn`=torder.`order_sn`
+	LEFT JOIN `t_order_house_snapshot` tohs ON torder.`order_sn`=tohs.`order_sn`
+    <where>
+		<if test="cashbackSn != null and cashbackSn != ''">
+			AND tfc.cashback_sn = #{cashbackSn,jdbcType=VARCHAR}
+		</if>
+		<if test="orderSn != null and orderSn != ''">
+			AND tfc.order_sn = #{orderSn,jdbcType=VARCHAR}
+		</if>
+		<if test="cashbackStatus != null and cashbackStatus != ''">
+			AND tfc.cashback_status = #{cashbackStatus,jdbcType=INTEGER}
+		</if>
+		<if test="actSn != null and actSn != ''">
+			AND tfc.act_sn = #{actSn,jdbcType=VARCHAR}
+		</if>
+		<if test="receiveType != null and receiveType != ''">
+			AND tfc.receive_type = #{receiveType,jdbcType=INTEGER}
+		</if>
+		<if test="receiveUidList != null and receiveUidList.size > 0">
+			AND tfc.receive_uid in
+			<foreach collection="receiveUidList"  item="receiveUid" open="(" separator="," close=")">
+				#{receiveUid,jdbcType=VARCHAR}
+	        </foreach>
+		</if>
+		<if test="operTimeStart != null and operTimeStart != ''">
+			AND EXISTS 
+			(SELECT 1 FROM t_finance_cashback_log t WHERE tfc.cashback_sn=t.cashback_sn AND t.to_status IN (20, 30) AND t.create_date>=#{operTimeStart,jdbcType=VARCHAR})
+		</if>
+		<if test="operTimeEnd != null and operTimeEnd != ''">
+			AND EXISTS 
+			(SELECT 1 FROM t_finance_cashback_log t WHERE tfc.cashback_sn=t.cashback_sn AND t.to_status IN (20, 30) AND t.create_date &lt;=#{operTimeEnd,jdbcType=VARCHAR})
+		</if>
+		<if test="createTimeStart != null and createTimeStart != ''">
+			AND tfc.create_time <![CDATA[ >= ]]> #{createTimeStart,jdbcType=VARCHAR}
+		</if>
+		<if test="createTimeEnd != null and createTimeEnd != ''">
+			AND tfc.create_time <![CDATA[ <= ]]> #{createTimeEnd,jdbcType=VARCHAR}
+		</if>
+		<if test="houseFids != null and houseFids.size > 0">
+            AND tohs.house_fid in
+            <foreach collection="houseFids" item="houseFid" open="(" separator="," close=")">
+                #{houseFid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+		AND tfc.is_del = 0
+    </where>
+  </select>
+  
+  <select id="getByOrderSnAndPvsn" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_finance_cashback tfc
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND pv_sn = #{pvSn,jdbcType=VARCHAR}
+    AND is_del = 0
+    LIMIT 1
+  </select>
+  
+  <select id="countByLanlordUidAndActSn" resultType="long" parameterType="map" >
+    SELECT COUNT(1) FROM t_finance_cashback
+    WHERE receive_uid = #{lanlordUid,jdbcType=VARCHAR}
+    AND act_sn = #{actSn,jdbcType=VARCHAR}
+     AND receive_type = 1
+  </select>
+  
+  <select id="getHasCashBackNum" resultType="long" parameterType="map" >
+    SELECT COUNT(1) FROM t_finance_cashback
+    WHERE receive_uid = #{uid,jdbcType=VARCHAR}
+    AND act_sn = #{actSn,jdbcType=VARCHAR}
+    AND is_del=0
+  </select>
+</mapper>

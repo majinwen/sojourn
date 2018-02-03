@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.orderConfigDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.OrderConfigEntity" >
+    <!-- 基础map -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="config_code" property="configCode" jdbcType="VARCHAR" />
+    <result column="config_value" property="configValue" jdbcType="VARCHAR" />
+      <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    <!--  基础列集合 -->
+    id, order_sn, config_code, config_value,is_valid
+  </sql>
+
+  <select id="getOrderConfigList" resultMap="BaseResultMap"  >
+    <!--  -->
+    select
+    <include refid="Base_Column_List" />
+    from t_order_config
+  </select>
+
+
+    <select id="getOrderConfigByOrderSnAndCode" resultMap="BaseResultMap" parameterType="map" >
+        <!-- 通过订单号获取当前的配置信息 -->
+        select
+        <include refid="Base_Column_List" />
+        from t_order_config
+        where order_sn = #{orderSn,jdbcType=VARCHAR}
+        and  config_code = #{code,jdbcType=VARCHAR}
+        limit 1
+    </select>
+
+
+  <select id="getOrderConfigListByOrderSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    <!-- 通过订单号获取当前的配置信息 -->
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM t_order_config
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+      AND is_valid = 1
+  </select>
+
+
+  <insert id="insertOrderConfig" parameterType="com.ziroom.minsu.entity.order.OrderConfigEntity" >
+    <!-- 保存订单的配置信息-->
+    insert into t_order_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="configCode != null" >
+        config_code,
+      </if>
+      <if test="configValue != null" >
+        config_value,
+      </if>
+        <if test="isValid != null" >
+            is_valid,
+        </if>
+
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="configCode != null" >
+        #{configCode,jdbcType=VARCHAR},
+      </if>
+      <if test="configValue != null" >
+        #{configValue,jdbcType=VARCHAR},
+      </if>
+        <if test="isValid != null" >
+            #{isValid,jdbcType=INTEGER},
+        </if>
+    </trim>
+  </insert>
+  
+  <update id="updateOrderConfValue" parameterType="map">
+        update t_order_config set config_value =#{confValue}
+		where order_sn=#{orderSn}
+		and config_code=#{confCode}
+  </update>
+
+</mapper>

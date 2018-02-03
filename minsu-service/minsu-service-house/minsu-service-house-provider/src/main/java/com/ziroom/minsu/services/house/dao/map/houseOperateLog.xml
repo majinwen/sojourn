@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseOperateLogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseOperateLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="bed_fid" property="bedFid" jdbcType="VARCHAR" />
+    <result column="cause" property="cause" jdbcType="INTEGER" />
+    <result column="audit_cause" property="auditCause" jdbcType="VARCHAR" />
+    <result column="from_status" property="fromStatus" jdbcType="INTEGER" />
+    <result column="to_status" property="toStatus" jdbcType="INTEGER" />
+    <result column="operate_type" property="operateType" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    hol.id, hol.fid, hol.house_base_fid, hol.room_fid, hol.bed_fid, hol.from_status, hol.to_status, hol.operate_type, 
+    hol.remark, hol.create_fid, hol.create_date, hol.cause, hol.audit_cause
+  </sql>
+
+  <!-- 查询房源操作日志 -->
+  <select id="findHouseOperateLogList" resultMap="BaseResultMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_operate_log hol
+    WHERE hol.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+    AND hol.from_status in
+    <foreach collection="fromList" item="fromStatus" open="(" separator="," close=")">
+    	#{fromStatus,jdbcType=INTEGER}  
+    </foreach>
+    ORDER BY hol.create_date desc
+  </select>
+  
+  <!-- 查询审核未通过次数-->
+  <select id="findHouseAuditNoLogTime" parameterType="com.ziroom.minsu.entity.house.HouseOperateLogEntity" resultType="int">
+  	<!-- SELECT 
+		COUNT(id)
+	FROM t_house_operate_log
+	WHERE 
+	<if test="houseBaseFid != null">
+		and house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+	</if>
+	<if test="roomFid != null">
+		and room_fid=#{roomFid,jdbcType=VARCHAR}
+	</if>
+	<if test="fromStatus != null">
+		and from_status=#{fromStatus,jdbcType=INTEGER}
+	</if>
+	<if test="toStatus != null">
+		and to_status=#{toStatus,jdbcType=INTEGER}
+	</if> -->
+	SELECT
+	COUNT(id)
+	FROM t_house_operate_log
+	WHERE 1=1
+	<if test="houseBaseFid != null">
+		and house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+	</if>
+	<if test="roomFid != null">
+		and room_fid=#{roomFid,jdbcType=VARCHAR}
+	</if>
+	and from_status=#{fromStatus,jdbcType=INTEGER}
+	and to_status=#{toStatus,jdbcType=INTEGER}
+  </select>	
+  
+  <!-- 查询房间操作日志 -->
+  <select id="findRoomOperateLogList" resultMap="BaseResultMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_operate_log hol
+    WHERE hol.room_fid = #{houseRoomFid,jdbcType=VARCHAR}
+    AND hol.from_status in
+    <foreach collection="fromList" item="fromStatus" open="(" separator="," close=")">
+    	#{fromStatus,jdbcType=INTEGER}  
+    </foreach>
+    ORDER BY hol.create_date desc
+  </select>
+  
+  <!-- 查询日志 -->
+  <select id="findOperateLogList" resultMap="BaseResultMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_operate_log hol
+    WHERE 1 = 1
+    <if test="houseFid != null and houseFid != ''">
+	  AND hol.house_base_fid = #{houseFid,jdbcType=VARCHAR}
+    </if>
+    <if test="roomFid != null and roomFid != ''">
+      AND hol.room_fid = #{roomFid,jdbcType=VARCHAR}
+    </if>
+    <if test="toStatus != null">
+	  AND hol.to_status = #{toStatus,jdbcType=INTEGER}
+    </if>
+    <if test="operateType != null">
+      AND hol.operate_type = #{operateType,jdbcType=INTEGER}
+    </if>
+    ORDER BY hol.create_date desc
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_house_operate_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insertHouseOperateLog" parameterType="com.ziroom.minsu.entity.house.HouseOperateLogEntity" >
+    insert into t_house_operate_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="bedFid != null" >
+        bed_fid,
+      </if>
+      <if test="cause != null" >
+        cause,
+      </if>
+      <if test="auditCause != null" >
+        audit_cause,
+      </if>
+      <if test="fromStatus != null" >
+        from_status,
+      </if>
+      <if test="toStatus != null" >
+        to_status,
+      </if>
+      <if test="operateType != null" >
+        operate_type,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="bedFid != null" >
+        #{bedFid,jdbcType=VARCHAR},
+      </if>
+      <if test="cause != null" >
+        #{cause,jdbcType=INTEGER},
+      </if>
+      <if test="auditCause != null" >
+        #{auditCause,jdbcType=VARCHAR},
+      </if>
+      <if test="fromStatus != null" >
+        #{fromStatus,jdbcType=INTEGER},
+      </if>
+      <if test="toStatus != null" >
+        #{toStatus,jdbcType=INTEGER},
+      </if>
+      <if test="operateType != null" >
+        #{operateType,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 查询最早的一次从一个状态到另一个状态 -->
+  <select id="findFirstChangeStauts" resultMap="BaseResultMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_operate_log hol
+    WHERE 1 = 1
+    <if test="houseFid != null and houseFid != ''">
+	  AND hol.house_base_fid = #{houseFid,jdbcType=VARCHAR}
+    </if>
+    <if test="roomFid != null and roomFid != ''">
+      AND hol.room_fid = #{roomFid,jdbcType=VARCHAR}
+    </if>
+    <if test="toStatus != null">
+	  AND hol.to_status = #{toStatus,jdbcType=INTEGER}
+    </if>
+    <if test="fromStatus != null">
+      AND hol.from_status = #{fromStatus,jdbcType=INTEGER}
+    </if>
+    ORDER BY hol.create_date
+    limit 1
+  </select>
+  
+  <!-- 查询到某一个状态的次数 -->
+  <select id="findToStatusNum" resultType="int"  parameterType="map">
+  	SELECT COUNT(id) FROM `t_house_operate_log` WHERE 
+  	house_base_fid=#{houseBaseFid,jdbcType=VARCHAR}
+  	AND to_status=#{toStatus,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询最后一次品质审核未通过记录 -->
+  <select id="findLastHouseLog" resultMap="BaseResultMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_operate_log hol
+    WHERE 1 = 1
+    <if test="houseFid != null and houseFid != ''">
+	  AND hol.house_base_fid = #{houseFid,jdbcType=VARCHAR}
+    </if>
+    <if test="roomFid != null and roomFid != ''">
+      AND hol.room_fid = #{roomFid,jdbcType=VARCHAR}
+    </if>
+	AND hol.to_status = 30
+    ORDER BY hol.create_date DESC
+    limit 1
+  </select>
+</mapper>

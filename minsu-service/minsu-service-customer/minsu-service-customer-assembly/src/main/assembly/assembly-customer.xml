@@ -1,0 +1,28 @@
+<!---->
+<assembly>
+	<id>provider</id>
+	<formats>
+		<format>tar.gz</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${project.build.outputDirectory}</directory>
+			<includes>
+				<include>minsu-service-customer-provider/bin/*</include>
+				<include>minsu-service-customer-provider/conf/*</include>
+				<include>minsu-service-customer-provider/logs/*</include>
+			</includes>
+			<fileMode>0755</fileMode>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+	</fileSets>
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>minsu-service-customer-provider/lib</outputDirectory>
+			<excludes>
+				<exclude>com.ziroom.minsu:minsu-service-customer-assembly</exclude>
+			</excludes>
+		</dependencySet>
+	</dependencySets>
+</assembly>

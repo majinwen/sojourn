@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+        <artifactId>minsu-service-message</artifactId>
+        <groupId>com.ziroom.minsu</groupId>
+        <version>0.0.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <version>${deploy.type}-0.0.1</version>
+    <artifactId>minsu-service-message-assembly</artifactId>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>make-tar-gz</id>
+                        <!-- 随便一个名字 -->
+                        <phase>package</phase>
+                        <!-- 绑定到package生命周期阶段上 -->
+                        <goals>
+                            <goal>single</goal>
+                            <!-- 只运行一次 -->
+                        </goals>
+                        <configuration>
+                            <skipAssembly>false</skipAssembly>
+                            <!-- 跳过这个执行器 -->
+                            <finalName>minsu-message</finalName>
+                            <!-- 描述符文件 -->
+                            <descriptors>
+                                <descriptor>src/main/assembly/assembly-message.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

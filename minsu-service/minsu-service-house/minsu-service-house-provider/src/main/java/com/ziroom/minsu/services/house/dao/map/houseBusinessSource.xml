@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseBusinessSourceDao" >
+
+	<!--
+      房源商机来源表映射
+    -->
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseBusinessSourceEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="business_fid" property="businessFid" jdbcType="VARCHAR" />
+    <result column="busniess_source" property="busniessSource" jdbcType="TINYINT" />
+    <result column="is_job_area" property="isJobArea" jdbcType="TINYINT" />
+    <result column="source_url" property="sourceUrl" jdbcType="VARCHAR" />
+    <result column="evaluate_num" property="evaluateNum" jdbcType="INTEGER" />
+    <result column="house_grade" property="houseGrade" jdbcType="DOUBLE" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+ 
+  <!--
+      房源商机来源表字段
+    -->
+  <sql id="Base_Column_List" >
+    id, fid, business_fid, busniess_source, is_job_area, source_url, evaluate_num, house_grade, 
+    create_fid, create_date, last_modify_date, is_del
+  </sql>
+ 
+ <!--
+     商机fid查询商机来源
+    -->
+  <select id="findBusinessSourceByBusinessFid" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_business_source
+    where business_fid = #{businessFid,jdbcType=VARCHAR}
+    limit 1
+  </select>
+  
+ 
+	<!--
+     插入房源商机来源表信息
+    -->
+  <insert id="insertHouseBusinessSourceEntity" parameterType="com.ziroom.minsu.entity.house.HouseBusinessSourceEntity" >
+    insert into t_house_business_source
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="businessFid != null" >
+        business_fid,
+      </if>
+      <if test="busniessSource != null" >
+        busniess_source,
+      </if>
+      <if test="isJobArea != null" >
+        is_job_area,
+      </if>
+      <if test="sourceUrl != null" >
+        source_url,
+      </if>
+      <if test="evaluateNum != null" >
+        evaluate_num,
+      </if>
+      <if test="houseGrade != null" >
+        house_grade,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="businessFid != null" >
+        #{businessFid,jdbcType=VARCHAR},
+      </if>
+      <if test="busniessSource != null" >
+        #{busniessSource,jdbcType=TINYINT},
+      </if>
+      <if test="isJobArea != null" >
+        #{isJobArea,jdbcType=TINYINT},
+      </if>
+      <if test="sourceUrl != null" >
+        #{sourceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateNum != null" >
+        #{evaluateNum,jdbcType=INTEGER},
+      </if>
+      <if test="houseGrade != null" >
+        #{houseGrade,jdbcType=DOUBLE},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+    <!--
+    更新房源商机来源表信息
+    -->
+  <update id="updateHouseBusinessSourceEntity" parameterType="com.ziroom.minsu.entity.house.HouseBusinessSourceEntity" >
+    update t_house_business_source
+    <set >
+      <if test="businessFid != null" >
+        business_fid = #{businessFid,jdbcType=VARCHAR},
+      </if>
+      <if test="busniessSource != null" >
+        busniess_source = #{busniessSource,jdbcType=TINYINT},
+      </if>
+      <if test="isJobArea != null" >
+        is_job_area = #{isJobArea,jdbcType=TINYINT},
+      </if>
+      <if test="sourceUrl != null" >
+        source_url = #{sourceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateNum != null" >
+        evaluate_num = #{evaluateNum,jdbcType=INTEGER},
+      </if>
+      <if test="houseGrade != null" >
+        house_grade = #{houseGrade,jdbcType=DOUBLE},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 删除房源商机来源信息 -->
+  <update id="delHouseBusinessSource"  parameterType="map">
+  	update t_house_business_source
+  	set is_del = 1
+  	where business_fid = #{businessFid,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="basedata.confTagDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.conf.ConfTagEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="tag_name" property="tagName" jdbcType="VARCHAR" />
+    <result column="tag_type" property="tagType" jdbcType="INTEGER" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_valid" property="isValid" jdbcType="TINYINT" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, tag_name, tag_type, create_fid, create_date, last_modify_date, is_valid, 
+    is_del
+  </sql>
+  <select id="selectByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_conf_tag
+    where fid =  #{fid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByFid" parameterType="java.lang.String" >
+    delete from t_conf_tag
+    where fid =  #{fid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertConfTag" parameterType="com.ziroom.minsu.entity.conf.ConfTagEntity" >
+    insert ignore into t_conf_tag (id, fid, tag_name, 
+      tag_type, create_fid, create_date, 
+      last_modify_date, is_valid, is_del
+      )
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{tagName,jdbcType=VARCHAR}, 
+      #{tagType,jdbcType=INTEGER}, #{createFid,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{isValid,jdbcType=TINYINT}, #{isDel,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelectiveConfTag" parameterType="com.ziroom.minsu.entity.conf.ConfTagEntity" >
+    insert ignore into t_conf_tag
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="tagName != null" >
+        tag_name,
+      </if>
+      <if test="tagType != null" >
+        tag_type,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="tagName != null" >
+        #{tagName,jdbcType=VARCHAR},
+      </if>
+      <if test="tagType != null" >
+        #{tagType,jdbcType=INTEGER},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=TINYINT},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByFid" parameterType="com.ziroom.minsu.entity.conf.ConfTagEntity" >
+    update t_conf_tag
+    <set > 
+      <if test="tagName != null" >
+        tag_name = #{tagName,jdbcType=VARCHAR},
+      </if>
+      <if test="tagType != null" >
+        tag_type = #{tagType,jdbcType=INTEGER},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=TINYINT},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update> 
+  
+  <select id="findByConfTagRequest" resultType="com.ziroom.minsu.services.basedata.dto.ConfTagVo" parameterType="com.ziroom.minsu.services.basedata.dto.ConfTagRequest" >
+    select 
+    	tag.fid fid,tag.tag_name tagName,tag.tag_type tagType,tag.is_valid isValid,tag.last_modify_date lastModifyDate,tag.create_fid createFid,dicm.show_name tagTypeName 
+    from `t_conf_tag` tag 
+    	left join `t_conf_dic_item` dicm on tag.`tag_type` = dicm.`item_value` 
+    	where tag.`is_del`=0 AND dicm.`dic_code`='ProductRulesEnum0022' AND dicm.`is_del` = 0 AND dicm.`item_status` =1
+    <if test="tagName != null and tagName!='' " >
+        and tag_name like CONCAT('%',#{tagName,jdbcType=VARCHAR},'%')
+    </if> 
+    <if test="tagType != null" >
+        and tag_type = #{tagType,jdbcType=INTEGER}
+    </if>
+    <if test="isValid != null" >
+        and is_valid = #{isValid,jdbcType=TINYINT}
+    </if>  
+    <if test="fids != null and fids.size > 0">
+        AND tag.fid in
+        <foreach collection="fids"  item="fid" index="index" open="(" separator="," close=")">
+            #{fid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    
+    order by tag.last_modify_date asc
+    
+  </select>
+  
+  
+  
+</mapper>

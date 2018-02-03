@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2011 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+		
+		<dubbo:provider filter="catFilter"></dubbo:provider>
+	    <dubbo:service interface="com.ziroom.minsu.services.search.api.inner.SearchService"  ref="search.searchProxy">
+	    	<dubbo:method name="getHouseList" timeout="3000" retries="3"/>
+	        <dubbo:method name="getNewHouseLst" timeout="3000" retries="3"/>
+	        <dubbo:method name="getHouseListByList" timeout="3000" retries="3"/>
+	        <dubbo:method name="getComplateTermsCommunityName" timeout="3000" retries="3"/>
+	        <dubbo:method name="getOneCommunityInfo" timeout="3000" retries="3"/>
+	        <dubbo:method name="getCommunityInfo" timeout="3000" retries="3"/>
+	        <dubbo:method name="getSuggestInfo" timeout="3000" retries="3"/>
+	        <dubbo:method name="getIkList" timeout="3000" retries="3"/>
+	        <dubbo:method name="getChangzuIkList" timeout="3000" retries="3"/>
+	        <dubbo:method name="getHouseListInfo" timeout="3000" retries="3"/>
+	        <dubbo:method name="getLandHouseList" timeout="3000" retries="3"/>
+	        <dubbo:method name="freshIndexByHouseFid" timeout="30000" retries="0"/>
+	        <dubbo:method name="creatAllIndexByArea" timeout="30000" retries="0"/>
+	        <dubbo:method name="creatAllIndex" timeout="3000" retries="0"/>
+	        <dubbo:method name="creatAllSuggest" timeout="3000" retries="0"/>
+	        <dubbo:method name="creatAllCommunityInfoDb" timeout="3000" retries="0"/>
+	        <dubbo:method name="syncHousesInfoByCode" timeout="3000" retries="0"/>
+	        <dubbo:method name="getLocationCondition" timeout="3000" retries="0"/>
+	        <dubbo:method name="getLocationConditionSort" timeout="3000" retries="0"/>
+	        <dubbo:method name="creatAllIndexByArea" timeout="3000" retries="3"/>
+	    </dubbo:service>
+	    
+	    <!-- 自如驿搜索 -->
+    	<dubbo:service interface="com.ziroom.minsu.services.search.api.inner.ZrySearchService"  ref="search.zrySearchProxy">
+    		<dubbo:method name="freshIndex" timeout="3000" retries="0"/>
+    		<dubbo:method name="getHouseListByConditionAndRecommend" timeout="3000" retries="3"/>
+    	</dubbo:service>
+
+	<!-- cms搜索 -->
+	<dubbo:service interface="com.ziroom.minsu.services.search.api.inner.CmsSearchService"  ref="search.cmsSearchProxy">
+		<dubbo:method name="freshIndex" timeout="3000" retries="0"/>
+		<dubbo:method name="getListByConditionAndRecommend" timeout="3000" retries="3"/>
+		<dubbo:method name="getArticleDetail" timeout="3000" retries="3"/>
+	</dubbo:service>
+
+</beans>

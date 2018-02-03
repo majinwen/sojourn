@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="order.financePaymentVouchersDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.order.FinancePaymentVouchersEntity" >
+    <!--
+     基本map
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="payment_sn" property="paymentSn" jdbcType="VARCHAR" />
+    <result column="order_sn" property="orderSn" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="source_type" property="sourceType" jdbcType="INTEGER" />
+    <result column="payment_type" property="paymentType" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="INTEGER" />
+    <result column="payment_uid" property="paymentUid" jdbcType="VARCHAR" />
+    <result column="total_fee" property="totalFee" jdbcType="INTEGER" />
+    <result column="need_money" property="needMoney" jdbcType="INTEGER" />
+    <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
+    <result column="sync_status" property="syncStatus" jdbcType="INTEGER" />
+    <result column="actual_sync_time" property="actualSyncTime" jdbcType="TIMESTAMP" />
+    <result column="is_send" property="isSend" jdbcType="INTEGER" />
+     <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="run_time" property="runTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, fid, payment_sn, order_sn,city_code, source_type, payment_type, pay_type, payment_uid, 
+    total_fee, need_money, trade_no, sync_status, actual_sync_time, is_send, run_time, pay_time,
+    create_id, create_time, last_modify_date, is_del
+  </sql>
+  
+  <!-- 查询订单支付的收款单 -->
+  <select id="getOrderPayment" resultMap="BaseResultMap" parameterType="string">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_finance_payment_vouchers
+    WHERE is_del = 0
+    AND order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND payment_type = 1
+</select>
+  
+  <select id="getListByCondiction" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.services.finance.dto.PaymentVouchersRequest">
+    <!--
+      查询  
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_finance_payment_vouchers
+    where is_del = 0
+    
+    <if test="paymentSn!=null and paymentSn!=''">
+	    AND payment_sn = #{paymentSn,jdbcType=VARCHAR}
+	</if>
+	<if test="sourceType!=null and sourceType!=''">
+	    AND source_type = #{sourceType,jdbcType=VARCHAR}
+	</if>
+	
+	<if test="paymentType!=null and paymentType!=''">
+	    AND payment_type = #{paymentType,jdbcType=VARCHAR}
+	</if>
+</select>
+
+
+  <!-- 查询收款单表中未同步收入记录count -->
+  <select id="getNotSyncPaymentCount" resultType="java.lang.Long">
+  	SELECT COUNT(id) FROM t_finance_payment_vouchers
+    WHERE is_del = 0
+    AND sync_status in (1,3)
+    AND total_fee != 0 
+    AND need_money != 0 
+    AND run_time &lt; NOW()
+    AND is_del = 0
+  </select>
+  
+  <!-- 查询收款单表中未同步收入记录list -->
+  <select id="getNotSyncPaymentList" resultMap="BaseResultMap" parameterType="map">
+  	SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_finance_payment_vouchers
+    WHERE is_del = 0
+    AND sync_status in (1,3)
+    AND total_fee != 0 
+    AND need_money != 0
+    AND run_time &lt; NOW()
+    AND is_del = 0
+    LIMIT #{limit,jdbcType=INTEGER}
+  </select>
+  
+  
+  <resultMap type="com.ziroom.minsu.services.finance.entity.FinancePaymentVo" id="FinancePaymentVoMap" extends="BaseResultMap">
+   <!-- 收入表返回参数 -->
+       <result column="user_name" property="userName" jdbcType="VARCHAR" />
+       <result column="user_tel" property="userTel" jdbcType="VARCHAR" />
+       <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+       <result column="pay_status" property="payStatus" jdbcType="INTEGER" />
+  </resultMap>
+  
+   <resultMap type="com.ziroom.minsu.services.finance.entity.FinancePaymentVo" id="FinancePaymentVoWithMoney" extends="FinancePaymentVoMap">
+       <association  column="order_sn"  property="orderMoneyEntity"  javaType="com.ziroom.minsu.entity.order.OrderMoneyEntity" select="order.orderMoneyDao.getOrderMoneyByOrderSn"/> 
+  </resultMap>
+  
+  
+  <sql id="Mutil_Column_List" >
+    <!--
+      基本列
+    -->
+    pay.id, pay.fid, pay.payment_sn, pay.order_sn, pay.source_type, pay.pay_type, pay.payment_uid, pay.total_fee, pay.need_money,pay.trade_no, 
+    pay.sync_status, pay.is_send,pay.run_time, pay.actual_sync_time, pay.create_id, pay.create_time, pay.last_modify_date, pay.pay_time,
+    pay.is_del
+  </sql>
+  <select id="queryPaymentVoByPage" resultMap="FinancePaymentVoMap" parameterType="com.ziroom.minsu.services.finance.dto.PaymentVouchersRequest">
+    <!-- 条件分页查询 -->
+    select 
+    <include refid="Mutil_Column_List" />,o.order_status ,o.user_name,o.pay_status,o.user_tel
+    from t_finance_payment_vouchers pay
+    LEFT JOIN `t_order` o ON pay.`order_sn` = o.`order_sn` 
+    WHERE pay.is_del = 0 AND o.`is_del` = 0
+    
+     <if test="userName != null and userName!=''">
+     AND o.user_name = #{userName,jdbcType=VARCHAR}
+    </if>
+    <if test="userTel != null and userTel !=''">
+     AND o.user_tel = #{userTel,jdbcType=VARCHAR}
+    </if>
+    <if test="userUid != null and userUid !=''">
+     AND o.user_uid = #{userUid,jdbcType=VARCHAR}
+    </if>
+    <if test="orderSn != null and orderSn !=''">
+     AND o.order_sn = #{orderSn,jdbcType=VARCHAR}
+   </if>
+    <if test="paymentSn!=null and paymentSn!=''">
+	    AND pay.payment_sn = #{paymentSn,jdbcType=VARCHAR}
+	</if>
+	<if test="payType!=null and payType!=''">
+	    AND pay.pay_type = #{payType,jdbcType=VARCHAR}
+	</if>
+	<if test="tradeNo!=null and tradeNo!=''">
+	    AND pay.trade_no = #{tradeNo,jdbcType=VARCHAR}
+	</if>
+	<if test="sourceType!=null and sourceType!=''">
+	    AND pay.source_type = #{sourceType,jdbcType=VARCHAR}
+	</if>
+	<if test="paymentType!=null and paymentType!=''">
+	    AND pay.payment_type = #{paymentType,jdbcType=VARCHAR}
+	</if>
+	<if test="syncStatus!=null">
+	    AND pay.sync_status = #{syncStatus,jdbcType=INTEGER}
+	</if>
+	  <if test="actualStartTime != null and actualStartTime !=''">
+     AND pay.actual_sync_time &gt;= #{actualStartTime,jdbcType=VARCHAR}
+   </if>
+    <if test="actualEndTime != null and actualEndTime !=''">
+     AND pay.actual_sync_time &lt;= #{actualEndTime,jdbcType=VARCHAR}
+     </if>
+</select>
+
+    <!-- 更改优惠券金额 -->
+    <update id="changeCouponMoney" parameterType="map" >
+        <!-- 改变优惠券金额 afi-->
+        UPDATE t_finance_payment_vouchers
+        SET total_fee = #{couponMoney,jdbcType=INTEGER},
+        need_money = #{couponMoney,jdbcType=INTEGER},
+        run_time = #{runTime,jdbcType=TIMESTAMP}
+        WHERE
+        order_sn = #{orderSn,jdbcType=VARCHAR}
+        AND payment_type=3
+        AND pay_type = 109
+        AND is_send=0
+    </update>
+
+
+  <insert id="insertPaymentVoucher" parameterType="com.ziroom.minsu.entity.order.FinancePaymentVouchersEntity" >
+    <!--
+      插入数据
+    -->
+    insert into t_finance_payment_vouchers
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="paymentSn != null" >
+        payment_sn,
+      </if>
+      <if test="orderSn != null" >
+        order_sn,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="sourceType != null" >
+        source_type,
+      </if>
+      <if test="paymentType != null" >
+        payment_type,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="paymentUid != null" >
+        payment_uid,
+      </if>
+      <if test="totalFee != null" >
+        total_fee,
+      </if>
+      <if test="needMoney != null" >
+        need_money,
+      </if>
+      <if test="tradeNo != null" >
+        trade_no,
+      </if>
+      <if test="syncStatus != null" >
+        sync_status,
+      </if>
+      <if test="actualSyncTime != null" >
+        actual_sync_time,
+      </if>
+      <if test="isSend != null" >
+        is_send,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="runTime != null" >
+        run_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentSn != null" >
+        #{paymentSn,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null" >
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceType != null" >
+        #{sourceType,jdbcType=INTEGER},
+      </if>
+      <if test="paymentType != null" >
+        #{paymentType,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=INTEGER},
+      </if>
+      <if test="paymentUid != null" >
+        #{paymentUid,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFee != null" >
+        #{totalFee,jdbcType=INTEGER},
+      </if>
+      <if test="needMoney != null" >
+        #{needMoney,jdbcType=INTEGER},
+      </if>
+      <if test="tradeNo != null" >
+        #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="syncStatus != null" >
+        #{syncStatus,jdbcType=INTEGER},
+      </if>
+      <if test="actualSyncTime != null" >
+        #{actualSyncTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isSend != null" >
+        #{isSend,jdbcType=INTEGER},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="runTime != null" >
+        #{runTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+      
+   <update id="updatePaymentVouchersByFid" parameterType="map" >
+    <!--
+     更新
+    -->
+    update t_finance_payment_vouchers
+    set is_send = 1
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 更新为已同步状态  -->
+  <update id="updatePaymentHasSync" parameterType="map" >
+	update t_finance_payment_vouchers
+	set sync_status = #{syncStatus,jdbcType=INTEGER},
+	<if test="actualSyncTime != null and actualSyncTime !=''">
+		actual_sync_time = #{actualSyncTime,jdbcType=TIMESTAMP},
+	</if>
+    is_send = #{isSend,jdbcType=INTEGER}
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+
+  <!--删除无效的活动-->
+  <update id="deletePaymentByOrderSnAndPayType" parameterType="map" >
+    update t_finance_payment_vouchers
+    set is_del = 1
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND pay_type = #{payType,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateActPaymentMoneyByOrderSn" parameterType="map" >
+    update t_finance_payment_vouchers
+    SET total_fee = #{money,jdbcType=INTEGER},
+    need_money = #{money,jdbcType=INTEGER},
+    run_time = #{runTime,jdbcType=TIMESTAMP}
+    WHERE order_sn = #{orderSn,jdbcType=VARCHAR}
+    AND payment_type = 3
+    AND pay_type=110
+    AND is_send=0
+  </update>
+    
+   <select id="countPaymentVouchersByTradeNo" resultType="Long" parameterType="map" >
+    <!--
+     统计流水号相关联的收款单号
+    -->
+    select count(id) from t_finance_payment_vouchers
+    where trade_no = #{tradeNo,jdbcType=VARCHAR}
+  </select>
+   <!-- 查询付款单详情 -->
+  <select id="queryPaymentVoByFid" resultMap="FinancePaymentVoWithMoney" parameterType="java.lang.String">
+	  	select 
+	    <include refid="Mutil_Column_List" />,o.order_status ,o.user_name,o.pay_status,o.user_tel
+	    from t_finance_payment_vouchers pay
+	    LEFT JOIN `t_order` o ON pay.`order_sn` = o.`order_sn` 
+	    WHERE pay.is_del = 0 AND o.`is_del` = 0 
+	    AND pay.fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="specialQueryPaymentVoByPage" resultMap="FinancePaymentVoMap" parameterType="map">
+    <!-- 条件分页查询 权限相关-->
+    select 
+    <include refid="Mutil_Column_List" />,o.order_status ,o.user_name,o.pay_status,o.user_tel
+    from t_finance_payment_vouchers pay
+    LEFT JOIN `t_order` o ON pay.`order_sn` = o.`order_sn` 
+    LEFT JOIN `t_order_house_snapshot` tohs ON o.`order_sn`=tohs.`order_sn`
+    WHERE pay.is_del = 0 AND o.`is_del` = 0
+    
+     <if test="userName != null and userName!=''">
+     AND o.user_name = #{userName,jdbcType=VARCHAR}
+    </if>
+    <if test="userTel != null and userTel !=''">
+     AND o.user_tel = #{userTel,jdbcType=VARCHAR}
+    </if>
+    <if test="userUid != null and userUid !=''">
+     AND o.user_uid = #{userUid,jdbcType=VARCHAR}
+    </if>
+    <if test="orderSn != null and orderSn !=''">
+     AND o.order_sn = #{orderSn,jdbcType=VARCHAR}
+   </if>
+    <if test="paymentSn!=null and paymentSn!=''">
+	    AND pay.payment_sn = #{paymentSn,jdbcType=VARCHAR}
+	</if>
+	<if test="payType!=null and payType!=''">
+	    AND pay.pay_type = #{payType,jdbcType=VARCHAR}
+	</if>
+	<if test="tradeNo!=null and tradeNo!=''">
+	    AND pay.trade_no = #{tradeNo,jdbcType=VARCHAR}
+	</if>
+	<if test="sourceType!=null and sourceType!=''">
+	    AND pay.source_type = #{sourceType,jdbcType=VARCHAR}
+	</if>
+	<if test="paymentType!=null and paymentType!=''">
+	    AND pay.payment_type = #{paymentType,jdbcType=VARCHAR}
+	</if>
+	<if test="syncStatus!=null">
+	    AND pay.sync_status = #{syncStatus,jdbcType=INTEGER}
+	</if>
+	<if test="actualStartTime != null and actualStartTime !=''">
+     AND pay.actual_sync_time &gt;= #{actualStartTime,jdbcType=VARCHAR}
+   </if>
+   <if test="actualEndTime != null and actualEndTime !=''">
+     AND pay.actual_sync_time &lt;= #{actualEndTime,jdbcType=VARCHAR}
+   </if>
+   <if test="houseFids != null and houseFids.size > 0">
+         AND tohs.house_fid in
+         <foreach collection="houseFids" item="houseFid" open="(" separator="," close=")">
+             #{houseFid,jdbcType=VARCHAR}
+         </foreach>
+   </if>
+</select>
+</mapper>

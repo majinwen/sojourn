@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="house.houseSurveyMsgDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.house.HouseSurveyMsgEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="survey_sn" property="surveySn" jdbcType="VARCHAR" />
+    <result column="house_base_fid" property="houseBaseFid" jdbcType="VARCHAR" />
+    <!-- <result column="house_sn" property="houseSn" jdbcType="VARCHAR" /> -->
+    <result column="survey_result" property="surveyResult" jdbcType="TINYINT" />
+    <result column="survey_emp_fid" property="surveyEmpFid" jdbcType="VARCHAR" />
+    <result column="survey_emp_name" property="surveyEmpName" jdbcType="VARCHAR" />
+    <result column="survey_date" property="surveyDate" jdbcType="TIMESTAMP" />
+    <result column="audit_emp_fid" property="auditEmpFid" jdbcType="VARCHAR" />
+    <result column="audit_emp_name" property="auditEmpName" jdbcType="VARCHAR" />
+    <result column="audit_date" property="auditDate" jdbcType="TIMESTAMP" />
+    <result column="is_audit" property="isAudit" jdbcType="TINYINT" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="record_status" property="recordStatus" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    hsm.id, hsm.fid, hsm.survey_sn, hsm.house_base_fid, hsm.survey_result, hsm.survey_emp_fid, hsm.survey_emp_name, 
+    hsm.survey_date, hsm.audit_emp_fid, hsm.audit_emp_name, hsm.audit_date, hsm.is_audit, hsm.create_fid, hsm.create_date, 
+    hsm.last_modify_date, hsm.record_status, hsm.remark
+  </sql>
+  
+  <select id="findHouseSurveyMsgByFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_survey_msg hsm
+    WHERE hsm.fid = #{fid,jdbcType=VARCHAR}
+    AND (hsm.record_status = 0 OR hsm.record_status = 1) 
+  </select>
+  
+  <select id="findHouseSurveyMsgByHouseFid" resultMap="BaseResultMap" parameterType="string" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM t_house_survey_msg hsm
+    WHERE hsm.house_base_fid = #{houseBaseFid,jdbcType=VARCHAR}
+    AND (hsm.record_status = 0 OR hsm.record_status = 1) 
+    LIMIT 1
+  </select>
+  
+  <!-- 查询需要实勘房源列表 -->
+  <resultMap id="SurveyVoMap" type="com.ziroom.minsu.services.house.survey.entity.HouseSurveyVo" extends="BaseResultMap">
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+    <!-- 出租方式为独立房间时展示 -->
+    <result column="rooms_sn" property="roomsSn" jdbcType="VARCHAR" />
+    <result column="house_name" property="houseName" jdbcType="VARCHAR" />
+    <result column="house_addr" property="houseAddr" jdbcType="VARCHAR" />
+  </resultMap>
+  
+    <!-- 实勘权限查询 -->
+  <select id="findAuthSurveyHouseListByPage" resultMap="SurveyVoMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    , hb.fid house_fid, hb.house_sn, hb.house_name, hb.house_addr, GROUP_CONCAT(hr.room_sn) rooms_sn
+    FROM t_house_base_msg hb
+    LEFT JOIN t_house_base_ext hbe
+    ON hb.fid = hbe.house_base_fid
+    LEFT JOIN t_house_phy_msg hp
+    ON hb.phy_fid = hp.fid AND hp.is_del = 0
+    LEFT JOIN t_house_guard_rel hgr
+    ON hb.fid = hgr.house_fid AND hgr.is_del = 0
+    LEFT JOIN t_house_survey_msg hsm
+    ON hb.fid = hsm.house_base_fid AND hsm.record_status = 1
+    LEFT JOIN t_house_room_msg hr 
+    ON hb.fid = hr.house_base_fid AND hb.rent_way = 1 AND hr.is_del = 0 AND hr.room_status > 10
+    <where>
+    AND hb.is_del = 0
+    AND hb.house_status > 10
+    <if test="guardCodeList != null and guardCodeList.size > 0">
+        AND hgr.emp_guard_code in
+        <foreach collection="guardCodeList"  item="empGuardCode" index="index" open="(" separator="," close=")">
+            #{empGuardCode,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="pushCodeList != null and pushCodeList.size > 0">
+        AND hgr.emp_push_code in
+        <foreach collection="pushCodeList"  item="empPushCode" index="index" open="(" separator="," close=")">
+            #{empPushCode,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="houseSn != null and houseSn !=''">
+		AND hb.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+	<if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+	<if test="areaCode != null and areaCode !=''">
+		AND hp.area_code = #{areaCode,jdbcType=VARCHAR}
+    </if>
+    <if test="surveySn != null and surveySn !=''">
+        AND hsm.survey_sn like CONCAT(#{surveySn,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="surveyResult != null">
+		AND hbe.survey_result = #{surveyResult,jdbcType=INTEGER}
+    </if>
+    <if test="isAudit != null">
+		AND hsm.is_audit = #{isAudit,jdbcType=INTEGER}
+    </if>
+    
+    <if test="listFid != null and listFid.size > 0">
+        AND hb.fid in
+        <foreach collection="listFid"  item="houseFid" open="(" separator="," close=")">
+            #{houseFid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    
+    </where>
+    GROUP BY
+		hsm.id,hb.fid
+  </select>
+  
+  
+
+   <select id="findSurveyHouseListByPage" resultMap="SurveyVoMap" parameterType="map" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    , hb.fid house_fid, hb.house_sn, hb.house_name, hb.house_addr, GROUP_CONCAT(hr.room_sn) rooms_sn
+    FROM t_house_base_msg hb
+    LEFT JOIN t_house_base_ext hbe
+    ON hb.fid = hbe.house_base_fid
+    LEFT JOIN t_house_phy_msg hp
+    ON hb.phy_fid = hp.fid AND hp.is_del = 0
+    LEFT JOIN t_house_guard_rel hgr
+    ON hb.fid = hgr.house_fid AND hgr.is_del = 0
+    LEFT JOIN t_house_survey_msg hsm
+    ON hb.fid = hsm.house_base_fid AND hsm.record_status = 1
+    LEFT JOIN t_house_room_msg hr 
+    ON hb.fid = hr.house_base_fid AND hb.rent_way = 1 AND hr.is_del = 0 AND hr.room_status > 10
+    <where>
+    AND hb.is_del = 0
+    AND hb.house_status > 10
+    <if test="guardCodeList != null and guardCodeList.size > 0">
+        AND hgr.emp_guard_code in
+        <foreach collection="guardCodeList"  item="empGuardCode" index="index" open="(" separator="," close=")">
+            #{empGuardCode,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="pushCodeList != null and pushCodeList.size > 0">
+        AND hgr.emp_push_code in
+        <foreach collection="pushCodeList"  item="empPushCode" index="index" open="(" separator="," close=")">
+            #{empPushCode,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="landlordUidList != null and landlordUidList.size > 0">
+		AND hb.landlord_uid in
+        <foreach collection="landlordUidList" item="landlordUid" index="index" open="(" separator="," close=")">  
+			#{landlordUid,jdbcType=VARCHAR}
+        </foreach>
+    </if>
+    <if test="houseSn != null and houseSn !=''">
+		AND hb.house_sn like CONCAT(#{houseSn,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="nationCode != null and nationCode !=''">
+		AND hp.nation_code = #{nationCode,jdbcType=VARCHAR}
+    </if>
+	<if test="provinceCode != null and provinceCode !=''">
+		AND hp.province_code = #{provinceCode,jdbcType=VARCHAR}
+    </if>
+	<if test="cityCode != null and cityCode !=''">
+		AND hp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+	<if test="areaCode != null and areaCode !=''">
+		AND hp.area_code = #{areaCode,jdbcType=VARCHAR}
+    </if>
+    <if test="surveySn != null and surveySn !=''">
+        AND hsm.survey_sn like CONCAT(#{surveySn,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="surveyResult != null">
+		AND hbe.survey_result = #{surveyResult,jdbcType=INTEGER}
+    </if>
+    <if test="isAudit != null">
+		AND hsm.is_audit = #{isAudit,jdbcType=INTEGER}
+    </if>
+    </where>
+    GROUP BY
+		hsm.id,hb.fid
+  </select>
+  <insert id="insertHouseSurveyMsg" parameterType="com.ziroom.minsu.entity.house.HouseSurveyMsgEntity" useGeneratedKeys="true" keyProperty="id" >
+    insert into t_house_survey_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="surveySn != null" >
+        survey_sn,
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid,
+      </if>
+      <!-- <if test="houseSn != null" >
+        house_sn,
+      </if> -->
+      <if test="surveyResult != null" >
+        survey_result,
+      </if>
+      <if test="surveyEmpFid != null" >
+        survey_emp_fid,
+      </if>
+      <if test="surveyEmpName != null" >
+        survey_emp_name,
+      </if>
+      <if test="surveyDate != null" >
+        survey_date,
+      </if>
+      <if test="auditEmpFid != null" >
+        audit_emp_fid,
+      </if>
+      <if test="auditEmpName != null" >
+        audit_emp_name,
+      </if>
+      <if test="auditDate != null" >
+        audit_date,
+      </if>
+      <if test="isAudit != null" >
+        is_audit,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="recordStatus != null" >
+        record_status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="surveySn != null" >
+        #{surveySn,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <!-- <if test="houseSn != null" >
+        #{houseSn,jdbcType=VARCHAR},
+      </if> -->
+      <if test="surveyResult != null" >
+        #{surveyResult,jdbcType=TINYINT},
+      </if>
+      <if test="surveyEmpFid != null" >
+        #{surveyEmpFid,jdbcType=VARCHAR},
+      </if>
+      <if test="surveyEmpName != null" >
+        #{surveyEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="surveyDate != null" >
+        #{surveyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditEmpFid != null" >
+        #{auditEmpFid,jdbcType=VARCHAR},
+      </if>
+      <if test="auditEmpName != null" >
+        #{auditEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="auditDate != null" >
+        #{auditDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isAudit != null" >
+        #{isAudit,jdbcType=TINYINT},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recordStatus != null" >
+        #{recordStatus,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateHouseSurveyMsg" parameterType="com.ziroom.minsu.entity.house.HouseSurveyMsgEntity" >
+    update t_house_survey_msg
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="surveySn != null" >
+        survey_sn = #{surveySn,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBaseFid != null" >
+        house_base_fid = #{houseBaseFid,jdbcType=VARCHAR},
+      </if>
+      <!-- <if test="houseSn != null" >
+        house_sn = #{houseSn,jdbcType=VARCHAR},
+      </if> -->
+      <if test="surveyResult != null" >
+        survey_result = #{surveyResult,jdbcType=TINYINT},
+      </if>
+      <if test="surveyEmpFid != null" >
+        survey_emp_fid = #{surveyEmpFid,jdbcType=VARCHAR},
+      </if>
+      <if test="surveyEmpName != null" >
+        survey_emp_name = #{surveyEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="surveyDate != null" >
+        survey_date = #{surveyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditEmpFid != null" >
+        audit_emp_fid = #{auditEmpFid,jdbcType=VARCHAR},
+      </if>
+      <if test="auditEmpName != null" >
+        audit_emp_name = #{auditEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="auditDate != null" >
+        audit_date = #{auditDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isAudit != null" >
+        is_audit = #{isAudit,jdbcType=TINYINT},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recordStatus != null" >
+        record_status = #{recordStatus,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+</mapper>

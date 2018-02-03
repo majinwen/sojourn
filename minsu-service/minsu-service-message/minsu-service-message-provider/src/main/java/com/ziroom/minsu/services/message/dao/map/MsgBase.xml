@@ -1,0 +1,860 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="message.msgBaseDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.message.MsgBaseEntity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="fid" property="fid" jdbcType="VARCHAR"/>
+        <result column="msg_content" property="msgContent" jdbcType="VARCHAR"/>
+        <result column="msg_real_content" property="msgRealContent" jdbcType="VARCHAR"/>
+        <result column="msg_sender_type" property="msgSenderType" jdbcType="INTEGER"/>
+        <result column="is_del" property="isDel" jdbcType="INTEGER"/>
+        <result column="msg_house_fid" property="msgHouseFid" jdbcType="VARCHAR"/>
+        <result column="is_read" property="isRead" jdbcType="INTEGER"/>
+        <result column="house_card" property="houseCard" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="house_fid" property="houseFid" jdbcType="VARCHAR"/>
+        <result column="rent_way" property="rentWay" jdbcType="INTEGER"/>
+        <result column="replay_time_house" property="replayTimeHouse" jdbcType="BIGINT"/>
+        <result column="replay_time_lanlord" property="replayTimeLanlord" jdbcType="BIGINT"/>
+        <result column="msg_send_time" property="msgSendTime" jdbcType="TIMESTAMP"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="secret" property="secret" jdbcType="VARCHAR"/>
+        <result column="filename" property="filename" jdbcType="VARCHAR"/>
+        <result column="file_length" property="fileLength" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="size" property="size" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="syncResultMap" type="com.ziroom.minsu.services.message.entity.ImMsgSyncVo">
+        <result column="tenant_uid" property="tenantUid" jdbcType="VARCHAR"/>
+        <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR"/>
+        <result column="msg_sender_type" property="msgSenderType" jdbcType="INTEGER"/>
+        <result column="is_del" property="isDel" jdbcType="INTEGER"/>
+        <result column="house_fid" property="houseFid" jdbcType="VARCHAR"/>
+        <result column="rent_way" property="rentWay" jdbcType="INTEGER"/>
+        <result column="msg_content" property="msgContent" jdbcType="VARCHAR"/>
+        <result column="msg_real_content" property="msgRealContent" jdbcType="VARCHAR"/>
+        <result column="msg_send_time" property="msgSendTime" jdbcType="TIMESTAMP"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="secret" property="secret" jdbcType="VARCHAR"/>
+        <result column="filename" property="filename" jdbcType="VARCHAR"/>
+        <result column="file_length" property="fileLength" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="size" property="size" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="NotReplyResult" type="com.ziroom.minsu.services.message.entity.MsgNotReplyVo"
+               extends="BaseResultMap">
+        <result column="tenant_uid" property="tenantUid" jdbcType="VARCHAR"/>
+        <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <resultMap id="AppMsgBaseMap" type="com.ziroom.minsu.services.message.entity.AppMsgBaseVo" extends="BaseResultMap">
+        <result column="froms" property="froms" jdbcType="VARCHAR"/>
+        <result column="tos" property="tos" jdbcType="VARCHAR"/>
+        <result column="houseFid" property="houseFid" jdbcType="VARCHAR"/>
+        <result column="rentWay" property="rentWay" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="ImMsgListMap" type="com.ziroom.minsu.services.message.entity.ImMsgListVo">
+        <result column="tenant_uid" property="tenantUid" jdbcType="VARCHAR"/>
+        <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR"/>
+        <result column="is_del" property="isDel" jdbcType="INTEGER"/>
+        <result column="imLastmodifyTime" property="imLastmodifyTime" jdbcType="TIMESTAMP"/>
+        <collection column="fid" property="listImMsgBaseVo" javaType="ArrayList" select="queryImMsgBaseVo"/>
+    </resultMap>
+
+    <resultMap id="ImMsgBaseVoMap" type="com.ziroom.minsu.services.message.entity.ImMsgBaseVo">
+        <result column="msg_content" property="msgContent" jdbcType="VARCHAR"/>
+        <result column="msg_real_content" property="msgRealContent" jdbcType="VARCHAR"/>
+        <result column="msg_sender_type" property="msgSenderType" jdbcType="INTEGER"/>
+        <result column="msg_send_time" property="msgSendTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, fid, msg_content,msg_real_content, msg_sender_type, is_del, msg_house_fid, is_read,house_card,create_time,msg_send_time,house_fid,rent_way,replay_time_house,
+    replay_time_lanlord,url,secret,filename,file_length,type,size
+  </sql>
+
+
+    <sql id="Not_Reply_Column">
+    a.id, a.fid, a.msg_content, a.msg_sender_type, a.is_del, a.msg_house_fid, a.is_read, a.create_time,a.msg_send_time, a.house_fid, a.rent_way,
+    c.tenant_uid, c.landlord_uid
+  </sql>
+
+    <sql id="sync_Column_List">
+        tenant_uid, landlord_uid, is_del,msg_sender_type, house_fid, rent_way, msg_content, msg_send_time
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        <!--
+          WARNING - @mbggenerated
+          This element is automatically generated by MyBatis Generator, do not modify.
+          This element was generated on Sat Apr 16 12:39:23 CST 2016.
+        -->
+        select
+        <include refid="Base_Column_List"/>
+        from t_msg_base
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="queryByPage" resultMap="BaseResultMap"
+            parameterType="com.ziroom.minsu.services.message.dto.MsgBaseRequest">
+        <!-- 条件分页查询-->
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_msg_base
+        WHERE msg_house_fid = #{msgHouseFid,jdbcType=VARCHAR}
+        <if test="isDel !=null">
+            AND is_del = #{isDel,jdbcType=INTEGER}
+        </if>
+        <if test="msgSenderType !=null">
+            AND msg_sender_type = #{msgSenderType,jdbcType=INTEGER}
+        </if>
+        <if test="isRead !=null">
+            AND is_read = #{isRead,jdbcType=INTEGER}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            AND `create_time` &gt;=#{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime != null and startTime != ''">
+            AND `create_time` &lt;=#{endTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="houseFid != null and houseFid != ''">
+            AND `house_fid`=#{houseFid,jdbcType=VARCHAR}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询对话未读消息个数 -->
+    <select id="queryMsgCountByItem" resultType="java.lang.Integer"
+            parameterType="com.ziroom.minsu.services.message.dto.MsgBaseRequest">
+        <!-- 条件分页查询-->
+        SELECT count(1)
+        FROM t_msg_base
+        WHERE msg_house_fid = #{msgHouseFid,jdbcType=VARCHAR}
+        AND msg_sender_type = #{msgSenderType,jdbcType=INTEGER}
+        <if test="startTime != null and startTime != ''">
+            AND `create_time` &gt;=#{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime != null and startTime != ''">
+            AND `create_time` &lt;=#{endTime,jdbcType=TIMESTAMP}
+        </if>
+        AND is_del = 0
+        AND is_read= 0
+    </select>
+
+    <!-- 查询房东或房客未读消息的条数 -->
+    <select id="queryMsgCountByUid" resultType="java.lang.Integer"
+            parameterType="com.ziroom.minsu.services.message.dto.MsgBaseRequest">
+        SELECT count(1)
+        FROM
+        t_msg_base m
+        WHERE m.`msg_house_fid` IN
+        (SELECT
+        t.`fid`
+        FROM
+        t_msg_house t
+        WHERE 1=1
+        <if test="landlordUid != null">
+            AND t.`landlord_uid` = #{landlordUid,jdbcType=VARCHAR}
+        </if>
+        <if test="tenantUid != null">
+            AND t.`tenant_uid` = #{tenantUid,jdbcType=VARCHAR}
+        </if>
+        AND t.`is_del` = 0)
+        AND m.`msg_sender_type` = #{msgSenderType,jdbcType=INTEGER}
+        AND m.`is_read` = 0
+        AND m.`is_del` = 0;
+    </select>
+
+
+    <!-- troy查询房东未回复的IM记录（1小时以内） -->
+    <select id="getNotReplyList" resultMap="NotReplyResult" parameterType="map">
+        SELECT
+        <include refid="Not_Reply_Column"/>
+        FROM t_msg_base a,
+        (SELECT MIN(id) id FROM t_msg_base
+        WHERE create_time>=#{todayStart,jdbcType=TIMESTAMP} AND create_time <![CDATA[ <= ]]>
+        #{todayEnd,jdbcType=TIMESTAMP}
+        AND msg_sender_type=20 AND is_del=0 GROUP BY msg_house_fid) b,
+        t_msg_house c
+        WHERE a.id=b.id
+        AND a.create_time >= #{limitStart,jdbcType=TIMESTAMP}
+        AND a.is_del=0
+        AND NOT EXISTS (
+        SELECT id FROM t_msg_base WHERE msg_house_fid=a.msg_house_fid
+        AND create_time > a.create_time
+        AND msg_sender_type=10)
+        AND a.msg_house_fid=c.fid
+        AND c.is_del=0
+        ORDER BY a.create_time
+    </select>
+
+    <insert id="insertSelective" parameterType="com.ziroom.minsu.entity.message.MsgBaseEntity">
+        <!--
+          WARNING - @mbggenerated
+          This element is automatically generated by MyBatis Generator, do not modify.
+          This element was generated on Sat Apr 16 12:39:23 CST 2016.
+        -->
+        insert into t_msg_base
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="msgContent != null">
+                msg_content,
+            </if>
+            <if test="msgRealContent != null">
+                msg_real_content,
+            </if>
+            <if test="msgSenderType != null">
+                msg_sender_type,
+            </if>
+            <if test="isSystemSend != null">
+                is_system_send,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+            <if test="msgHouseFid != null">
+                msg_house_fid,
+            </if>
+            <if test="isRead != null">
+                is_read,
+            </if>
+            <if test="houseCard != null">
+                house_card,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="msgSendTime != null">
+                msg_send_time,
+            </if>
+
+            <if test="houseFid != null">
+                house_fid,
+            </if>
+            <if test="rentWay != null">
+                rent_way,
+            </if>
+            
+            <if test="url != null">
+                url,
+            </if>
+            
+            <if test="secret != null">
+                secret,
+            </if>
+            
+            <if test="filename != null">
+                filename,
+            </if>
+            
+            <if test="fileLength != null">
+                file_length,
+            </if>
+            
+            <if test="type != null">
+                type,
+            </if>
+              <if test="size != null">
+                size,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="fid != null">
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="msgContent != null">
+                #{msgContent,jdbcType=VARCHAR},
+            </if>
+            <if test="msgRealContent != null">
+                #{msgRealContent,jdbcType=VARCHAR},
+            </if>
+            <if test="msgSenderType != null">
+                #{msgSenderType,jdbcType=INTEGER},
+            </if>
+            <if test="isSystemSend != null">
+                #{isSystemSend,jdbcType=INTEGER},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=INTEGER},
+            </if>
+            <if test="msgHouseFid != null">
+                #{msgHouseFid,jdbcType=VARCHAR},
+            </if>
+            <if test="isRead != null">
+                #{isRead,jdbcType=INTEGER},
+            </if>
+            <if test="houseCard != null">
+                #{houseCard,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="msgSendTime != null">
+                #{msgSendTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="houseFid != null">
+                #{houseFid,jdbcType=VARCHAR},
+            </if>
+            <if test="rentWay != null">
+                #{rentWay,jdbcType=INTEGER},
+            </if>
+             <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+             <if test="secret != null">
+                #{secret,jdbcType=VARCHAR},
+            </if>
+             <if test="filename != null">
+                #{filename,jdbcType=VARCHAR},
+            </if>
+             <if test="fileLength != null">
+                #{fileLength,jdbcType=INTEGER},
+            </if>
+             <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+             <if test="size != null">
+                #{size,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.message.MsgBaseEntity">
+        update t_msg_base
+        <set>
+            <if test="fid != null">
+                fid = #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="msgContent != null">
+                msg_content = #{msgContent,jdbcType=VARCHAR},
+            </if>
+            <if test="msgSenderType != null">
+                msg_sender_type = #{msgSenderType,jdbcType=INTEGER},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=INTEGER},
+            </if>
+            <if test="msgHouseFid != null">
+                msg_house_fid = #{msgHouseFid,jdbcType=VARCHAR},
+            </if>
+            <if test="isRead != null">
+                is_read = #{isRead,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+              <if test="secret != null">
+                secret = #{secret,jdbcType=VARCHAR},
+            </if>
+              <if test="filename != null">
+                filename = #{filename,jdbcType=VARCHAR},
+            </if>
+              <if test="fileLength != null">
+                file_length = #{fileLength,jdbcType=INTEGER},
+            </if>
+              <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+             <if test="size != null">
+                size = #{size,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByFid" parameterType="com.ziroom.minsu.entity.message.MsgBaseEntity">
+        <!-- 根据fid更新 -->
+        update t_msg_base
+        <set>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=INTEGER},
+            </if>
+
+            <if test="isRead != null">
+                is_read = #{isRead,jdbcType=INTEGER},
+            </if>
+            <if test="replayTimeHouse != null">
+                replay_time_house = #{replayTimeHouse,jdbcType=BIGINT},
+            </if>
+            <if test="replayTimeLanlord != null">
+                replay_time_lanlord = #{replayTimeLanlord,jdbcType=BIGINT},
+            </if>
+        </set>
+        where fid = #{fid,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByMsgHouseFid" parameterType="map">
+        <!-- 根据msg_house_fid更新is_del = 1 -->
+        update t_msg_base
+        <set>
+            is_del = 1
+        </set>
+        where msg_house_fid = #{msgHouseFid,jdbcType=VARCHAR}
+    </update>
+
+
+    <update id="updateByMsgHouseReadFid" parameterType="map">
+        <!-- 根据msg_house_fid更新is_read = 1 -->
+        update t_msg_base
+        <set>
+            is_read = 1,
+        </set>
+        where msg_house_fid = #{msgHouseFid,jdbcType=VARCHAR}
+        AND msg_sender_type = #{msgSenderType,jdbcType=INTEGER}
+        AND is_read = 0
+    </update>
+
+
+    <select id="staticsCountLanImReplyNum" resultType="java.lang.Long" parameterType="map">
+        <!-- #统计 2小时内  房东回复在30min内回复的新增会话人数 -->
+        SELECT COUNT(tmp1.msg_house_fid)
+        FROM (SELECT tb.msg_house_fid,th.landlord_uid, MIN(tb.create_time) AS tmp_create_time
+        FROM t_msg_base tb
+        LEFT JOIN t_msg_house th
+        ON th.fid=tb.msg_house_fid
+        WHERE tb.msg_sender_type IN(1,10) AND th.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+        GROUP BY tb.msg_house_fid,th.landlord_uid ) AS tmp1
+        LEFT JOIN (SELECT tb.msg_house_fid,th.landlord_uid, MIN(tb.create_time) AS tmp_create_time
+        FROM t_msg_base tb
+        LEFT JOIN t_msg_house th
+        ON th.fid=tb.msg_house_fid
+        WHERE tb.msg_sender_type IN(2,20) AND th.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+        GROUP BY tb.msg_house_fid,th.landlord_uid) AS tmp2
+        ON tmp1.msg_house_fid=tmp2.msg_house_fid
+        WHERE tmp1.tmp_create_time-tmp2.tmp_create_time <![CDATA[ < ]]> #{sumTime,jdbcType=INTEGER}
+        AND tmp1.tmp_create_time <![CDATA[ > ]]> #{limitTime,jdbcType=TIMESTAMP}
+    </select>
+
+    <select id="staticsCountLanImReplySumTime" resultType="java.lang.Long" parameterType="map">
+        <!-- #统计 2小时内  房东回复在30min内的时间和-->
+
+        SELECT COALESCE(SUM(if(tmp1.tmp_create_time-tmp2.tmp_create_time <![CDATA[ < ]]>
+        0,0,tmp1.tmp_create_time-tmp2.tmp_create_time)),0)
+        FROM (SELECT tb.msg_house_fid,th.landlord_uid, MIN(tb.create_time) AS tmp_create_time
+        FROM t_msg_base tb
+        LEFT JOIN t_msg_house th
+        ON th.fid=tb.msg_house_fid
+        WHERE tb.msg_sender_type IN(1,10) AND th.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+        GROUP BY tb.msg_house_fid,th.landlord_uid ) AS tmp1
+        LEFT JOIN (SELECT tb.msg_house_fid,th.landlord_uid, MIN(tb.create_time) AS tmp_create_time
+        FROM t_msg_base tb
+        LEFT JOIN t_msg_house th
+        ON th.fid=tb.msg_house_fid
+        WHERE tb.msg_sender_type IN(2,20) AND th.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+        GROUP BY tb.msg_house_fid,th.landlord_uid) AS tmp2
+        ON tmp1.msg_house_fid=tmp2.msg_house_fid
+        WHERE tmp1.tmp_create_time-tmp2.tmp_create_time <![CDATA[ < ]]> #{sumTime,jdbcType=INTEGER}
+        AND tmp1.tmp_create_time  <![CDATA[ > ]]> #{limitTime,jdbcType=TIMESTAMP}
+    </select>
+
+    <update id="updateByCondition" parameterType="com.ziroom.minsu.entity.message.MsgBaseEntity">
+        <!-- 条件更新 -->
+        update t_msg_base
+        <set>
+            <if test="msgContent != null">
+                msg_content = #{msgContent,jdbcType=VARCHAR},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=INTEGER},
+            </if>
+
+        </set>
+        WHERE 1=1
+        <if test="msgHouseFid != null and msgHouseFid !=''">
+            AND msg_house_fid = #{msgHouseFid,jdbcType=VARCHAR}
+        </if>
+        <if test="msgSenderType !=null">
+            AND msg_sender_type = #{msgSenderType,jdbcType=INTEGER}
+        </if>
+        <if test="isDel !=null">
+            AND is_del = #{isDel,jdbcType=INTEGER}
+        </if>
+        <if test="fid != null and fid !=''">
+            AND fid = #{fid,jdbcType=VARCHAR}
+        </if>
+    </update>
+
+
+    <select id="queryCurrMsgBook" resultMap="BaseResultMap" parameterType="java.lang.String">
+        <!-- 条件分页查询-->
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `t_msg_base` WHERE id = (SELECT MAX(t.id) FROM `t_msg_base` t
+        WHERE
+        t.`msg_house_fid` = #{msgHouseFid,jdbcType=VARCHAR}
+        AND t.`msg_sender_type` = 3
+        AND t.`is_del` = 0
+        )
+    </select>
+
+    <select id="queryTwoChatRecord" resultMap="BaseResultMap"
+            parameterType="com.ziroom.minsu.services.message.dto.MsgHouseRequest">
+        <!-- 房东或房客 条件查询IM聊天历史数据（ 当前俩人的聊天数据）-->
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `t_msg_base` ba
+        WHERE EXISTS(
+        SELECT fid FROM `t_msg_house` t
+        WHERE 1=1
+        AND t.`landlord_uid` = #{landlordUid,jdbcType=VARCHAR}
+        AND t.`tenant_uid` = #{tenantUid,jdbcType=VARCHAR}
+        AND t.fid =ba.msg_house_fid
+        AND ba.`is_del` = 0
+        ORDER BY t.`id`
+        )
+        ORDER BY ba.`id`;
+
+    </select>
+
+    <select id="queryOneChatRecord" resultMap="AppMsgBaseMap"
+            parameterType="com.ziroom.minsu.services.message.dto.MsgHouseRequest">
+        <!-- 查询当前一个用户 所有的聊天记录-->
+        <!-- SELECT <include refid="Base_Column_List" /> FROM `t_msg_base` ba
+         WHERE  EXISTS(
+          SELECT fid FROM `t_msg_house` t
+         WHERE 1=1
+           AND( t.`landlord_uid` =#{landlordUid,jdbcType=VARCHAR}
+           OR t.`tenant_uid` =#{tenantUid,jdbcType=VARCHAR})
+           AND t.fid =ba.msg_house_fid
+           AND ba.`is_del` = 0
+           ORDER BY t.`id`
+         )
+     ORDER BY ba.`id`; -->
+
+        SELECT
+        tem.id,tem.fid,tem.msg_content,tem.msg_sender_type,tem.is_del,tem.msg_house_fid,tem.is_read,tem.create_time,CASE
+        tem.msg_sender_type WHEN 1 THEN msg.landlord_uid WHEN 10 THEN msg.landlord_uid
+        WHEN 3 THEN msg.tenant_uid WHEN 2 THEN msg.tenant_uid WHEN 20 THEN msg.tenant_uid END AS froms ,
+        CASE tem.msg_sender_type WHEN 1 THEN msg.tenant_uid WHEN 10 THEN msg.tenant_uid
+        WHEN 3 THEN msg.landlord_uid WHEN 2 THEN msg.landlord_uid WHEN 20 THEN msg.landlord_uid END AS tos,msg.rent_way
+        AS rentWay,
+        CASE msg.rent_way WHEN 0 THEN msg.house_fid WHEN 1 THEN msg.room_fid WHEN 2 THEN bed_fid END AS houseFid
+
+        FROM (SELECT id, fid, msg_content, msg_sender_type, is_del, msg_house_fid, is_read, create_time FROM
+        `t_msg_base` ba
+        WHERE EXISTS(
+        SELECT fid FROM `t_msg_house` t
+        WHERE 1=1
+        AND( t.`landlord_uid` =#{landlordUid,jdbcType=VARCHAR}
+        OR t.`tenant_uid` =#{tenantUid,jdbcType=VARCHAR})
+        AND t.fid =ba.msg_house_fid
+        AND ba.`is_del` = 0
+        AND ba.msg_sender_type IN(1,2,3)
+        ORDER BY t.`id`
+        )
+        ORDER BY ba.`id`) AS tem
+
+        LEFT JOIN `t_msg_house` msg
+        ON msg.fid = tem.msg_house_fid;
+
+    </select>
+
+    <select id="findIMChatRecord" resultMap="AppMsgBaseMap"
+            parameterType="com.ziroom.minsu.services.message.dto.MsgHouseRequest">
+        <!-- 查询当前一个用户 所有的聊天记录-->
+        <!-- SELECT <include refid="Base_Column_List" /> FROM `t_msg_base` ba
+         WHERE  EXISTS(
+          SELECT fid FROM `t_msg_house` t
+         WHERE 1=1
+           AND( t.`landlord_uid` =#{landlordUid,jdbcType=VARCHAR}
+           OR t.`tenant_uid` =#{tenantUid,jdbcType=VARCHAR})
+           AND t.fid =ba.msg_house_fid
+           AND ba.`is_del` = 0
+           ORDER BY t.`id`
+         )
+     ORDER BY ba.`id`; -->
+
+        SELECT
+        tem.id,tem.fid,tem.msg_content,tem.msg_sender_type,tem.is_del,tem.msg_house_fid,tem.is_read,tem.create_time,msg_send_time,CASE
+        tem.msg_sender_type WHEN 1 THEN msg.landlord_uid WHEN 10 THEN msg.landlord_uid
+        WHEN 3 THEN msg.tenant_uid WHEN 2 THEN msg.tenant_uid WHEN 20 THEN msg.tenant_uid END AS froms ,
+        CASE tem.msg_sender_type WHEN 1 THEN msg.tenant_uid WHEN 10 THEN msg.tenant_uid
+        WHEN 3 THEN msg.landlord_uid WHEN 2 THEN msg.landlord_uid WHEN 20 THEN msg.landlord_uid END AS tos,msg.rent_way
+        AS rentWay,
+        CASE msg.rent_way WHEN 0 THEN msg.house_fid WHEN 1 THEN msg.room_fid WHEN 2 THEN bed_fid END AS houseFid
+
+        FROM (SELECT id, fid, msg_content, msg_sender_type, is_del, msg_house_fid, is_read, create_time, msg_send_time
+        FROM `t_msg_base` ba
+        WHERE EXISTS(
+        SELECT fid FROM `t_msg_house` t
+        WHERE 1=1
+        AND t.`landlord_uid` =#{landlordUid,jdbcType=VARCHAR}
+        AND t.`tenant_uid` =#{tenantUid,jdbcType=VARCHAR}
+        AND t.fid =ba.msg_house_fid
+        AND ba.`is_del` = 0
+        AND ba.msg_sender_type IN(10,20)
+        ORDER BY t.`id`
+        )
+        ORDER BY ba.`id`) AS tem
+
+        LEFT JOIN `t_msg_house` msg
+        ON msg.fid = tem.msg_house_fid;
+
+    </select>
+
+    <!-- 查询当前房东多少天内所有的聊天关系id -->
+    <select id="queryLandAllMsgHouseByDays" resultType="java.lang.String"
+            parameterType="com.ziroom.minsu.services.message.dto.MsgReplyStaticsRequest">
+
+        SELECT DISTINCT(mh.fid) FROM t_msg_house mh
+        WHERE mh.is_del=0
+        <if test="landlordUid !=null">
+            AND mh.landlord_uid=#{landlordUid,jdbcType=VARCHAR}
+        </if>
+        AND DATE_SUB(CURDATE(), INTERVAL <![CDATA[ #{days,jdbcType=INTEGER} ]]> DAY ) <![CDATA[  <= ]]> mh.create_time
+        <if test="houseFid !=null and rentWay==0">
+            AND mh.house_fid = #{houseFid,jdbcType=INTEGER}
+        </if>
+        <if test="houseFid !=null and rentWay==1">
+            AND mh.room_fid = #{houseFid,jdbcType=INTEGER}
+        </if>
+        <if test="houseFid !=null and rentWay==2">
+            AND mh.bed_fid = #{houseFid,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <!-- 根据消息关系表fid统计房东第一条消息的回复时长(ms) -->
+    <select id="staticsLandReplyFirstTime" resultType="java.lang.Integer" parameterType="map">
+        SELECT ABS(TIMESTAMPDIFF(SECOND,tenantTmp.firstRecordTime,landlordTmp.firstRecordTime)) sc FROM(
+        SELECT DATE_FORMAT( mb.`create_time`, "%Y-%m-%d" ) ymd ,MIN(mb.`create_time`) firstRecordTime FROM `t_msg_base`
+        mb
+        WHERE mb.`is_del`='0' AND mb.`msg_sender_type` IN ('2','20','3')
+        AND mb.`msg_house_fid` IN
+        <foreach collection="msgHouseFidList" item="msgHouseFid" index="index" open="(" separator="," close=")">
+            #{msgHouseFid,jdbcType=VARCHAR}
+        </foreach>
+        GROUP BY ymd
+        ) AS tenantTmp
+        INNER JOIN (
+        SELECT DATE_FORMAT( mb.`create_time`, "%Y-%m-%d" ) ymd ,MIN(mb.`create_time`) firstRecordTime FROM `t_msg_base`
+        mb
+        WHERE mb.`is_del`='0' AND mb.`msg_sender_type` IN ('1','10')
+        AND mb.`msg_house_fid` IN
+        <foreach collection="msgHouseFidList" item="msgHouseFid" index="index" open="(" separator="," close=")">
+            #{msgHouseFid,jdbcType=VARCHAR}
+        </foreach>
+        GROUP BY ymd
+        ) AS landlordTmp
+        ON tenantTmp.ymd = landlordTmp.ymd ORDER BY sc ASC
+
+    </select>
+
+    <!-- 根据消息关系表fid统计一段时间内房东消息的回复时长(s) -->
+    <select id="staticsLandReplyTimeByDays" resultType="java.lang.Integer"
+            parameterType="com.ziroom.minsu.services.message.dto.MsgReplyStaticsRequest">
+        SELECT ROUND((mb.replay_time_lanlord / 1000)) sc FROM t_msg_base mb
+        WHERE mb.is_del=0 AND DATE_SUB(CURDATE(), INTERVAL <![CDATA[ #{days,jdbcType=INTEGER} ]]> DAY )
+        <![CDATA[  <= ]]> mb.create_time
+        AND mb.replay_time_lanlord IS NOT NULL AND mb.replay_time_lanlord !=0
+        AND mb.msg_house_fid IN
+        <foreach collection="msgHouseFidList" item="msgHouseFid" index="index" open="(" separator="," close=")">
+            #{msgHouseFid,jdbcType=VARCHAR}
+        </foreach>
+        ORDER BY sc ASC
+    </select>
+
+    <!-- 根据消息关系表fid统计一段时间内房东回复的咨询消息的条数 -->
+    <select id="staticsLandReplyNumByDays" resultType="java.lang.Integer"
+            parameterType="com.ziroom.minsu.services.message.dto.MsgReplyStaticsRequest">
+        SELECT COUNT(DISTINCT(mb.msg_house_fid)) FROM t_msg_base mb
+        WHERE mb.is_del=0 AND DATE_SUB(CURDATE(), INTERVAL <![CDATA[ #{days,jdbcType=INTEGER} ]]> DAY )
+        <![CDATA[  <= ]]> mb.create_time
+        AND mb.msg_sender_type IN ('1','10')
+        AND mb.msg_house_fid IN
+        <foreach collection="msgHouseFidList" item="msgHouseFid" index="index" open="(" separator="," close=")">
+            #{msgHouseFid,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+
+    <!-- 根据当前房东聊天记录 查询房东上一条聊天记录 -->
+    <select id="findPreLanRecord" resultMap="BaseResultMap"
+            parameterType="com.ziroom.minsu.entity.message.MsgBaseEntity">
+
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `t_msg_base` t1 where t1.msg_house_fid = #{msgHouseFid,jdbcType=VARCHAR} AND t1.`msg_sender_type` =
+        #{msgSenderType,jdbcType=INTEGER}
+        AND EXISTS
+        (SELECT * FROM `t_msg_base` t2 where t2.`fid` = #{fid,jdbcType=VARCHAR} and t1.`id` <![CDATA[<]]> t2.`id`)
+
+        AND t1.`is_del` = 0
+        <if test="houseFid !=null and houseFid !=''">
+            AND house_fid = #{houseFid,jdbcType=VARCHAR}
+        </if>
+        ORDER BY t1.id DESC LIMIT 1;
+    </select>
+
+
+    <select id="findMsgBaseByFid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        <!-- 条件分页查询-->
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_msg_base
+        WHERE fid = #{fid,jdbcType=VARCHAR}
+
+    </select>
+
+    <select id="queryImMsgBaseVo" resultMap="ImMsgBaseVoMap" parameterType="java.lang.String">
+       SELECT msg_real_content,msg_content,msg_sender_type,msg_send_time FROM `t_msg_base` 
+     WHERE  msg_house_fid = #{msgHouseFid,jdbcType=VARCHAR} ORDER BY id DESC LIMIT 10
+  </select>
+
+    <select id="queryImMsgList" resultMap="ImMsgListMap"
+            parameterType="com.ziroom.minsu.services.message.dto.ImMsgListDto">
+        SELECT landlord_uid, tenant_uid,fid ,im_lastmodify_time,is_del
+        FROM (select ho.`fid`,ho.`landlord_uid`,ho.`tenant_uid`,ho.`im_lastmodify_time`,ho.`is_del` from `t_msg_house`
+        ho
+        WHERE ho.`im_lastmodify_time` <![CDATA[ <= ]]>#{imLastmodifyTime,jdbcType=TIMESTAMP}
+        <if test="landlordUid !=null and landlordUid !=''">
+            AND ho.`landlord_uid` = #{landlordUid,jdbcType=VARCHAR}
+        </if>
+        <if test="tenantUid !=null and tenantUid !=''">
+            AND ho.`tenant_uid` = #{tenantUid,jdbcType=VARCHAR}
+        </if>
+        order by ho.`id` desc limit 10) as tem;
+    </select>
+
+    <!--同步消息列表-->
+    <select id="listImMsgSyncList" resultMap="syncResultMap"
+            parameterType="com.ziroom.minsu.services.message.dto.MsgSyncRequest">
+    SELECT
+      t.`tenant_uid`,t.`landlord_uid`,t.`is_del`,t1.`msg_sender_type`,t1.`house_fid`,t.`rent_way`,t1.`msg_content`,t1.`msg_real_content`,t1.`msg_send_time`,
+      t1.url, t1.secret, t1.filename, t1.file_length, t1.type, t1.size
+    FROM
+      t_msg_house t
+      LEFT JOIN `t_msg_base` t1
+        ON t.`fid` = t1.msg_house_fid
+    WHERE t1.msg_send_time > #{tillDate,jdbcType=TIMESTAMP}
+      AND (t.`tenant_uid` = #{uid,jdbcType=VARCHAR} OR t.`landlord_uid` = #{uid,jdbcType=VARCHAR})
+      ORDER BY t1.msg_send_time DESC
+   </select>
+
+    <!--消息聊天列表-->
+    <select id="listChatBoth" resultType="com.ziroom.minsu.services.message.entity.MsgChatVo" parameterType="string">
+        SELECT
+          t.`tenant_uid` as tenantUid,
+          t.`landlord_uid` as landlordUid,
+          t1.`msg_sender_type` as msgSenderType,
+          t1.`msg_content` as content,
+          t1.msg_send_time as msgSendTime
+        FROM
+          t_msg_house t
+          LEFT JOIN t_msg_base t1
+          ON t.`fid` = t1.`msg_house_fid`
+        WHERE t.`fid` = #{fid,jdbcType=VARCHAR}
+        ORDER by t1.msg_send_time ASC
+    </select>
+
+    <!--house_fid,msg_advisory_fid 维度的消息聊天列表-->
+    <select id="listChatOnAdvisory" resultType="com.ziroom.minsu.services.message.entity.MsgAdvisoryChatVo" parameterType="map">
+        SELECT
+          msgHouseFid,
+          tenantUid,
+          landlordUid,
+          t1.`msg_real_content`as msgRealContent,
+          t1.`house_card` AS houseCard,
+          t1.`msg_sender_type` AS msgSenderType,
+          t1.`msg_content` AS content,
+          t1.`msg_send_time` AS msgSendTime
+        FROM
+          (SELECT
+            t.`fid` AS msgHouseFid,
+            t.`tenant_uid` AS tenantUid,
+            t.`landlord_uid` AS landlordUid,
+            f.create_time AS createTime
+          FROM
+            `minsu_message_db`.`t_msg_first_advisory` f
+            INNER JOIN t_msg_house t
+              ON f.`msg_house_fid` = t.`fid`
+          WHERE f.`msg_base_fid` = #{msgBaseFid,jdbcType=VARCHAR}
+          AND f.create_time >= #{fisrtAdvisoryFollowStartTime,jdbcType=VARCHAR}
+         ) AS tem
+          LEFT JOIN t_msg_base t1
+            ON t1.`msg_house_fid` = tem.msgHouseFid
+        AND DATE_ADD(t1.create_time,INTERVAL 5 SECOND)  >= tem.createTime
+        ORDER BY t1.create_time ASC ;
+    </select>
+    
+    <!--  t_msg_house查询所有记录 -->
+    <select id="getAllMsgHouseFid" resultType="com.ziroom.minsu.entity.message.MsgHouseEntity" parameterType="com.ziroom.minsu.services.message.dto.MsgHouseRequest">
+        select fid, temp.house_fid as houseFid, temp.landlord_uid as landlordUid, temp.tenant_uid as tenantUid, temp.rent_way as  rentWay
+		from
+		        (SELECT t.`id`,t.fid, t.house_fid , t.landlord_uid , t.tenant_uid, t.rent_way 
+		        FROM `t_msg_house` t
+		        WHERE 1=1
+		        AND( t.`landlord_uid` = #{landlordUid}
+		        OR t.`tenant_uid` = #{tenantUid})
+		        and t.rent_way =0  		       
+		        UNION
+		        SELECT t.`id`,t.fid, t.room_fid as houseFid, t.landlord_uid as landlordUid, t.tenant_uid as tenantUid, t.rent_way as  rentWay
+		        FROM `t_msg_house` t
+		        WHERE 1=1
+		        AND( t.`landlord_uid` = #{landlordUid}
+		        OR t.`tenant_uid` = #{tenantUid})
+		        and t.rent_way =1) temp
+		 ORDER BY temp.`id`
+
+    </select>
+    
+    <!-- 查询t_msg_base表，填充所有需要的字段 -->
+    <select id="fillMsgBaseByMsgHouse" resultMap="AppMsgBaseMap" parameterType="string">
+        SELECT id, fid, msg_content, msg_sender_type, is_del, msg_house_fid, is_read, create_time FROM
+        `t_msg_base` ba
+        where ba.msg_house_fid=#{fid,jdbcType=VARCHAR}  AND ba.msg_sender_type IN(1,2,3)
+    </select>
+    
+    
+    <!--  t_msg_house查询所有记录 -->
+    <select id="getAllMsgHouseFidByIMChatRecord" resultType="com.ziroom.minsu.entity.message.MsgHouseEntity" parameterType="com.ziroom.minsu.services.message.dto.MsgHouseRequest">
+        select fid, temp.house_fid as houseFid, temp.landlord_uid as landlordUid, temp.tenant_uid as tenantUid, temp.rent_way as  rentWay
+		from
+		        (SELECT t.`id`,t.fid, t.house_fid , t.landlord_uid , t.tenant_uid, t.rent_way 
+		        FROM `t_msg_house` t
+		        WHERE 1=1
+		        AND( t.`landlord_uid` = #{landlordUid}
+		        AND t.`tenant_uid` = #{tenantUid})
+		        and t.rent_way =0  		       
+		        UNION
+		        SELECT t.`id`,t.fid, t.room_fid as houseFid, t.landlord_uid as landlordUid, t.tenant_uid as tenantUid, t.rent_way as  rentWay
+		        FROM `t_msg_house` t
+		        WHERE 1=1
+		        AND( t.`landlord_uid` = #{landlordUid}
+		        AND t.`tenant_uid` = #{tenantUid})
+		        and t.rent_way =1) temp
+		 ORDER BY temp.`id`
+
+    </select>
+     
+    <!-- 查询t_msg_base表，填充所有需要的字段 -->
+    <select id="getMsgBaseByMsgHouse" resultMap="AppMsgBaseMap" parameterType="string">
+        SELECT id, fid, msg_content, msg_sender_type, is_del, msg_house_fid, is_read, create_time FROM
+        `t_msg_base` ba
+        where ba.msg_house_fid=#{fid,jdbcType=VARCHAR}  AND ba.msg_sender_type IN(10,20)
+    </select>
+    
+      <!-- 根据param获取两个人所有回话的集合-->
+    <select id="findAllImByParam" resultMap="BaseResultMap" parameterType="map">
+        SELECT id, fid, msg_content, msg_sender_type, is_del, msg_house_fid, is_read, create_time FROM
+        `t_msg_base` ba
+        where ba.msg_house_fid=#{msgHouseFid,jdbcType=VARCHAR}
+              AND ba.msg_sender_type = #{msgSenderType,jdbcType=INTEGER}
+              AND ba.is_system_send = #{isSystemSend,jdbcType=INTEGER}
+    </select>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cms.activityHouseDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.cms.ActivityHouseEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="act_sn" property="actSn" jdbcType="VARCHAR" />
+    <result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, act_sn, house_sn
+  </sql>
+
+  <select id="findHouseByActsn" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_activity_house
+    where act_sn = #{actSn,jdbcType=VARCHAR}
+  </select>
+
+
+  <insert id="saveActivityHouse" parameterType="com.ziroom.minsu.entity.cms.ActivityHouseEntity" >
+    insert into t_activity_house
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="actSn != null" >
+        act_sn,
+      </if>
+      <if test="houseSn != null" >
+        house_sn,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="actSn != null" >
+        #{actSn,jdbcType=VARCHAR},
+      </if>
+      <if test="houseSn != null" >
+        #{houseSn,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>
