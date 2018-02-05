@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016. Copyright (c) 2016. ziroom.com.
+  -->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        ">
+
+    <!--interceptor-->
+    <context:property-placeholder location="classpath:application.properties,classpath:redis.properties,classpath:pay.properties" local-override="true"/>
+
+    <!-- 扫描注解Bean -->
+    <context:component-scan base-package="com.asura" />
+    <context:component-scan base-package="com.ziroom.minsu.api">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--
+        启用 aspectj 动态代理
+        proxy-target-class属性若此值为true强制使用CGLIB代理
+        expose-proxy属性若此值为true时，是为了目标对象内部的自我调用也可实施切面
+    -->
+    <aop:aspectj-autoproxy proxy-target-class="true" expose-proxy="true"/>
+
+    <!-- 校验参数 -->
+    <bean id="api.messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>classpath:message/api-message</value>
+                <value>classpath:message/api-validator</value>
+                <value>classpath:org/hibernate/validator/ValidationMessages</value>
+            </list>
+        </property>
+        <property name="useCodeAsDefaultMessage" value="false"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="cacheSeconds" value="60"/>
+    </bean>
+    <!--z-track 链路跟踪-->
+    <bean id="zTrackHttpClientUtils" class="com.ziroom.track.httpclient.HttpClientUtils"/>
+
+    <bean id="api.validatorFactory"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+        <property name="validationMessageSource" ref="api.messageSource"/>
+    </bean>
+    
+    <!-- 上传图片client -->
+    <bean id="storageService" class="com.ziroom.tech.storage.client.service.impl.StorageServiceImpl">
+	    <property name="server" value="${storage_client_url}"/>
+	</bean>
+
+    <bean id="api.validator" factory-bean="api.validatorFactory" factory-method="getValidator"/>
+    <!-- dubbo消费者配置 -->
+    <import resource="dubbo-consumer.xml"/>
+    <!-- 基础数据服务 -->
+    <import resource="classpath:META-INF/spring/basedata-inner-consumer.xml"/>
+    <!-- 房源服务 -->
+    <import resource="classpath:META-INF/spring/house-inner-consumer.xml"/>
+    <!-- 订单服务 -->
+     <import resource="classpath:META-INF/spring/order-inner-consumer.xml"/>
+    <!-- 消息服务 -->
+    <import resource="classpath:META-INF/spring/message-inner-consumer.xml"/>
+    <!-- 客户服务 -->
+    <import resource="classpath:META-INF/spring/customer-inner-consumer.xml"/>
+    <!--房源评价-->
+    <import resource="classpath:META-INF/spring/evaluate-inner-consumer.xml"/>
+    <!--房源评价-->
+    <import resource="classpath:META-INF/spring/search-inner-consumer.xml"/>
+
+    <import resource="classpath:META-INF/spring/cms-inner-consumer.xml"/>
+</beans>

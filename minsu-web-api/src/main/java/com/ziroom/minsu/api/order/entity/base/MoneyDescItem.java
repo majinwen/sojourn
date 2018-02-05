@@ -1,0 +1,28 @@
+package com.ziroom.minsu.api.order.entity.base;
+
+/**
+ * <p>TODO</p>
+ * <p>
+ * <PRE>
+ * <BR>	修改记录
+ * <BR>-----------------------------------------------
+ * <BR>	修改日期			修改人			修改内容
+ * </PRE>
+ *
+ * @author jixd
+ * @version 1.0
+ * @Date Created in 2017年08月01日 14:31
+ * @since 1.0
+ */
+public class MoneyDescItem extends MoneyItem {
+
+    private String desc;
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+}

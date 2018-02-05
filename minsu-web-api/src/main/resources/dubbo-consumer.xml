@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="minsu-web-api-consumer" owner="minsu-web-api-consumer" organization="dubbox"/>
+
+    <!--本地-->
+    <!--<dubbo:registry address="zookeeper://127.0.0.1:2181"/>-->
+
+    <!-- d环境 zk地址 -->
+    <dubbo:registry address="zookeeper://10.16.4.95:2181"/>
+
+    <!-- T环境 zk地址 -->
+    <!--<dubbo:registry address="zookeeper://minsu.zk.t.ziroom.com:2181"/>-->
+
+    <dubbo:protocol name="dubbo" />
+
+</beans>
