@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016. Copyright (c) 2016. ziroom.com.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+       
+	    <mvc:interceptors>
+	         <!-- 验证登录请求的URL处理 -->
+			  <mvc:interceptor>
+			   <mvc:mapping path="/*/ea61d2/*" />
+			   <mvc:mapping path="/*/43e881/*" />
+	           <bean class="com.ziroom.minsu.web.im.common.interceptor.LoginInterceptor"/>
+			  </mvc:interceptor>
+			       <!-- 参数初始化 -->
+	         <mvc:interceptor>   
+			   <mvc:mapping path="/**" />  
+			   <bean class="com.ziroom.minsu.web.im.common.interceptor.InitGlobalParamsInterceptor" >
+			  </bean>
+		 </mvc:interceptor> 
+	    </mvc:interceptors>
+</beans>
