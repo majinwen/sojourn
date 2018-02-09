@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016. Copyright (c) 2016. ziroom.com.
+  -->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        ">
+
+    <!--interceptor-->
+    <context:property-placeholder location="classpath:application.properties,classpath:redis.properties" local-override="true"/>
+
+    <!-- 扫描注解Bean -->
+    <context:component-scan base-package="com.asura" />
+    <context:component-scan base-package="com.ziroom.minsu.troy">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    
+    <!-- 权限系统相关配置 -->
+	<bean id="upsConfig" class="com.ziroom.minsu.services.common.entity.UpsConfig">
+	    <property name="systemCode" value="${system_code}"/>
+	    <property name="userMsgApi" value="${res_user_msg_api}"/>
+	</bean>
+
+    <!--
+        启用 aspectj 动态代理
+        proxy-target-class属性若此值为true强制使用CGLIB代理
+        expose-proxy属性若此值为true时，是为了目标对象内部的自我调用也可实施切面
+    -->
+    <aop:aspectj-autoproxy proxy-target-class="true" expose-proxy="true"/>
+
+    <!-- dubbo消费者配置 -->
+    <import resource="dubbo-consumer.xml"/>
+    <!-- 基础数据服务 -->
+    <import resource="classpath:META-INF/spring/basedata-inner-consumer.xml"/>
+
+    <import resource="classpath:META-INF/spring/search-inner-consumer.xml"/>
+    
+    <import resource="classpath:META-INF/spring/evaluate-inner-consumer.xml"/>
+    
+    <import resource="classpath:META-INF/spring/house-inner-consumer.xml"/>
+    
+    <!-- 上传图片client -->
+    <bean id="storageService" class="com.ziroom.tech.storage.client.service.impl.StorageServiceImpl">
+	    <property name="server" value="${storage_client_url}"/>
+	</bean>
+	
+    <import resource="classpath:META-INF/spring/order-inner-consumer.xml"/>
+	
+	<import resource="classpath:META-INF/spring/message-inner-consumer.xml"/>
+	
+	<import resource="classpath:META-INF/spring/customer-inner-consumer.xml"/>
+
+    <import resource="classpath:META-INF/spring/cms-inner-consumer.xml"/>
+
+    <import resource="classpath:META-INF/spring/houses-consumer.xml"/>
+</beans>

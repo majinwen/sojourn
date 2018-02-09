@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016. Copyright (c) 2016. ziroom.com.
+  -->
+
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <contextName>com.ziroom.minsu.troy</contextName>
+
+    <property name="log.base" value="../logs"/>
+
+    <!-- 所有日志 -->
+    <appender name="allAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <Encoding>UTF-8</Encoding>
+        <File>${log.base}/troy.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.base}/troy-%d{yyyyMMdd}.log</fileNamePattern>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!--格式化输出,%d:日期;%thread:线程名;%-5level：级别,从左显示5个字符宽度;%msg:日志消息;%n:换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="com.ziroom" level="INFO"/>
+    <logger name="com.fasterxml" level="INFO"/>
+    <logger name="com.alibaba.dubbo" level="INFO"/>
+
+    <logger name="com.ziroom" level="INFO" addtivity="false">
+        <appender-ref ref="allAppender"/>
+    </logger>
+    <root level="error">
+        <appender-ref ref="allAppender"/>
+    </root>
+
+</configuration>
