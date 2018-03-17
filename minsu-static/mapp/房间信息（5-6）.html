@@ -1,0 +1,286 @@
+
+<!DOCTYPE>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="applicable-device" content="mobile">
+	<meta content="fullscreen=yes,preventMove=yes" name="ML-Config">
+	<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/header.js?v=js.version.20160815001"></script>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta content="yes" name="apple-mobile-web-app-capable" />
+	<meta content="yes" name="apple-touch-fullscreen" />
+	<title>房间信息(5/6)</title>
+	<link rel="stylesheet" type="text/css"
+	href="http://minsustatic.d.ziroom.com/mapp/css/styles_new.css?v=js.version.20160815001">
+	<link rel="stylesheet" type="text/css" href="http://minsustatic.d.ziroom.com/mapp/css/mui.picker.min.css?v=js.version.20160815001" />
+
+	<link rel="stylesheet" type="text/css" href="css/css_830.css">
+	
+</head>
+<body>
+
+	
+<header class="header"> 
+	<a href="javascript:history.go(-1);" id="goback" class="goback"></a>
+	<h1>房间信息(5/6)</h1>
+</header>
+		
+			<div class="main" id="main">
+				<div class="box z_scrollBox">
+					
+				
+				<form id="addHouseFourForm" >
+				<ul class="z_list">
+					
+					<li class="mui-btn s"> 
+							<input id="houseBaseDataShow" type="text" placeholder="请选择整套房屋的户型" value="0室0厅0厨0卫0阳台" readonly="readonly" class=" text">
+							<span class="c_span">房源户型</span>
+							<span class="c_ipt" id="houseBaseText">0室0厅0厨0阳台</span>
+							<span class="icon_r icon"></span>
+						
+					</li>
+					<li class="z_fx_tips s">您需要完善与户型中卧室相同的房间信息，才可以完成房源发布</li>
+					
+
+				</ul>
+
+				<!--
+
+					<li>					   
+					    <span class="c_span">房间1</span>
+					    <span class="c_ipt">已完成</span>
+					    <span class="icon_r icon"></span>					   
+					</li>
+					<li class="s">
+					 	<span class="text">完善房间2的信息</span>
+					    <span class="icon_r icon"></span>
+					</li>
+					
+				-->
+				<ul id="baseHouseList" class="z_list hide">
+                    
+                </ul>
+				<ul class="z_list">
+					
+					<li class=" "> 
+						<a href="javascript:void(0);">							
+							<span class="text">可选信息</span>
+							<span class="icon_r icon"></span>
+						</a>
+					</li>
+					
+
+				</ul>
+				</form>
+
+				</div>
+			</div><!--/main-->
+		
+		<div class="box box_bottom">
+			<input type="button" id="sentHouse" value="下一步" class="org_btn disabled_btn ">
+		</div>
+	
+	<!-- 添加房源名称 -->
+	<input type="hidden" name="sIpt" id="sIpt" value="0" >
+	<input type="hidden" name="tIpt" id="tIpt" value="0" >
+	<input type="hidden" name="cIpt" id="cIpt" value="0" >
+	<input type="hidden" name="wIpt" id="wIpt" value="0" >
+	<input type="hidden" name="yIpt" id="yIpt" value="0" >
+
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/jquery-2.1.1.min.js?v=js.version.20160815001"
+	type="text/javascript"></script>
+	<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/common/commonUtils2.js?v=js.version.20160815001"></script>
+<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/house/apartInfo.js?v=js.version.20160815006"></script>
+
+	<script type="text/javascript"
+	src="http://minsustatic.d.ziroom.com/mapp/js/layer/layer.js?v=js.version.20160815001"></script>
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/common2.js?v=js.version.20160815001"></script>
+	<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/bed_style2.js?v=js.version.20160815003"></script>
+
+
+	<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/mui.min.js?v=js.version.20160815001"></script>
+	<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/mui.picker.min.js?v=js.version.20160815001"></script>
+
+<script src="http://minsustatic.d.ziroom.com/mapp/js/iscroll-probe.js?v=js.version.20160815006"></script>
+	<script type="text/javascript">
+	var myScroll = new IScroll('#main', { scrollbars: true, probeType: 3, mouseWheel: true });
+
+		
+		var iWinHeight = $$(window).height();
+		var top = $$(window).scrollTop()+iWinHeight;		
+		var conHeight = $$(window).height()-$$('.header').height()-$$('.box_bottom').height();
+		
+		
+		$$('#main').css({'position':'relative','height':conHeight,'overflow':'hidden'});
+		$$('#main .box').css({'position':'absolute','width':'100%'});
+		myScroll.refresh();
+		document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+		(function($) {
+            $.init();
+            var result = $('#houseBaseDataShow')[0];
+            var btns = $('.mui-btn');
+            btns.each(function(i, btn) {
+                btn.addEventListener('tap', function() {
+                    var optionsJson = this.getAttribute('data-options') || '{}';
+                    var options = JSON.parse(optionsJson);
+                    var id = this.getAttribute('id');                       
+                    var picker = new $.DtPicker(options);
+                    picker.show(function(rs) {                          
+                        $$('#houseBaseDataShow').val(rs.text);
+                        $$('#houseBaseText').html(rs.text);
+
+                        $$('.mui-btn').addClass('mui-btn-active');
+
+                        var s = $$("#sIpt").val();
+                        var _html='';
+                        for(var i=0; i<s; i++){
+                        	_html+='<li class="mui-table-view-cell">'
+                        				+'<div class="mui-slider-right mui-disabled">'
+                        					+'<a class="mui-btn mui-btn-red">删除</a>'
+                        				+'</div>'
+                        				+'<div class="mui-slider-handle" onclick="window.location.href=&quot;http://minsu.m.d.ziroom.com/houseInput/43e881/goToHouseUpdate?houseBaseFid=8a9084df56b0fec30156b1263bc2003c&amp;houseRoomFid=null&amp;rentWay=0&quot;">'
+                        						+'<span class="text">完善房间<span class="liIndex">'+(i+1)+'</span>的信息</span>'
+                        						//+'<span class="c_span">房间 <span class="liIndex">'+(i+1)+'</span></span><span class="c_ipt">已完成</span>'
+                        						+'<span class="icon_r icon"></span>'
+                        					
+                        				+'</div>'
+                        			+'</li>';
+                        }
+                        $$('#baseHouseList').html('').append(_html).show();
+                        myScroll.refresh();
+                        picker.dispose();
+                    });
+                }, false);
+            });
+        })(mui);
+
+
+        mui.init();
+		(function($) {
+			$('#baseHouseList').on('tap', '.mui-btn', function(event) {
+				var elem = this;
+				var li = elem.parentNode.parentNode;
+				var liSize = $$('#baseHouseList li').size();
+
+				if(liSize==1){
+					mui.confirm('最后一条房间信息不可删除！', '', ['关闭'], function(e) {
+						$.swipeoutClose(li);
+					});
+							
+							
+				}else{
+					mui.confirm('确认删除该条房间信息？', '', btnArray, function(e) {
+						var liSize = $$('#baseHouseList li').size();
+						if (e.index == 1) { //这是确认
+							
+								li.parentNode.removeChild(li);
+								countLiIndex();
+							
+						} else {//这是取消
+							setTimeout(function() {
+								$.swipeoutClose(li);
+							}, 0);
+						}
+					});
+				}
+				
+			});
+			var btnArray = ['取消', '确认'];
+			
+		})(mui);
+
+    	function countLiIndex(){
+    		$$('.liIndex').each(function(){
+    			$$(this).html($$(this).parents('li').index()+1);
+    		});
+    	}
+	    //添加房间按钮
+	    $$(function(){
+	        
+	        var oldVal = $$('#houseBaseDataShow').val();
+	        var oldS = $$("#sIpt").val();
+	        var oldT = $$("#tIpt").val();
+	        var oldC = $$("#cIpt").val();
+	        var oldW = $$("#wIpt").val();
+	        var oldY = $$("#yIpt").val();
+	        var curVal = '';
+	        var params = {};
+	        
+	        $$(document).on('tap',function(){
+
+	            curVal = $$('#houseBaseDataShow').val();
+	            s = Number($$("#sIpt").val());//卧室
+	            t = Number($$("#tIpt").val());//客厅
+	            c = Number($$("#cIpt").val());//厨房
+	            w = Number($$("#wIpt").val());//卫生间
+	            y = Number($$("#yIpt").val());//阳台
+
+	            var result = false;
+
+	            if(oldVal!==curVal){
+	                var fid = $$("input[name='houseBaseFid']").val();
+	                params = {fid:fid,roomNum:s,hallNum:t,kitchenNum:c,toiletNum:w,balconyNum:y};
+	                
+	                result = ApartInfo.complateBtnClick(s);
+	                if(!result){
+	                    $$('#houseBaseDataShow').val(oldVal);
+	                    $$("#sIpt").val(oldS);//卧室
+	                    $$("#tIpt").val(oldT);//客厅
+	                    $$("#cIpt").val(oldC);//厨房
+	                    $$("#wIpt").val(oldW);//卫生间
+	                    $$("#yIpt").val(oldY);//阳台
+	                }else{
+	                    oldVal = curVal;
+	                }
+	            }
+	            if(result){
+	                //保存到数据库
+	                ApartInfo.saveRoomInfo(params);
+	                $$("#submitBtn").removeClass("disabled_btn").addClass("org_btn");
+	            }
+
+	        });
+
+
+	       $$("#submitBtn").click(function(){
+	            if($$(this).hasClass("disabled_btn")){
+	                return false;
+	            }else{
+	                window.location.href="room_message2.html";
+	            }
+	        })
+
+
+	        $$(".del_btn").each(function(){
+	            $$(this).click(function(){
+	                var fid =  $$(this).attr("roomFid");
+	                var button = $$(this);
+	                var delUrl = "http://minsu.m.d.ziroom.com:80/roomMgt/43e881/delRoomInfo?roomFid="+fid;
+	                $$.ajax({
+	                    url:delUrl,
+	                    type:"get",
+	                    dataType:"json",
+	                    async: false,
+	                    success:function(result) {
+	                       if(result.code === 0){
+	                            button.parents("li").remove();
+	                        }else{
+	                            button.parents("li").stop().animate({'left':'0px'},200);
+	                            showShadedowTips(result.msg,1);
+	                        }
+	                    },
+	                    error:function(result){
+	                        showShadedowTips("未知错误",1);
+	                    }
+	                });
+	            })
+	        })
+
+	    });
+	</script>
+
+
+	</body>
+	</html>

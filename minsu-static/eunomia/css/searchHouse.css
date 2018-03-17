@@ -1,0 +1,42 @@
+#allmap{width: 100%; height: 500px;}
+.txtStyle{position: absolute; box-shadow: 0 0 5px #666; color: #fff; font-size: 12px; padding: 0 10px; border-radius: 3px;
+    line-height: 30px; height: 30px;
+}
+.txtStyle .arrow{
+    background :url(../img/icon.png) no-repeat 0 0;
+    position:absolute;
+    width:10px;
+    height:5px;
+    top:28px;
+    left:50%;
+    margin-left :-5px;
+    overflow:hidden;
+}
+.txtStyle .san{background: url(../img/icon.png) no-repeat 105% -40px; padding-right: 12px;}
+.txtStyle.org{background: #ffa000;}
+.txtStyle.gray{background: #ababab;}
+.txtStyle.blue{background: #2d9dd7;}
+.txtStyle.red{background: #ff0000;}
+.txtStyle.gray .arrow{background :url(../img/icon.png) no-repeat 0 -20px;}
+.txtStyle.blue .arrow{background :url(../img/icon.png) no-repeat 0 -10px;}
+.txtStyle.red .arrow{background :url(../img/icon.png) no-repeat 0 -30px;}
+
+.houseDetail{background: #fff; width: 390px;  padding: 15px 0; border-radius: 5px;position: absolute; left: 50%; bottom: 50px; margin-left: -195px; box-sizing: initial; box-shadow: 0 0 10px #999; display: none;}
+
+.houseDetail .img{width: 360px; height: 240px; margin:0 15px; overflow: hidden; background: #eee;}
+
+.houseDetail .img img{height: 240px; width: 360px;}
+.houseDetail .txt{color: #444; font-size: 16px; line-height: 1.5; padding:0 15px;}
+.houseDetail .txt .price{font-size: 18px; font-weight: normal;}
+.houseDetail b.arr{width: 24px;height: 12px; position: absolute; left: 50%; bottom: -12px; margin-left: -12px; background: url(../img/bigIcon.png);}
+.houseDetail .txt .p2{width:100%;display:block;text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
+.houseDetail .col-xs-8,.houseDetail .col-xs-4{padding: 0;}
+.houseDetail .p1 {padding: 10px 0; height: 40px; overflow: hidden;}
+.houseDetail .p1 .col-xs-8{text-align: right}
+.houseDetail .p1 .pingjia{color: #999; font-size: 14px;}
+.star{ display: inline-block; padding-right: 10px; position: relative; top: 2px;}
+.star i{display: inline-block; width:14px; height: 14px; background-image: url(../img/star.png);
+    background-position:0 -40px;
+}
+.star i.half{background-position:0 -20px;}
+.star i.active{background-position:0px 0px;}

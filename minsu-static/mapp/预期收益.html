@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="applicable-device" content="mobile">
+	<meta content="fullscreen=yes,preventMove=yes" name="ML-Config">    
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta content="yes" name="apple-mobile-web-app-capable"/>
+	<meta content="yes" name="apple-touch-fullscreen"/>
+	<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width">
+	<meta name="format-detection" content="telephone=no">
+	<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/header.js?v=js.version.20160603.01001"></script>
+	<title>房间收益</title>
+	<link rel="stylesheet" type="text/css" href="css/slick.css">
+	<link rel="stylesheet" type="text/css" href="css/styles_new.css">
+	
+</head>
+
+<body>
+	<header class="header">
+		<h1>朝阳区十里堡阳关暖屋</h1>
+	</header>
+	<div class="bodys">
+		<div class="main">
+			<div class="profit_tab">
+				<ul class="profit_tab_ul clearfix">
+					<li>
+						<a href="实际收益.html">实际收益</a>
+					</li>
+					<li class="active">
+						<a href="预期收益.html">预期收益</a>
+					</li>
+				</ul>
+				<div id="slider" class="slider slick_box2 clearfix">
+					<div>
+						<div class="profit_tab_money">
+								<p><span>￥</span><span class="money">22,880.00</span></p>
+								<p> <span class="date" data-date="2016-05">5</span>月实际收益 </p>
+							</div>
+					</div>
+					<div>
+						<div class="profit_tab_money">
+								<p><span>￥</span><span class="money">17,880.00</span></p>
+								<p> <span class="date" data-date="2016-06">6</span> 月实际收益</p>
+							</div>
+					</div>
+				</div>
+			</div>
+			<ul class="profitList" id="profitList">
+				<li>
+					<div class="t clearfix">
+						<span class="fl">十里堡复式公寓单人间</span>
+						<span class="fr">结算中</span>
+					</div>
+					<a href="javascript:;">
+						<div class="c clearfix">
+							<div class="img">
+								<img src="images/image/img1.png">
+							</div>
+							<div class="txt">
+								<p>2016-01-01至2016-01-03  共2晚</p>
+								<p>预订人：小鱼  共2位入住</p>
+								<p>订单总额：<span class="org">￥430元</span></p>
+							</div>
+							<span class="icon_r icon"></span>	
+						</div>
+					</a>
+					<div class="b">
+						<a href="javascript:;"><span class="icon">添加备注(2)</span></a>
+					</div>
+				</li>
+				<li>
+					<div class="t clearfix">
+						<span class="fl">十里堡复式公寓单人间</span>
+						<span class="fr">已完成</span>
+					</div>
+					<a href="javascript:;">
+						<div class="c clearfix">
+							<div class="img">
+								<img src="images/image/img1.png">
+							</div>
+							<div class="txt">
+								<p>2016-01-01至2016-01-03  共2晚</p>
+								<p>预订人：小鱼  共2位入住</p>
+								<p>订单总额：<span class="org">￥430元</span></p>
+							</div>
+							<span class="icon_r icon"></span>	
+						</div>
+					</a>
+					<div class="b">
+						<a href="javascript:;"><span class="icon">添加备注(232)</span></a>
+					</div>
+				</li>
+			</ul>
+		</div><!--/main-->
+
+
+	</div><!--/bodys-->
+
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/jquery-2.1.1.min.js?v=js.version.20160603.01001" type="text/javascript"></script>
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/common/commonUtils.js?v=js.version.20160603.01001"></script>
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/layer/layer.js?v=js.version.20160603.01001"></script>
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/common.js?v=js.version.20160603.01001"></script>
+	<script type="text/javascript" src="js/slick.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('#slider').slick({
+		        dots: false,
+		        arrows:false,
+		        infinite: true,
+		        speed: 300,
+		        slidesToShow: 1,
+		        slidesToScroll: 1,
+		        onBeforeChange:function(){
+		        	touchMove:true
+		        },
+		        onAfterChange:function(o,index){
+		        	var date = $(".slick-active").find(".date").attr("data-date");
+		        	// TODO:根据date请求数据
+		        }
+		    });
+		})
+	</script>
+</body>
+</html>

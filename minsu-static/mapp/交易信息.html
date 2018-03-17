@@ -1,0 +1,162 @@
+
+<!DOCTYPE>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="applicable-device" content="mobile">
+	<meta content="fullscreen=yes,preventMove=yes" name="ML-Config">
+	<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/header.js?v=js.version.20160815001"></script>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta content="yes" name="apple-mobile-web-app-capable" />
+	<meta content="yes" name="apple-touch-fullscreen" />
+	<title>交易信息</title>
+	<link href="css/mui.picker.min.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css"
+	href="http://minsustatic.d.ziroom.com/mapp/css/styles_new.css?v=js.version.20160815001">
+	
+	<link rel="stylesheet" type="text/css" href="css/css_830.css">
+</head>
+<body>
+	<form id="addHouseFourForm" >
+		<header class="header"> <a href="javascript:history.go(-1);" id="goback" class="goback"></a>
+			<h1>交易信息</h1>
+		</header>
+		<input name="houseBaseFid" value="8a90a2d456a1980f0156a2576a2f0022" type="hidden"/>
+		<div class="bodys">
+			<div class="main">
+
+				<ul id="houseList" class="myCenterList">
+					
+					<li class="c_ipt_li bor_b "> 
+						<a href="javascript:void(0);"> 
+							<span class="c_span">预订类型</span>
+							<input class="c_ipt j_s_ipt" type="text" id="orderType" value="普通下单" readonly="readonly">
+							<select onchange="setValToInput(this,'orderType')" name="orderType">
+								<option value="" >请选择</option>
+								<option value="1" >实时下单</option>
+
+								<option value="2" selected>普通下单</option>
+
+							</select>
+							<span class="icon_r icon"></span>
+						</a>
+					</li>
+					<li class="c_ipt_li bor_b "> 
+						<a href="javascript:void(0);"> 
+							<span class="c_span">民宿类型</span>
+							<input class="c_ipt j_s_ipt" type="text" id="homestayType" value="通用" readonly="readonly">
+					<select onchange="setValToInput(this,'homestayType')" name="homestayType">
+							<option value="" >请选择</option>
+                        	<option value="1" >商务出差</option>
+                        
+                        	<option value="2" >旅游</option>
+                        
+                        	<option value="0" selected>通用</option>
+                        
+					</select>
+							<span class="icon_r icon"></span>
+						</a>
+					</li>
+					<li id="rulerLi" class="c_ipt_li c_ipt_li_none bor_b "> 
+						<a href="javascript:void(0);"> 
+							<span id="rulerSpan" class="c_span">押金规则</span>
+							<input class="c_ipt" type="text" placeholder="请选择押金规则" id="depositRulesCode" name="depositRulesCode" value="" readonly="readonly">
+							<span class="icon_r icon"></span>
+						</a>
+					</li>
+					<li class="c_ipt_li c_ipt_li_none bor_b ">
+						<a href="javascript:;">
+							<span class="c_span">退房规则</span>
+							<input  class="c_ipt" type="text" placeholder="请选择退房规则" id="checkOutRules" name="checkOutRules" value="" readonly="readonly"> 
+							<span class="icon_r icon"></span>
+						</a>
+
+					</li>
+					
+					<li class="c_ipt_li c_ipt_li_none bor_b ">
+						<a href="javascript:void(0);"> 
+							<span class="c_span">清洁费</span>
+							<input class="c_ipt j_ipt" data-type="price" type="tel" placeholder="请填写清洁费" id="cleanPrice" value=""/> 
+							<span class="icon_r icon icon_clear"></span>
+						</a>
+					</li>
+				</ul>
+				<!--/main-->
+			</div>
+			<div class="boxP080">
+				<input type="button" id="submitBtn" value="确认" class="org_btn  btn_radius">
+			</div>
+		</form>
+		<!-- 添加房源名称 -->
+
+		<script src="http://minsustatic.d.ziroom.com/mapp/js/jquery-2.1.1.min.js?v=js.version.20160815001"
+		type="text/javascript"></script>
+		<script type="text/javascript"
+		src="http://minsustatic.d.ziroom.com/mapp/js/layer/layer.js?v=js.version.20160815001"></script>
+		<script src="http://minsustatic.d.ziroom.com/mapp/js/common.js?v=js.version.20160815001"></script>
+		<script src="http://minsustatic.t.ziroom.com/mapp/js/iscroll-probe.js?v=js.version.201608168006"></script>
+		<script type="text/javascript" src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/mui.picker.min.js"></script>
+		<script type="text/javascript" src="js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="js/common_830.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+			})
+		</script>
+		<script>
+			(function($, doc) {
+				$.init();
+				$.ready(function() {
+					var rulerData = [{
+						value:'0',
+						text:'按房租收取',
+						children:[{
+							value:'1',
+							text:'首日房费'
+						},{
+							value:'2',
+							text:'2倍首日房费'
+						}]
+					},
+					{
+						value:'1',
+						text:'固定收取',
+						children:[{
+							value:'1',
+							text:'首日房费'
+						},{
+							value:'2',
+							text:'2倍首日房费'
+						}]
+					}];
+					//级联示例
+					var rulerPicker = new $.PopPicker({
+						layer: 2
+					});
+					rulerPicker.setData(rulerData);
+					var showRulerPickerButton = doc.getElementById('depositRulesCode');
+					showRulerPickerButton.addEventListener('tap', function(event) {
+						rulerPicker.show(function(items) {
+							jQuery.noConflict();
+							showRulerPickerButton.value = items[0].text + " " + items[1].text;
+							jQuery("#rulerLi").removeClass("c_ipt_li_none");
+						});
+					}, false);
+				});
+
+			})(mui, document);
+			$("#submitBtn").click(function(){
+				var _price = $("#cleanPrice").val();
+				_price = _price.replace("元","");
+				if(_price > 100){
+					mui.confirm('您的清洁费太高了，最高可设置为100元！', '', ['关闭'], function(e) {
+											});
+				}
+				
+			})
+		</script>
+
+	</body>
+	</html>

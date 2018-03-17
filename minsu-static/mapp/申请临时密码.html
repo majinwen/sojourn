@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>申请临时密码</title>
+		<script type="text/javascript" src="js/header.js"></script>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" type="text/css" href="css/styles.css">
+	</head>
+
+	<body>
+			<header class="header">
+				<a href="" class="goback"></a>	
+				<h1>申请临时密码</h1>
+			</header>
+			<form accept="" method="post" class="checkFormChild" id="form">	
+			<div class="main myCenterListNoneA myCenterListGeren guanlimimaList3">
+			<ul class="myCenterList">
+				<li class="clearfix bor_b ">
+					起始时间
+					<input type="text"
+						placeholder="请选择起始时间" id="start_time" name="start_time"
+						value="" pattern='yyyy-MM-dd' readonly="readonly" />
+						<input id="start_time_date" type="date"
+						onchange="setValToInputDate(this,'start_time');compareDate(this,'start_time');"
+						mins="2016-06-22"> 
+		
+					<span class="icon_r icon"></span>
+				</li>
+				<li class="clearfix bor_b">
+					截止时间			
+					<input type="text"
+						placeholder="请选择截止时间" id="end_time" name="end_time"
+						value="" pattern='yyyy-MM-dd' readonly="readonly" />
+						
+
+					<span class="icon_r icon"></span>
+				</li>
+				<li class="clearfix">
+					接收密码手机号
+					<input type="tel" placeholder="请填写接收密码手机号" id="tel" name="" value="">
+				</li>
+				
+			</ul>
+			
+
+			</div>
+<div class="boxP075 mt85 mb85">
+				<input type="button" value="确定" class="org_btn disabled_btn" id="saveBtn">
+			</div>
+			</form>
+<script src="http://minsustatic.d.ziroom.com/mapp/js/jquery-2.1.1.min.js?v=js.version.20160603.01001" type="text/javascript"></script>
+<script src="http://minsustatic.d.ziroom.com/mapp/js/layer/layer.js?v=js.version.20160603.01001"></script>
+<script src="http://minsustatic.d.ziroom.com/mapp/js/common.js?v=js.version.20160603.01001"></script>
+<script type="text/javascript">
+		
+		
+		
+		$("#saveBtn").click(function(){
+			saveBaiscMsg();
+		});
+		
+		function saveBaiscMsg(type){
+			if($('#saveBtn').hasClass('disabled_btn')){
+				return;
+			}
+			if(!validate()){
+				return;
+			}
+	    	$.ajax({
+				url:"http://minsu.m.d.ziroom.com:80//personal/43e881/updateCustomerInfo",
+				data:$('#form').serialize(),
+				dataType:"json",
+				type:"post",
+				async: false,
+				success:function(result) {
+					if(result.code === 0){
+						if(type == 1){
+							window.location.href = "http://minsu.m.d.ziroom.com:80/personal/43e881/introduce";
+						}else{
+							showShadedowTips("操作成功",1);
+							setTimeout(function(){
+								window.location.href='http://minsu.m.d.ziroom.com:80/personal/43e881/initPersonalCenter';
+							},1000);
+						}
+					}else{
+						showShadedowTips("操作失败",1);
+					}
+				},
+				error:function(result){
+					showShadedowTips("未知错误",1);
+				}
+			});
+	    	$(this).removeAttr("disabled");
+		}
+		
+		//校验填写信息
+		function validate(){
+	    	var telVal = $("#tel").val();
+
+	    	var flag = true;
+
+	    	
+	    	if(!checkMobile(telVal)){
+	    		showShadedowTips("请输入正确的手机号",1);
+	    		flag = false;
+	    		return;
+	    	}
+	    	
+	    	
+	    	return flag;
+		}
+		
+		function compareDate(obj, id) {
+			var beginDate = $(obj).attr('mins');
+			var endDate = $(obj).val();
+			var d1 = new Date(beginDate.replace(/\-/g, "\/"));
+			var d2 = new Date(endDate.replace(/\-/g, "\/"));
+
+			if (beginDate != "" && endDate != "" && d1 >= d2) {
+				showShadedowTips("只能选择今天以后的日期！", 1);
+				$(obj).val(beginDate);
+				$('#' + id).val(beginDate);
+				return false;
+			}
+		}
+		function compareDate2(start, end) {
+			var beginDate = $(start).val();
+			var endDate = $(end).val();
+			var d1 = new Date(beginDate.replace(/\-/g, "\/"));
+			var d2 = new Date(endDate.replace(/\-/g, "\/"));
+
+			if (beginDate != "" && endDate != "" && d1 >= d2) {
+				showShadedowTips("截止时间不能大于起始时间！请重新选择", 1);
+				$(end).val('');
+				$(end+'_date').val('');
+				return false;
+			}
+		}
+
+
+	</script>
+	</body>
+
+</html>

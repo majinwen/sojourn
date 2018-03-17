@@ -1,0 +1,66 @@
+body{background: #030616; color: #fff; font-size: 14px;}
+.box{padding: 50px 0;}
+img{width: 100%;}
+.detail {margin:10px 0px; position: relative; top: -110px;}
+.detail .c{border:solid 5px #43afff; padding: 5px; margin-bottom: 50px;}
+.detail .con{border:solid 2px #43afff; padding:15px 15px; color: #fff; font-size: 32px; line-height: 60px; text-align: center}
+.detail .con span{color: #43afff}
+
+.detail .b{height: 100px; overflow: hidden; margin: 50px 52px 0 52px;}
+.btn_xize{width: 302px; height: 100px; background:url(../img/xz_btn.png) no-repeat 0 0; float: left; border-radius: 0;}
+.btn_to{width: 302px; height: 100px; background:url(../img/fx_btn.png) no-repeat 0 0; float: right; border-radius: 0;}
+
+
+.jcList{padding: 0; margin: 0 auto; width: 690px;}
+.jcList > div{position: relative; font-size: 24px;margin:40px 0;background: #2c6ab4; color: #fff;width: 690px;}
+.jcList img{width: 100%; min-height: 100%;}
+.jcList > div .img {position: relative; width: 690px; height: 460px; overflow: hidden; background: #030616;}
+.jcList > div .img .t{
+  position: absolute; left: 0; bottom: 64px; background:rgba(0,0,0,.5); font-size: 32px; padding:5px 20px;
+  color: #fff; line-height: 64px;
+}
+.jcList > div a{color: #fff; text-decoration: none;}
+.jcList > div span.tips{position: absolute; right: 40px; top: 20px; z-index: 99; width: 227px; height: 227px;}
+.jcList > div.end span.tips{display: block;}
+.jcList .txt{padding:0px 30px 25px 20px; font-size: 30px; position: relative;}
+.jcList .txt h2{width:80%;text-overflow:ellipsis; white-space:nowrap; overflow:hidden; line-height:50px;
+color: #fff; padding-top: 10px; font-size: 30px;}
+.jcList .txt p{color: #fff; line-height: 30px; font-size: 20px;}
+.jcList .ts{position:absolute; right: 20px; top: -64px; border: solid 5px #43afff; border-radius: 50%; height: 128px; width: 128px;
+overflow: hidden;}
+.jcList .ts img{width: 100%; min-height: 100%;border-radius: 50%; border: solid 1px #fff; }
+
+.icon{background-image: url(../img/icon.png); background-repeat: no-repeat}
+
+.dliog{border:solid 1px #40a5f1; width: 90%; background: rgba(3,6,22,.9); position: fixed; left: 5%; top: 50%;
+	-webkit-transform: translateY(-50%);
+transform: translateY(-50%);
+ box-sizing: border-box; z-index: 999;}
+.dliog .close{width: 60px; height: 60px; right: 0; top: -60px;background: url(../img/icon.png) no-repeat 0 0;position: absolute;}
+.dliog .con{padding:20px;}
+.dliog .con h2{color: #43afff; font-size:30px; line-height:50px;}
+.slick-dots li button:before{color: #fff;font-size: 14px;}
+
+#dliogBg{background:rgba(0,0,0,.8); width: 100%; height: 100%; position: fixed; left: 0; top: 0; z-index: 998; display:none;}
+
+#xizeBox{font-size: 28px;}
+#xizeBox li{list-style: none; margin-bottom: 20px; position: relative; padding-left: 30px;}
+#xizeBox li b{width: 30px; height: 30px;background: url(../img/icon.png) no-repeat 0 -60px;position: absolute; left: 0; top: 5px;}
+#xizeBox  h2{color: #43afff; line-height: 50px;}
+
+#shareBox{background:url(../img/share.png) no-repeat 90% 5%;height: 400px; border:none; width: 100%; padding: 0; margin: 0;
+-webkit-transform: translateY(0%);
+transform: translateY(0%);
+left: 0; top: 0;}
+
+#querenBox{border:none; width: 100%; padding: 0; margin: 0; left: 0; background: none;}
+#querenBox a{width: 206px; height: 72px; position: absolute; left: 284px; top: 425px; background:rgba(0,0,0,.0);}
+
+#formBox .inp{border:solid 1px #43afff; height: 92px; background: none;}
+
+html,body{height: 100%; overflow: hidden;}
+#wrapper{height: 100%; position: relative; z-index: 1;}
+
+.slick-prev, .slick-next{visibility: hidden;}
+
+.share{position: absolute; left: -300px; top: -300px; width: 300px;height: 300px; z-index: 0;}

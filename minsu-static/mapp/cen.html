@@ -1,0 +1,298 @@
+
+
+
+ 
+ 
+<!doctype html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+   	<meta name="applicable-device" content="mobile">
+    <meta content="fullscreen=yes,preventMove=yes" name="ML-Config">    
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width">
+    <meta name="format-detection" content="telephone=no">
+    <script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/header.js?v=js.version.20160603.01001"></script>
+	<title>个人中心</title>
+	<link rel="stylesheet" type="text/css" href="css/styles.css?v=js.version.20160603.01001">
+	
+</head>
+<body>
+<div id="myListStep_1">	
+<div class="bodys">
+	<div class="main">
+		<div class="myBanner">
+			<img src="http://minsustatic.d.ziroom.com/mapp/images/userbg.jpg" class="bg">
+			<div class="avatar"  >
+				<!-- 审核通过不能上传修改头像    如果头像为空，显示默认头像 -->
+				
+					
+					
+						<div class="img"  style="background:url('http://10.16.34.44:8000/mona/group1/M00/00/4D/ChAiMFdLnSCAM3AsAAavmAwm4ws778.jpg_Z_120_120.jpg') no-repeat center center;background-size: auto 100%;"></div>
+					
+				
+				
+				
+			</div><!--/avatr-->
+			<p class="name"></p>
+			
+
+		</div>
+		<ul class="myCenterList">
+			<li class="clearfix ">
+				<a href="http://minsu.m.d.ziroom.com:80/personal/43e881/showBasicDetail" >
+					<span class="c_icon icon_ziliao"></span>
+					个人资料
+					<span class="icon_r icon"></span>
+				</a>
+			</li>
+			<!-- 如果是房东才显示认证信息 -->
+			
+				<li class="clearfix bor_t">
+					
+						<a href="http://minsu.m.d.ziroom.com:80/personal/43e881/showAuthDetail" > 
+							<span class="c_icon icon_renzheng"></span>
+							认证信息
+							<span class="gray">已认证</span>
+							<span class="icon_r icon"></span>
+						</a>
+					
+					
+				</li>
+			
+		</ul>
+
+		<ul class="myCenterList">
+			<li class="clearfix">
+				<a href="http://minsu.m.d.ziroom.com:80/personal/43e881/toMyBankAcount" >
+					<span class="c_icon icon_zhanghu"></span>
+					我的账户
+					<span class="icon_r icon"></span>
+				</a>
+			</li>
+		</ul>
+
+		<ul class="myCenterList">
+			
+			<li class="clearfix bor_b">
+				<a href="http://minsu.m.d.ziroom.com:80/personal/43e881/complain" id="customerComplain">
+					<span class="c_icon icon_tousu"></span>
+					投诉建议
+					<span class="icon_r icon"></span>
+				</a>
+			</li>
+			<li class="clearfix">
+				<a href="http://bnbstatic.ziroom.com/act/html/order/order_service_protocol.html">
+					<span class="c_icon icon_xieyi"></span>
+					服务协议					
+					<span class="icon_r icon"></span>
+				</a>
+			</li>
+		</ul>
+
+		<ul class="myCenterList">
+			
+			<li class="clearfix bor_b">
+				<a href="http://minsu.m.d.ziroom.com:80/personal/43e881/complain" id="customerComplain">
+					<span class="c_icon icon_pingjia"></span>
+					我的评价
+					<span class="icon_r icon"></span>
+				</a>
+			</li>
+			
+		</ul>
+		<ul class="myCenterList">
+			<li class="btnCen">
+				
+				
+					<a href="http://minsu.m.d.ziroom.com:80/customer/43e881/loginOut">
+						退出登录
+					</a>
+				
+			</li>
+		</ul>
+	</div><!--/main-->
+</div><!--/bodys-->
+
+<div class="bottomNav">
+	
+	<a href="http://minsu.m.d.ziroom.com:80/orderland/43e881/showlist" ><i class="dd"></i>订单</a>
+	<a href="http://minsu.m.d.ziroom.com:80/houseMgt/43e881/myHouses"><i class="fy"></i>房源</a>
+	<a href="http://minsu.m.d.ziroom.com:80/landlordEva/43e881/index" ><i class="pj"></i>评价</a>
+	<a href="http://minsu.m.d.ziroom.com:80/personal/43e881/initPersonalCenter"  class="active"><i class="wd"></i>我的</a>
+</div>	
+
+<input type="hidden" id="sourceType" value="">
+<input type="hidden" id="phone400" value="400-7711-666,70030">
+<input type="hidden" id="picBaseAddrMona" value="http://10.16.34.44:8000/minsu/">
+<input type="hidden" id="default_head_size" value="_Z_120_120">
+<input type="hidden" id="picSuffix" value=".jpg">
+
+</div><!--/myListStep_1-->
+<div id="myListStep_2" style="display:none;">	
+		<header class="header">
+		<a href="javascript:;" id="goBack" class="goback"></a>
+		<h1>修改头像</h1>
+	</header>
+	<div class="main">	
+			<div class="chooseImg">	
+				<div id="clipArea" style="background: url('http://10.16.34.44:8000/mona/group1/M00/00/4D/ChAiMFdLnSCAM3AsAAavmAwm4ws778.jpg_Z_120_120.jpg') no-repeat center center; background-size:400px 400px;">		
+				
+				<div class="files" style="z-index: 100">	
+					<input type="file" id="file">
+				</div>
+			</div>
+		
+		
+		<div class="boxP075 mt85">
+			<input type="button" value="上传头像" class="org_btn" id="clipBtn">
+		</div>	
+
+	</div>	
+
+</div><!--/myListStep_1-->
+</div>
+<div class="uhide" id="chooseKfBox">
+	<ul id="chooseKfBoxList">
+		<li><a href="javascript:;" onclick="callphone()">400电话客服</a></li>
+		<li><a href="javascript:;"   onclick="easemobIM()">7*24小时在线客服</a></li>
+	</ul>
+</div>
+	
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/jquery-2.1.1.min.js?v=js.version.20160603.01001" type="text/javascript"></script>
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/common/commonUtils.js?v=js.version.20160603.01001"></script>
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/layer/layer.js?v=js.version.20160603.01001" type="text/javascript"></script>
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/common.js?v=js.version.20160603.01001"></script>
+	
+	
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/photoClip/iscroll-zoom.js"></script>
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/photoClip/hammer.js"></script>
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/photoClip/jquery.photoClip.js"></script>
+	<script type="text/javascript">
+		//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+		$("#clipArea").photoClip({
+			width: 400,
+			height: 400,
+			file: "#file",
+			view: "#myUserAvatar",
+			ok: "#clipBtn",
+			loadStart: function() {
+			},
+			loadComplete: function() {
+			},
+			clipFinish: function(dataURL) {
+				$.post("http://minsu.m.d.ziroom.com:80/personal/43e881/updateHeadPicBinary",{"picBin":dataURL},function(data){
+							},'json');
+			}
+		});
+		
+		$('#file').click(function(){
+			$('#clipArea').css({'background':'none'});
+		});
+		
+		$('#myUserAvatar').click(function(){
+			//如果是android不处理
+			if($("#sourceType").val() == "1"){
+				return;
+			}
+			
+			$('#myListStep_2').show();
+			$('#myListStep_1').hide();
+		});
+
+		$('#clipBtn,#goBack').click(function(){
+			$('#myListStep_1').show();
+			$('#myListStep_2').hide();
+		});
+	
+		$('#chooseKf').click(function(){
+			layer.open({
+					title:'联系客服',
+				    content: $('#chooseKfBox').html(),
+				    offset:0,
+				    btn:['取消'],
+				    yes: function(){
+			        	closeLayer();
+			    	}, no: function(){
+			        	
+			    	}
+				    
+				});
+		});
+	
+	function closeLayer(){
+		layer.closeAll();
+	}
+	//在线客服
+	function easemobIM(){
+		closeLayer();
+		var sourceType = $("#sourceType").val();
+		if(sourceType == 1){
+			window.WebViewFunc.contactIM(); //安卓
+		}else if(sourceType == 2){
+			contactIM();//ios
+		}
+
+	}
+	//移动端拨号
+	function callphone(){
+		closeLayer();
+		var sourceType = $("#sourceType").val();
+		var phone400 = $("#phone400").val();
+		if(phone400 == ""){
+			return;
+		}
+		if(sourceType == "1"){
+			window.WebViewFunc.callPhone(phone400);
+		}else if(sourceType == "2"){
+			callPhone(phone400);
+		}
+	}
+
+	
+	//调用android图片上传方法
+	function upoladPicAndroid(type){
+		var sourceType = $("#sourceType").val();
+		//来自android
+		if(sourceType == "1"){
+			window.WebViewFunc.uploadUserPic(type);
+			return;
+		}
+	}
+	
+	
+	//android图片回调
+	function handleAndroidPic(response){
+		if(response == null || response == ""){
+			showShadedowTips('图片上传失败请重新上传',1);
+			return;
+		}
+		//图片后缀
+		var picSuffix = $("#picSuffix").val();
+		var resJson = $.parseJSON(response);
+		var param = $.param(resJson.data);
+		if(resJson.status == "0"){
+			//照片信息入库
+			$.post(SERVER_CONTEXT+"personal/"+LOGIN_UNAUTH+"/updateHeadPicAndroid",param,function(txt){
+				if(txt.code == 0){
+					var headSize =  $("#default_head_size").val();
+					var picBaseAddrMona = $("#picBaseAddrMona").val();
+					var picInfo = resJson.data;
+					var URL = picBaseAddrMona + picInfo.urlBase + picInfo.urlExt + headSize + picSuffix;
+					$("#myUserAvatar").css({'background-image':"url("+URL+")"});
+				}else{
+					showShadedowTips('图片上传失败请重新上传',1);
+				}
+			},'json');
+			
+		}
+	}
+	
+
+		
+	</script>
+</body>
+</html>

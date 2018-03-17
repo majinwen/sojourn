@@ -1,0 +1,122 @@
+
+/*7ad2c5 active*/
+/*8de2d7 hover*/
+
+.part_r_tt{width: 770px;padding:10px 0;padding-left: 30px;font-size: 18px;color: #444;background: #fafafa;border-bottom: 1px solid #eee;height: 40px;line-height: 40px;position: relative;}
+.price_link,
+.date_link{display: block;width: 70px;height: 25px;line-height: 26px;border: 1px solid #ddd;border-radius: 4px;font-size: 12px;color: #999;position: absolute;top: 20px;text-align: center;}
+.price_link{right: 30px;}
+.date_link{right: 115px;}
+.sign_icons{width: 400px;height: 50px;line-height: 50px;text-align: center;font-size: 14px;color: #999;padding-bottom: 30px;margin: 0 auto;}
+.sign_icons li{width: 30%;height: 50px;float: left;}
+.sign_icons li .sign_icon{width: 20px;height: 20px;display: inline-block;vertical-align: middle;}
+.b_green{background: #e4f5f3;}
+.b_blue{background: #ddd;}
+.b_gary{background: #bdd3ec;}
+
+/*出租日历*/
+.calendarBox{padding: 0 30px;width: 740px;}
+.calendars {width: 100%;background: #fff;text-align: center;}
+.calendars_bar{width: 100%;height: 40px;padding: 10px 0;line-height: 40px;position: relative;font-size: 16px;color: #444;}
+.calendars_bar .icon{width: 40px;height: 40px;position: absolute;top: 10px;cursor: pointer;}
+.calendars_bar .icon.icon_prev{background: url(../../images/house/l_abled.jpg)center center no-repeat;left: 0;}
+.calendars_bar .icon.icon_prev.disabled{background: url(../../images/house/l_disabled.jpg)center center no-repeat;}
+.calendars_bar .icon.icon_next{background: url(../../images/house/r_abled.jpg)center center no-repeat;right: 0;}
+.calendars_bar .icon.icon_next.disabled{background: url(../../images/house/r_disabled.jpg)center center no-repeat;}
+.calendars_bar .icon.icon_prev.disabled{cursor: auto;}
+.calendars_bar span{display: inline-block;height: 40px;line-height: 40px;}
+.select_box{display: inline-block;vertical-align: middle;height: 40px;position: relative;margin-top: -3px;}
+.select_box .select_span{display:inline-block;height: 40px;line-height: 40px;z-index: 999;background: transparent;padding-right: 20px;white-space:nowrap; text-overflow:ellipsis; -o-text-overflow:ellipsis; overflow:hidden;color: #444;font-size: 16px;background: url(../../images/house/jt.png) right 4px no-repeat;cursor: pointer;}
+.selects_ul{width: 150px;position: absolute;top: 50px;left: 0px;background: #fff;border: 1px solid #ddd;height: 40px;background: #fff;font-size: 14px;color: #999;height: 300px;z-index: 100;display: none;padding: 10px 0;overflow: hidden;}
+.selects{width: 150px;height: 300px;overflow-y:auto;position: relative;}
+.selects li:hover a,
+.selects li.active a{color: #7ad2c5;}
+.selects li {padding-left: 20px;}
+.selects li a{display: block;white-space:nowrap; text-overflow:ellipsis; -o-text-overflow:ellipsis; overflow:hidden;width: 100%;height: 30px;line-height:30px;color: #666;font-size: 14px;text-align: left;}
+
+.calendars table{width: 100%; margin: 0 auto;}
+.calendars table th{font-size: 14px;color: #666;height: 40px;line-height: 40px;font-weight: normal;}
+.calendars table td{ text-align: left; font-size: 14px;padding: 5px;}
+.calendars table td .dates{width: 68px;height: 48px;padding: 10px;margin: 0 auto;color: #444;line-height: 25px;cursor: pointer;border:1px solid #ddd;}
+.calendars table td.un_rented .dates{color: #999;}
+.calendars table td.can_rented .dates{background: #e4f5f3;border:1px solid transparent;}
+.calendars table td.set_rented .dates{background: #ddd;border:1px solid transparent;}
+.calendars table td.have_rented .dates{background: #bdd3ec;border:1px solid transparent;}
+.calendars table td.can_rented:hover .dates,
+.calendars table td.set_rented:hover .dates,
+.calendars table td.active .dates{background: #bce6e1;}
+/*弹层*/
+body.hidden{overflow-y: hidden;}
+.modal .modal-content .org_btn{padding:0;}
+.modal{position:fixed;z-index:9999;width:100%;height:100%;left:0;top:0;overflow-y:auto;color:#000;display:none}
+.modal-mask{width: 100%;height: 100%;left: 0;top: 0;position: fixed;background: url(../../images/house/modal_bg.png) center center repeat;}
+.modal .modal-content{border-radius:5px;background:#fff;width:360px;margin:0 auto;position:relative;padding: 30px;padding-top: 0;}
+.modal .modal-content .control-group{}
+.modal .modal-content .set-box{width: 100%;height: 60px;line-height: 60px;border-bottom: 1px solid #eee;}
+.modal .modal-content .set-box li{float: left;width: 50%;height: 68px;line-height: 68px;text-align: center;font-size: 16px;color: #666;cursor: pointer;}
+.modal .modal-content .set-box li.current{background: url(../../images/house/current.png) center -2px no-repeat;}
+.ipt-box {width: 100%;height: 30px;padding: 5px 0;border-radius: 5px;border: 1px solid #ddd;margin: 30px 0;}
+.ipt-box li{width: 138px;height: 30px;float: left;border-right: 1px solid #eee;text-align: center;padding: 0 20px;}
+.ipt-box li:last-child{border-right: none;}
+.ipt-box li .ipt{width: 100%;height: 30px;font-size: 14px;line-height: 30px;color: #666;}
+.ipt-box li .date-ipt{background: url(../../images/house/date.png) right center no-repeat;}
+.ipt-box li .price-ipt{background: url(../../images/house/price.png) right center no-repeat;}
+.ipt-box-md{width: 176px;}
+.modal .modal-content .btn-group{
+  height: 40px;
+  width: 280px;
+  margin: 0 auto;
+}
+.modal .modal-content .btn-group li{
+	width: 50%;
+	height: 40px;
+	float:left;
+	text-align: center;
+}
+.modal .modal-content .btn-group .btn{
+  font-size: 14px;
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 3px;
+  background: #fff;
+  color: #666;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+}
+.modal .modal-content .btn-group .btn.active{
+  background: #7ad2c5;
+  border-color: #7ad2c5;
+  color: #fff;
+}
+.modal .modal-content .btn-group .btn.active:hover{background: #8de2d7; border-color: #8de2d7;}
+.modal .modal-content .btn-group .btn.disabled:hover,
+.modal .modal-content .btn-group .btn.disabled{background: #ddd; border-color: #ddd;color: #fff;}
+.modal .modal-content .btn-group .btn-left{
+  
+}
+.modal .modal-content .btn-group .btn-right{
+  
+}
+/*导出日历弹层*/
+.modal .modal-content.modal-content-export{width: 700px;padding: 0;}
+.modal .modal-content.modal-content-export .modal-title{height: 65px;line-height: 65px;font-size: 18px;border-bottom: 1px solid #ddd;padding: 0 30px;position: relative;color: #444;}
+.modal .modal-content.modal-content-export .modal-main{padding: 0 30px;padding-bottom: 20px;}
+.modal .modal-content.modal-content-export .modal-main .modal-txt{font-size: 16px;line-height: 32px;padding: 13px 0;color: #666;}
+.modal .modal-content.modal-content-export .modal-main .modal-txt a{color: #7ad0c4;text-decoration: underline;}
+.modal .modal-content.modal-content-export .modal-main .modal-txt a:hover{color: #8de2d7;}
+.modal .modal-content.modal-content-export .modal-main .modal-ipt{border-radius: 4px;border: 1px solid #ddd;margin-bottom: 20px;padding: 16px;}
+.modal .modal-content.modal-content-export .modal-main .modal-ipt .ipt{line-height: 32px;font-size: 16px;color: #666;width: 100%;white-space:nowrap; text-overflow:ellipsis; -o-text-overflow:ellipsis; overflow:}
+.modal .modal-content.modal-content-export .btn-group{width: 120px;}
+.modal .modal-content.modal-content-export .modal-main .modal-msg{font-size: 14px;color: #999;padding-bottom: 30px;}
+.modal .modal-content.modal-content-export .modal-title .modal-close{width: 20px;height: 20px;background: url(../../images/house/del.png);position: absolute;top: 20px;right: 30px;display: block;}
+
+/*同步日历引导*/
+.main_date{background: #fff;border: 1px solid #eee;}
+.main_date_tt{padding:10px 0;padding-left: 30px;font-size: 18px;color: #444;background: #fafafa;border-bottom: 1px solid #eee;height: 40px;line-height: 40px;}
+.main_date_step{padding: 0 60px;padding-bottom: 60px;}
+.main_date_step h1{font-size: 20px;line-height: 24px;color: #444;padding: 35px 0;}
+.main_date_step h1 span.C_blue{color: #7ad2c5;}
+.main_date_step h1 span.step{display: inline-block;vertical-align: top;width: 100px;}
+.main_date_img{width: 545px;margin: 0 auto;}

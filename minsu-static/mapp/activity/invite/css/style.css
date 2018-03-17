@@ -1,0 +1,140 @@
+
+.share{position: absolute; left: -300px; top:-300px; width: 300px; height: 300px;}
+
+.hide{ display: none !important;}
+.show{ display: block !important;}
+
+.c_blue{ color: #08a3e4;}
+.c_orange{ color: #ff8a00;}
+.fl{ float: left;}
+.fr{ float: right;}
+.tc{ text-align: center;}
+.btn_disabled{ background-color: rgba(60,126,156,0.6) !important;}
+.mt10{ margin-top: 10px;}
+.pr{ position: relative;}
+/*横屏*/
+.dialog-guide {position: fixed;width: 100%;height: 100%;overflow: hidden;left: 0px;top: 0px;font-size: .4rem;z-index: 9999999999;display: none;background: #f0efed;}
+.dialog-guide .guide-wrapper {position: absolute;left: 0%;top:50%;width: 100%;text-align: center;color: #7e7e7e; transition: translateY(-50%);}
+.dialog-guide .guide-wrapper .icon-rotate-phone {position: relative;display: block;top: -10px;margin: 0px auto;-webkit-animation: rotate-always 1.6s linear infinite;animation: rotate-always 1.6s linear infinite;-webkit-animation-play-state: initial;animation-play-state: initial}
+
+
+
+/*modal*/
+.layui-layer-shade{opacity: 0.5!important;}
+.layui-layer-page{
+  padding: 0 0.4rem;
+  background: #fff;
+  border-radius: 0.1rem;
+}
+.layui-layer-page .layui-layer-content {
+  position: relative;
+  text-align: center;
+  font-size: 0.3rem;
+  line-height: 0.5rem;
+  margin-top: 0.2rem;
+}
+.layui-layer-title{
+  height: 0.5rem;
+  font-size: .4rem;
+}
+.layui-layer-page .layui-layer-btn {
+  padding-top: 0.5rem;
+}
+.layui-layer-btn {
+  text-align: center;
+  padding: 0 1rem;
+  pointer-events: auto;
+}
+.layui-layer-btn a {
+  height: 0.5rem;
+  line-height: 0.5rem;
+  margin: 0 auto;
+  padding: 0.5rem;
+  border: 1px solid #dedede;
+  background-color: #f1f1f1;
+  color: #333;
+  border-radius: 2px;
+  font-weight: 400;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/*浏览器打开modal*/
+.modal{width: 100%;height: 100%;background: rgba(0,0,0,0.5);position: fixed;top: 0;left: 0;}
+
+img{width: 100%;}
+html,body{height: 100%; color: #055252}
+a{color: #055252}
+.main,
+.mainBox{height: 100%; position: relative;}
+
+.topBox{background: url(../images/bg.jpg) no-repeat center bottom; background-size: 100% auto; height: 78%; position: relative; z-index: 1}
+.topBox .img{width:50%; margin:0 auto; padding-top: 10%;}
+.bottomBox .more{position: absolute; left: 50%; top: -1.05rem; color: #055252; font-size: .373rem; padding-right: .5rem; background: url(../images/jiantou.png) no-repeat right center;
+  background-size: auto 55%; margin-left: -1rem;}
+.topBox .yaoqingTxt{width: 75%; margin:0 auto; padding-top: 5%; position: relative;}
+.topBox .yaoqingTxt p{position: absolute; left: 10%; top: 5%; font-size: 1.2rem;
+  width: 2.4rem;
+}
+
+.topBox .yqmTxt{font-size: .48rem; display: block; text-align: center; margin-top: .5rem;}
+
+.bottomBox{background: #fff; position: fixed; left: 0; bottom: 0; width: 100%; box-sizing: border-box;border:solid .36rem #fff; z-index: 3;}
+.bottomBox .con{border: solid 1px #054d4c; width: 100%; padding:.5rem 0; text-align: center; }
+.bottomBox .con .txt{color: #0d5b5b; font-size: .3733rem; margin:0rem .4rem .4rem .4rem;}
+.bottomBox .con .btns{width: 7.25rem; height:1.1733rem; overflow: hidden; margin: 0 auto; }
+.bottomBox .con .btn{display: block; width: 7.25rem; margin: 0 auto;}
+.bottomBox .con .btn img{width: 100%;}
+.bottomBox .con .btnss{display: block; width: 3.5rem; float: left;}
+.bottomBox .con .btnss:nth-child(2){float: right;}
+
+
+.toShare{background: url(../images/shareY.png) no-repeat center center;
+  background-size: 100% 100%; width:7.3733rem; height: 1.1733rem; margin: 0 auto; }
+.toShare p{font-size: .48rem; width: 4.8533rem; line-height: 1.1733rem; }
+
+.toShareDis{background: url(../images/shareN.png) no-repeat center center;
+  background-size: 100% 100%;}
+
+.topBoxQc{background: url(../images/bg2.jpg?1) no-repeat center bottom; background-size: 100% auto; height: 72%; position: relative; z-index: 1}
+.topBoxQc .img{width: 100%;}
+
+.topBoxQc .txt2{padding-top:30%; text-align: center;}
+.topBoxQc .txt2 h3{font-size: .48rem;}
+.topBoxQc .txt2 p{font-size: .4rem; padding: 0 1rem; line-height: .6rem;}
+
+.topBoxQcError{background: url(../images/bg3.jpg) no-repeat center bottom; background-size: 100% auto; height: 100%;
+  position: relative; z-index: 1}
+.topBoxQcError .txt{padding-top: 30%; margin: 0 1rem; font-size: .4rem; text-align: center;}
+.topBoxQc .liucheng{width: 8.4533rem; margin:0 auto; position: relative;}
+.topBoxQc .liucheng p{position: absolute; z-index: 1;
+  right:12%; top: 48.5%;
+  font-size: .4rem;}
+
+.detailMore{text-align: left;}
+.detailMore ul {
+  padding: .4rem .5rem;
+  width: 8rem;
+}
+.detailMore h3{font-size: .4rem; border-bottom: solid 1px #055252; line-height: 1rem; text-align: center; padding: 0;}
+.detailMore ul li{
+
+  list-style: none;
+  font-size: .3733rem;
+  line-height: .5rem; margin-bottom: .2rem;
+
+}
+
+img{vertical-align: top;}
+.appNoUpdate{height:auto; padding: .5rem;}
+.appNoUpdate p{padding: 0rem; font-size: .4rem; line-height: .6rem; text-align: center; margin-bottom: .5rem;}
+.appNoUpdate .btn{width: 6.5rem; height: 1.1733rem;}
+
+
+#boserShow{background:rgba(0,0,0,.8) url(../images/toBower.png) no-repeat top center;
+  background-size: 100% auto; position: absolute; width: 100%; height: 100%; display: none; z-index: 999; left: 0; top: 0;}
+
+
+a.btn{
+  -webkit-tap-highlight-color:rgba(0,0,0,.5)
+}

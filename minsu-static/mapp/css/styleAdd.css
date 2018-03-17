@@ -1,0 +1,368 @@
+
+/*
+* @Author: mqz
+* @Date:   2017-04 
+* @Last Modified by:   Happy
+* @Last Modified time: 2017-04-17
+* @description: 统一民宿h5rem计算方式
+*/
+/*新增项目样式*/
+.S_newHeader{
+    position: relative;
+    height: 2.2rem;
+    background-color: #fff;
+    margin-bottom: 1.2rem;
+}
+.S_newHeader.S_bor{border-bottom: 1px solid #ddd;}
+.S_newHeader h1{
+    width: 60%;
+    margin: 0 auto;
+    font-size: 0.9rem;
+    font-weight: normal;
+    line-height: 2.2rem;
+    text-align: center;
+}
+.S_newHeader a{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    background: url(../images/back_dark2x.png) no-repeat center center;
+    background-size: 40% auto;
+}
+.S_ruleSelectBox{
+    background-color: #ffffff;
+    margin-bottom: 1.65rem;
+}
+.S_ruleSelectUl{
+    margin-top: 1.2rem;
+    padding-left: 0.8rem;
+}
+.S_ruleSelectUl>li{
+    position: relative;
+    height: 2.7rem;
+    border-bottom: 1px solid #eeeeee;
+    line-height: 2.7rem;
+    font-size: 0.7rem;
+    color: #999;
+}
+.S_ruleSelectUl>li:nth-last-child(1){
+    border: none;
+}
+.S_ruleSelectUl i{
+    position: absolute;
+    right: 0.8rem;
+    top: 50%;
+    margin-top: -0.5rem;
+    width: 1rem;
+    height: 1rem;
+    background: url("../images/item_isSelect.png") 100% 50% no-repeat;
+    background-size: cover;
+}
+.S_ruleSelectUl i.on{
+    background: url("../images/item_isSelect.png") 0 50% no-repeat;
+    background-size: cover;
+}
+.S_elseRule{
+    position: relative;
+    padding-left: 0.8rem;
+    height: 2.7rem;
+    background-color: #ffffff;
+}
+.S_elseRule>a{
+    display: block;
+    height: 2.7rem;
+    line-height: 2.7rem;
+    color: #999;
+    font-size: 0.7rem;
+}
+.S_elseRule i{
+    position: absolute;
+    right: 0.8rem;
+    top: 50%;
+    margin-top: -0.45rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    background: url("../mapp/images/item_goNext.png") 50% 50% no-repeat;
+    background-size: cover;
+}
+.S_ruleSelectSubmit{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2.45rem;
+    line-height: 2.45rem;
+    text-align: center;
+    background-color: #ffa000;
+    color: #ffffff;
+    font-size: 0.8rem;
+}
+.S_ruleSelectSubmit:disabled{
+    background-color: #ddd;
+}
+/*联系方式页面样式*/
+.S_contactBox{
+    padding: 1.2rem 0.8rem 0;
+}
+.S_contactList{
+    margin-bottom: 1.2rem;
+}
+.S_contactList>li{
+    position: relative;
+    height: 2.2rem;
+    border-bottom: 1px solid #eee;
+    padding-left: 5.3rem;
+}
+.S_contactList span{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5.3rem;
+    height: 2.2rem;
+    line-height: 2.2rem;
+    font-size: 0.8rem;
+    color: #999;
+}
+.S_contactList p{
+    height: 2.2rem;
+    line-height: 2.2rem;
+    font-size: 0.8rem;
+    color: #666;
+}
+.S_contactLiTel{
+    padding-top: 0.25rem;
+}
+.S_contactList input[type=tel]{
+    width: 100%;
+    height: 1.5rem;
+    line-height: 1.5rem;
+    font-size: 0.8rem;
+    color: #666;
+    outline:none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+}
+.S_contactNext{
+    display: block;
+    width: 15.75rem;
+    height:2rem;
+    margin: 0 auto;
+    background-color: #ffa000;
+    line-height: 2rem;
+    text-align: center;
+    color: #fff;
+    font-size: 0.9rem;
+    border-radius: 0.15rem;
+}
+.S_contactCountryBox{
+    display: none;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    box-sizing: border-box;
+    padding: 0 0.8rem;
+    background-color: #fff;
+}
+.S_contactCountryTit{
+    height: 2.2rem;
+    position: relative;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 1.2rem;
+}
+.S_contactCountryTit i{
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
+    width: 1.2rem;
+    height: 1.2rem;
+    background: url("../images/item_countryBoxClose.png") 50% 50% no-repeat;
+    background-size: contain;
+}
+.S_contactCountryTit p{
+    width: 60%;
+    height: 2.2rem;
+    margin: 0 auto;
+    line-height: 2.2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #333;
+}
+.S_countryList>li{
+    padding: 0.35rem 0;
+    border-bottom: 1px solid #eee;
+}
+.S_countryList>li:last-child{
+    border-bottom: none;
+}
+.S_countryList>li>*{
+    height: 1.5rem;
+    line-height: 1.5rem;
+    font-size: 0.7rem;
+}
+.S_itemCountry{
+    float: left;
+    color: #444;
+}
+.S_itemCountryTelNum{
+    float: right;
+    text-align: right;
+    color: #999;
+}
+
+
+/*覆盖原本layer样式*/
+.layermmain .section {
+    display: block;
+    margin: -3rem auto;
+    position: relative;
+    top: 30%;
+}
+.layermcont {
+    padding: 0 1rem;
+    line-height: 2.2rem;
+    text-align: center;
+    color:#fff;
+}
+.regAuthCode {
+    width: 12rem;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    color: #666;
+    position: relative;
+}
+.regAuthCode input {
+    border-bottom: solid 1px #ddd;
+    font-size: 0.7rem;
+    height: 2rem;
+    width: 6rem;
+    text-align: center;
+    margin-right: 0.5rem;
+}
+.regAuthCode img {
+	display:inline-block;
+    height: 2rem;
+    width: 5rem;
+    vertical-align: middle;
+}
+#rTips {
+    color: red;
+    font-size: 0.6rem;
+    position: absolute;
+    left: 0;
+    top: 3.2rem;
+    width: 100%;
+    height: 1rem;
+    line-height: 1rem;
+}
+.layermbtn {
+    position: relative;
+    height: 2.45rem;
+    line-height: 2.45rem;
+    font-size: 0;
+    text-align: center;
+    border-top: 1px solid #eee;
+    overflow: hidden;
+}
+.layermchild {
+    font-size:0.8rem;
+    border-radius: 0.5rem;
+}
+.layermbtn span:first-child {
+    height: auto;
+    border-radius: 0 0 0 0.5rem;
+    top: 0;
+}
+.layermbtn span {
+    font-size: 0.9rem;
+}
+body{
+	background-color:#fff;
+}
+input {
+    -webkit-appearance: none;
+}
+input {
+    -webkit-appearance: none;
+    border: none;
+}
+#regStep_2 {
+    display: none;
+    box-sizing: border-box;
+}
+#regStep_2 *{
+	 box-sizing: border-box;
+}
+
+#regStep_2 .content {
+    text-align: center;
+    font-size: 0.6rem;
+    padding-top: 0.5rem;
+}
+.loginBox .content {
+    padding: 0 0.5rem;
+}
+#regStep_2 h2, #regStep_2 h3 {
+    font-size: 0.9rem;
+    line-height: 1.2rem;
+    color: #666;
+}
+#regStep_2 .inputs {
+    position: relative;
+    width: 5.3rem;
+    height: 2rem;
+    margin: 0 auto 0.7rem auto;
+    background: url(../images/login/line.png) repeat-x left bottom;
+    background-size: 0.86rem 1px;
+}
+#regStep_2 input.val {
+    height: 2rem;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #333;
+    letter-spacing: 0.5rem;
+    text-align: left;
+    background: none;
+    padding-left: 0.2rem;
+}
+.org {
+    color: #ffa000;
+}
+.gray {
+    color: #999;
+}
+.mt85 {
+    margin-bottom: 0.84rem;
+}
+.mt85 {
+    margin-top: 0.84rem;
+}
+.boxP075 {
+    padding: 0 0.8rem;
+}
+.org_btn {
+    background: #ffa000;
+    height: 2rem;
+    width: 100%;
+    color: #fff;
+    border: none;
+    border-radius: 0.2rem;
+    font-size: 0.7rem;
+    margin-top: 0.4rem;
+}
+
+.disabled_btn, .disabled_btn2 {
+    background: #ddd;
+    height: 2rem;
+    width: 100%;
+    color: #fff;
+    border: none;
+    border-radius: 0.2rem;
+    font-size: 0.7rem;
+    margin-top: 0.4rem;
+}

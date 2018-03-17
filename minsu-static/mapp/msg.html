@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>我的消息</title>
+		<script type="text/javascript" src="js/header.js"></script>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="css/styles.css">
+	</head>
+
+	<body class="bgF">
+		<div class="bodys">
+			<header class="header">
+				<h1>我的消息</h1>
+			</header>
+			<div class="mui-content">
+				<ul id="OA_task_1" class="mui-table-view">
+					<li class="mui-table-view-cell" style="z-index: 0;">
+						<div class="mui-slider-right mui-disabled">
+							<a class="mui-btn mui-btn-grey" data-id="1">标为已读</a>
+							<a class="mui-btn mui-btn-red" data-id="1">删除</a>
+						</div>
+						<div class="mui-slider-handle">
+								
+								<div class="msgList" data-url="http://www.baidu.com">
+									<div class="img">
+										<img src="http://img.mukewang.com/55fd033c00018a0606000338-280-160.jpg">
+									</div>
+									<div class="txt">
+										<h3><span class="time">15:14</span><span class="name">王菁雅</span> </h3>
+										<p class="introduction">另一个房间住了一个人，他不会一个房间住了一个一个房间住了一个</p>
+										<p class="bottom">
+											<span class="tag">十里堡主卧无印良品风阳光房</span>
+											<span class="nums nums_more" id="nums_1"></span>
+										</p>
+									</div>
+								</div>
+								
+								
+							
+						</div>
+					</li>
+					<li class="mui-table-view-cell" style="z-index: 1;">
+						<div class="mui-slider-right mui-disabled">
+							<a class="mui-btn mui-btn-grey" data-id="2">标为已读</a>
+							<a class="mui-btn mui-btn-red" data-id="2">删除</a>
+						</div>
+						<div class="mui-slider-handle">
+								
+								<div class="msgList" data-url="http://www.baidu.com">
+									<div class="img">
+										<img src="http://www.imooc.com/static/img/landp_banner.jpg">
+									</div>
+									<div class="txt">
+										<h3><span class="name">小米商城</span> <span class="time">15:14</span></h3>
+										<p class="introduction">小米商城 - 小米手机官方网站，直营小米公司旗下所有产品</p>
+										<p class="bottom clearfix">
+											<span class="tag">小米在线服务支持——小米官网</span>
+											<span class="nums" id="nums_2">1</span>
+										</p>
+									</div>
+								</div>
+								
+								
+							
+						</div>
+					</li>
+					<li class="mui-table-view-cell" style="z-index: 2;">
+						<div class="mui-slider-right mui-disabled">
+							<a class="mui-btn mui-btn-grey" data-id="3">标为已读</a>
+							<a class="mui-btn mui-btn-red" data-id="3">删除</a>
+						</div>
+						<div class="mui-slider-handle">
+								
+								<div class="msgList" data-url="http://www.baidu.com">
+									<div class="img">
+										<img src="http://img.mukewang.com/569c3f9600010da706000338-280-160.jpg">
+									</div>
+									<div class="txt">
+										<h3><span class="name">何控制整个页面</span> <span class="time">15:14</span></h3>
+										<p class="introduction">js如何控制整个页面滚动条的位置_百度知道</p>
+										<p class="bottom clearfix">
+											<span class="tag">动控制垂直滚动条位置。通过div的scrollLeft变动控制水平滚</span>
+											<span class="nums" id="nums_3">99</span>
+										</p>
+									</div>
+									
+								</div>
+								
+								
+							
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="bottomNav">	
+			<a href="http://minsu.m.d.ziroom.com:80/orderland/43e881/showlist"><i class="dd"></i>订单</a>
+			<a href="http://minsu.m.d.ziroom.com:80/houseMgt/43e881/myHouses"><i class="fy"></i>房源</a>
+			<a href="http://minsu.m.d.ziroom.com:80/landlordEva/43e881/index" class="active"><i class="xx"></i>消息<b class="n" id="totalNums">99</b></a>
+			<a href="http://minsu.m.d.ziroom.com:80/personal/43e881/initPersonalCenter"><i class="wd"></i>我的</a>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery-2.1.1.min.js"></script>
+		<script>
+			jQuery.noConflict();
+			
+			mui.init();
+			(function($) {
+				var btnArray = ['确认', '取消'];
+				//链接跳转
+				$('#OA_task_1').on('tap','.msgList',function(){
+					var elem = this;
+					var _url=elem.getAttribute('data-url');
+					window.location.href=_url;
+					
+				});
+				//标记为已读
+				$('#OA_task_1').on('tap','.mui-btn-grey',function(){
+					var elem = this;
+					var _id=document.getElementById('nums_'+elem.getAttribute('data-id'));
+					var li = elem.parentNode.parentNode;
+					$.swipeoutClose(li);
+					_id.parentNode.removeChild(_id);
+				});
+				
+				//删除
+				$('#OA_task_1').on('tap', '.mui-btn-red', function(event) {
+					var elem = this;
+					var li = elem.parentNode.parentNode;
+					mui.confirm('确认删除该条记录？', 'Hello MUI', btnArray, function(e) {
+						if (e.index == 0) {
+							li.parentNode.removeChild(li);
+						} else {
+							setTimeout(function() {
+								$.swipeoutClose(li);
+							}, 0);
+						}
+					});
+				});
+				
+				
+			})(mui);
+			
+			
+		</script>
+	</body>
+
+</html>

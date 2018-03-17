@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+ 	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<title>十座城市的十月秋光，十足心意的我们跟你一起踏上旅程。</title>
+    <style type="text/css">
+	*{margin: 0;padding: 0;}
+	img{width: 100%;vertical-align: top;}
+	.pr{position: relative;}
+	.share{position: absolute;top: -500px;left: -500px;}
+	.loadImg{opacity: 0;
+    -webkit-transition:opacity .5s ease-in;
+    -moz-transition:opacity .5s ease-in;
+    -o-transition:opacity .5s ease-in;
+    transition:opacity .5s ease-in; }    
+	.loadImgShow{opacity: 1;}
+	.ewm{position: absolute;left: 0;bottom: 0;}
+    </style>
+</head>
+
+<body>
+	<img src="../img/dscj/share.jpg" class="share">
+
+	<img src="../img/dscj/pic1.jpg">
+	<img src="../img/dscj/pic2.jpg" class="loadImg">
+	<img src="../img/dscj/pic3.jpg" class="loadImg">
+	<img src="../img/dscj/pic4.jpg" class="loadImg">
+	<img src="../img/dscj/pic5.jpg" class="loadImg">
+	<div class="pr">
+		<img src="../img/dscj/pic6.jpg" class="loadImg">
+		<img src="../img/dscj/ewm.png" class="loadImg ewm">
+	</div>
+	<img src="../img/dscj/pic7.jpg" class="loadImg">
+	<img src="../img/dscj/pic8.jpg" class="loadImg">
+	<img src="../img/dscj/pic9.jpg" class="loadImg">
+	<img src="../img/dscj/pic10.jpg" class="loadImg">
+	<img src="../img/dscj/pic11.jpg" class="loadImg">
+	<img src="../img/dscj/pic12.jpg" class="loadImg">
+	<img src="../img/dscj/pic13.jpg" class="loadImg">
+	<img src="../img/dscj/pic14.jpg" class="loadImg">
+	<img src="../img/dscj/pic15.jpg" class="loadImg">
+
+<!--
+	分享文案
+大标题：十座城市的十月秋光，十足心意的我们想跟你一起踏上旅程。
+小文案：在最美的旅行季节，勿虚度好时光。
+-->
+<script src="http://bnbstatic.ziroom.com/act/js/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	showImg();   
+    $(window).scroll(function(){
+        showImg(); 
+    });
+    function showImg(){
+		var iWinHeight = $(window).height();
+		var iTop = $(window).scrollTop() + iWinHeight;
+		
+		$('.loadImg').each(function(){
+				var _top = $(this).offset().top;
+				if(_top < iTop){
+					var dataAni ='';
+	        		var dataDelay ='';
+	        		if($(this).attr('data-ani'))
+	        		{
+	        			dataAni =$(this).attr('data-ani');
+	        		}
+	        		if($(this).attr('data-delay'))
+	        		{
+	        			dataDelay=$(this).attr('data-delay');
+	        		}
+
+	        		$(this).addClass(dataAni+' animated loadImgShow '+dataDelay);
+				}
+			});	
+	}
+});
+</script>
+
+
+<!--统计代码-->
+<div style="display:none"> 
+    <script type="text/javascript">
+    var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F038002b56790c097b74c818a80e3a68e' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-26597311-1']);
+    _gaq.push(['_setLocalRemoteServerMode']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+</div>
+</body>
+</html>

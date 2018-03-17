@@ -1,0 +1,137 @@
+<!DOCTYPE>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="applicable-device" content="mobile">
+	<meta content="fullscreen=yes,preventMove=yes" name="ML-Config">
+	<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/header.js?v=js.version.20160815001"></script>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta content="yes" name="apple-mobile-web-app-capable" />
+	<meta content="yes" name="apple-touch-fullscreen" />
+	<title>入住信息</title>
+	<link href="css/mui.picker.min.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css"
+	href="http://minsustatic.d.ziroom.com/mapp/css/styles_new.css?v=js.version.20160815001">
+	
+	<link rel="stylesheet" type="text/css" href="css/css_830.css">
+</head>
+<body>
+	<form id="addHouseFourForm" >
+		<header class="header"> <a href="javascript:history.go(-1);" id="goback" class="goback"></a>
+			<h1>入住信息</h1>
+		</header>
+		<input name="houseBaseFid" value="8a90a2d456a1980f0156a2576a2f0022" type="hidden"/>
+		<div class="bodys">
+			<div class="main">
+
+				<ul id="houseList" class="myCenterList">
+					
+					<li class="c_ipt_li c_ipt_li_none bor_b "> 
+						<a href="javascript:void(0);"> 
+							<span class="c_span">最小入住天数</span>
+							<input class="c_ipt j_s_ipt" type="text" placeholder="请选择最小入住天数" id="minDay" value="" readonly="readonly">
+					<select onchange="setValToInput(this,'minDay')" name="minDay">
+							<option value="" >请选择</option>
+                        	<option value="1">1天</option>
+                        
+                        	<option value="2" >2天</option>
+                        
+                        	<option value="3" >3天</option>
+                        
+                        	<option value="4" >4天</option>
+                        
+                        	<option value="5" >5天</option>
+                        
+                        	<option value="6" >6天</option>
+                        
+                        	<option value="7" >7天</option>
+                        
+					</select>
+							<span class="icon_r icon"></span>
+						</a>
+					</li>
+					<li class="c_ipt_li c_ipt_li_none bor_b "> 
+						<a href="javascript:void(0);"> 
+							<span class="c_span">退房时间</span>
+							<input class="c_ipt j_s_ipt" type="text" id="checkOutTime" placeholder="请选择退房时间" value="" readonly="readonly">
+					<select onchange="setTextToInput(this,'checkOutTime','前')" name="checkOutTime">
+							<option value="" >请选择</option>
+                        	<option value="11:00:00" >11:00</option>
+                        
+                        	<option value="12:00:00" >12:00</option>
+                        
+                        	<option value="13:00:00" >13:00</option>
+                        
+					</select>
+							<span class="icon_r icon"></span>
+						</a>
+					</li>
+					<li class="c_ipt_li c_ipt_li_none bor_b "> 
+						<a href="javascript:void(0);"> 
+							<span class="c_span">入住时间</span>
+							<input class="c_ipt j_s_ipt" type="text" id="checkInTime" placeholder="请选择入住时间" value="" readonly="readonly">
+					<select onchange="setTextToInput(this,'checkInTime','后')" name="checkInTime">
+							<option value="" >请选择</option>
+                        	<option value="13:00:00" >13:00</option>
+                        
+                        	<option value="14:00:00" >14:00</option>
+                        
+                        	<option value="15:00:00" >15:00</option>
+                        
+					</select>
+							<span class="icon_r icon"></span>
+						</a>
+					</li>
+					<li class="c_ipt_li c_ipt_li_none bor_b "> 
+						<a href="javascript:void(0);"> 
+							<span class="c_span">被单更换规则</span>
+							<input class="c_ipt j_s_ipt" type="text" id="sheetsReplaceRules" placeholder="请选择被单更换规则" value="" readonly="readonly">
+					
+					<select onchange="setValToInput(this,'sheetsReplaceRules')" name="sheetsReplaceRules">
+							<option value="" >请选择</option>
+                        	<option value="0" selected>每客一换</option>
+                        
+                        	<option value="1" >每日一换</option>
+                        
+					</select>
+							<span class="icon_r icon"></span>
+						</a>
+					</li>
+					<li class="c_ipt_li c_ipt_li_none">
+						<a href="javascript:;">
+							<span class="c_span">房屋守则</span>
+							<input  class="c_ipt" type="text" placeholder="请填写房屋守则" id="houseRuler" name="houseRuler" value="" readonly="readonly"> 
+							<span class="icon_r icon"></span>
+						</a>
+
+					</li>
+
+
+				</ul>
+				<!--/main-->
+			</div>
+			<div class="boxP080">
+				<input type="button" id="submitBtn" value="确认" class="org_btn  btn_radius">
+			</div>
+		</form>
+		<!-- 添加房源名称 -->
+
+		<script src="http://minsustatic.d.ziroom.com/mapp/js/jquery-2.1.1.min.js?v=js.version.20160815001"
+		type="text/javascript"></script>
+		<script type="text/javascript"
+		src="http://minsustatic.d.ziroom.com/mapp/js/layer/layer.js?v=js.version.20160815001"></script>
+		<script src="http://minsustatic.d.ziroom.com/mapp/js/common.js?v=js.version.20160815001"></script>
+		<script src="http://minsustatic.t.ziroom.com/mapp/js/iscroll-probe.js?v=js.version.201608168006"></script>
+		<script type="text/javascript" src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/mui.picker.min.js"></script>
+		<script type="text/javascript" src="js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="js/common_830.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+			})
+		</script>
+
+	</body>
+	</html>

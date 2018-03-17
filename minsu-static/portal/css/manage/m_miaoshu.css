@@ -1,0 +1,144 @@
+.part_l{
+    padding: 0 20px 45px;
+
+}
+.part_r_tt {
+    width: 770px;
+    padding-left: 30px;
+    font-size: 16px;
+    color: #444;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+    height: 60px;
+    line-height: 60px;
+}
+.S_l_list li{
+    position: relative;
+    height: 75px;
+    line-height: 75px;
+    text-align: center;
+    border-bottom: 1px solid #eeeeee;
+}
+.S_l_list li a{
+    color: #666;
+    cursor:default;
+}
+.S_l_list li a.S_click{
+	cursor:pointer;
+}
+.S_l_list li.S_noBorder{
+    border: none;
+}
+.S_item_yes{
+    display: none;
+    position: absolute;
+    top: 50%;
+    right: 13px;
+    margin-top: -9px;
+    width: 16px;
+    height: 16px;
+    background: url("../../images/common/item_yes.png") 50% 50% no-repeat;
+}
+.S_l_list li.on a{
+    color: #7acec3;
+}
+
+
+
+.S_enter_box{
+    position: relative;
+}
+.part_r_box{
+    width: 740px;
+    padding: 30px;
+}
+
+textarea[placeholder]{
+    float: left;
+    width: 382px;
+    border: 1px solid #ddd;
+    padding: 18px;
+    line-height: 25px;
+    font-size: 14px;
+    color: #444;
+    border-radius: 3px;
+}
+.S_area1{
+    height: 62px;;
+}
+.S_area2{
+    height: 202px;
+}
+.S_main_item{
+    margin-bottom: 60px;
+}
+.S_main_item>p{
+    font-size: 14px;
+    line-height: 14px;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.S_lizi{
+    position: absolute;
+    top:0;
+    right:0;
+    width: 248px;
+    padding: 11px 16px;
+    line-height: 20px;
+    font-size: 12px;
+    color: #999;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+}
+.S_lizi>i{
+    position: absolute;
+    left: -8px;
+    top: 26px;
+    border-right: 8px solid #f7f7f7;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 0px;
+}
+.S_tishi{
+    display: none;
+    position: absolute;
+    left: 0;
+    bottom: -35px;
+    color: #ff4848;
+    font-size: 12px;
+    line-height: 12px;
+}
+.S_tongji{
+    position: absolute;
+    left: 1px;
+    bottom: -21px;
+    width: 420px;
+    height: 21px;
+    line-height: 21px;
+    color: #c5c5c5;
+    text-align: right;
+    background-color: #fff;
+    font-size: 12px;
+}
+.S_tongji>span.on{
+    color: #ff4848;
+}
+
+
+
+
+
+.S_next{
+    float: left;
+    width: 120px;
+    height: 40px;
+    background-color: #7acec3;
+    color: #ffffff;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 3px;
+}
+.S_next:hover{
+    color: #ffffff;
+}

@@ -1,0 +1,74 @@
+
+<!DOCTYPE>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="applicable-device" content="mobile">
+    <meta content="fullscreen=yes,preventMove=yes" name="ML-Config">    
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width">
+    <meta name="format-detection" content="telephone=no">
+    <script type="text/javascript" src="http://minsustatic.t.ziroom.com/mapp/js/header.js?v=js.version.201608168001"></script>
+    <title>出租类型</title>
+    <link rel="stylesheet" type="text/css" href="http://minsustatic.t.ziroom.com/mapp/css/styles_new.css?v=js.version.201608168001">
+    <link rel="stylesheet" type="text/css" href="css/css_830.css">
+
+</head>
+<body>
+
+    <form id="form" >
+        <input type="hidden" name="houseBaseFid" value="">
+        <input type="hidden" name="houseType" value="3">
+    
+        <header class="header">
+                <a href="javascript:;" id="goback" class="goback" onclick=""></a>
+                <h1>(2/6)</h1>
+            </header>
+            <div class="myBanner">
+                <h1>选择您的出租方式</h1>
+                <img src="http://minsustatic.t.ziroom.com/mapp/images/userbg.jpg" class="bg">
+            </div>
+            <div class="main">
+                <ul class="myCenterList myCenterList_no">
+                    <li class="c_ipt_li bor_b rentWayLi">
+                        <a href="javascript:void(0);"> 
+                            <input type="radio" name="rentWay" value="0"/>
+                            <span class="c_span">整套出租</span>
+                            <input class="c_ipt" value="您的房子整套出租" readonly="readonly">
+                            <span class="icon_r icon"></span>
+                        </a>
+                    </li>
+                    <li class="c_ipt_li bor_b rentWayLi">
+                        <a href="javascript:void(0);"> 
+                            <input type="radio" name="rentWay" value="1"/>
+                            <span class="c_span">独立房间</span>
+                            <input class="c_ipt" value="您的一套房子可按多个独立房间出租" readonly="readonly">
+                            <span class="icon_r icon"></span>
+                        </a>
+                    </li>
+                   
+                </ul>
+                <!--/main-->
+            </div>
+
+    </form>
+    <!-- 添加房源名称 -->
+    
+    <script src="http://minsustatic.t.ziroom.com/mapp/js/jquery-2.1.1.min.js?v=js.version.201608168001" type="text/javascript"></script>
+    <script src="http://minsustatic.t.ziroom.com/mapp/js/layer/layer.js?v=js.version.201608168001"></script>
+    <script src="http://minsustatic.t.ziroom.com/mapp/js/common.js?v=js.version.201608168001"></script>
+    <script src="http://minsustatic.t.ziroom.com/mapp/js/iscroll-probe.js?v=js.version.201608168006"></script>
+    <script type="text/javascript">
+        $(function(){
+            document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+            $(".rentWayLi").click(function(event){
+                window.location.href = "发布房源3_位置信息.html"
+            });
+        })
+    </script>
+   
+    </body>
+    </html>

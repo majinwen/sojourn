@@ -1,0 +1,159 @@
+<!DOCTYPE>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="applicable-device" content="mobile">
+	<meta content="fullscreen=yes,preventMove=yes" name="ML-Config">        
+	<script type="text/javascript" src="http://minsustatic.t.ziroom.com/mapp/js/header.js?v=js.version.201608168001"></script>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta content="yes" name="apple-mobile-web-app-capable"/>
+	<meta content="yes" name="apple-touch-fullscreen"/>
+	<title>修改房源</title>
+	<link rel="stylesheet" type="text/css" href="http://minsustatic.t.ziroom.com/mapp/css/styles_new.css?v=js.version.201608168002"> 
+	<link rel="stylesheet" type="text/css" href="css/css_830.css">
+</head>
+<body>
+	<form id="addHouseFourForm" >
+		<header class="header"> <a href="javascript:history.go(-1);" id="goback" class="goback"></a>
+			<h1>修改房源</h1>
+		</header>
+		<input name="houseBaseFid" value="8a90a2d456a1980f0156a2576a2f0022" type="hidden"/>
+		<div id="main" class="main">
+			<div class="box">
+				<!-- <div class="scrollDiv" style="position:absolute;top:0;left:0;width: 100%;"> -->
+				<div class="myBanner img">
+
+					<a href="http://minsu.m.t.ziroom.com:80/houseInput/43e881/goToUpHousePic?houseBaseFid=8a90a2d456a07f150156a09532a70003&rentWay=1&houseRoomFid=8a90a2d356a07ec00156a7359b570025&flag=1&pageType=1"><img src="" class="bg setImg"></a>
+
+
+					<!-- 显示审核未通过原因 -->
+
+
+					<span  class="house_status">待发布</span>
+
+				</div>
+				<ul class="myCenterList" style="margin-bottom:0;">
+					<li class="c_ipt_li bor_b">
+						<a href="javascript:;">
+							<span class="c_span">房源信息</span>
+							<input  class="c_ipt" type="text" placeholder="请填写房源信息" id="houseMessage" name="houseMessage" value="未完成，点击继续填写房源信息" readonly="readonly">
+							<span class="icon_r icon"></span>
+						</a>
+
+					</li>
+					<li class="c_ipt_li bor_b">
+						<a href="javascript:;">
+							<span class="c_span">房间信息</span>
+							<input  class="c_ipt" type="text" placeholder="请填写房间信息" id="houseMessage" name="roomMessage" value="未完成，点击继续填写房间信息" readonly="readonly">
+							<span class="icon_r icon"></span>
+						</a>
+
+					</li>
+					<li class="c_ipt_li ">
+						<a href="javascript:;">
+							<span class="c_span">可选信息</span>
+							<input  class="c_ipt" type="text" placeholder="请填写可选信息" id="houseMessage" name="addMessage" value="已完成，点击编辑可选信息" readonly="readonly">
+							<span class="icon_r icon"></span>
+						</a>
+
+					</li>
+
+				</ul>
+				<ul class="myCenterList"  style="margin-bottom:0;">
+					<li class="c_ipt_li bor_b">
+						<a href="javascript:;">
+							<span class="c_span">房源地址</span>
+							<input  class="c_ipt" type="text" placeholder="请填写房源地址" id="houseMessage" name="houseMessage" value="北京市朝阳区酒仙桥中路" readonly="readonly">
+							<span class="icon_r icon"></span>
+						</a>
+
+					</li>
+					<li class="c_ipt_li ">
+						<a href="javascript:;">
+							<span class="c_span">房源类型</span>
+							<input  class="c_ipt j_s_ipt" type="text" placeholder="请选择房源类型" id="checkInLimit" name="checkInLimit" value="老洋房" readonly="readonly">
+							<select onchange="setValToInput(this,'checkInLimit')"  id="checkInLimitSelect"  name="checkInLimit">
+								
+								<option selected  value="1">老洋房</option>
+
+								<option  value="2">四合院</option>
+
+								<option  value="3">公寓</option>
+
+							</select>
+							<span class="icon_r icon"></span>
+						</a>
+
+					</li>
+				</ul>
+				<ul class="myCenterList">
+					<!-- TODO：根据发布状态判断 -->
+					<!-- 不可修改 出租类型-->
+					<!-- <li class="c_ipt_li bor_b">
+						<a href="javascript:;">
+							<span class="c_tt">出租类型</span>
+							<span class="c_sub_tt" id="rentStyle">独立房间</span>
+							
+						</a>
+
+					</li> -->
+					<!-- 可修改 出租类型-->
+					<li class="c_ipt_li bor_b">
+						<a href="javascript:;">
+							<span class="c_span">出租类型</span>
+							<input  class="c_ipt j_s_ipt" type="text" placeholder="请选择出租类型" id="rentStyle" name="rentStyle" value="整套出租" readonly="readonly">
+							<select onchange="setValToInput(this,'rentStyle')"  id="rentStyleList"  name="rentStyleList">
+
+								<option selected  value="0">整套出租</option>
+
+								<option  value="1">独立房间</option>
+
+							</select>
+							<span class="icon_r icon"></span>
+						</a>
+
+					</li>
+					<li class="c_ipt_li">
+						<a href="javascript:;">
+							<span class="c_tt">房源编码</span>
+							<span class="c_sub_tt" id="houseCode">110100132045F</span>
+							
+						</a>
+
+					</li>
+				</ul>
+				
+				<!-- </div> -->
+			</div>
+			<!--/main-->
+		</div>
+		<div class="box box_bottom">
+			<input type="button" id="nextBtn" value="发布房源" class="org_btn">
+		</div>
+	</form>
+	<!-- 添加房源名称 -->
+
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/jquery-2.1.1.min.js?v=js.version.20160815001"
+	type="text/javascript"></script>
+	<script type="text/javascript"
+	src="http://minsustatic.d.ziroom.com/mapp/js/layer/layer.js?v=js.version.20160815001"></script>
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/common.js?v=js.version.20160815001"></script>
+	<script src="http://minsustatic.t.ziroom.com/mapp/js/iscroll-probe.js?v=js.version.201608168006"></script>
+	<script type="text/javascript" src="js/common_830.js"></script>
+	<script type="text/javascript">
+	$(function(){
+
+		var myScroll = new IScroll('#main', { scrollbars: true, probeType: 3, mouseWheel: true });
+
+		var conHeight = $(window).height()-$('.header').height()-$('.box_bottom').height();
+
+		$('#main').css({'position':'relative','height':conHeight,'overflow':'hidden'});
+		$('#main .box').css({'position':'absolute','width':'100%'});
+		myScroll.refresh();
+		document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+	})
+	</script>
+
+</body>
+</html>

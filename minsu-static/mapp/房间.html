@@ -1,0 +1,403 @@
+
+<!DOCTYPE>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="applicable-device" content="mobile">
+	<meta content="fullscreen=yes,preventMove=yes" name="ML-Config">
+	<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/header.js?v=js.version.20160815001"></script>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta content="yes" name="apple-mobile-web-app-capable" />
+	<meta content="yes" name="apple-touch-fullscreen" />
+	<title>房间</title>
+	<link href="css/mui.picker.min.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css"
+	href="http://minsustatic.d.ziroom.com/mapp/css/styles_new.css?v=js.version.20160815001">
+	
+	<link rel="stylesheet" type="text/css"
+	href="http://minsustatic.d.ziroom.com/mapp/css/styles_new.css?v=js.version.20160815001">
+	<link rel="stylesheet" type="text/css" href="css/css_830.css">
+	<style type="text/css">
+	#addHouseFourForm, #addSupporting {
+		height: 100%;
+	}
+	#addHouseFourForm .bodys, #addSupporting .bodys {
+		height: calc(100% - 2.45rem);
+		overflow: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+	</style>
+</head>
+<body>
+
+	<form id="addHouseFourForm" >
+		<input id="rentType" type="hidden" value="1">
+		<!-- 租住类型 0 整租 1分租 整租只有床位信息 分租必须有床 -->
+		<header class="header"> <a href="javascript:history.go(-1);" id="goback" class="goback"></a>
+			<h1>房间</h1>
+		</header>
+		<div class="bodys">
+			<div id="main" class="main">
+				<div class="box">
+					<!-- TODO:还未添加床位信息时显示 -->
+					<!-- <p class="noBedMessage">您还没有添加床位</p> -->
+					<ul id="roomList" class="myCenterList">
+
+						<li class="c_ipt_li c_ipt_li_none bor_b ">
+							<a href="javascript:void(0);"> 
+								<!-- TODO： 保存下一步时验证房间名称字数是否小于10-->
+								<span class="c_span">房间名称</span>
+								<textarea rows="1" class="c_ipt j_ipt" data-type="name" type="text" placeholder="请填写房源名称" id="roomName" maxlength="30"></textarea>
+								<span class="icon_r icon icon_clear"></span>
+							</a>
+						</li>
+						<li class="c_ipt_li bor_b "> 
+							<a href="javascript:void(0);"> 
+								<span class="c_span">房间面积</span>
+								<input class="c_ipt j_ipt" data-type="area" type="tel" placeholder="请填写整套房源面积" id="roomArea"
+								value="200m²">
+								<span class="icon_r icon icon_clear"></span>
+							</a>
+						</li>
+						<li class="c_ipt_li c_ipt_li_none bor_b ">
+							<a href="javascript:void(0);"> 
+								<span class="c_span">每晚价格</span>
+								<input class="c_ipt j_ipt" data-type="price" type="tel" placeholder="请填写每晚价格" id="housePrice" value=""/> 
+								<span class="icon_r icon icon_clear"></span>
+							</a>
+						</li>
+						<li class="c_ipt_li c_ipt_li_none bor_b "> 
+							<a href="javascript:void(0);"> 
+								<span class="c_span">是否独卫</span>
+								<input class="c_ipt j_s_ipt" type="text" placeholder="请选择是否独卫" id="toilet" value="" readonly="readonly">
+								<select onchange="setValToInput(this,'toilet')" id="toiletList" name="toiletList">
+									<option value=""
+									 >请选择</option>
+									<option value="0"
+									>是</option>
+
+									<option value="1"
+									>否</option>
+
+								</select>
+								<span class="icon_r icon"></span>
+							</a>
+						</li>
+						<li class="c_ipt_li c_ipt_li_none bor_b "> 
+							<a href="javascript:void(0);"> 
+								<span class="c_span">入住人数限制</span>
+								<input class="c_ipt j_s_ipt" type="text" placeholder="请选择入住人数限制" id="person" value="" readonly="readonly">
+								<select onchange="setValToInput(this,'person')" id="personList" name="personList">
+
+									<option value="0"
+									selected>不限制</option>
+
+									<option value="1"
+									>1人</option>
+
+									<option value="2"
+									>2人</option>
+
+									<option value="3"
+									>3人</option>
+
+									<option value="4"
+									>4人</option>
+
+									<option value="5"
+									>5人</option>
+
+									<option value="6"
+									>6人</option>
+
+									<option value="7"
+									>7人</option>
+
+								</select>
+								<span class="icon_r icon"></span>
+							</a>
+						</li>
+
+						</ul>
+					</div>
+					<!--/main-->
+				</div>
+			</div>
+			<ul class="bottomBtns clearfix">
+				<li id="addBedBtn" class="addBtn">添加床位</li>
+				<li id="submitBtn" class="submitBtn">确定</li>
+			</ul>
+		</form>
+		<!-- 添加房源名称 -->
+
+		<script src="http://minsustatic.d.ziroom.com/mapp/js/jquery-2.1.1.min.js?v=js.version.20160815001"
+		type="text/javascript"></script>
+		<script type="text/javascript"
+		src="http://minsustatic.d.ziroom.com/mapp/js/layer/layer.js?v=js.version.20160815001"></script>
+		<script src="http://minsustatic.d.ziroom.com/mapp/js/common2.js?v=js.version.20160815001"></script>
+		<script src="http://minsustatic.t.ziroom.com/mapp/js/iscroll-probe.js?v=js.version.201608168006"></script>
+		<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/mui.min.js?v=js.version.20160815001"></script>
+		<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/mui.picker.min.js?v=js.version.20160815001"></script>
+		<script type="text/javascript" src="js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="js/common_830_2.js"></script>
+
+		<script type="text/javascript">
+		$$(function(){
+
+			var myScroll = new IScroll('#main', { scrollbars: true, probeType: 3, mouseWheel: true });
+
+			var conHeight = $$(window).height()-$$('.header').height()-$$('.bottomBtns').height();
+
+			$$('#main').css({'position':'relative','height':conHeight,'overflow':'hidden'});
+			$$('#main .box').css({'position':'absolute','width':'100%'});
+			myScroll.refresh();
+			document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+			$$("#submitBtn").click(function(){
+				var rentType = $$("#rentType").val();
+				var beds = $$(".j_ipt_li").length;
+				if(rentType == 0){//整租
+
+				}else if(rentType == 1){//分租
+					if(beds < 1){
+						mui.confirm('您至少可添加1个床位！', '', ['关闭'], function(e) {});
+					}
+				}
+			})
+			
+			
+		})
+</script>
+<script>
+(function($, doc) {
+	$.init();
+	$.ready(function() {
+		var rulerData = [
+		{
+			value:'1',
+			text:'单人床',
+			children:[
+			{
+				value:'1',
+				text:'0.9米*2米'
+			},{
+				value:'2',
+				text:'1.2米*2米'
+			},{
+				value:'3',
+				text:'1.5米*2米'
+			},{
+				value:'4',
+				text:'1.8米*2米'
+			},{
+				value:'5',
+				text:'2米*2米'
+			},{
+				value:'6',
+				text:'其他'
+			}
+			]
+		},
+		{
+			value:'2',
+			text:'双人床',
+			children:[
+			{
+				value:'1',
+				text:'0.9米*2米'
+			},{
+				value:'2',
+				text:'1.2米*2米'
+			},{
+				value:'3',
+				text:'1.5米*2米'
+			},{
+				value:'4',
+				text:'1.8米*2米'
+			},{
+				value:'5',
+				text:'2米*2米'
+			},{
+				value:'6',
+				text:'其他'
+			}
+			]
+		},
+		{
+			value:'3',
+			text:'双层床',
+			children:[
+			{
+				value:'1',
+				text:'0.9米*2米'
+			},{
+				value:'2',
+				text:'1.2米*2米'
+			},{
+				value:'3',
+				text:'1.5米*2米'
+			},{
+				value:'4',
+				text:'1.8米*2米'
+			},{
+				value:'5',
+				text:'2米*2米'
+			},{
+				value:'6',
+				text:'其他'
+			}
+			]
+		},{
+			value:'4',
+			text:'榻榻米',
+			children:[
+			{
+				value:'1',
+				text:'0.9米*2米'
+			},{
+				value:'2',
+				text:'1.2米*2米'
+			},{
+				value:'3',
+				text:'1.5米*2米'
+			},{
+				value:'4',
+				text:'1.8米*2米'
+			},{
+				value:'5',
+				text:'2米*2米'
+			},{
+				value:'6',
+				text:'其他'
+			}
+			]
+		},{
+			value:'5',
+			text:'沙发床',
+			children:[
+			{
+				value:'1',
+				text:'0.9米*2米'
+			},{
+				value:'2',
+				text:'1.2米*2米'
+			},{
+				value:'3',
+				text:'1.5米*2米'
+			},{
+				value:'4',
+				text:'1.8米*2米'
+			},{
+				value:'5',
+				text:'2米*2米'
+			},{
+				value:'6',
+				text:'其他'
+			}
+			]
+		}
+		];
+
+		//级联示例
+		var bedPicker = new $.PopPicker({
+			layer: 2
+		});
+		bedPicker.setData(rulerData);
+		var showRulerPickerButton = doc.getElementById('addBedBtn');
+		showRulerPickerButton.addEventListener('tap', function(event) {
+			bedPicker.show(function(items) {
+				var beds = $$(".j_ipt_li").length;
+				if(beds > 6){
+					mui.confirm('您最多可添加7个床位！', '', ['关闭'], function(e) {});
+					return;
+				}
+				var _str='';
+				_str+='<li id="li_bed'+(beds+1)+'" class="c_ipt_li j_ipt_li bor_b mui-table-view-cell mui-transitioning"> '
+				+	'<div class="mui-slider-right mui-disabled" data-roomfid="">'
+				+		'<a class="mui-btn mui-btn-red" style="-webkit-transform: translate(0px, 0px);">删除</a>'
+				+	'</div>'
+				+	'<a href="javascript:void(0);">'
+				+		'<div class="mui-slider-handle">'
+				+			'<span class="c_span j_span">床位'+(beds+1)+'</span>'
+				
+				+			'<input class="c_ipt j_b_ipt" type="text" placeholder="请选择床位信息" id="bed'+(beds+1)+'" name="bed'+(beds+1)+'" value="'+items[0].text + " " + items[1].text+'" readonly="readonly"></div>'
+				+		'<span class="icon_r icon"></span>'
+
+				+	'</a>'
+				+'</li>'
+
+				$$("#roomList").append(_str);
+				setTimeout(function(){
+					myScroll.refresh();
+				},10)
+			});
+		}, false);
+	});
+})(mui, document);
+
+</script>
+<script type="text/javascript">
+
+        mui.init();
+		(function($) {
+			$('#roomList').on('tap', '.mui-btn', function(event) {
+				var elem = this;
+				var li = elem.parentNode.parentNode;
+				var liSize = $$('#roomList .j_ipt_li').size();
+				var rentType = $$("#rentType").val();
+				if(rentType == 0){//整租
+					li.parentNode.removeChild(li);
+					countLiIndex();
+				}else if(rentType == 1){//分租
+					if(liSize==1){
+					mui.confirm('您至少保留1个床位！', '', ['关闭'], function(e) {
+						$.swipeoutClose(li);
+					});
+														
+				}else{
+					mui.confirm('确认删除该条床位信息？', '', btnArray, function(e) {
+						var liSize = $$('#roomList .j_ipt_li').size();
+						if (e.index == 1) { //这是确认
+							
+								li.parentNode.removeChild(li);
+								countLiIndex();
+							
+						} else {//这是取消
+							setTimeout(function() {
+								$.swipeoutClose(li);
+							}, 0);
+						}
+					});
+				}
+				}
+				
+			});
+			var btnArray = ['取消', '确认'];
+			
+		})(mui);
+
+    	function countLiIndex(){
+    		var rentType = $$("#rentType").val();
+    		if(rentType == 0){//整租
+    			n = 1
+			}else if(rentType == 1){//分租
+				n = -4;
+			}
+			console.log(n);
+			$$('.j_ipt_li').each(function(){
+    			$$(this).attr("id","li_bed"+($$(this).index()+n));
+    		});
+    		$$('.j_b_ipt').each(function(){
+    			$$(this).attr("id","bed"+($$(this).parents("li").index()+n));
+    			$$(this).attr("name","bed"+($$(this).parents("li").index()+n));
+    		});
+    		$$('.j_span').each(function(){
+    			$$(this).text("床位"+($$(this).parents("li").index()+n));
+    		});
+    		
+    	}
+	   
+	</script>
+
+</body>
+</html>

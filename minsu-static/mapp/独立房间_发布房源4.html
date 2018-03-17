@@ -1,0 +1,230 @@
+
+<!DOCTYPE>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="applicable-device" content="mobile">
+	<meta content="fullscreen=yes,preventMove=yes" name="ML-Config">
+	<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/header.js?v=js.version.20160815001"></script>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta content="yes" name="apple-mobile-web-app-capable" />
+	<meta content="yes" name="apple-touch-fullscreen" />
+	<title>发布房源</title>
+	<link rel="stylesheet" type="text/css"
+	href="http://minsustatic.d.ziroom.com/mapp/css/styles_new.css?v=js.version.20160815001">
+	<link rel="stylesheet" type="text/css" href="css/css_830.css">
+	<style type="text/css">
+	#addHouseFourForm, #addSupporting {
+		height: 100%;
+	}
+	#addHouseFourForm .bodys, #addSupporting .bodys {
+		height: calc(100% - 2.45rem);
+		overflow: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+	</style>
+</head>
+<body>
+
+	<form id="addHouseFourForm" >
+		<header class="header"> <a href="javascript:history.go(-1);" id="goback" class="goback"></a>
+			<h1>发布房源(4/6)</h1>
+		</header>
+		<div class="bodys">
+			<div class="main">
+
+				<ul id="houseList" class="myCenterList">
+					<li class="c_ipt_li c_ipt_li_none bor_b "> 
+						<a href="javascript:void(0);"> 
+							<span class="c_span">是否与房东同住</span>
+							<input class="c_ipt j_s_ipt" type="text" placeholder="请选择是否与房东同住" id="liveTogether" value="" readonly="readonly">
+							<select onchange="setValToInput(this,'liveTogether')" id="liveTogetherList" name="liveTogetherList">
+
+								<option value="0"
+								selected>是</option>
+
+								<option value="1"
+								>否</option>
+
+							</select>
+							<span class="icon_r icon"></span>
+						</a>
+					</li>
+					<li class="c_ipt_li c_ipt_li_none bor_b "> 
+						<a href="javascript:void(0);">  
+							<span class="c_span">出租期限</span>
+							<input class="c_ipt" type="text"
+							placeholder="请选择出租期限" id="rentTime" name="rentTime"
+							value="" pattern='yyyy-MM-dd' readonly="readonly" />
+							<input id="rentDate" type="date" onchange="setValToInputDate(this,'rentTime');compareDate(this,'rentTime');" mins="2016-08-19" max="2037-12-30" value="">
+							<span class="icon_r icon"></span> 
+						</a>
+					</li>
+					<li class="c_ipt_li c_ipt_li_none bor_b "> 
+						<a href="javascript:void(0);"> 
+							<span class="c_span">入住人数限制</span>
+							<input class="c_ipt j_s_ipt" type="text" placeholder="请选择入住人数限制" id="person" value="" readonly="readonly">
+							<select onchange="setValToInput(this,'person')" id="personList" name="personList">
+								<option value="" >请选择</option>
+								<option value="0"
+								selected>不限制</option>
+
+								<option value="1"
+								>1人</option>
+
+								<option value="2"
+								>2人</option>
+
+								<option value="3"
+								>3人</option>
+
+								<option value="4"
+								>4人</option>
+
+								<option value="5"
+								>5人</option>
+
+								<option value="6"
+								>6人</option>
+
+								<option value="7"
+								>7人</option>
+
+							</select>
+							<span class="icon_r icon"></span>
+						</a>
+					</li>
+					<li class="c_ipt_li c_ipt_li_none bor_b ">
+						<a href="javascript:;">
+							<span class="c_span">便利设施</span>
+							<input  class="c_ipt" type="text" placeholder="请选择有哪些便利设施" id="supportList" name="supportList" value="" readonly="readonly"> 
+							<span class="icon_r icon"></span>
+						</a>
+
+					</li>
+
+					<li class="c_ipt_li c_ipt_li_none bor_b">
+						<a href="javascript:;"> 
+							<span class="c_span">房源描述</span>
+							<input class="c_ipt" type="text" placeholder="请填写房源描述信息" id="houseMessage" value="" readonly="readonly">
+							<span class="icon_r icon"></span>
+						</a>
+					</li>
+					<li class="c_ipt_li c_ipt_li_none">
+						<a href="javascript:;"> 
+							<span class="c_span">周边情况</span>
+							<input class="c_ipt" type="text" placeholder="请填写周边情况"  id="arroundMessage" value="" readonly="readonly">
+							<span class="icon_r icon"></span>
+						</a>
+					</li>
+
+				</ul>
+				<!--/main-->
+			</div>
+			<div class="box box_bottom">
+				<input type="button" id="sentHouse" value="下一步" class="org_btn">
+			</div>
+		</form>
+		<!-- 添加房源名称 -->
+
+		<script src="http://minsustatic.d.ziroom.com/mapp/js/jquery-2.1.1.min.js?v=js.version.20160815001"
+		type="text/javascript"></script>
+		<script type="text/javascript"
+		src="http://minsustatic.d.ziroom.com/mapp/js/layer/layer.js?v=js.version.20160815001"></script>
+		<script src="http://minsustatic.d.ziroom.com/mapp/js/common.js?v=js.version.20160815001"></script>
+		<script src="http://minsustatic.t.ziroom.com/mapp/js/iscroll-probe.js?v=js.version.201608168006"></script>
+		<script type="text/javascript" src="js/common_830.js"></script>
+		<script type="text/javascript">
+
+
+		/*只能输入数字*/
+
+		function keepFloat(obj, float, len) {
+			//	验证是否有字母
+			var reg1 = new RegExp("[a-zA-Z]");
+			//验证是否有多个.
+			var reg = /^\\d+.\\d{2}/;
+			//	特殊字符 
+			var reg3 = /[`~!@#$%^&*()_+<>?:"{},\/;'[\]]/im;
+			//验证是否有汉字
+			var reg4 = /[^\u0000-\u00FF]/;
+			var v = $.trim($(obj).val());
+
+			if (reg.test(v)) {
+				v = v.replace(/(^\s*)|(\s*$)/g, '')
+				$(obj).val(v);
+			}
+			if (reg1.test(v)) {
+				v = v.replace(/[a-zA-Z]/g, '')
+				$(obj).val(v);
+				return false;
+			}
+			if (reg3.test(v)) {
+				v = v.replace(/[`~!@#$%^&*()_+<>?:"{},\/;'[\]]/g, '')
+				$(obj).val(v);
+				return false;
+			}
+			if (reg4.test(v)) {
+				v = v.replace(/[^\u0000-\u00FF]/g, '')
+				$(obj).val(v);
+				return false;
+			}
+			if (float == 0) {
+				//		保留为整数
+				if (v.indexOf(".") != -1) {
+					v = v.split(".")[0];
+					$(obj).val(v);
+					return false;
+				}
+			}
+			if (len !== undefined) {
+				if (v.indexOf(".") != -1) {
+					var str = v.replace(".", "");
+					if (str.length > len) {
+						$(obj).val(v.slice(0, len));
+						return false;
+					}
+				} else {
+					if (v.length > len) {
+						$(obj).val(v.slice(0, len));
+						return false;
+					}
+				}
+			}
+			if (v.indexOf(".") != -1) {
+				var str = v.split(".");
+				$(obj).val(str[0] + "." + str[1].slice(0, float));
+			}
+			return true;
+		}
+
+		function compareDate(obj, id) {
+			var beginDate = $(obj).attr('mins');
+			var endDate = $(obj).val();
+			var maxDate = $(obj).attr("max");
+			var d1 = new Date(beginDate.replace(/\-/g, "\/"));
+			var d2 = new Date(endDate.replace(/\-/g, "\/"));
+			var max = new Date(maxDate.replace(/\-/g, "\/"));
+
+			if (beginDate != "" && endDate != "" && d1 >= d2) {
+				showShadedowTips("只能选择今天以后的日期！", 1);
+				$(obj).val(beginDate);
+				$('#' + id).val(beginDate);
+				return false;
+			}
+			
+			if(endDate != "" && d2 >= max ){
+				showShadedowTips("最大时间为2037年！", 1);
+				$(obj).val(maxDate);
+				$('#' + id).val(maxDate);
+				return false;
+			}
+		}
+		
+		var myScroll = new IScroll('#houseList', { scrollbars: true, probeType: 3, mouseWheel: true });
+		document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+		</script>
+
+	</body>
+	</html>

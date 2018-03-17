@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="applicable-device" content="mobile">
+	<meta content="fullscreen=yes,preventMove=yes" name="ML-Config">    
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta content="yes" name="apple-mobile-web-app-capable"/>
+	<meta content="yes" name="apple-touch-fullscreen"/>
+	<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width">
+	<meta name="format-detection" content="telephone=no">
+	<script type="text/javascript" src="http://minsustatic.d.ziroom.com/mapp/js/header.js?v=js.version.20160603.01001"></script>
+	<title>房间收益</title>
+	<link rel="stylesheet" type="text/css" href="css/slick.css">
+	<link rel="stylesheet" type="text/css" href="css/styles_new.css">
+	
+</head>
+
+<body>
+	<header class="header">
+		<h1>我的收益</h1>
+	</header>
+	<div class="bodys">
+		<div class="main">
+			<div class="sliderBox">
+				<div id="slider" class="slider slick_box clearfix">
+				<div>
+					<div class="date" data-date="2016-05">2016年5月收益</div>
+					<div class="slick_item">
+						<ul class="slick_item_ul">
+							<li><p>实际收益 <span class="money">￥25,678.34</span> </p></li>
+							<li><p>预计收益 <span class="money">￥24,000.00</span> </p></li>
+						</ul>
+					</div>
+				</div>
+				<div>
+					<div class="date" data-date="2016-06">2016年6月收益</div>
+					<div class="slick_item">
+						<ul class="slick_item_ul">
+							<li><p>实际收益 <span class="money">￥25,678.34</span> </p></li>
+							<li><p>预计收益 <span class="money">￥24,000.00</span> </p></li>
+						</ul>
+					</div>
+				</div>
+				
+			</div>
+			</div>
+			<ul class="houseList houseListNo" >
+				<li>
+					<a href="实际收益.html">
+						<div class="content_box clearfix">
+							<div class="img_box">
+								<img src="images/image/img1.png">
+								<span class="status">已上架</span>
+							</div>
+							<div class="text_box">
+								<h1>朝阳区十里堡阳光温暖屋</h1>
+								<p>浏览量：<span class="v">30</span> 次</p>
+								<p>30天内出租率：<span class="r">67%</span></p>
+								<p>客户评分：<span class="s">5.0</span></p>
+							</div>
+						</div>
+					</a>
+				</li>
+				<li>
+					<a href="实际收益.html">
+						<div class="content_box clearfix">
+							<div class="img_box">
+								<img src="images/image/img2.png">
+								<span class="status">已上架</span>
+							</div>
+							<div class="text_box">
+								<h1>朝阳区十里堡阳光温暖屋</h1>
+								<p>浏览量：<span class="v">30</span> 次</p>
+								<p>30天内出租率：<span class="r">67%</span></p>
+								<p>客户评分：<span class="s">5.0</span></p>
+							</div>
+						</div>
+					</a>
+				</li>
+				<li>
+					<a href="实际收益.html">
+						<div class="content_box clearfix">
+							<div class="img_box">
+								<img src="images/image/img3.png">
+								<span class="status">已上架</span>
+							</div>
+							<div class="text_box">
+								<h1>朝阳区十里堡阳光温暖屋</h1>
+								<p>浏览量：<span class="v">30</span> 次</p>
+								<p>30天内出租率：<span class="r">67%</span></p>
+								<p>客户评分：<span class="s">5.0</span></p>
+							</div>
+						</div>
+					</a>
+				</li> 
+			</ul>
+
+
+		</div><!--/main-->
+
+
+	</div><!--/bodys-->
+
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/jquery-2.1.1.min.js?v=js.version.20160603.01001" type="text/javascript"></script>
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/common/commonUtils.js?v=js.version.20160603.01001"></script>
+	<script src="http://minsustatic.d.ziroom.com/mapp/js/layer/layer.js?v=js.version.20160603.01001"></script>
+	<script src="js/common.js"></script>
+	<script type="text/javascript" src="js/slick.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('#slider').slick({
+		        dots: false,
+		        arrows:false,
+		        infinite: true,
+		        speed: 300,
+		        slidesToShow: 1,
+		        slidesToScroll: 1,
+		        onBeforeChange:function(){
+		        	touchMove:true
+		        },
+		        onAfterChange:function(o,index){
+		        	var date = $(".slick-active").find(".date").attr("data-date");
+		        	// TODO:根据date请求数据
+		        }
+		    });
+		    // 630新增 方法已放到git common.js
+			setImgPosition();
+		})
+	</script>
+</body>
+</html>

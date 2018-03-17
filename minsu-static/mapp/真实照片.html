@@ -1,0 +1,234 @@
+
+
+
+
+<!DOCTYPE >
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="applicable-device" content="mobile">
+	<meta content="fullscreen=yes,preventMove=yes" name="ML-Config">        
+	<script type="text/javascript" src="http://minsustatic.t.ziroom.com/mapp/js/header.js?v=js.version.201608168001"></script>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta content="yes" name="apple-mobile-web-app-capable"/>
+	<meta content="yes" name="apple-touch-fullscreen"/>
+	<title>添加照片</title>
+	<link rel="stylesheet" type="text/css" href="http://minsustatic.t.ziroom.com/mapp/css/styles_new.css?v=js.version.201608168001">
+	<link rel="stylesheet" type="text/css" href="css/css_830.css">
+</head>
+<body>
+
+	<!-- <form accept="" method="">	 -->
+	<div class="bodys">
+	<header class="header">
+			
+				<a href="http://minsu.m.t.ziroom.com:80/houseInput/43e881/goToHouseUpdate?houseBaseFid=8a90a2d456a1980f0156b14caac9004d&rentWay=0&houseRoomFid=null"  class="goback"></a>
+			
+			
+			<h1>添加照片</h1>
+			<a href="javascript:;" class="header_r" onclick="setDefaultPic('8a90a2d456a1980f0156b14caac9004d','0');">设置封面照片</a>
+		</header>
+	
+		<div id="main" class="main">
+			<div class="box">
+			<ul class="hosueList" style="margin-bottom:0;">
+				
+				
+					
+					
+						<li class="noimgli" onclick="toUpPic('8a90a2d456a1980f0156b14caac9004d','null',1);">
+							
+							<div class="upload_photo">
+								<div class="uploadBtn"></div>
+								<h2>上传客厅照片</h2>
+							</div>
+							
+							<p class="title hide"></p>
+						</li>
+					
+				
+					
+					
+						<li class="noimgli" onclick="toUpPic('8a90a2d456a1980f0156b14caac9004d','null',2);">
+							
+							<div class="upload_photo">
+								<div class="uploadBtn"></div>
+								<h2>上传厨房照片</h2>
+							</div>
+							
+							<p class="title hide"></p>
+						</li>
+					
+				
+					
+					
+						<li class="noimgli" onclick="toUpPic('8a90a2d456a1980f0156b14caac9004d','null',3);">
+							
+							<div class="upload_photo">
+								<div class="uploadBtn"></div>
+								<h2>上传卫生间照片</h2>
+							</div>
+							
+							<p class="title hide"></p>
+						</li>
+					
+				
+					
+					
+						<li class="noimgli" onclick="toUpPic('8a90a2d456a1980f0156b14caac9004d','null',4);">
+							
+							<div class="upload_photo">
+								<div class="uploadBtn"></div>
+								<h2>上传室外照片</h2>
+							</div>
+							
+							<p class="title hide"></p>
+						</li>
+					
+				
+			</ul>
+			<div class="title_classify pl20 ">
+					<span onclick="clecked(this)"><span class="icon_check icon icon_l active"></span><span>同意</span></span><a href="http://minsustatic.t.ziroom.com/mapp/html/order_service_protocol.html" style="color: #4A90E2;font-size:0.7rem;line-height:2.2rem;">《服务协议》</a>
+				</div>
+			</div>
+		</div><!--/main-->
+	</div>
+	<div class="box box_bottom">
+		<a href="http://minsu.m.t.ziroom.com:80/houseIssue/43e881/showOptionalInfo?houseBaseFid=8a90a2d456a1980f0156b14caac9004d&houseRoomFid=null&flag=1&rentWay=0"><input type="button" id="nextBtn" value="确认" class="org_btn" ></a>
+	</div>
+	
+	<input type="hidden" id="houseAllPicCount" value="0">
+	<input type="hidden" id="sourceType" value="">
+	<input type="hidden" id="houseStatus" value="10">
+	
+	<!-- </form> -->
+	<script src="http://minsustatic.t.ziroom.com/mapp/js/jquery-2.1.1.min.js?v=js.version.201608168001" type="text/javascript"></script>
+	<script type="text/javascript" src="http://minsustatic.t.ziroom.com/mapp/js/layer/layer.js?v=js.version.201608168001"></script>
+	<script src="http://minsustatic.t.ziroom.com/mapp/js/iscroll-probe.js?v=js.version.201608168006"></script>
+	<script src="http://minsustatic.t.ziroom.com/mapp/js/common.js?v=js.version.201608168001"></script>
+	<script type="text/javascript">
+		
+
+		var source= $("#sourceType").val();
+		var houseAllPicCount = $("#houseAllPicCount").val();
+		var houseStatus = $("#houseStatus").val();
+		function clecked(e) {
+			if ($(e).find(".icon_check").hasClass("active")) {
+				$(e).find(".icon_check").removeClass("active");
+				$("#sentHouse").removeClass("org_btn").addClass("disabled_btn");
+			} else {
+				$(e).find(".icon_check").addClass("active");
+				$("#sentHouse").addClass("org_btn").removeClass("disabled_btn");
+
+			}
+		}
+		
+
+		/*询问弹层*/
+		function showConfirm(str){
+		    //信息框-例2
+		    layer.open({
+		    	content: '<div class="loginTips" style="line-height: 1.1rem">'+str+'</div>',
+		    	btn:['拒绝','同意'],
+		    	yes: function(){
+		              //直接跳转到手机注册
+		              layer.closeAll();              
+		          }, no: function(){
+		            alert("已下架")
+		        }
+	
+		    });
+		}
+		
+		
+		//选择房间属性 值
+		var sRoomFid = "";
+		var sRoomPicCount = 0;
+		function setVal(obj,val){
+			sRoomFid = $(obj).attr('data-id');
+			sRoomPicCount = $(obj).attr('data-count');
+			$(obj).addClass('active').siblings().removeClass();
+		}
+		
+		//选择需要设置默认图片的房间
+		function chooseSetRoom(houseBaseFid){
+			var roomList = '<ul class="layerList" id="layerList">'
+							
+							+'</ul>';
+			layer.open({
+			    title: ['请选择房间'],
+			    content: roomList,
+			    btn:['确定','取消'],
+			    yes: function(){
+			    	if(sRoomFid == ""){
+			    		showShadedowTips("请选择房间",1);
+			    		return;
+			    	}
+			    	if(sRoomPicCount == 0){
+			    		showShadedowTips("请先添加照片",1);
+			    		return;
+			    	}
+			    	layer.closeAll();
+			    	if(source == "1"){
+				    	window.WebViewFunc.setHouseDefaultPic(houseBaseFid,sRoomFid);
+				    	sRoomFid = "";
+				    	sRoomPicCount = 0;
+			    	}else if(source == "2"){
+			    		setHouseDefaultPic(houseBaseFid,sRoomFid);
+			    		sRoomFid = "";
+			    		sRoomPicCount = 0;
+			    	}
+		    	}, no: function(){
+		    		sRoomFid = "";
+		    		sRoomPicCount = 0;
+		    	}
+			    
+			});
+		}
+		
+		
+		//调用原生
+		function toUpPic(houseBaseFid,houseRoomFid,picType){
+			if(source == "1"){
+				//兼容之前版本处理(多加一个参数)
+				window.WebViewFunc.uploadHousePic(houseBaseFid,houseRoomFid,picType);
+				window.WebViewFunc.uploadHousePicNew(houseBaseFid,houseRoomFid,picType,parseInt(houseStatus));
+			}else if(source == "2"){
+				uploadHousePic(houseBaseFid,houseRoomFid,picType);
+				uploadHousePicNew(houseBaseFid,houseRoomFid,picType,parseInt(houseStatus));
+			}
+		}
+		 //设置默认图片
+		function setDefaultPic(houseBaseFid,rentWay){
+			if(rentWay == 0){
+				if(houseAllPicCount == 0){
+					showShadedowTips("请先添加照片",1);
+					return;
+				}
+				if(source == "1"){
+					window.WebViewFunc.setHouseDefaultPic(houseBaseFid,'');
+				}else if(source == "2"){
+					setHouseDefaultPic(houseBaseFid,'');
+				}
+			}else if(rentWay == 1){
+				chooseSetRoom(houseBaseFid);
+			}
+		 }
+	</script>
+	<script type="text/javascript">
+	$(function(){
+
+		var myScroll = new IScroll('#main', { scrollbars: true, probeType: 3, mouseWheel: true });
+
+		var conHeight = $(window).height()-$('.header').height()-$('.box_bottom').height();
+
+		$('#main').css({'position':'relative','height':conHeight,'overflow':'hidden'});
+		$('#main .box').css({'position':'absolute','width':'100%'});
+		myScroll.refresh();
+		document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+	})
+	</script>
+
+</body>
+</html>

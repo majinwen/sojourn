@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+   	<meta name="applicable-device" content="mobile">
+    <meta content="fullscreen=yes,preventMove=yes" name="ML-Config">        
+    <script type="text/javascript" src="js/header.js"></script>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="yes" name="apple-touch-fullscreen"/>
+	<title>订单详情</title>
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+<div class="">
+	
+	<header class="header">
+		<a href="http://minsu.m.d.ziroom.com:80/orderland/43e881/showlist" class="goback"></a>
+		<h1>订单详情</h1>
+	</header>
+	
+	<div class="main">
+		<div class="d_banner img">
+			<img src="http://10.16.34.44:8000/minsu/group1/M00/00/34/ChAiMFc6L_mAfVMNAACJVwu7YVo925.jpg_Z_1200_800.jpg" class="setImg">
+			<div class="txt">
+				<h3>待房东确认其他消费</h3>
+				<p>160523C3710XWV145528</p>
+			</div>
+		</div>
+
+		<div class="bgF">
+			<div class="detail_top">
+				<p class="t">宽松固定最少3天
+					<span>预订时间：2016-05-23</span>
+				</p>
+				<p class="line2 fz7 boxP075"></p>
+			</div>
+			<div class="detail_center clearfix">
+				<div class="c">
+					<span class="icon icon_in">入住</span>
+					<p>6月1日 13:00</p>
+				</div>
+				<div class="c">
+					<span class="icon icon_out">退房</span>
+					<p>6月4日 11:00</p>
+				</div>
+			</div>
+			
+		</div>
+
+		<h2 class="tit">订单金额</h2>
+		<div class="bgF">
+			<div class="detail_top">
+				<p class="t pr" onclick="sh(this,'detail_center_1')">房客支付： <span class="org num">￥949.95</span><span class="icon icon_r icon_t"></span></p>
+				<p class="line2 fz7 boxP075"></p>
+			</div>
+			<div class="detail_center uhide" id="detail_center_1">
+				<div class="money_detail">
+					
+						<p class="d"><a>房租<span>￥450.00</span></a></p>
+					
+					
+						<p class="d"><a>房租优惠金额<span>￥4.50</span></a></p>
+					
+					
+					
+					
+					
+					
+				</div>
+			</div>
+			
+			
+				<!-- 未支付状态房东端收入显示0 -->
+				<div class="detail_top">
+					<p class="t bd0 pr" onclick="sh(this,'detail_center_2')">本单收入： <span class="org num">￥0</span><span class="icon icon_r icon_t"></span></p>
+					<p class="line2 fz7 boxP075"></p>
+				</div>
+			
+			
+		</div>
+		
+		<!-- 待房东确认额外消费 显示输入框让房东输入 -->
+		
+			<h2 class="tit">其他费用</h2>
+			<div class="bgF">
+				<div class="detail_top">
+					<p class="t bd0 pr"> 
+						金额：<span class="org num">
+								<input type="tel" id="otherMoneyValue" class="org" placeholder="请输入合计金额" onafterpaste="keyUpMon(this)" onkeyup = "keyUpMon(this)" maxlength="5">
+							</span>
+							<span class="icon icon_r icon_t"></span>
+					</p>
+					<p class="line2 fz7 boxP075"></p>
+				</div>
+				<div class="detail_center">
+					<div class="input_detail">
+						<textarea name="" id="otherMoneyDes" placeholder="请输入其它费用明细，例：&#13;&#10;矿泉水1瓶：￥5:00&#13;&#10;打碎玻璃杯一个：￥40.00"></textarea>
+					</div>
+				</div>
+			</div>
+		
+		
+		<!-- 结算中或者已完成状态会有其他费用展示，不过是只读的 -->
+		
+		
+		<h2 class="tit">房客信息</h2>
+		<div class="bgF">
+			<div class="detail_top">
+				<a href="http://minsu.m.d.ziroom.com:80/orderland/43e881/bookingDetail?orderSn=160523C3710XWV145528&userUid=03a9ec5a-d921-432b-b7ad-d9c429d0925d" class="pr disblock">
+				<ul class="fk_info clearfix">
+					<li class="fk_info_img"><img src="http://10.16.34.44:8000/minsu/group1/M00/00/3D/ChAiMFc9kQKAEONhABykz7jH7yc212.jpg_Z_120_120.jpg" alt=""></li>
+					<li class="fk_info_txt">
+						<p>预订人：陈云</p>
+						<p class="star">
+							<!-- 星级显示计算 -->
+							
+								<i class="s"></i>
+							
+								<i class="s"></i>
+							
+								<i class="s"></i>
+							
+							
+								<i class="h"></i>
+								
+									<i></i>
+								
+							
+							
+							<span>3.4</span>
+							<span>1条评价</span></p>
+					</li>
+					<span class="icon icon_r"></span>
+					<p class="line2 fz7 boxP075"></p>
+				</ul>
+				</a>
+			</div>
+			<div class="detail_top">
+				<p class="bd0 fk_info">
+					<a href="http://minsu.m.d.ziroom.com:80/orderland/43e881/contactlist?orderSn=160523C3710XWV145528" class="pr disblock">
+						<span>1位入住人</span>
+						<span>陈瑜</span>
+						<span class="icon icon_r"></span>
+					</a>
+				</p>
+				<p class="line2 fz7 boxP075"></p>
+			</div>
+		</div>
+		<h2 class="tit">备注</h2>
+
+		<div class="bgF beizhuBox"><p class="none">您还没有添加备注</p></div>
+
+		<div class="bgF beizhuBox">
+			<ul class="bzList">
+    <li class="moveLi" id="">
+							<div class="del_btn" data-fid="8a9084df55950ff00155951da89f0014">删除</div>
+							<div class="list clearfix">
+								<span class="icon_del"></span>
+								<p class="list_txt">啦啦啦具体旅进旅退啦啦啦具体旅进旅退啦啦啦具体旅进旅退啦啦啦具体旅进旅退啦啦啦具体旅进旅退吧安立路安立路安立路</p>
+							</div>
+						</li>
+					
+						<li class="moveLi" id="">
+							<div class="del_btn" data-fid="8a9084df55952b0401559576eb8b0039">删除</div>
+							<div class="list clearfix">
+								<span class="icon_del"></span>
+								<p class="list_txt">酷兔兔</p>
+							</div>
+						</li>
+					
+						<li class="moveLi" id="">
+							<div class="del_btn" data-fid="8a9084df55952b04015595aab13b00a3">删除</div>
+							<div class="list clearfix">
+								<span class="icon_del"></span>
+								<p class="list_txt">考虑</p>
+							</div>
+						</li>
+					
+						<li class="moveLi" id="">
+							<div class="del_btn" data-fid="8a9084df55952b04015595ab17a800a4">删除</div>
+							<div class="list clearfix">
+								<span class="icon_del"></span>
+								<p class="list_txt">fufudystuayrsrusrutsuydixgitistiydisustudijddtjxtjiydisustudijddtjxtj</p>
+							</div>
+						</li>
+
+</ul>
+			<div class="addBzBox"><a href=""><span>添加备注</span></a></div>
+		</div>
+		<br><br>
+		<br><br>
+		<br><br>
+		<br><br>
+	</div><!--/main-->
+
+
+<input type="hidden" id="orderSn" value="160523C3710XWV145528"/>
+<!-- 待房东确认订单 -->
+
+
+
+</div>
+<ul class="stateEvents detailBtns clearfix" id="">
+<li id="notesBtn" class="btnss">备注</li>
+<!--li class="btnss">
+	<p class="bzBtn">备注</p>
+	<p class="jjBtn">拒绝订单</p>
+</li-->
+<li id="makeSureBtn">确认订单</li>
+</ul>
+
+
+
+
+<!--ul class="stateEvents detailBtns clearfix" id="">
+	<li>确定订单</li>
+</ul-->
+
+<script src="js/jquery-2.1.1.min.js" type="text/javascript"></script>
+<script src="js/layer/layer.js"></script>
+<script src="js/common.js"></script>
+<script src="js/bed_style.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+
+
+
+var refuseHtml='<ul class="layerList" id="layerList">'
+			+'<li data-val="0" onclick="setRefuseVal(this,0)"><span class="radio"></span>房客未认证</li>'
+			+'<li data-val="1" onclick="setRefuseVal(this,1)"><span class="radio"></span>房客评价较差</li>'
+			+'<li data-val="2" onclick="setRefuseVal(this,2)"><span class="radio"></span>个人原因</li>'
+			+'</ul>'
+	var sRefuseVal='';
+
+	
+
+$('#refuse').click(function(){
+	layer.open({
+	    title: ['请选择拒绝原因'],
+	    content: refuseHtml,
+	    btn:['确定','取消'],
+	    yes: function(){
+
+        	//返回的值就是sRefuseVal
+    		
+    	}, no: function(){
+        	//layer.open({content: '你选择了取消', time: 1});
+    	}
+	    
+	});
+});
+
+
+
+function setRefuseVal(obj,val){
+	sRefuseVal = val;
+	$(obj).addClass('active').siblings().removeClass();
+}
+$(".del_btn").each(function(){
+               $(this).click(function(){
+                   $(this).parents("li").remove();
+                })
+            })
+$(function(){
+	$(".moveLi").each(function(){
+		var h = $(this).height();
+		$(this).find(".del_btn").css({
+			"height":h+"px",
+			"line-height":h+"px"
+		})
+	})
+})
+</script>
+
+</body>
+</html>

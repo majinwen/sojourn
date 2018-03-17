@@ -1,0 +1,766 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=640,user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+        <title>计价模型-价格信息</title>
+    <link href="http://modeprice.m.q.ziroom.com/zz/css/mui.picker.min.css" rel="stylesheet">
+<link href="http://modeprice.m.q.ziroom.com/zz/css/mui.poppicker.css" rel="stylesheet">
+<link href="http://modeprice.m.q.ziroom.com/zz/css/style.css" rel="stylesheet"></head>
+
+<body>
+
+
+
+	<script type="text/javascript">
+	if (/Android (\d+\.\d+)/.test(navigator.userAgent)) {
+	  var version = parseFloat(RegExp.$1);
+	  if (version > 2.3) {
+	  var phoneScale = parseInt(window.screen.width) / 720;
+	  document.write('<meta name="viewport" content="width=720, minimum-scale = ' + phoneScale + ', maximum-scale = ' + phoneScale + ', target-densitydpi=device-dpi">');
+	  } else {
+	  document.write('<meta name="viewport" content="width=720, target-densitydpi=device-dpi">');
+	  }
+	  } else {
+	  document.write('<meta name="viewport" content="width=720, user-scalable=no, target-densitydpi=device-dpi">');
+	  }
+	</script>
+
+	<div id="page_index">
+            <input name="assess_id" id="assess_id" value="" type="hidden">
+		<header class="header">
+			<a href="javascript:window.history.back()" class="goback"></a>
+			价格评估
+			<a href="/index.php?r=zz/assess/index" class="pinggu_jilu">评估记录</a>
+			<a href="javascript:;" class="index_reset">重置</a>
+		</header>
+		<div class="title"><img src="zz/img/title1.png"></div>
+		<nav class="index">
+			<ul class="clearfix">
+				<li class="on">地址信息</li>
+				<li>户型信息</li>
+				<li>功能区域</li>
+				<li>价格租约</li>
+			</ul>
+		</nav>
+
+
+		<!-- 地址信息 -->
+		<div class="content content_dizhi">
+			<div id="scroller1">
+				<ul class="dizhi_btn clearfix">
+                                    <li><a class="index_to_page1" href="javascript:;">常用楼盘</a></li>
+                                    <li><a class="index_to_page4" href="javascript:;">房源宝商机</a></li>
+				</ul>
+				<ul class="dizhi_list">
+					<li>
+						<p class="fl list_name">城市</p>
+						<div class="fr list_r">
+							<input class="select" type="text" placeholder="请选择" readonly>
+							<select name="city" id="city" value="110000">
+                                                            									<option city_code="110000" value="北京" selected="selected">北京</option>
+                                                            									<option city_code="310000" value="上海" >上海</option>
+                                                            									<option city_code="440300" value="深圳" >深圳</option>
+                                                            							</select>
+							<i class="list_arrow"></i>
+						</div>
+					</li>
+					<li>
+						<p class="fl list_name">行政区域</p>
+						<div class="fr list_r">
+							<input class="select" type="text" placeholder="请选择" readonly>
+							<select name="district" id="district">
+                                                            <option value="">请选择</option>
+                                                                                                                            <option no="23008613"  value="朝阳区" >朝阳区</option>
+                                                                                                                            <option no="23008618"  value="海淀区" >海淀区</option>
+                                                                                                                            <option no="23008626"  value="西城区" >西城区</option>
+                                                                                                                            <option no="23008614"  value="东城区" >东城区</option>
+                                                                                                                            <option no="23008625"  value="通州区" >通州区</option>
+                                                                                                                            <option no="23008611"  value="昌平区" >昌平区</option>
+                                                                                                                            <option no="23008617"  value="丰台区" >丰台区</option>
+                                                                                                                            <option no="23008615"  value="大兴区" >大兴区</option>
+                                                                                                                            <option no="23008624"  value="顺义区" >顺义区</option>
+                                                                                                                            <option no="23008623"  value="石景山区" >石景山区</option>
+                                                                                                                            <option no="23008616"  value="房山区" >房山区</option>
+                                                                                                                            <option no="330105"  value="拱墅" >拱墅</option>
+                                                                                                                            <option no="330106"  value="西湖" >西湖</option>
+                                                                                                                            <option no="370203"  value="市北" >市北</option>
+                                                                                                                            <option no="330103"  value="下城" >下城</option>
+                                                                                                                            <option no="330108"  value="滨江" >滨江</option>
+                                                                                                                            <option no="330104"  value="江干" >江干</option>
+                                                                                                                            <option no="320105"  value="建邺" >建邺</option>
+                                                                                                                            <option no="330110"  value="余杭" >余杭</option>
+                                                                                                                            <option no="320102"  value="玄武" >玄武</option>
+                                                                                                                            <option no="330185"  value="临安" >临安</option>
+                                                                                                                            <option no="320104"  value="秦淮" >秦淮</option>
+                                                                                                                            <option no="23008629"  value="亦庄开发区" >亦庄开发区</option>
+                                                                                                                            <option no="23008620"  value="门头沟" >门头沟</option>
+                                                                                                                            <option no="23008621"  value="密云" >密云</option>
+                                                                                                                            <option no="23008628"  value="延庆" >延庆</option>
+                                                                                                                            <option no="23008619"  value="怀柔" >怀柔</option>
+                                                                                                                            <option no="23008622"  value="平谷" >平谷</option>
+                                                            							</select>
+							<i class="list_arrow"></i>
+						</div>
+					</li>
+                                        <li class="pr">
+						<p class="fl list_name">楼盘名称</p>
+						<div class="fr list_r">
+							<input class="loupan" type="text" placeholder="请填写" name="estate" id="entry" value="">
+						</div>
+                                                <ul id="select-menu">
+                                                </ul>
+					</li>
+					<li>
+						<p class="fl list_name">楼栋</p>
+						<div class="fr list_r">
+							<input class="select" type="text" placeholder="请选择" readonly>
+							<select name="building" id="loudong">
+                                                            <option value="" selected="selected"></option>
+							</select>
+							<i class="list_arrow"></i>
+						</div>
+					</li>
+					<li>
+						<p class="fl list_name">单元</p>
+						<div class="fr list_r">
+							<input class="select" type="text" placeholder="请选择" readonly>
+							<select name="unit" id="unit">
+                                                            <option value="" selected="selected"></option>
+							</select>
+							<i class="list_arrow"></i>
+						</div>
+					</li>
+					<li>
+						<p class="fl list_name">楼层</p>
+						<div class="fr list_r">
+							<input class="select" type="text" placeholder="请选择" readonly>
+							<select name="floor" id="floor">
+                                                            <option value="" selected="selected"></option>
+							</select>
+							<i class="list_arrow"></i>
+						</div>
+					</li>
+					<li>
+						<p class="fl list_name">门牌号</p>
+						<div class="fr list_r">
+							<input class="select" type="text" placeholder="请选择" readonly>
+							<select name="number" id="room">
+                                                            <option value="" selected="selected"></option>
+							</select>
+							<i class="list_arrow"></i>
+						</div>
+					</li>
+					<li>
+						<p class="fl list_name">是否顶层底层</p>
+						<div class="fr list_r">
+							<input class="select" type="text" placeholder="请选择" readonly>
+							<select name="is_first_floor" id="is_first_floor">
+                                                            <option value="1" >是</option>
+                                                            <option value="0" >否</option>
+							</select>
+							<i class="list_arrow"></i>
+						</div>
+					</li>
+				</ul>
+                                <input  name="standard_id" id="standard_id" type="hidden" value=""/>
+                                <input type="hidden" id='lp_no' name="resblock_id" value=""/>
+                                
+				<div class="next_btn">
+					<a id="step1_btn" href="javascript:;">下一步</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- 户型信息 -->
+		<div class="content content_huxing">
+			<div id="scroller2">
+				<ul class="huxing_list">
+					<li>
+						<div class="oneline clearfix">
+							<p class="list_name fl">改前户型</p>
+							<div class="list_r fr ui-radio">
+                                                            <a id="qian_kai" href="javascript:;" data-type="0" >开间</a>
+                                                            <a id="qian_one" href="javascript:;" data-type="1">一居室</a>
+                                                            <a id="qian_two" href="javascript:;" data-type="2">两居室</a>
+                                                            <input class="default_value" type="hidden" name="pre_house_type" value="0">
+							</div>
+						</div>
+						<ul class="detail">
+							<li class="clearfix">
+								<div class="fl">
+                                                                    <div class="mui-numbox fl" data-numbox-min='1' data-numbox-max='2'>
+										<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+										<input disabled id="qian_shi" class="mui-input-numbox" type="number" name="pre_room" value="1" />
+										<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+									</div>
+									<p class="fr">室</p>
+								</div>
+								<div class="fl line"></div>
+								<div class="fr">
+									<div class="mui-numbox fl" data-numbox-min='0' data-numbox-max='2'>
+										<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+										<input disabled class="mui-input-numbox" type="number" name="pre_saloon" value="1" />
+										<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+									</div>
+									<p class="fr">厅</p>
+								</div>
+							</li>
+							<li class="clearfix">
+								<div class="fl">
+									<div class="mui-numbox fl" data-numbox-min='0' data-numbox-max='2'>
+										<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+										<input disabled class="mui-input-numbox" type="number" name="pre_kitchen" value="1" />
+										<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+									</div>
+									<p class="fr">厨</p>
+								</div>
+								<div class="fl line"></div>
+								<div class="fr">
+									<div class="mui-numbox fl" data-numbox-min='0' data-numbox-max='2'>
+										<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+										<input disabled class="mui-input-numbox" type="number" name="pre_toliet" value="1" />
+										<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+									</div>
+									<p class="fr">卫</p>
+								</div>
+							</li>
+						</ul>
+					</li>
+					<li class="clearfix">
+						<div class="oneline clearfix">
+							<p class="list_name fl">改后户型</p>
+                                                        <div class="list_r fr ui-radio" id="hou_type">
+								<a id="hou_kai" href="javascript:;" data-type="0">开间</a>
+								<a id="hou_one" href="javascript:;" data-type="1">一居室</a>
+								<a id="hou_two" href="javascript:;" data-type="2">两居室</a>
+                                                                <input class="default_value" type="hidden" name="after_house_type" value="0">
+							</div>
+						</div>
+						<ul class="detail">
+							<li class="clearfix">
+								<div class="fl">
+									<div class="mui-numbox fl" data-numbox-min='1' data-numbox-max='2'>
+										<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+										<input disabled id="hou_shi" class="mui-input-numbox" type="number" name="after_room" value="1" />
+										<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+									</div>
+									<p class="fr">室</p>
+								</div>
+								<div class="fl line"></div>
+								<div class="fr">
+									<div class="mui-numbox fl" data-numbox-min='0' data-numbox-max='2'>
+										<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+										<input disabled id="hou_ting" class="mui-input-numbox" type="number" name="after_saloon" value="1"/>
+										<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+									</div>
+									<p class="fr">厅</p>
+								</div>
+							</li>
+							<li class="clearfix">
+								<div class="fl">
+									<div class="mui-numbox fl" data-numbox-min='0' data-numbox-max='2'>
+										<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+										<input disabled id="hou_chu" class="mui-input-numbox" type="number" name="after_kitchen" value="1"/>
+										<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+									</div>
+									<p class="fr">厨</p>
+								</div>
+								<div class="fl line"></div>
+								<div class="fr">
+									<div class="mui-numbox fl" data-numbox-min='0' data-numbox-max='2'>
+										<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+										<input disabled id="hou_wei" class="mui-input-numbox" type="number" name="after_toliet" value="1"/>
+										<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+									</div>
+									<p class="fr">卫</p>
+								</div>
+							</li>
+						</ul>
+					</li>
+					<li class="oneline clearfix">
+						<p class="list_name fl">风&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格</p>
+						<div class="list_r fr ui-radio">
+							<a href="javascript:;" data-type = "优格">优格</a>
+							<a href="javascript:;" data-type = "清语">清语</a>
+                                                        <input type="hidden" class="default_value" name="house_style" id='house_style' value="优格">
+						</div>
+					</li>
+					<li class="oneline clearfix">
+						<p class="list_name fl">装修程度</p>
+						<div class="list_r fr ui-radio">
+							<a href="javascript:;" data-type = "2" >精装</a>
+                                                        <a href="javascript:;" data-type = "1" >老旧</a>
+							<a href="javascript:;" data-type = "3" >毛坯</a>
+                                                        <input type="hidden" class="default_value" name="decorate_type" id="decorate_type" value="2">
+						</div>
+                                                
+					</li>
+				</ul>
+				<div class="next_btn">
+                                    <a id="huxing_nextbtn" href="javascript:;">下一步</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- 功能区域 -->
+		<div class="content content_gongneng">
+			<div id="scroller3">
+				<ul class="gongneng_list">
+                                                                                <li>
+						<p class="section"><span class="area_number">01</span>区域-卧室</p>
+                                                <input class="room_type" name="rooms--1--room_type" type="hidden" value="ws">
+						<ul>
+							<li class="clearfix">
+								<p class="list_name fl">区域面积</p>
+								<input class="fr room_area" type="number" placeholder="请输入面积" name="rooms--1--room_area">
+							</li>
+							<li class="clearfix">
+								<p class="list_name fl">区域朝向</p>  
+								<div class="list_r fr">
+									<input class="select" type="text" placeholder="请选择" readonly>
+									<select name="rooms--1--orientation">
+                                                                                                                                                        <option value ="东" >东</option>
+                                                                                                                                                        <option value ="南" selected='selected'>南</option>
+                                                                                                                                                        <option value ="西" >西</option>
+                                                                                                                                                        <option value ="北" >北</option>
+                                                                                                                                                        <option value ="东南" >东南</option>
+                                                                                                                                                        <option value ="东北" >东北</option>
+                                                                                                                                                        <option value ="西南" >西南</option>
+                                                                                                                                                        <option value ="西北" >西北</option>
+                                                                            									</select>
+									<i class="list_arrow"></i>
+								</div>
+							</li>
+							<li class="clearfix">
+								<p class="list_name fl">区域特点</p>
+								<div class="list_r area_tedian fr">
+									<a href="javascript:;">独卫</a>
+                                                                        <input type="hidden" class="toliet" name="rooms--1--toliet" value="2" />
+                                                                        <a href="javascript:;">阳台</a>
+                                                                        <input type="hidden" class="balcony" name="rooms--1--balcony" value="2" />
+                                                                        <a href="javascript:;">优化间</a>                                                                                                                                                                            
+                                                                        <input type="hidden" class="is_new_room" name="rooms--1--is_new_room" value="2" />
+								</div>
+							</li>
+						</ul>
+                                            </li>
+
+                                            <li class="clearfix">
+                                                    <div class="section fl">
+                                                            <span class="area_number fl">02</span>
+                                                            <p class="fl">区域-</p>
+                                                            <div class="area_name fl">
+                                                                    <select class="fl room_type" name="rooms--2--room_type">
+                                                                        <option value="qjs" selected="selected">起居室</option>
+                                                                        <option value="ct">餐厅</option>
+                                                                        <option value="kt">客厅</option>
+                                                                        <option value="cf">厨房</option>
+                                                                        <option value="wsj">卫生间</option>	
+                                                                    </select>
+                                                                    <i class="area_arrow fl"></i>
+                                                            </div>
+                                                    </div>
+                                                    <input class="fr room_area" name="rooms--2--room_area" type="number" placeholder="请输入面积">
+                                                    <a class="delete" href="javascript:;">删除</a>
+                                            </li>
+                                            <li class="clearfix">
+                                                    <div class="section fl">
+                                                            <span class="area_number fl">03</span>
+                                                            <p class="fl">区域-</p>
+                                                            <div class="area_name fl">
+                                                                    <select class="fl room_type" name="rooms--3--room_type">
+                                                                        <option value="qjs">起居室</option>
+                                                                        <option value="ct" selected="selected">餐厅</option>
+                                                                        <option value="kt">客厅</option>
+                                                                        <option value="cf">厨房</option>
+                                                                        <option value="wsj">卫生间</option>
+                                                                    </select>
+                                                                    <i class="area_arrow fl"></i>
+                                                            </div>
+                                                    </div>
+                                                    <input class="fr room_area" name="rooms--3--room_area" type="number" placeholder="请输入面积">
+                                                    <a class="delete" href="javascript:;">删除</a>
+                                            </li>
+                                            <li class="clearfix">
+                                                    <div class="section fl">
+                                                            <span class="area_number fl">05</span>
+                                                            <p class="fl">区域-</p>
+                                                            <div class="area_name fl">
+                                                                    <select class="fl room_type" name="rooms--5--room_type">
+                                                                        <option value="qjs">起居室</option>
+                                                                        <option value="ct">餐厅</option>
+                                                                        <option value="kt" selected="selected">客厅</option>
+                                                                        <option value="cf">厨房</option>
+                                                                        <option value="wsj">卫生间</option>
+                                                                    </select>
+                                                                    <i class="area_arrow fl"></i>
+                                                            </div>
+                                                    </div>
+                                                    <input class="fr room_area" name="rooms--5--room_area" type="number" placeholder="请输入面积">
+                                                    <a class="delete" href="javascript:;">删除</a>
+                                            </li>
+                                            <li class="clearfix">
+                                                    <div class="section fl">
+                                                            <span class="area_number fl">06</span>
+                                                            <p class="fl">区域-</p>
+                                                            <div class="area_name fl">
+                                                                    <select class="fl room_type" name="rooms--6--room_type">
+                                                                        <option value="qjs">起居室</option>
+                                                                        <option value="ct">餐厅</option>
+                                                                        <option value="kt">客厅</option>
+                                                                        <option value="cf" selected="selected">厨房</option>
+                                                                        <option value="wsj">卫生间</option>
+                                                                    </select>
+                                                                    <i class="area_arrow fl"></i>
+                                                            </div>
+                                                    </div>
+                                                    <input class="fr room_area" name="rooms--6--room_area" type="number" placeholder="请输入面积">
+                                                    <a class="delete" href="javascript:;">删除</a>
+                                            </li>
+                                            <li class="clearfix">
+                                                    <div class="section fl">
+                                                            <span class="area_number fl">07</span>
+                                                            <p class="fl">区域-</p>
+                                                            <div class="area_name fl">
+                                                                    <select class="fl room_type" name="rooms--7--room_type">
+                                                                        <option value="qjs">起居室</option>
+                                                                        <option value="ct">餐厅</option>
+                                                                        <option value="kt">客厅</option>
+                                                                        <option value="cf">厨房</option>
+                                                                        <option value="wsj" selected="selected">卫生间</option>
+                                                                    </select>
+                                                                    <i class="area_arrow fl"></i>
+                                                            </div>
+                                                    </div>
+                                                    <input class="fr room_area" name="rooms--7--room_area" type="number" placeholder="请输入面积">
+                                                    <a class="delete" href="javascript:;">删除</a>
+                                            </li> 
+                                        					
+				</ul>
+				<div class="gongneng_btn clearfix">
+					<a class="fl add_area" href="javascript:;">添加区域</a>
+					<a class="fr next_btn" href="javascript:;">下一步</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- 价格租约 -->
+		<div class="content content_price">
+			<div id="scroller4">
+				<ul class="price_list">
+					<li class="clearfix">
+						<p class="list_name fl">房屋面积</p>
+						<input class="fr" type="number" placeholder="请输入面积" name="house_area" value="">
+					</li>
+					<li class="clearfix li_position">
+						<p class="list_name fl">房屋朝向</p>
+						<div class="list_r fr">
+							<input class="select" type="text" placeholder="请选择" readonly>
+							<select name="house_orientation">
+                                                            <option value="">请选择</option>
+                                                                                                                        <option value="东" >东</option>
+                                                                                                                        <option value="南" >南</option>
+                                                                                                                        <option value="西" >西</option>
+                                                                                                                        <option value="北" >北</option>
+                                                                                                                        <option value="东南" >东南</option>
+                                                                                                                        <option value="东北" >东北</option>
+                                                                                                                        <option value="南北" >南北</option>
+                                                                                                                        <option value="西南" >西南</option>
+                                                                                                                        <option value="西北" >西北</option>
+                                                                                                                        <option value="东西" >东西</option>
+                                                                                                                    </select>
+							<i class="list_arrow"></i>
+						</div>
+					</li>
+					<li class="clearfix">
+						<p class="list_name fl">配置标准</p>
+						<div class="list_r fr  ui-radio">
+							<a href="javascript:;" data-type = "2">标准配置</a>
+<!--							<a href="javascript:;" data-type = "1">高端配置</a>-->
+                                                        <input type="hidden" class="default_value" name="config_level" id="config_level" value="2">
+						</div>
+					</li>
+					<li class="clearfix">
+						<p class="list_name fl">付款方式</p>
+						<div class="list_r fr ui-radio">
+							<a href="javascript:;" data-type="1" >月付</a>
+							<a href="javascript:;" data-type="3" >季付</a>
+							<a href="javascript:;" data-type="6" >半年付</a>
+							<a href="javascript:;" data-type="12" >年付</a>
+                                                        <input type="hidden" class="default_value" name="payment" id="payment" value="3">
+						</div>
+					</li>
+					<li class="clearfix">
+						<p class="list_name fl">维修基金</p>
+						<div class="list_r weixiu fr  ui-radio">
+							<a href="javascript:;" data-type="0">无</a>
+							<a href="javascript:;" data-type="300">300元</a>
+							<a href="javascript:;" data-type="860">860元</a>
+                                                        <input type="hidden" class="default_value" name="fund" id="payment" value="300">
+						</div>
+					</li>
+					<li class="clearfix">
+						<p class="list_name fl">租期</p>
+						<div class="list_r fr">
+                                                    <input readonly="readonly" class="zuqi" id="zuqi" type="text" placeholder="请选择" value="3年0个月">
+							<i class="list_arrow"></i>
+                                                        <input type="hidden" name="lease_year" id="lease_year" value="3"/>
+                                                        <input type="hidden" name="lease_month" id="lease_month" value="0"/>
+						</div>
+					</li>
+                                                                                    <li class="clearfix J_kongzhi" >
+						<p class="list_name fl">第1年空置期</p>
+						<input class="J_vanancyday fr" name="vanancyday--1" type="tel" placeholder="请输入" value="0">
+                                            </li> 
+                                                                                    <li class="clearfix J_kongzhi" >
+						<p class="list_name fl">第2年空置期</p>
+						<input class="J_vanancyday fr" name="vanancyday--2" type="tel" placeholder="请输入" value="0">
+                                            </li> 
+                                                                                    <li class="clearfix J_kongzhi" >
+						<p class="list_name fl">第3年空置期</p>
+						<input class="J_vanancyday fr" name="vanancyday--3" type="tel" placeholder="请输入" value="0">
+                                            </li> 
+                                                                                    <li class="clearfix J_kongzhi" >
+						<p class="list_name fl">第4年空置期</p>
+						<input class="J_vanancyday fr" name="vanancyday--4" type="tel" placeholder="请输入" value="0">
+                                            </li> 
+                                                                                    <li class="clearfix J_kongzhi" >
+						<p class="list_name fl">第5年空置期</p>
+						<input class="J_vanancyday fr" name="vanancyday--5" type="tel" placeholder="请输入" value="0">
+                                            </li> 
+                                        					<li class="clearfix">
+						<p class="list_name fl">标准出房价</p>
+						<input class="fr" type="text" id="standard_rent_price" readonly value="">
+					</li>
+					<li class="clearfix">
+						<p class="list_name fl">预估出房价</p>
+                                                <input class="fr" type="number" id="real_rent_price" name="real_rent_price" placeholder="请输入" value="">
+					</li>
+				</ul>
+				<div class="price_btn">
+					<a class="save" href="javascript:;">保存</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- 弹框 -->
+		<div class="tc_reset">
+			<div class="box">
+				<p>是否放弃本次评估？</p>
+				<div class="btn">
+					<a class="cancel fl" href="javascript:;">取消</a>
+					<a class="sure fr" href="javascript:;">确定</a>
+				</div>
+			</div>
+		</div>
+		<div class="tc_pinggu">
+			<div class="box">
+				<ul>
+					<li class="clearfix">
+						<p class="fl">标准收房价</p>
+                                                <p class="fr"><input type="text" id="stand_hire_house_price" value="" readonly>元</p>
+					</li>
+					<li class="clearfix">
+						<p class="fl">实际收房价</p>
+						<p class="fr"><input class="active_price" id="real_hire_house_price" name="real_hire_house_price" type="number" value="">元</p>
+					</li>
+					<li class="clearfix">
+						<p class="fl">差异率</p>
+                                                <p id="chayilv" class="fr red"></p>
+					</li>
+					<li class="clearfix">
+						<p class="fl">加成率</p>
+                                                <p id="jiachenglv" class="fr red"></p>
+					</li>
+				</ul>
+				<div class="btn clearfix">
+					<a class="fl no" href="javascript:;">取消</a>
+					<a class="fr yes" href="javascript:;" id="index_submit">确定</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="page_page1" class="page1">
+		<header class="header">
+			<a class="page1_to_index goback" href="javascript:;"></a>
+			楼盘信息
+			<a class="page1_to_page2 right" href="javascript:;"></a>
+		</header>
+
+		<section>
+			<img src="zz/img/none_03.jpg"/>
+			<div>
+				<a class="add page1_to_page2" href="javascript:;">立即添加</a>
+			</div>
+		</section>
+	</div>
+
+	<div id="page_page2" class="page2">	
+		<header class="header">
+			<a href="javascript:;" class="goback page2_to_index"></a>
+			设置楼盘信息
+		</header>
+		<ul>
+			<li class="clearfix">
+				<span class="fl">城市</span>
+				<div class="fr pr">
+					<input class="select" type="text" placeholder="请选择" readonly>
+                                        <select id="city_page2">
+                                                                                            <option city_code="110000" value="北京" selected="selected">北京</option>
+                                                                                            <option city_code="310000" value="上海" >上海</option>
+                                                                                            <option city_code="440300" value="深圳" >深圳</option>
+                                            					</select>
+					<i class="list_arrow"></i>
+				</div>
+			</li>
+                        <li class="clearfix">
+				<span class="fl">行政区域</span>
+				<div class="fr pr">
+					<input class="select" type="text" placeholder="请选择" readonly>
+                                        <select id="district_page2">
+                                            <option value=''>请选择</option>
+                                                                                            <option no="23008613"  value="朝阳区" >朝阳区</option>
+                                                                                            <option no="23008618"  value="海淀区" >海淀区</option>
+                                                                                            <option no="23008626"  value="西城区" >西城区</option>
+                                                                                            <option no="23008614"  value="东城区" >东城区</option>
+                                                                                            <option no="23008625"  value="通州区" >通州区</option>
+                                                                                            <option no="23008611"  value="昌平区" >昌平区</option>
+                                                                                            <option no="23008617"  value="丰台区" >丰台区</option>
+                                                                                            <option no="23008615"  value="大兴区" >大兴区</option>
+                                                                                            <option no="23008624"  value="顺义区" >顺义区</option>
+                                                                                            <option no="23008623"  value="石景山区" >石景山区</option>
+                                                                                            <option no="23008616"  value="房山区" >房山区</option>
+                                                                                            <option no="330105"  value="拱墅" >拱墅</option>
+                                                                                            <option no="330106"  value="西湖" >西湖</option>
+                                                                                            <option no="370203"  value="市北" >市北</option>
+                                                                                            <option no="330103"  value="下城" >下城</option>
+                                                                                            <option no="330108"  value="滨江" >滨江</option>
+                                                                                            <option no="330104"  value="江干" >江干</option>
+                                                                                            <option no="320105"  value="建邺" >建邺</option>
+                                                                                            <option no="330110"  value="余杭" >余杭</option>
+                                                                                            <option no="320102"  value="玄武" >玄武</option>
+                                                                                            <option no="330185"  value="临安" >临安</option>
+                                                                                            <option no="320104"  value="秦淮" >秦淮</option>
+                                                                                            <option no="23008629"  value="亦庄开发区" >亦庄开发区</option>
+                                                                                            <option no="23008620"  value="门头沟" >门头沟</option>
+                                                                                            <option no="23008621"  value="密云" >密云</option>
+                                                                                            <option no="23008628"  value="延庆" >延庆</option>
+                                                                                            <option no="23008619"  value="怀柔" >怀柔</option>
+                                                                                            <option no="23008622"  value="平谷" >平谷</option>
+                                            					</select>
+					<i class="list_arrow"></i>
+				</div>
+			</li>
+			<li class="clearfix">
+				<span class="fl">楼盘名称</span>
+				<div class="fr pr name page2_to_page3">
+                                    <input class="select" id="entry_page2" type="text" placeholder="请输入" >
+                                    <ul id="select-menu-page2"></ul>
+				</div>
+			</li>
+		</ul>
+		<div class="btn">
+			<input type="button" id="add_commonly_btn" class="save" value="保存">
+		</div>
+	</div>
+
+	<div id="page_page3" class="page3">	
+		<header class="header">
+			<a href="javascript:;" class="goback page3_to_page2"></a>
+			<div class="search-group fr">
+	    		<input type="text" name="lpname" placeholder="楼盘名称" />
+	    		<a class="searchBtn">搜索</a>
+		    </div>
+		</header>
+
+		<section>
+			<p class="tishi">历史搜索记录</p>
+			<div>
+				<ul class="jilu">
+				</ul>
+
+				<div class="btn">
+					<a class="empty live" href="javascript:;">清空历史搜索记录</a>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<div id="page_page4" class="page4">	
+		<header class="header">
+			<a href="javascript:;" class="goback page4_to_index"></a>
+			请选择已录入商机
+		</header>
+
+		<ul class="name clearfix">
+			<li>编号</li>
+			<li>小区</li>
+			<li>楼栋</li>
+			<li>单元</li>
+		</ul>
+		<div class="list">
+		
+		</div>
+		
+        <div class="page_btn">
+            <button class="prev">上一页</button>
+            <button class="next gray" disabled="disabled">下一页</button>
+        </div>
+	</div>
+        
+        <div id="page_page5" class="page5">
+		<header class="header">
+			<a class="page5_to_index goback" href="javascript:;"></a>
+			常用楼盘
+			<a class="page5_to_page2 right" href="javascript:;"></a>
+		</header>
+
+		<section>
+                    <ul class="name clearfix">
+                        <li>城区</li>
+                        <li>楼盘</li>
+                        <li>操作</li>
+                    </ul>
+                    <div class="list" id="commonly">
+                        <ul class="clearfix">
+                            <li>城区</li>
+                            <li>楼盘</li>
+                            <li><input type="button" value="删除"></li>
+                        </ul>
+                    </div>
+		</section>
+	</div>
+
+
+<!-- 滚动的调用 -->
+<script type="text/javascript">
+	var myScroll1;
+	var myScroll2;
+	var myScroll3;
+	var myScroll4;
+	function loaded () {
+		myScroll1 = new IScroll('.content_dizhi', { mouseWheel: true,preventDefault: false});
+		myScroll2 = new IScroll('.content_huxing', { mouseWheel: true,preventDefault: false});
+		myScroll3 = new IScroll('.content_gongneng', { mouseWheel: true,preventDefault: false});
+		myScroll4 = new IScroll('.content_price', { mouseWheel: true,preventDefault: false});
+	}
+	document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+        
+        var action = "";
+</script>
+
+
+<script src="zz/js/jquery.min.js"></script>
+<script src="zz/js/common.js"></script>
+<script src="zz/js/iscroll.js"></script>
+<script src="zz/js/mui.min.js"></script>
+<script src="zz/js/zuqidata.js"></script>
+<script src="zz/js/mui.picker.min.js"></script>
+<script src="zz/js/mui.poppicker.js"></script>
+<script src="zz/js/index.js"></script></body>
+</html>
