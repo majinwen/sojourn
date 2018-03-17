@@ -1,0 +1,403 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源房间信息（整租）">
+    <meta name="description" content="自如民宿房源房间信息（整租）">
+#end
+
+#override("title")
+房源房间信息- 合租增加
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" href="${staticResourceUrl}/css/manage/m_roomInfo_hezu.css$!{VERSION}">	
+<!-- 自定义js -->
+<script type="text/javascript" src="${staticResourceUrl}/js/manage/m_roomInfo_hezu.js$!{VERSION}001"></script>
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+        <div class="part_r" id="J_delegate">
+            <div class="part_r_tt c4">房间信息</div>
+            <div class="part_r_box c4">
+                <div class="S_part1">
+                    <p class="S_helpInfo J_helpInfo">
+                        <span>您的房源户型是什么</span>
+                        <b></b>
+                        <i></i>
+                        <span class="S_helpTxt">
+                        	1、无独立客厅，例如loft、开间等房型，请选择0厅
+							<br /> 2、发布独立房间时，需要选择整套房源的户型，并至少完善1间房间信息
+							<br /> 3、发布整套房源时，至少为其中1个卧室添加床位信息	
+                        </span>
+                    </p>
+                    <ul class="S_roomInfo_select clearfix" id="J_huxing_info">
+
+                        <li class="J_xiala">
+							#set($roomNum = $!houseRooms.houseBaseMsgEntity.roomNum)
+                            <input type="text" id="F_room" #if($roomNum == 0)value="1"#else value="$!roomNum"#end #if($!isModify==1)disabled="disabled"#end readonly="readonly" />
+                            <i>室</i>
+                            <ul class="S_xiala" id="J_room">
+                                <li data-value="1">1</li>
+                                <li data-value="2">2</li>
+                                <li data-value="3">3</li>
+                                <li data-value="4">4</li>
+								<li data-value="5">5</li>
+                                <li data-value="6">6</li>
+								<li data-value="7">7</li>
+                                <li data-value="8">8</li>
+								<li data-value="9">9</li>
+                                <li data-value="10">10</li>
+                                
+                                <li data-value="11">11</li>
+                                <li data-value="12">12</li>
+                                <li data-value="13">13</li>
+                                <li data-value="14">14</li>
+								<li data-value="15">15</li>
+                                <li data-value="16">16</li>
+								<li data-value="17">17</li>
+                                <li data-value="18">18</li>
+								<li data-value="19">19</li>
+                                <li data-value="20">20</li>
+                                
+                                <li data-value="21">21</li>
+                                <li data-value="22">22</li>
+                                <li data-value="23">23</li>
+                                <li data-value="24">24</li>
+								<li data-value="25">25</li>
+                                <li data-value="26">26</li>
+								<li data-value="27">27</li>
+                                <li data-value="28">28</li>
+								<li data-value="29">29</li>
+                                <li data-value="30">30</li>
+                            </ul>
+                        </li>
+
+                        <li class="J_xiala">
+                            <input type="text" id="F_hall" value="$!houseRooms.houseBaseMsgEntity.hallNum" #if($!isModify==1)disabled="disabled"#end readonly="readonly"/>
+                            <i>厅</i>
+                            <ul class="S_xiala">
+								<li data-value="0">0</li>
+                                <li data-value="1">1</li>
+                                <li data-value="2">2</li>
+                                <li data-value="3">3</li>
+                                <li data-value="4">4</li>
+								<li data-value="5">5</li>
+								<li data-value="6">6</li>
+                                <li data-value="7">7</li>
+                                <li data-value="8">8</li>
+                                <li data-value="9">9</li>
+                                <li data-value="10">10</li>
+                            </ul>
+                        </li>
+
+                        <li class="J_xiala">
+                            #set($toiletNum = $!houseRooms.houseBaseMsgEntity.toiletNum)
+                            <input type="text" id="F_toilet" #if($toiletNum == 0)value="1"#else value="$!toiletNum"#end  #if($!isModify==1)disabled="disabled"#end readonly="readonly"/>
+                            <i>卫</i>
+                            <ul class="S_xiala">
+                                <li data-value="1">1</li>
+                                <li data-value="2">2</li>
+                                <li data-value="3">3</li>
+                                <li data-value="4">4</li>
+								<li data-value="5">5</li>
+								<li data-value="6">6</li>
+                                <li data-value="7">7</li>
+                                <li data-value="8">8</li>
+                                <li data-value="9">9</li>
+                                <li data-value="10">10</li>
+								<li data-value="11">11</li>
+                                <li data-value="12">12</li>
+                                <li data-value="13">13</li>
+                                <li data-value="14">14</li>
+								<li data-value="15">15</li>
+								<li data-value="16">16</li>
+                                <li data-value="17">17</li>
+                                <li data-value="18">18</li>
+                                <li data-value="19">19</li>
+								<li data-value="20">20</li>
+								<li data-value="21">21</li>
+                                <li data-value="22">22</li>
+                                <li data-value="23">23</li>
+                                <li data-value="24">24</li>
+								<li data-value="25">25</li>
+								<li data-value="26">26</li>
+                                <li data-value="27">27</li>
+                                <li data-value="28">28</li>
+                                <li data-value="29">29</li>
+								<li data-value="30">30</li>
+                            </ul>
+                        </li>
+
+                        <li class="J_xiala">
+                            <input type="text" id="F_kitchen" value="$!houseRooms.houseBaseMsgEntity.kitchenNum" #if($!isModify==1)disabled="disabled"#end readonly="readonly"/>
+                            <i>厨</i>
+                            <ul class="S_xiala">
+								<li data-value="0">0</li>
+                                <li data-value="1">1</li>
+                                <li data-value="2">2</li>
+                                <li data-value="3">3</li>
+                                <li data-value="4">4</li>
+								<li data-value="5">5</li>
+								<li data-value="6">6</li>
+                                <li data-value="7">7</li>
+                                <li data-value="8">8</li>
+                                <li data-value="9">9</li>
+                                <li data-value="10">10</li>
+                            </ul>
+                        </li>
+
+                        <li class="J_xiala">
+                            <input type="text" id="F_balcony" value="$!houseRooms.houseBaseMsgEntity.balconyNum" #if($!isModify==1)disabled="disabled"#end readonly="readonly"/>
+                            <i>阳台</i>
+                            <ul class="S_xiala">
+								<li data-value="0">0</li>
+                                <li data-value="1">1</li>
+                                <li data-value="2">2</li>
+                                <li data-value="3">3</li>
+                                <li data-value="4">4</li>
+								<li data-value="5">5</li>
+								<li data-value="6">6</li>
+                                <li data-value="7">7</li>
+                                <li data-value="8">8</li>
+                                <li data-value="9">9</li>
+                                <li data-value="10">10</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <span class="S_tishi_1" id="J_tishi_1">请选择户型信息</span>
+                </div>
+                <input type="hidden" id="houseRoomIssueCount" value="$!houseRoomIssueCount"/>
+                <input type="hidden" id="roomFid" value="$!roomFid"/>
+				<input type="hidden" id="houseFid" value="$!houseFid"/>
+				<input type="hidden" id="J_priceLow" value="$!priceLow"/>
+				<input type="hidden" id="J_priceHigh" value="$!priceHigh">
+				#if($houseRooms.roomList.size() == 0)
+					<div class="S_part2 J_roomBox" id="J_roomBox_1">
+                    <div class="S_part2_item">
+						<input type="hidden" class="J_room_fid"/>
+                        <h2 class="S_small_tit clearfix">
+                            <p>房间<span class="J_small_tit">1</span></p>
+                            <input type="button" value="删除房间" class="J_remove_room"/>
+                        </h2>
+                        <ul class="S_item_content">
+
+                            <li>
+                                <p class="S_content_tit">房间名称</p>
+                                <input type="text" class="S_long_ipt J_room_name" placeholder="房子名字（选填）+商圈+房东特色+房源特色，限10-30字。"/>
+                                <span class="S_tishi_2 J_tishi2">请填写正确的房间名称</span>
+                            </li>
+
+                            <li>
+                                <p class="S_content_tit">您的房间面积</p>
+                                <input type="text" maxlength="6" class="S_normal_ipt J_room_mianji"/>
+                                <i class="S_str_right">平米</i>
+                                <span class="S_tishi_2 J_tishi2">请填写正确的房间面积</span>
+                            </li>
+
+                            <li>
+                                <p class="S_content_tit">是否独立卫生间</p>
+                                <div class="S_radio_box clearfix">
+                                    <input type="hidden" value="0" class="J_isWc"/>
+                                    <p class="S_radio J_radio_yes">是</p>
+                                    <p class="S_radio on J_radio_no">否</p>
+                                </div>
+                            </li>
+
+                            <li class="J_xiala">
+                                <p class="S_content_tit">可以接待多少位房客</p>
+                                <input type="text" class="S_normal_ipt J_how_many" readonly="readonly" placeholder="请选择"/>
+                                <i class="S_jiantou_right"></i>
+                                <ul class="S_xiala S_xiala2">
+                                    #foreach( $!limit in $!limitList)
+										<li data-value="$!limit.key">$!limit.text</li>
+									#end
+                                </ul>
+                                <span class="S_tishi_2 J_tishi2">请选择可接待的房客数</span>
+                            </li>
+
+                            <li>
+                                <p class="S_content_tit">您的房间价格</p>
+                                <input type="text" maxlength="6" class="S_normal_ipt J_how_much"/>
+                                <i class="S_str_right">每晚</i>
+                                <span class="S_tishi_2 J_tishi2">请填写正确的房源价格</span>
+                            </li>
+							<li>
+								<p class="S_helpInfo2 J_helpInfo" >
+								<span>清洁费</span>
+								<b></b>
+								<i></i>
+								<span class="S_helpTxt2">#set($cleanFeeRate = $!cleaningFees * 100)清洁费默认为0元，表示不收取清洁费；清洁费最高上限为每晚房费的$!cleanFeeRate%。</span>
+								</p>
+								<input type="text" maxlength="6" class="S_normal_ipt J_cleanFee" value="0"/>
+								<span class="S_tishi_2 J_tishi2"></span>
+							</li>
+                            <li>
+                                <p class="S_content_tit">您的床位信息</p>
+
+                                <div class="S_bed_info clearfix">
+									<input type="hidden" class="J_bed_fid"/>
+                                    <div class="S_bed_info_item J_xiala">
+                                        <input type="text" readonly="readonly" placeholder="床位类型" class="J_bed_type" data-value="2" value="$bedTypeList.get(2).text"/>
+                                        <i class="S_bed_jiantou"></i>
+                                        <ul class="S_xiala S_xiala3">
+                                            #foreach($item in $bedTypeList)
+                                                <li data-value="$!item.key">$!item.text</li>
+    										#end
+                                        </ul>
+                                    </div>
+                                #*<div class="S_bed_info_item J_xiala">
+                                    <input type="text" readonly="readonly" placeholder="床位规格" class="J_bed_guige"  data-value="4" value="$bedSizeList.get(4).text"/>
+                                    <i class="S_bed_jiantou"></i>
+                                    <ul class="S_xiala S_xiala3">
+                                        #foreach($!item in $bedSizeList)
+                                            <li data-value="$item.key">$!item.text</li>
+                                        #end
+                                    </ul>
+                                </div>*#
+                                </div>
+
+                                <div class="S_add_bed J_add_bed">
+                                    <i class="S_item_add"></i>
+                                    <span>添加床位</span>
+                                </div>
+
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+				#else
+    				#foreach($roomHasBeds in $houseRooms.roomList)
+                    <div class="S_part2 J_roomBox" id="J_roomBox_$!{velocityCount}">
+                        <div class="S_part2_item">
+    						<input type="hidden" class="J_room_fid" value="$!roomHasBeds.roomMsg.fid"/>
+                            <h2 class="S_small_tit clearfix">
+                                <p>房间<span class="J_small_tit">$!{velocityCount}</span><span class="S_room_status" data-value="$!roomHasBeds.roomMsg.roomStatus"></span></p>
+                                #if($!roomHasBeds.roomMsg.roomStatus!=40 && $!roomHasBeds.roomMsg.roomStatus!=20 && $!roomHasBeds.roomMsg.roomStatus!=30)<input type="button" value="删除房间" class="J_remove_room"/>#end
+                            </h2>
+                            <ul class="S_item_content">
+    
+                                <li>
+                                    <p class="S_content_tit">房间名称</p>
+                                    <input type="text" class="S_long_ipt J_room_name" value="$!roomHasBeds.roomMsg.roomName" placeholder="房子名字（选填）+商圈+房东特色+房源特色，限10-30字。"/>
+                                    <span class="S_tishi_2 J_tishi2">请填写正确的房间名称</span>
+                                </li>
+    
+                                <li>
+                                    <p class="S_content_tit">您的房间面积</p>
+									
+                                    <input type="text" maxlength="6" class="S_normal_ipt J_room_mianji" #if($!roomHasBeds.roomMsg.roomStatus==40 || $!roomHasBeds.roomMsg.roomStatus==20)disabled="disabled"#end  value="$!roomHasBeds.roomMsg.roomArea"/>
+                                    <i class="S_str_right">平米</i>
+                                    <span class="S_tishi_2 J_tishi2">请填写正确的房间面积</span>
+                                </li>
+    
+                                <li>
+                                    <p class="S_content_tit">是否独立卫生间</p>
+                                    <div class="S_radio_box clearfix">
+                                        <input type="hidden" value="$!roomHasBeds.roomMsg.isToilet" class="J_isWc"/>
+                                        <p class="S_radio J_radio_yes">是</p>
+                                        <p class="S_radio on J_radio_no">否</p>
+                                    </div>
+                                </li>
+    
+                                <li class="J_xiala">
+                                    <p class="S_content_tit">可以接待多少位房客</p>
+                                    <input type="text" class="S_normal_ipt J_how_many" #if($!roomHasBeds.roomMsg.checkInLimit == 0)value="不限制"#else value="$!roomHasBeds.roomMsg.checkInLimit"#end  data-value="$!roomHasBeds.roomMsg.checkInLimit" readonly="readonly" placeholder="请选择"/>
+                                    <i class="S_jiantou_right"></i>
+                                    <ul class="S_xiala S_xiala2">
+										#foreach( $!limit in $!limitList)
+											<li data-value="$!limit.key">$!limit.text</li>
+										#end
+                                    </ul>
+                                    <span class="S_tishi_2 J_tishi2">请选择可接待的房客数</span>
+                                </li>
+    							
+                                <li>
+                                    <p class="S_content_tit" >您的房间价格</p>
+                                    <input type="text" maxlength="6" class="S_normal_ipt J_how_much" #set($price = $!roomHasBeds.roomMsg.roomPrice/100) value="$price"/>
+                                    <i class="S_str_right">每晚</i>
+                                    <span class="S_tishi_2 J_tishi2">请填写正确的房源价格</span>
+                                </li>
+    							
+    							 <li>
+                                    <p class="S_helpInfo2 J_helpInfo" >
+                                        <span>清洁费</span>
+                                        <b></b>
+                                        <i></i>
+                                        <span class="S_helpTxt2">#set($cleanFeeRate = $!cleaningFees * 100)清洁费默认为0元，表示不收取清洁费；清洁费最高上限为每晚房费的$!cleanFeeRate%。</span>
+    								</p>
+                                    <input type="text" maxlength="6" class="S_normal_ipt J_cleanFee" #set($cleanFee = $!roomHasBeds.roomMsg.roomCleaningFees/100) value="$cleanFee"/>
+    								<span class="S_tishi_2 J_tishi2"></span>
+                                </li>
+    
+                                <li>
+                                    <p class="S_content_tit">您的床位信息</p>
+    								#foreach($bed in $!roomHasBeds.beds)
+                                    <div class="S_bed_info clearfix">
+    									<input type="hidden" class="J_bed_fid" value="$!bed.fid"/>
+                                        <div class="S_bed_info_item J_xiala">
+                                            <input type="text" readonly="readonly" placeholder="床位类型" class="J_bed_type"  data-value="$bed.bedType"/>
+                                            <i class="S_bed_jiantou"></i>
+                                            <ul class="S_xiala S_xiala3">
+    											#foreach($item in $bedTypeList)
+                                                <li data-value="$!item.key">$!item.text</li>
+    											#end
+                                            </ul>
+                                        </div>
+                                    #*<div class="S_bed_info_item J_xiala">
+                                        <input type="text" readonly="readonly" placeholder="床位规格" class="J_bed_guige" data-value="$bed.bedSize" />
+                                        <i class="S_bed_jiantou"></i>
+                                        <ul class="S_xiala S_xiala3">
+                                           #foreach($!item in $bedSizeList)
+                                            <li data-value="$item.key">$!item.text</li>
+                                           #end
+                                        </ul>
+                                    </div>*#
+    									<a href="javascript:;" class="J_remove_bed">删除</a>
+                                    </div>
+    								#end
+                                    <div class="S_add_bed J_add_bed">
+                                        <i class="S_item_add"></i>
+                                        <span>添加床位</span>
+                                    </div>
+    
+                                </li>
+    
+                            </ul>
+                        </div>
+                    </div>
+    				#end
+				#end
+                <div class="clearfix">
+                    <input type="button" value="继续添加房间" class="S_add_room" id="J_add_room"/>
+                    <a href="javascript:;" class="S_next" id="J_next">下一步</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+#end
+#override("leftNavigation")
+#end
+#override("header_img")
+#end
+
+#override("bottom")
+<input type="hidden" id="cleaningFeeRate" value="$!cleaningFees" >
+<script>
+	var bedJson = {};
+    /*var bedTypeJson = {};*/
+	var limitJson = {};
+	#foreach($item in $bedTypeList)
+    bedJson['$item.key']='$item.text';
+	#end
+    #*#foreach($item in $bedSizeList)
+    bedTypeJson['$item.key']='$item.text';
+    #end*#
+	#foreach($item in $limitList)
+	limitJson['$item.key'] = '$item.text';
+	#end
+</script>
+#end
+#extends("/template/conmmonTem.vm")

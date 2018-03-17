@@ -1,0 +1,28 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源访问权限提示">
+    <meta name="description" content="自如民宿房源访问权限提示">
+#end
+
+#override("title")
+房源访问权限提示
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" href="${staticResourceUrl}/css/manage/m_posInfo.css$!{VERSION}">	
+<!-- 自定义js -->
+<script type="text/javascript" src="/js/house/m_posInfo.js$!{VERSION}"></script>
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+	没有此房源的访问权限！
+		</div>
+	</section>
+#end
+#override("leftNavigation")
+#end
+#override("header_img")
+#end
+#extends("/template/conmmonTem.vm")

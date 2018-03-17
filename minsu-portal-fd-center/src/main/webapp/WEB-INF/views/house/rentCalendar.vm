@@ -1,0 +1,161 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源管理">
+    <meta name="description" content="自如民宿房源管理">
+#end
+
+#override("title")
+出租日历
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" type="text/css" href="${staticResourceUrl}/css/manage/m_date.css$!{VERSION}">
+<script type="text/javascript" src="${staticResourceUrl}/js/ShearPhoto.js"></script>
+<script type="text/javascript" src="${staticResourceUrl}/js/handle.js"></script>
+#end
+#override("inBody_header")
+<section class="main" >
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+	  <div class="part_r">
+        <div class="part_r_tt">
+			<div id="houseBox" class="select_box">
+                    <span class="select_span">$!selectHR.name</span>
+
+                    <i class="jt"></i>
+					<div class="selects_ul">
+                    <ul id="houseSelect" class="selects" >
+					  #foreach($item in $houseList)
+						<li data-rent="$!item.rentWay" data-hfid="$!item.houseFid" data-rfid="$!item.roomFid" #if($item.isSelect == 1)class="active"#end ><a href="javascript:;">$!item.name</a></li>
+					  #end
+                    </ul>
+					</div>
+          	 </div>
+            <!-- TODO: 同步日历-->
+            <a href="javascript:toExportDate();" class="date_link">同步日历</a>
+            #if($longTermLimit < 500)
+                <a href="javascript:toPriceDetail();" class="price_link">价格设置</a>
+            #end
+        </div>
+        <div class="part_r_box">
+          <!--/calendarTop-->
+          <div class="calendarBox" id="calendarBox">
+            <div class="calendars">
+              <div class="calendars_bar">
+                  <div id="monthBox" class="select_box">
+                    <span class="select_span"></span>
+					<div class="selects_ul">
+                    <ul id="monthSelect" class="selects">
+					 
+                    </ul>
+					</div>
+                  </div>
+                  <!-- TODO: 判断状态  禁用增加class disabled-->
+                  <a href="javascript:;" class="icon icon_prev"></a>
+                  <a href="javascript:;" class="icon icon_next"></a>
+                  <!-- 禁用样式 -->
+                  <!-- <a href="javascript:;" class="icon icon_prev disabled"></a>
+                  <a href="javascript:;" class="icon icon_next disabled"></a> -->
+              </div>
+              <table id="calendarTab">
+                
+              </table>
+              </div>
+            </div><!--/calendarBox-->
+          <ul class="sign_icons clearfix">
+              <li>
+                <span class="sign_icon b_green"></span>
+					可出租
+              </li>
+              <li>
+                <span class="sign_icon b_blue"></span>
+					设为已租
+              </li>
+              <li>
+                <span class="sign_icon b_gary"></span>
+					已出租
+              </li>
+          </ul>
+        </div>
+      </div>
+	</div>
+    </section>
+	 <div id="modal" class="modal">
+      <div class="modal-mask">
+        <div class="modal-content" id="rentBox">
+          <div class="control-group">
+            <ul class="set-box clearfix">
+              <li class="current have_rented_li" data-rent="0">设为已租</li>
+              <li class="can_rented_li" data-rent="1">设为可租</li>
+            </ul>
+            <ul class="ipt-box">
+              <li>
+                <input id="startDate" class="date-ipt ipt" type="text" placeholder="开始日期" readonly="readonly" >
+              </li>
+              <li>
+                 <input id="endDate" class="date-ipt ipt" type="text" placeholder="结束日期" readonly="readonly" >
+              </li>
+            </ul>
+             <ul class="ipt-box ipt-box-md">
+              <li>
+                <input id="price" class="price-ipt ipt" type="text" placeholder="当晚价格" onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" value="" >
+              </li>
+            </ul>
+          </div>
+          <ul class="btn-group clearfix">
+            <li><input type="button" value="保存" class="btn-right btn active" id="sure" onclick="savePrice()"></li>
+            <li><input type="button" value="取消修改" class="btn-left btn" id="del" onclick="closeModalBox()"></li>
+          </ul>
+        </div>
+
+          <!-- TODO: 同步日历-->
+          <div class="modal-content modal-content-export" id="exportBox">
+              <div class="modal-title">同步日历<a href="javascript:closeModalBox();" class="modal-close"></a></div>
+              <div class="modal-main">
+                  <p class="modal-txt">为了保持您的日历为最新状态，请您填写房源的ical日历链接，我们会自动更新您的房源日历可预订状态！<a href="/house/toCalenderGuid" target="_blank" >查看教程</a></p>
+                  <div class="modal-ipt">
+                      <input id="link" class="ipt" type="text" placeholder="日历链接" onkeyup="setMsg();" onafterpaste="setMsg();" value="$!abHouseRelateVo.calendarUrl" >
+                  </div>
+                  <p class="modal-msg" id="exportMsg"></p>
+                  <div class="btn-group  clearfix">
+                  	  #if($!abHouseRelateVo.houseStatus!=40)
+                      	<input type="button" value="保存" class="btn active" id="toExport" onclick="toExport();" >
+                      #end
+                      #if($!abHouseRelateVo.houseStatus==40)
+                      	<input type="button" value="保存并同步" class="btn active" id="toExport" onclick="toExport();" >
+                      #end
+                      <input type="button" value="停止同步" class="btn active" id="stopExport" onclick="stopExport();" >
+                  </div>
+              </div>
+          </div>
+          <!-- /同步日历-->
+
+
+      </div>
+    </div>
+	#end
+
+	#override("bottom")
+    <input type="hidden" id="inDate" value="$!startDate">
+    <input type="hidden" id="outDate" value="$!endDate">
+
+	<input type="hidden" id="start" value="2016-08-01">
+    <input type="hidden" id="monthStr" value="2016-08">
+    <input type="hidden" id="houseFid" value="$!selectHR.houseFid">
+	<input type="hidden" id="roomFid" value="$!selectHR.roomFid">
+    <input type="hidden" id="rentWay" value="$!selectHR.rentWay">
+	<input type="hidden" id="isRent" value="0">
+    <input type="hidden" id="relateFid" value="$!abHouseRelateVo.fid">
+    <input type="hidden" id="relateStatus" value="$!abHouseRelateVo.isDel">
+    <input type="hidden" id="relateUrl" value="$!abHouseRelateVo.calendarUrl">
+    <input type="hidden" id="abSn" value="$!abHouseRelateVo.abSn">
+    <input type="hidden" id="houseStatus" value="$!houseStatus">
+	<script type="text/javascript" src="${staticResourceUrl}/js/manage/m_date.js$!{VERSION}002"></script>
+	#end
+	
+	#override("leftHouseIssue")
+	#end
+	#override("goTop")
+	#end
+
+#extends("/template/conmmonTem.vm")

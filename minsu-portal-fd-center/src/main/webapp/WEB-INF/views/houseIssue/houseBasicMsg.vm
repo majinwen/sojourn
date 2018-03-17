@@ -1,0 +1,109 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源基本信息">
+    <meta name="description" content="自如民宿房源基本信息">
+#end
+
+#override("title")
+房源基本信息
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" href="${staticResourceUrl}/css/manage/m_houseBaseInfo.css$!{VERSION}">	
+<!-- 自定义js -->
+<script type="text/javascript" src="${staticResourceUrl}/js/manage/m_houseBaseInfo.js$!{VERSION}"></script>
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+        <div class="part_r" id="J_bigger">
+            <div class="part_r_tt c4">基本信息</div>
+            <div class="part_r_box c4">
+                <ul class="S_module_ul">
+                    <input type="hidden" id="J_chuzuType" value="$!houseBaseExt.rentWay"/>
+					<input type="hidden" id="J_isNone" value="$!nowStep">
+                    <input type="hidden" id="J_priceLow" value="$!priceLow"/>
+					<input type="hidden" id="J_priceHigh" value="$!priceHigh">
+                    <li id="J_whole1">
+                        <p>可以接待多少位房客？</p>
+                        <div class="S_module_enter">
+                            <input type="text" placeholder="请选择" readonly="readonly" id="J_numIpt" data-num="$!houseBaseExt.houseBaseExt.checkInLimit" value="$!checkInLimitName"/>
+                            <i class="S_item_jiantou"></i>
+                            <ul class="S_xiala" style="display: none;" id="J_numUl">
+								#foreach( $!limit in $!limitList)
+									<li data-num="$!limit.key">$!limit.text</li>
+								#end
+                            </ul>
+							<p class="S_tishi_txt J_tishi_txt">请选择可接待房客数</p>
+                        </div>
+                    </li>
+                    <li id="J_one1" style="display: none;">
+                        <p>是否与房东同住？</p>
+                        <div class="S_module_enter">
+                            <input type="text" placeholder="请选择" readonly="readonly" id="J_togetherIpt" data-together="$!houseBaseExt.houseBaseExt.isTogetherLandlord" value="#if($!houseBaseExt.houseBaseExt.isTogetherLandlord==1)是#else否#end"/>
+                            <i class="S_item_jiantou"></i>
+                            <ul class="S_xiala" style="display: none;" id="J_togetherUl">
+                                <li data-together="1">是</li>
+                                <li data-together="0">否</li>
+                            </ul>
+                            <p class="S_tishi_txt J_tishi_txt">请选择是否与房东同住</p>
+                        </div>
+                    </li>
+                    <li id="J_whole2">
+                        <p>您的房源的面积？</p>
+                        <div class="S_module_enter">
+                            <input type="text" maxlength="6" id="houseArea" #if($!isModify==1)disabled="disabled"#end value="$number.format("#0.0",$!houseBaseExt.houseArea)"/>
+                            <span>平米</span>
+							<p class="S_tishi_txt J_tishi_txt">请填写房源的面积</p>
+                        </div>
+                    </li>
+                    #*<li id="J_public">
+                        <p>请选择可接受哪天之前的订单（建议选择1年后的日期）</p>
+                        <div class="S_module_enter">
+                            <input type="text" readonly="readonly" id="J_qixian" value="$!date.format('yyyy-MM-dd',$!houseBaseExt.tillDate)"/>
+                            <i class="S_item_dateIcon"></i>
+							<p class="S_tishi_txt J_tishi_txt">请选择可接受哪天之前的订单（建议选择1年后的日期）</p>
+                        </div>
+                    </li>*#
+                    <li id="J_whole3">
+                        <p>您的房源价格？</p>
+                        <div class="S_module_enter">
+                            <input type="text" maxlength="6" id="housePrice" #if($leasePrice)value="$number.format("#0",$leasePrice)" #end />
+                            <span>每晚</span>
+							<p class="S_tishi_txt J_tishi_txt">请填写正确的房源价格</p>
+                        </div>
+                    </li>
+					<li id="J_whole4">
+                        <p class="S_helpInfo J_helpInfo" >
+                            <span>清洁费</span>
+                            <b></b>
+                            <i></i>
+							#set($clf = $cleaningFees * 100)
+                            <span class="S_helpTxt">清洁费默认为0元，表示不收取清洁费；清洁费最高上限为每晚房费的$clf%。</span>
+						</p>
+						<div class="S_module_enter">
+							#set($cleanFees = $!houseBaseExt.houseCleaningFees / 100)
+							<input type="text" maxlength="6" class="S_normal_ipt" value="$number.format("#0",$cleanFees)" id="houseCleaningFees"/>
+							<p class="S_tishi_txt J_tishi_txt">请正确填写清洁费</p>
+						</div>
+					</li>
+                </ul>
+				<!-- 隐藏域房源fid-->
+				<input type="hidden" id="roomFid" value="$!roomFid"/>
+				<input type="hidden" id="houseFid" value="$!houseBaseExt.fid"/>
+				<input type="hidden" id="operateSeq" value="$!houseBaseExt.operateSeq"/>
+				<input type="hidden" id="cleaningFees" value="$!cleaningFees"/>
+                <div class="clearfix">
+                    <a href="javascript:;" class="S_next" id="J_next">下一步</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+#end
+#override("leftNavigation")
+#end
+#override("header_img")
+#end
+#extends("/template/conmmonTem.vm")

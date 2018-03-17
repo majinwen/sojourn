@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016. Copyright (c) 2016. ziroom.com.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+        <mvc:interceptors>
+        	<!-- 常量拦截器 -->
+            <mvc:interceptor>
+				<mvc:mapping path="/**" />
+				<mvc:exclude-mapping path="/js/**"/>
+				<mvc:exclude-mapping path="/error/**"/>   
+				<bean class="com.ziroom.minsu.portal.fd.center.common.interceptor.InitGlobalParamsInterceptor"></bean>	
+	    	</mvc:interceptor>
+	    	   
+	    	<!-- 登录拦截器 -->
+	    	<mvc:interceptor>
+				<mvc:mapping path="/**" />
+				<mvc:exclude-mapping path="/js/**"/>  
+				<mvc:exclude-mapping path="/null"/> 
+				<mvc:exclude-mapping path="/error/**"/> 
+				<bean class="com.ziroom.minsu.portal.fd.center.common.interceptor.LoginInterceptor" ></bean>	
+	    	</mvc:interceptor>
+	    	
+	    	
+            <!-- 房东信息拦截器 -->
+            
+	        <mvc:interceptor>
+				<mvc:mapping path="/customer/initPersonData" />
+				<mvc:mapping path="/house/lanHouseList" />
+				<mvc:mapping path="/customer/initAuthData" />
+				<mvc:mapping path="/**/calendar" />
+				<bean class="com.ziroom.minsu.portal.fd.center.common.interceptor.CustomerMsgInterceptor" ></bean>	
+	    	</mvc:interceptor>
+         
+	    	
+	    	<!-- 房源访问权限拦截器 -->
+	    	
+	        <mvc:interceptor>
+				<mvc:mapping path="/houseIssue/locationMsg/**" />
+				<mvc:mapping path="/houseIssue/basicMsg/**" />
+				<mvc:mapping path="/houseIssue/configMsg/**" />
+				<mvc:mapping path="/houseIssue/roomWhole/**" />
+				<mvc:mapping path="/houseIssue/desc/**" />
+				<mvc:mapping path="/houseIssue/pic/**" />
+				<mvc:mapping path="/houseIssue/success/**" />
+				<mvc:mapping path="/houseReleaseExtras/initExtrasInfo/**" />
+				<mvc:exclude-mapping path="/houseIssue/locationMsg"/>
+				<bean class="com.ziroom.minsu.portal.fd.center.common.interceptor.HouseLimitInterceptor" ></bean>	
+	    	</mvc:interceptor>
+        </mvc:interceptors>
+</beans>

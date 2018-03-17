@@ -1,0 +1,69 @@
+#override("commonMeta")
+    <meta name="keywords" content="500错误">
+    <meta name="description" content="500错误">
+#end
+
+#override("title")
+500错误
+#end
+#override("commonCss")
+    <link REL = "Shortcut Icon" href="${staticResourceUrl}/images/common/favicon.ico">
+    <link rel="stylesheet" href="${staticResourceUrl}/css/common.css$!{VERSION}">
+#end
+#override("inHeader")
+<style type="text/css">
+    .main{width: 100%;position: relative;}
+    .main img{width: 100%}
+    .box{position: absolute;color: #fff;}
+    .txt dt{font-size: 46px;height: 60px;line-height: 60px;}
+    .txt dd{font-size: 24px;height: 30px;line-height: 30px;}
+    .link{height:74px;width:100%;display: block;background: url(images/common/error_btn.png) left center no-repeat;position: absolute;}
+  </style>
+#end
+#override("inBody_footer")
+<section id="main" class="main">
+  <img src="${staticResourceUrl}/images/common/err_500.jpg">
+  <div class="box">
+    <div class="txt">
+      <dt>对不起!</dt>
+      <dd>服务器内部错误</dd>
+    </div>
+    <a href="$!PORTAL_FRONT_URL" class="link"></a>
+  </div>
+  </section>
+#end
+#override("leftNavigation")
+#end
+#override("leftHouseIssue")
+#end
+#override("header_img")
+#end
+#override("goTop")
+<script type="text/javascript">
+    $(function(){
+      setPosition();
+      $(window).resize(function(){
+        setPosition();
+      })
+      function setPosition(){
+        var _w = $("#main").width();
+        var oImg = $("#main").find('img');
+        var newImg = new Image();
+        newImg.onload = function(){
+                w = newImg.width;
+                var rate = _w/w;
+                if(rate >1){
+                  rate = 1;
+                }
+                var a_w = parseInt(480*rate);
+                var a_t = parseInt(350*rate);
+                var a_r = parseInt(385*rate);
+                $(".box").css({"width":a_w,"top":a_t,"right":a_r});
+            }
+           
+        newImg.src = oImg.attr('src');
+      }
+    })
+  </script>
+#end
+#extends("/template/conmmonTem.vm")

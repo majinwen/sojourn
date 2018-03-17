@@ -1,0 +1,96 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源房间信息（整租）">
+    <meta name="description" content="自如民宿房源房间信息（整租）">
+#end
+
+#override("title")
+房源 - 描述信息
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" href="${staticResourceUrl}/css/manage/m_miaoshu.css$!{VERSION}">	
+<script type="text/javascript" src="${staticResourceUrl}/js/manage/m_miaoshu.js$!{VERSION}"></script>
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+       <div class="part_r" id="J_delegate">
+            <div class="part_r_tt c4">描述信息</div>
+            <input type="hidden" id="roomFid" value="$!roomFid"/>
+			<input type="hidden" id="houseFid" value="$!desc.houseFid"/>
+            <div class="part_r_box c4">
+                <ul class="S_main_content">
+                    <li class="S_main_item">
+                        <p>房源标题</p>
+                        <div class="clearfix S_enter_box">
+                            <textarea id="J_biaoti"  placeholder="房子名字（选填）+商圈+房东特色+房源特色，限10-30字。" data-total="30" class="S_area1">$!desc.houseName</textarea>
+                            <p class="S_lizi" style="display:none"><span>例如：<br/>&nbsp;&nbsp;&nbsp;&nbsp;恭王府胡同里的中式古典四合院</span><i></i></p>
+							<p class="S_tishi J_tishi">房源标题字数为10-30字</p>
+                            <p class="S_tongji J_tongji">
+                                <span>0</span>
+                                <span>/</span>
+                                <span>30</span>
+                            </p>
+                        </div>
+                    </li>
+                    <li class="S_main_item">
+                        <p>房源描述</p>
+                        <div class="clearfix S_enter_box">
+                            <textarea id="J_miaoshu" placeholder="请描述房子的基础信息，房屋内的配套设施及房子本身的特色，能够充分展示出您的美屋的特征，如：特色区域如花园等，特色结构如loft等，装修风格如北欧风等。文字优美能传递出意境和场景感，中英文双语为佳。限100-1000字。&#10;为保证您的房源呈现效果，请注意错别字、过多空行等格式问题。" data-total="1000" class="S_area2">$!desc.houseDesc</textarea>
+                            <p class="S_lizi" style="display:none">
+                            	<span>例如：
+                            			<br/>&nbsp;&nbsp;&nbsp;&nbsp;我的民宿是一所紧邻恭亲王府的胡同儿宅院，属于标准四合院的东厢房，并拥有一坐景观露台。清晨登台小坐，可以望见京城历史悠久的古老建筑。门外即是恭王府，有一辆辆人力黄包车经过，清风徐来，感受清晨照进胡同儿里的阳光，聆听车夫为旅人讲述和珅的故事，颇有一番古都清晨的景象。
+										<br/>&nbsp;&nbsp;&nbsp;&nbsp;宅子的内饰凸显出老北京四合院的风情，客厅茶具古朴，竹兰相应。两个房间各呈不同风格，一间传统古典，一间榻榻米安详静谧。在一层小院怡然自得的小憩，捧一杯龙井，听着胡同里不时传来的三两声清脆的铃声，看看书架上介绍老北京历史文化的书籍，仿佛回到了老北京闲适悠远的那个年代。
+										<br/>&nbsp;&nbsp;&nbsp;&nbsp;露台之上干净整洁，养了许多花草，希望每天能在清晨中为它们浇水。
+										<br/>&nbsp;&nbsp;&nbsp;&nbsp;我们有很多厨具和餐具可供使用，同时希望在膳后它们会整洁如初。当你要出门时，不妨搭一趟人力黄包车，感受帝都的胡同儿文化，说笑中，听黄包车夫为你带来的北京故事。
+                            	
+                            	</span>
+                            	<i></i>
+                            </p>
+							<p class="S_tishi J_tishi">房源描述字数为100-1000字</p>
+                            <p class="S_tongji J_tongji">
+                                <span>0</span>
+                                <span>/</span>
+                                <span>1000</span>
+                            </p>
+                        </div>
+                    </li>
+                    <li class="S_main_item">
+                        <p>周边情况</p>
+                        <div class="clearfix S_enter_box">
+                            <textarea placeholder="请描述房子附近的景点，地标建筑的信息，周边吃喝玩乐生活配套设施，有哪些有趣好玩的推荐。有场景感和生活气息。中英文双语为佳，生活方式的推荐尤其佳。限100-1000字。&#10;为保证您的房源呈现效果，请注意错别字、过多空行等格式问题。" data-total="1000" id="J_zhoubian" class="S_area2">$!desc.houseAround</textarea>
+							<p class="S_lizi" style="display:none">
+								<span>例如：
+									<br/>&nbsp;&nbsp;&nbsp;&nbsp;房子是隐藏在老北京胡同里的安静四合院，周边有很多老北京人在此居住多年，能够体会到当地居民闲适的日常生活。
+									<br/>&nbsp;&nbsp;&nbsp;&nbsp;-出门即是恭亲王府，晚餐过后可以步行5分钟到后海，在后海的酒吧听听现场音乐，和朋友们喝几杯。
+									<br/>&nbsp;&nbsp;&nbsp;&nbsp;-步行8分钟，乘坐地铁6号线可以1站抵达南锣鼓巷，里面有许多超赞的小吃，当然，还有独立品牌的服装店，工艺品店等等，可以在拥有各种好吃的好玩儿的巷子里闲逛。
+									<br/>&nbsp;&nbsp;&nbsp;&nbsp;-乘坐地铁，6站抵达天安门广场。驾车或taxi的话15分钟即可抵达。
+									<br/>&nbsp;&nbsp;&nbsp;&nbsp;-屋子门外，可以停车。
+									
+								</span>
+								<i></i>
+							</p>
+							<p class="S_tishi J_tishi">周边情况字数为100-1000字</p>
+                            <p class="S_tongji J_tongji">
+                                <span>0</span>
+                                <span>/</span>
+                                <span>1000</span>
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="clearfix">
+                    <a href="javascript:;" class="S_next" id="J_next">下一步</a>
+                </div>
+            </div>
+        </div>
+	</div>
+</section>
+#end
+#override("leftNavigation")
+#end
+#override("header_img")
+#end
+#extends("/template/conmmonTem.vm")

@@ -1,0 +1,226 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源房间信息（整租）">
+    <meta name="description" content="自如民宿房源房间信息（整租）">
+#end
+
+#override("title")
+房源房间信息- 整租
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" href="${staticResourceUrl}/css/manage/m_roomInfo_zhengzu.css$!{VERSION}">	
+<!-- 自定义js -->
+<script type="text/javascript" src="${staticResourceUrl}/js/manage/m_roomInfo_zhengzu.js$!{VERSION}"></script>
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+        <div class="part_r" id="J_delegate">
+            <div class="part_r_tt c4">房间信息</div>
+            <div class="part_r_box c4">
+                <div class="S_part1">
+                    <p class="S_helpInfo" id="J_helpInfo">
+                        <span>您的房源户型是什么</span>
+                        <b></b>
+                        <i></i>
+                        <span class="S_helpTxt">
+                        	1、无独立客厅，例如loft、开间等房型，请选择0厅
+							<br /> 2、发布独立房间时，需要选择整套房源的户型，并至少完善1间房间信息
+							<br /> 3、发布整套房源时，至少为其中1个卧室添加床位信息	
+                        </span>
+                    </p>
+                    <ul class="S_roomInfo_select clearfix">
+
+                        <li class="J_xiala">
+                            <input type="text" readonly="readonly" #if($!isModify==1)disabled="disabled"#end value="#if($!houseRoom.houseBaseMsgEntity.roomNum==0)1#else$!houseRoom.houseBaseMsgEntity.roomNum#end" id="F_room"/>
+                            <i>室</i>
+                            <ul class="S_xiala" id="J_room">
+                                <li data-value="1">1</li>
+                                <li data-value="2">2</li>
+                                <li data-value="3">3</li>
+                                <li data-value="4">4</li>
+								<li data-value="5">5</li>
+								<li data-value="6">6</li>
+                                <li data-value="7">7</li>
+                                <li data-value="8">8</li>
+                                <li data-value="9">9</li>
+								<li data-value="10">10</li>
+								<li data-value="11">11</li>
+                                <li data-value="12">12</li>
+                                <li data-value="13">13</li>
+                                <li data-value="14">14</li>
+								<li data-value="15">15</li>
+								<li data-value="16">16</li>
+                                <li data-value="17">17</li>
+                                <li data-value="18">18</li>
+                                <li data-value="19">19</li>
+								<li data-value="20">20</li>
+								<li data-value="21">21</li>
+                                <li data-value="22">22</li>
+                                <li data-value="23">23</li>
+                                <li data-value="24">24</li>
+								<li data-value="25">25</li>
+								<li data-value="26">26</li>
+                                <li data-value="27">27</li>
+                                <li data-value="28">28</li>
+                                <li data-value="29">29</li>
+								<li data-value="30">30</li>
+                            </ul>
+                        </li>
+
+                        <li class="J_xiala">
+                            <input type="text" readonly="readonly" #if($!isModify==1)disabled="disabled"#end value="$!houseRoom.houseBaseMsgEntity.hallNum" id="F_hall"/>
+                            <i>厅</i>
+                            <ul class="S_xiala">
+								<li data-value="0">0</li>
+                                <li data-value="1">1</li>
+                                <li data-value="2">2</li>
+                                <li data-value="3">3</li>
+                                <li data-value="4">4</li>
+								<li data-value="5">5</li>
+								<li data-value="6">6</li>
+                                <li data-value="7">7</li>
+                                <li data-value="8">8</li>
+                                <li data-value="9">9</li>
+                                <li data-value="10">10</li>
+                            </ul>
+                        </li>
+
+                        <li class="J_xiala">
+                            <input type="text" readonly="readonly" #if($!isModify==1)disabled="disabled"#end value="#if($!houseRoom.houseBaseMsgEntity.toiletNum==0)1#else$!houseRoom.houseBaseMsgEntity.toiletNum#end" id="F_toilet"/>
+                            <i>卫</i>
+                            <ul class="S_xiala">
+                                <li data-value="1">1</li>
+                                <li data-value="2">2</li>
+                                <li data-value="3">3</li>
+                                <li data-value="4">4</li>
+								<li data-value="5">5</li>
+								<li data-value="6">6</li>
+                                <li data-value="7">7</li>
+                                <li data-value="8">8</li>
+                                <li data-value="9">9</li>
+                                <li data-value="10">10</li>
+								<li data-value="11">11</li>
+                                <li data-value="12">12</li>
+                                <li data-value="13">13</li>
+                                <li data-value="14">14</li>
+								<li data-value="15">15</li>
+								<li data-value="16">16</li>
+                                <li data-value="17">17</li>
+                                <li data-value="18">18</li>
+                                <li data-value="19">19</li>
+								<li data-value="20">20</li>
+								<li data-value="21">21</li>
+                                <li data-value="22">22</li>
+                                <li data-value="23">23</li>
+                                <li data-value="24">24</li>
+								<li data-value="25">25</li>
+								<li data-value="26">26</li>
+                                <li data-value="27">27</li>
+                                <li data-value="28">28</li>
+                                <li data-value="29">29</li>
+								<li data-value="30">30</li>
+                            </ul>
+                        </li>
+
+                        <li class="J_xiala">
+                            <input type="text" readonly="readonly" #if($!isModify==1)disabled="disabled"#end value="$!houseRoom.houseBaseMsgEntity.kitchenNum"  id="F_kitchen"/>
+                            <i>厨</i>
+                            <ul class="S_xiala">
+								<li data-value="0">0</li>
+                                <li data-value="1">1</li>
+                                <li data-value="2">2</li>
+                                <li data-value="3">3</li>
+                                <li data-value="4">4</li>
+								<li data-value="5">5</li>
+								<li data-value="6">6</li>
+                                <li data-value="7">7</li>
+                                <li data-value="8">8</li>
+                                <li data-value="9">9</li>
+                                <li data-value="10">10</li>
+                            </ul>
+                        </li>
+
+                        <li class="J_xiala">
+                            <input type="text" readonly="readonly" #if($!isModify==1)disabled="disabled"#end value="$!houseRoom.houseBaseMsgEntity.balconyNum" id="F_balcony"/>
+                            <i>阳台</i>
+                            <ul class="S_xiala">
+								<li data-value="0">0</li>
+                                <li data-value="1">1</li>
+                                <li data-value="2">2</li>
+                                <li data-value="3">3</li>
+                                <li data-value="4">4</li>
+								<li data-value="4">5</li>
+								<li data-value="6">6</li>
+                                <li data-value="7">7</li>
+                                <li data-value="8">8</li>
+                                <li data-value="9">9</li>
+                                <li data-value="10">10</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+				<input type="hidden" id="houseFid" value="$!houseRoom.houseBaseMsgEntity.fid"/>
+                <div class="S_part2">
+                    <ul id="J_room_box">
+						#foreach( $!room in $!houseRoom.roomList)
+                        <li class="S_item_content on J_room_item" id="J_roomBox_$!{velocityCount}">
+							<input type="hidden" class="J_room_fid" value="$!room.roomMsg.fid"/>
+                            <p class="S_content_tit">卧室$!{velocityCount}</p>
+							#foreach($!bed in $!room.beds)
+								<div class="S_bed_info clearfix">
+									<input type="hidden" class="J_bed_fid" value="$!bed.fid"/>
+									<div class="S_bed_info_item J_xiala">
+										<input type="text" placeholder="床位类型" readonly="readonly" data-value="$bed.bedType" class="J_bed_type" ><i class="S_bed_jiantou"></i>
+										<ul class="S_xiala S_xiala3" style="display: none;">
+											#foreach($!bedType in $!bedTypeList)
+											<li data-value="$!bedType.key">$!bedType.text</li>
+											#end
+										</ul>
+									</div>
+                                #*<div class="S_bed_info_item J_xiala">
+                                    <input type="text" placeholder="床位规格" readonly="readonly" data-value="$bed.bedSize" class="J_bed_guige"><i class="S_bed_jiantou"></i>
+                                    <ul class="S_xiala S_xiala3" style="display: none;">
+                                        #foreach($!bedSize in $!bedSizeList)
+                                        <li data-value="$!bedSize.key">$!bedSize.text</li>
+                                        #end
+                                    </ul>
+                                </div>*#
+									<a class="J_remove_bed" href="javascript:;">删除</a>
+								</div>
+							#end	
+                            <div class="S_add_bed J_add_bed">
+                                <i class="S_item_add"></i>
+                                <span>添加床位</span>
+                            </div>
+                        </li>
+						#end
+                    </ul>
+                </div>
+                <div class="clearfix">
+                    <a href="javascript:;" class="S_next" id="J_next">下一步</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+#end
+#override("leftNavigation")
+#end
+#override("header_img")
+#end
+#override("bottom")
+<script>
+	var bedJson = {};
+    /*var bedTypeJson = {};*/
+	#foreach($item in $bedTypeList)
+    bedJson['$item.key']='$item.text';
+	#end
+    #*#foreach($item in $bedSizeList)
+    bedTypeJson['$item.key']='$item.text';
+    #end*#
+</script>
+#end
+#extends("/template/conmmonTem.vm")

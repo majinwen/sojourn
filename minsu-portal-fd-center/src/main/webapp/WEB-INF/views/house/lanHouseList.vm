@@ -1,0 +1,43 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源管理">
+    <meta name="description" content="自如民宿房源管理">
+#end
+
+#override("title")
+管理房源
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" type="text/css" href="${staticResourceUrl}/css/manage/m_house.css$!{VERSION}004">
+	<!-- 图片裁切 -->
+<script type="text/javascript" src="${staticResourceUrl}/js/ShearPhoto.js"></script>
+<script type="text/javascript" src="${staticResourceUrl}/js/handle.js"></script>
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+			<div class="part_r">
+				<div class="part_r_tt c4">管理房源</div>
+				<input type="hidden" id="picBaseAddrMona" value="${picBaseAddrMona}">
+                <input type="hidden" id="staticUrl" value="${staticResourceUrl}">
+                 <input type="hidden" id="rentWay" value="0">
+				<div class="part_r_box">
+					<ul class="part_r_tt_box clearfix">
+						<li class="current" rentWay="0"><a href="javascript:;">整套出租(<span class="num">$!houseNum</span>)</a></li>
+						<li  rentWay="1"><a href="javascript:;">独立房间(<span class="num">$!roomNum</span>)</a></li>
+					</ul>
+					<ul id="houseList" class="part_r_list">
+				
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="loadMore"></div>
+	</section>
+<script type="text/javascript" src="${staticResourceUrl}/js/house/hosueMan.js$!{VERSION}009"></script>
+#end
+#override("leftHouseIssue")
+#end
+#extends("/template/conmmonTem.vm")

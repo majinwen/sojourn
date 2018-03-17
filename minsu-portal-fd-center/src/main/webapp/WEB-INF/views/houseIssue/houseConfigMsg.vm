@@ -1,0 +1,56 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源配置信息">
+    <meta name="description" content="自如民宿房源配置信息">
+#end
+
+#override("title")
+房源配置信息
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" href="${staticResourceUrl}/css/manage/m_configInfo.css$!{VERSION}">	
+<!-- 自定义js -->
+<script type="text/javascript" src="${staticResourceUrl}/js/manage/m_configInfo.js$!{VERSION}"></script>
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+         <div class="part_r">
+            <div class="part_r_tt c4">配套设施</div>
+            <div class="part_r_box c4">
+				
+				#foreach( $!conf in $!confList)
+                <div class="clearfix S_module">
+                    <p class="S_tab_tit">$!conf.name</p>
+                    <ul class="S_module_ul clearfix">
+						#foreach($!cf in $!conf.confList)
+                        <li>
+                            <div class="S_tab_content J_tab_content #if($!cf.selected==1)on#end">
+                                <i class="S_checkBox"></i>
+                                <b class="$!cf.styleCss"></b>
+                                <span>$!cf.name</span>
+                                <input type="hidden" data-code="$!cf.code:$!cf.value" value="#if($!cf.selected==1)1#end#if($!cf.selected==0)0#end"/>
+                            </div>
+                        </li>
+						#end
+                    </ul>
+                </div>
+				#end
+				<input type="hidden" value="$!roomFid" id="roomFid"/>
+				<input type="hidden" value="$!houseBaseFid" id="houseFid"/>
+				<input type="hidden"  id="confCodeList"/>
+                <div class="clearfix mt30">
+                    <a href="javascript:;" class="S_next" id="J_next">下一步</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+#end
+#override("leftNavigation")
+#end
+#override("header_img")
+#end
+#extends("/template/conmmonTem.vm")

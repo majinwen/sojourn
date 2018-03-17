@@ -1,0 +1,324 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+ <meta charset="utf-8">
+ <meta name="renderer" content="webkit">
+ <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width">
+#block("commonMeta")
+#end
+ 
+<title>
+	#block("title")
+	管理房源
+	#end
+</title>
+
+#block("commonJs")
+    <script type='text/javascript'>
+        var _vds = _vds || [];
+        window._vds = _vds;
+        (function(){
+            _vds.push(['setAccountId', '8da2730aaedd7628']);
+            (function() {
+                var vds = document.createElement('script');
+                vds.type='text/javascript';
+                vds.async = true;
+                vds.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'dn-growing.qbox.me/vds.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(vds, s);
+            })();
+        })();
+    </script>
+
+    <script type="text/javascript">
+	var PORTAL_FRONT_URL="$!PORTAL_FRONT_URL";
+	var PORTAL_FD_URL="$!PORTAL_FD_URL";
+	var PORTAL_SEARCH_URL = "$!PORTAL_SEARCH_URL";
+	var SSO_USER_LOGIN_URL="$!SSO_USER_LOGIN_URL";
+	var SSO_USER_REGISTER_URL="$!SSO_USER_REGISTER_URL";
+	</script>
+	<!-- 全局js -->
+	<script type="text/javascript" src="${staticResourceUrl}/js/jquery-2.1.1.min.js$!{VERSION}"></script>
+	<script type="text/javascript" src="${staticResourceUrl}/js/html5shiv.js$!{VERSION}"></script>
+	<script type="text/javascript" src="${staticResourceUrl}/js/layer/layer.js$!{VERSION}"></script>
+	<script type="text/javascript" src="${staticResourceUrl}/js/common1.js$!{VERSION}"></script>
+	<script type="text/javascript" src="${staticResourceUrl}/js/manage/m_common.js$!{VERSION}"></script>
+	<script type="text/javascript" src="${staticResourceUrl}/js/common/commonUtils.js$!{VERSION}"></script>
+	<script type="text/javascript" src="${staticResourceUrl}/js/jquery.form.js$!{VERSION}"></script>
+	<script type="text/javascript" src="${staticResourceUrl}/js/common/login.js$!{VERSION}"></script>
+#end
+
+#block("commonCss")
+    <link REL = "Shortcut Icon" href="${staticResourceUrl}/images/common/favicon.ico">
+    <link rel="stylesheet" href="${staticResourceUrl}/css/common.css$!{VERSION}">
+	<link rel="stylesheet" href="${staticResourceUrl}/css/manage/m_common.css$!{VERSION}">
+#end
+
+#block("inHeader")
+#end
+</head>
+#block("startBody")
+<body>
+#end
+ <header class="header" id="header">
+        <div class="area clearfix">
+        	<h1 class="logo">
+        		<a href="$!PORTAL_FRONT_URL"></a>
+        	</h1>
+        	<div class="txt_right">
+        		<ul>
+        			<li class="toziroom"><a href="http://www.ziroom.com/">自如网</a></li>
+        			<li class="downLoad">
+        				<p>下载APP</p><span><img src="${staticResourceUrl}/images/common/ewm.png"></span>
+        			</li>
+        			<li class="users">
+        				<a href="$SSO_USER_LOGIN_URL$currentUrl">登录</a>
+        				<i>|</i>
+        				<a href="$SSO_USER_REGISTER_URL$currentUrl">注册</a>
+        			</li>
+        			<li class="to">
+        				<a href="/houseIssue/houseIssueOrAuth">发布房源</a>
+        			</li>
+        		</ul>
+        	</div>
+        </div>
+    </header>
+
+#block("inBody_header")
+
+#end	
+
+#block("leftNavigation")
+   <div class="part_l">
+		<div class="part_l_box">
+			<div class="head_img_box">
+				<dt class="headimg" onclick="showModal()">
+					<img id="headImg" src="$!headPic" >
+				</dt>
+				<dd class="name_dd">$!customerVo.nickName</dd>
+			</div>
+			<div class="part_l_list">
+				<dt>我的房源</dt>
+				<dd #if($!uri=="/house/lanHouseList" || $!uri.contains("calendar"))class="active"#end><a href="/house/lanHouseList">管理房源</a></dd>
+				<dd><a href="/houseIssue/houseIssueOrAuth">发布房源</a></dd>
+			</div>
+			<div class="part_l_list">
+				<dt>个人资料</dt>
+				<dd #if($!uri=="/customer/initPersonData")class="active"#end><a href="/customer/initPersonData">个人信息</a></dd>
+				#if($!customerVo.auditStatus==1)
+				<dd class="set #if($uri=='/customer/initAuthData')active#end"><a href="/customer/initAuthData">认证信息<span class="haveSet">(已认证)</span></a></dd>
+				#else
+				<dd class="set #if($uri=='/customer/initAuthData')active#end"><a href="/customer/initAuthData">认证信息<span >(未认证)</span></a></dd>
+				#end
+			</div>
+		</div>
+	</div>
+#end
+
+#block("leftHouseIssue")
+<div class="part_l">
+    <ul class="S_l_list">
+        <li #if($!clickStep==1)class="on"#end>
+            <a class="S_click" href="#if($!nowStep<1)/houseIssue/locationMsg#else javascript:CommonUtils.houseUrlTurn($!nowStep,0) #end">物理信息</a>
+            <i class="S_item_yes" #if($!nowStep>=1)style="display: block;"#end></i>
+        </li>
+        <li #if($!clickStep==2)class="on"#end>
+            <a #if($nowStep>=2)class="S_click"#end href="javascript:CommonUtils.houseUrlTurn($!nowStep,1);">基本信息</a>
+            <i class="S_item_yes" #if($!nowStep>=2)style="display: block;"#end></i>
+        </li>
+        <li #if($!clickStep==3)class="on"#end>
+            <a #if($nowStep>=3)class="S_click"#end href="javascript:CommonUtils.houseUrlTurn($!nowStep,2);">配套设施</a>
+            <i class="S_item_yes" #if($!nowStep>=3)style="display: block;"#end></i>
+        </li>
+        <li #if($!clickStep==4)class="on"#end>
+            <a #if($nowStep>=4)class="S_click"#end href="javascript:CommonUtils.houseUrlTurn($!nowStep,3);">描述信息</a>
+            <i class="S_item_yes" #if($!nowStep>=4)style="display: block;"#end></i>
+        </li>
+        <li #if($!clickStep==5)class="on"#end>
+            <a #if($nowStep>=5)class="S_click"#end href="javascript:CommonUtils.houseUrlTurn($!nowStep,4);">房间信息</a>
+            <i class="S_item_yes" #if($!nowStep>=5)style="display: block;"#end></i>
+        </li>
+        <li #if($!clickStep==6)class="on"#end>
+            <a #if($nowStep>=6)class="S_click"#end href="javascript:CommonUtils.houseUrlTurn($!nowStep,5);">预订信息</a>
+            <i class="S_item_yes" #if($!nowStep>=6)style="display: block;"#end></i>
+        </li>
+		<li class="S_noBorder #if($!clickStep==7) on#end">
+            <a #if($nowStep>=7)class="S_click"#end href="javascript:CommonUtils.houseUrlTurn($!nowStep,6);">真实照片</a>
+            <i class="S_item_yes" #if($!nowStep>=7)style="display: block;"#end></i>
+        </li>
+    </ul>
+</div>
+#end
+
+#block("inBody_footer")
+
+#end
+<footer class="footer">
+	<div class="area clearfix">
+		<div class="topLinks">
+			<a href="$!PORTAL_FRONT_URL/common/about">关于我们</a>
+			<a href="$!PORTAL_FRONT_URL/common/contact" target="_blank">联系我们</a>
+			<a href="http://www.ziroom.com/zhaopin/" target="_blank">加入我们</a>
+            <a href="$!PORTAL_FRONT_URL/common/protocols" class="_blank" target="_blank">平台服务协议</a>
+            <a href="$!PORTAL_FRONT_URL/common/tenantProtocols" class="_blank" target="_blank">房客服务协议</a>
+            <a href="$!PORTAL_FRONT_URL/common/landlordProtocols" class="last" target="_blank">房东服务协议</a>
+		</div>
+		<div class="shares">
+			<ul class="clearfix">
+				<li>
+					<div class="img"><img src="${staticResourceUrl}/images/common/weixin.png"></div>
+					<span class="weixin"></span>
+				</li>
+				<li>
+					<div class="img"><img src="${staticResourceUrl}/images/common/weibo.png"></div>
+					<span class="weibo"></span>
+				</li>
+				<li>
+					<div class="img"><img src="${staticResourceUrl}/images/common/ewm.png"></div>
+					<span class="app"></span>
+				</li>
+			</ul>
+		</div>
+		<p>客服：4007711666</p>
+		<p id="currentYear">Copyright©2016-2018 ziroomstay.com 版权所有 京ICP备16045409号-1</p>
+	</div>	
+</footer>
+#block("header_img")
+<div id="headImgModal" class="head_img_modal">
+	<div class="modal_main clearfix">
+		<div class="upload_box box">
+			<div class="box_tt"><span>编辑头像</span> <span class="close_btn" onclick='closeModal()'></span></div>
+			<div class="box_main clearfix">
+				<!--主功能部份 主功能部份的标签请勿随意删除，除非你对shearphoto的原理了如指掌，否则JS找不到DOM对象，会给你抱出错误-->
+				<div id="shearphoto_loading">程序加载中......</div>
+				<!--这是2.2版本加入的缓冲效果，JS方法加载前显示的等待效果-->
+				<div id="shearphoto_main">
+					<!--primary范围开始-->
+					<div class="primary">
+						<!--main范围开始-->
+						<div id="main">
+							<div class="point">
+							</div>
+							<!--选择加载图片方式开始-->
+							<div id="SelectBox">
+								<form id="ShearPhotoForm" enctype="multipart/form-data" method="post" target="POSTiframe">
+									<input name="shearphoto" type="hidden" value="我要传参数" autocomplete="off">
+									<!--示例传参数到服务端，后端文件UPLOAD.php用$_POST['shearphoto']接收,注意：HTML5切图时，这个参数是不会传的-->
+									<a href="javascript:;" id="selectImage">
+										<input type="file" name="UpFile" autocomplete="off" />
+									</a>
+								</form>
+								<a href="javascript:;" id="PhotoLoading"></a>
+								<a href="javascript:;" id="camerasImage"></a>
+							</div>
+							<!--选择加载图片方式结束-->
+							<div id="relat">
+								<div id="black">
+								</div>
+								<div id="movebox">
+									<div id="smallbox">
+										<img src="${staticResourceUrl}/images/house/default.gif" class="MoveImg" />
+										<!--截框上的小图-->
+									</div>
+									<!--动态边框开始-->
+									<i id="borderTop">
+									</i>
+
+									<i id="borderLeft">
+									</i>
+
+									<i id="borderRight">
+									</i>
+
+									<i id="borderBottom">
+									</i>
+									<!--动态边框结束-->
+									<i id="BottomRight">
+									</i>
+									<i id="TopRight">
+									</i>
+									<i id="Bottomleft">
+									</i>
+									<i id="Topleft">
+									</i>
+									<i id="Topmiddle">
+									</i>
+									<i id="leftmiddle">
+									</i>
+									<i id="Rightmiddle">
+									</i>
+									<i id="Bottommiddle">
+									</i>
+								</div>
+								<img src="${staticResourceUrl}/images/house/default.gif" class="BigImg" />
+								<!--MAIN上的大图-->
+							</div>
+						</div>
+						<!--main范围结束-->
+						<div style="clear: both"></div>
+						<!--工具条开始-->
+						<div id="Shearbar">
+							<a id="LeftRotate" href="javascript:;"></a>
+							<div class="ZoomDist" id="ZoomDist">
+								<div id="Zoomcentre">
+								</div>
+								<div id="ZoomBar">
+								</div>
+								<span class="progress">
+								</span>
+							</div>
+							<a id="RightRotate" href="javascript:;"></a>
+							<p class="Psava">
+								<a id="saveShear" href="javascript:;">保存截图</a>
+								<a id="againIMG" href="javascript:;">重新选择</a>
+							</p>
+						</div>
+						<!--工具条结束-->
+					</div>
+					<!--primary范围结束-->
+					<div style="clear: both"></div>
+				</div>
+				<!--shearphoto_main范围结束-->
+
+			</div>
+		</div>
+	</div>
+	#end
+		
+	#block("bottom")
+	#end
+
+	#block("goTop")
+	<div id="goTop"></div>
+    <script> 
+    $(function(){			
+         $("#goTop").click(//定义返回顶部点击向上滚动的动画 
+    				function(){$('html,body').stop().animate({scrollTop:0},300); 
+    			}).html("TOP")
+    })
+    </script>
+	#end
+
+	<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-26597311-1']);
+    _gaq.push(['_setLocalRemoteServerMode']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    
+    (function() {
+        var nowDate  = new Date();
+        var currentYear = nowDate.getFullYear(); 
+        var buttomTxt = "Copyright©2016-" + currentYear + " ziroomstay.com 版权所有 京ICP备16045409号-1";
+        document.getElementById("currentYear").innerHTML=buttomTxt;
+    })();
+</script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,456 @@
+#override("commonMeta")
+    <meta name="keywords" content="民宿房源搜索">
+    <meta name="description" content="民宿房源搜索">
+#end
+
+#override("title")
+房源预览
+#end
+#override("inHeader")
+<script type="text/javascript" src="$!staticResourceUrl/js/jquery.form.js"></script>
+<script type="text/javascript" src="$!staticResourceUrl/js/jquery.SuperSlide.2.1.1-1.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=$!{BAIDU_AK}"></script>
+<script type="text/javascript" src="$!staticResourceUrl/js/house/housePreview.js$!{VERSION}"></script>
+<link rel="stylesheet" type="text/css" href="$!staticResourceUrl/css/detail.css$!{VERSION}">
+#end
+#override("commonCss")
+    <link REL = "Shortcut Icon" href="${staticResourceUrl}/images/common/favicon.ico">
+    <link rel="stylesheet" href="${staticResourceUrl}/css/common.css$!{VERSION}">
+#end
+
+#override("leftNavigation")
+#end
+#override("leftHouseIssue")
+#end
+#override("inBody_footer")
+    <div id="subNav" class="sub_header_box">
+		<div class="area">
+			<ul class="sub_header point">
+				<li class="part1"> <a href="#part1" rel="nofollow">图片</a> </li>
+				<li class="part2"> <a href="#part2">配套设施</a></li>
+				<li class="part3"> <a href="#part3">房源描述</a></li>
+				<li class="part4"> <a href="#part4">预订须知</a></li>
+				<li class="part5"> <a href="#part5">周边情况</a></li>
+			</ul>
+		</div>
+    </div>
+	<section class="main" id="main">
+		<div class="area clearfix">
+			<div class="room_detail_left">
+				<!-- part1 -->
+				<div id="part1" class="part part1">
+					<div class="slider">
+						<ul class="bd">
+							#foreach($item in $detailVo.picList)
+							<li class="slide_item">
+								<img _src="$!item">
+							</li>
+							#end
+						</ul>
+						<div class="btn">
+							<a class="prev" href="javascript:void(0)"></a>
+							<a class="next" href="javascript:void(0)"></a>
+						</div>
+					</div>
+					<div class="detail">
+						<div class="detail_tt">
+							<h1>#if($stringUtils.isEmpty($detailVo.houseName))未完成发布的美居#else$!detailVo.houseName#end</h1>
+							<div class="detail_txt clearfix">
+								<div class="detail_sub_tt">$!detailVo.houseAddr</div>
+								<div class="star_box clearfix">
+									<ul class="stars clearfix" data-val="5">
+										<li class="star"></li>
+										<li class="star"></li>
+										<li class="star"></li>
+										<li class="star"></li>
+										<li class="star"></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						#set($num = 0)
+						<ul class="detail_tags clearfix">
+							<li class="tag">
+								<dt class="icons_dt rent"></dt>
+								<dd>$!detailVo.rentWayName</dd>
+							</li>
+							<li class="tag">
+								<dt class="icons_dt person"></dt>
+								<dd>#if($detailVo.checkInLimit == 0)不限制#else 可住$detailVo.checkInLimit人#end</dd>
+							</li>
+							#if($!detailVo.roomNum >0)
+							<li class="tag">
+								<dt class="icons_dt room"></dt>
+								<dd>$!detailVo.roomNum居</dd>
+							</li>
+							#set($num=$num+1)
+							#end
+							#foreach($item in $detailVo.bedList)
+    							<li class="tag">
+    								<dt class="icons_dt bed"></dt>
+    								<dd>$!item.bedNum张$!item.bedTypeName</dd>
+    							</li>
+    							#set($num=$num+1)
+    							#if($num == 3)
+    								#break
+    							#end
+							#end
+							
+							#if($num != 3)
+								#if($detailVo.rentWay == 0 && $detailVo.toiletNum>0)
+									<li class="tag">
+    								<dt class="icons_dt toliet"></dt>
+    								<dd>$detailVo.toiletNum个卫生间</dd>
+    							</li>
+								#end
+								#if($detailVo.rentWay == 1 && $detailVo.istoilet==1)
+									<li class="tag">
+    								<dt class="icons_dt toliet"></dt>
+    								<dd>独立卫生间</dd>
+    							</li>
+								#end
+							#end
+							#if($num != 3 && $!detailVo.houseArea>0)
+							<li class="tag">
+								<dt class="icons_dt area"></dt>
+								<dd>$!detailVo.houseArea平方米</dd>
+							</li>
+							#end
+						</ul>
+					</div>
+					<div id="outSlideBox" class="outslidebox">
+						<div class="outslide-mask">
+							<div class="outslide">
+								<ul class="bd">
+									#foreach($item in $detailVo.picList)
+            							<li class="slide_item">
+            								<img _src="$!item">
+            							</li>
+									#end
+								</ul>
+								<div class="nav_slide">
+									<ul class="hd clearfix">
+									#foreach($item in $detailVo.picList)
+									<li class="slide_item">
+    									<div class="img_box"><img src="$!item"></div>
+    									<div class="bg"></div>
+									</li>
+									#end
+								</ul>
+								</div>
+								<div class="close"></div>
+								<div class="btn">
+									<a class="prev" href="javascript:void(0)"></a>
+									<a class="next" href="javascript:void(0)"></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /part1 -->
+				<!-- part2 -->
+				<div id="part2" class="part part2">
+					<div class="detail clearfix">
+						<div class="detail_left">配套设施</div>
+						<div class="detail_right">
+							<ul class="support_list clearfix">
+								#foreach($item in $!detailVo.facilityList)
+									<!--电器-->
+									#if($item.dicCode == "ProductRulesEnum002001" && $item.dicValue ==1)
+        								<li> <i class="icon_supports tv"></i>$item.dicName</li> <!--电视-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002001" && $item.dicValue ==2)
+        								<li> <i class="icon_supports air"></i>$item.dicName</li><!--空调-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002001" && $item.dicValue ==3)
+        								<li> <i class="icon_supports water"></i>$item.dicName</li><!--饮水设备-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002001" && $item.dicValue ==4)
+        								<li> <i class="icon_supports fridge"></i>$item.dicName</li><!--冰箱-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002001" && $item.dicValue ==5)
+        								<li> <i class="icon_supports washing"></i>$item.dicName</li><!--洗衣机-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002001" && $item.dicValue ==6)
+        								<li> <i class="icon_supports dryer"></i>$item.dicName</li><!--烘干机-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002001" && $item.dicValue ==7)
+        								<li> <i class="icon_supports hair_dryer"></i>$item.dicName</li><!--电吹风-->
+									#end
+									<!--卫浴-->
+									#if($item.dicCode == "ProductRulesEnum002002" && $item.dicValue ==1)
+        								<li> <i class="icon_supports shower"></i>$item.dicName</li><!--热水淋浴-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002002" && $item.dicValue ==2)
+        								<li> <i class="icon_supports bathtub"></i>$item.dicName</li><!--热水浴缸-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002002" && $item.dicValue ==3)
+        								<li> <i class="icon_supports toothbrush"></i>$item.dicName</li><!--牙具-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002002" && $item.dicValue ==4)
+        								<li> <i class="icon_supports soap"></i>$item.dicName</li><!--香皂-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002002" && $item.dicValue ==5)
+        								<li> <i class="icon_supports shoes"></i>$item.dicName</li><!--拖鞋-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002002" && $item.dicValue ==6)
+        								<li> <i class="icon_supports papper"></i>$item.dicName</li><!--卫生纸-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002002" && $item.dicValue ==7)
+        								<li> <i class="icon_supports tower"></i>$item.dicName</li><!--毛巾-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002002" && $item.dicValue ==8)
+        								<li> <i class="icon_supports acne"></i>$item.dicName</li><!--沐浴露-->
+									#end
+									
+									<!--设施-->
+									#if($item.dicCode == "ProductRulesEnum002003" && $item.dicValue ==1)
+        								<li> <i class="icon_supports sofa"></i>$item.dicName</li><!--沙发-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002003" && $item.dicValue ==2)
+        								<li> <i class="icon_supports wify"></i>$item.dicName</li><!--无线网络-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002003" && $item.dicValue ==3)
+        								<li> <i class="icon_supports network"></i>$item.dicName</li><!--有线网络-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002003" && $item.dicValue ==4)
+        								<li> <i class="icon_supports heater"></i>$item.dicName</li><!--暖气-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002003" && $item.dicValue ==5)
+        								<li> <i class="icon_supports lift"></i>$item.dicName</li><!--电梯-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002003" && $item.dicValue ==6)
+        								<li> <i class="icon_supports access"></i>$item.dicName</li><!--门禁系统-->
+									#end
+									#if($item.dicCode == "ProductRulesEnum002003" && $item.dicValue ==7)
+        								<li> <i class="icon_supports book_tab"></i>$item.dicName</li><!--书桌-->
+									#end
+								#end
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- /part2 -->
+				<!-- part3 -->
+				<div id="part3" class="part part3">
+					<div class="detail clearfix">
+						<div class="detail_left">房源描述</div>
+						<div class="detail_right">
+							<div class="detail_intro detail_txt overflow">
+								$!detailVo.houseDesc
+							</div>
+						</div>
+					</div>
+					<div class="show_more_btn">
+						<a href="javascript:;" id="introBtn" class="overflowBtn">查看全部</a>
+					</div>
+				</div>
+				<!-- /part3 -->
+				<!-- part4 -->
+				<div id="part4" class="part part4">
+					<div class="detail clearfix">
+						<div class="detail_left">预订须知</div>
+						<div class="detail_right">
+							<ul class="reserve_list clearfix">
+								<li>
+									<span class="reserve_list_tt">预订类型 ：</span>
+									$!detailVo.orderTypeName
+								</li>
+								<li>
+									<span class="reserve_list_tt">押金规则 ：</span>
+									$!detailVo.depositRulesName
+								</li>
+								<li>
+									<span class="reserve_list_tt">最少入住天数 ：</span>
+									$!detailVo.minDay天
+								</li>
+								<li>
+									<span class="reserve_list_tt">清洁费 ：</span>
+									#set($cleaningFees = $!detailVo.cleaningFees / 100)$!cleaningFees元/单
+								</li>
+								<li>
+									<span class="reserve_list_tt">入住时间 ：</span>
+									#if(!$stringUtils.isEmpty($detailVo.checkInTime))$detailVo.checkInTime点之后#end
+								</li>
+								<li>
+									<span class="reserve_list_tt">退房时间 ：</span>
+									#if(!$stringUtils.isEmpty($detailVo.checkOutTime))$detailVo.checkOutTime点之前#end
+								</li>
+								<li class="clearfix server_li">
+									<span class="reserve_list_tt" style="float:left;">服务 ：</span>
+									<div>
+									#foreach($item in $!detailVo.serveList)
+										$item.dicName#if($!velocityCount != $!detailVo.serveList.size())、#end
+									#end
+									</div>
+								</li>
+								
+								<li>
+									<span class="reserve_list_tt">退房政策 ：</span>
+									#if(!$stringUtils.isEmpty($detailVo.checkOutRulesName))
+									<a id="policyBtn" onclick="showPolicy(this)" href="javascript:;">$!detailVo.checkOutRulesName <i class="up"></i></a>
+									#end
+								</li>
+							</ul>
+							#if($!detailVo.unregText2)
+                                <div class="policy">
+                                    <ul class="policyUl">
+										$!detailVo.tradeRulesShowName
+                                    </ul>
+                                </div>
+							#end
+
+						</div>
+					</div>
+				</div>
+				<!-- /part4 -->
+				<!-- part5 -->
+				<div id="part5" class="part part5">
+					<div class="detail clearfix">
+						<div class="detail_left">周边情况</div>
+						<div class="detail_right">
+							<div class="detail_arround detail_txt overflow">
+								$!detailVo.houseAroundDesc
+							</div>
+						</div>
+					</div>
+					<div class="show_more_btn ">
+						<a href="javascript:;" id="arroundBtn" class="overflowBtn">查看全部</a>
+					</div>
+					<div class="map_box">
+						<div id="allmap" class="map"></div>
+						<div id="position" data-longitude="$!detailVo.longitude" data-latitude="$!detailVo.latitude" class="map_title">$!detailVo.houseAddr</div>
+					</div>
+				</div>
+				<!-- /part5 -->
+				<!-- part6 -->
+				#if(!$stringUtils.isEmpty($detailVo.houseRules))
+				<div id="part6" class="part part6">
+					<div class="detail clearfix">
+						<div class="detail_left">房屋守则</div>
+						<div class="detail_right">
+							<div class="detail_rules">
+								$!detailVo.houseRules
+							</div>
+						</div>
+					</div>
+				</div>
+				#end
+				<!-- /part6 -->
+				<!-- part7 -->
+				
+				<!-- /part7 -->
+				<!-- 更多类似房源 -->
+				
+				<!-- /更多类似房源 -->
+			</div>
+			<div class="room_detail_right">
+				<!-- expense_box -->
+				<div class="box expense_box">
+					#if($stringUtils.isEmpty($detailVo.housePrice))
+						<h1>未填写价格</h1>
+					#else
+					<h1>￥#set($housePrice = $!detailVo.housePrice / 100)$housePrice/晚</h1>
+					#end
+					<ul class="expense_list">
+						<li class="expense_li clearfix">
+							<div class="expense_li_left">
+								<input id="startDate" class="ipt" placeholder="入住日期" readonly="readonly">
+							</div>
+							<div class="expense_li_right">
+								<input id="endDate" class="ipt" placeholder="离开日期" readonly="readonly">
+							</div>
+						</li>
+						<li  class="expense_li clearfix">
+							<div class="expense_li_left">
+								房费       
+							</div>
+							<div class="expense_li_right">
+								￥<span id="roomCharge">0</span>
+							</div>
+						</li>
+						<li  class="expense_li clearfix">
+							<div class="expense_li_left">
+								清洁费       
+							</div>
+							<div class="expense_li_right">
+								￥<span id="cleanFee">0</span>
+							</div>
+						</li>
+						<li style="display:none" id="discountMoneyWrapper" class="expense_li clearfix">
+							<div class="expense_li_left">
+								折扣金额       
+							</div>
+							<div class="expense_li_right">
+								￥<span id="discountMoney">0</span>
+							</div>
+						</li>
+						<li class="expense_li clearfix">
+							<div class="expense_li_left">
+								押金 
+							</div>
+							<div class="expense_li_right">
+								￥<span id="deposit">0</span>
+							</div>
+						</li>
+						<li class="expense_li clearfix">
+							<div id="service" onclick="showService()" class="expense_li_left">
+								房客服务费
+								<i class="service"></i>       
+							</div>
+							<div class="expense_li_right">
+								￥<span id="serviceCharge">0</span>
+							</div>
+						</li>
+						<li class="expense_li clearfix">
+							<div class="expense_li_left c_g">
+								订单总额       
+							</div>
+							<div class="expense_li_right c_g">
+								￥<span id="totalCharge">0</span>
+							</div>
+						</li>
+					</ul>
+					<div class="ewm_box">
+						<dt></dt>
+						<dd>预订请至APP</dd>
+					</div>
+				</div>
+				<!-- /expense_box -->
+				<!-- data_box -->
+				<div class="box data_box">
+					<div class="headimg_box">
+						<dt>
+							<div class="headimg">
+								<img src="$!lanInfo.headPicUrl">
+							</div>
+						</dt>
+						<dd>你好，我是$!lanInfo.nickName</dd>
+					</div>
+					<ul class="btn_box">
+						<li class="btn_left"><a href="javascript:;">身份认证</a></li>
+						<li class="btn_right"><a href="javascript:;">房源认证</a></li>
+					</ul>
+					<div class="txt">
+						$!lanInfo.introduce
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<input type="hidden" id="endDate" >
+	<input type="hidden" id="startDate">
+	<input type="hidden" id="outDate">
+	<input type="hidden" id="fid" value="$!detailVo.fid">
+	<input type="hidden" id="rentWay" value="$!detailVo.rentWay">
+	<input type="hidden" id="lanUid" value="$!detailVo.landlordUid">
+		
+#end
+
+#override("header_img")
+#end
+#override("goTop")
+#end
+#extends("/template/conmmonTem.vm")

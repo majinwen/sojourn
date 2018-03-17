@@ -1,0 +1,124 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源位置信息">
+    <meta name="description" content="自如民宿房源位置信息">
+#end
+
+#override("title")
+房源位置信息
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" href="${staticResourceUrl}/css/manage/m_posInfo.css$!{VERSION}">	
+<!-- 自定义js -->
+<script type="text/javascript" src="${staticResourceUrl}/js/manage/m_posInfo.js$!{VERSION}"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=$!baiduAk&v=1.0"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&amp;ak=$!baiduAk&amp;services=&amp;t=20160513110936"></script>
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+        <div class="part_r">
+				<div class="part_r_tt c4">物理信息</div>
+				<div class="part_r_box c4" id="J_all_in">
+					<ul class="S_module_ul">
+	                    <li>
+	                        <p>您的房源类型是什么？</p>
+	                        <div class="S_module_enter">
+	                            <input type="text" #if($!isModify==1) disabled="disabled" #end placeholder="请选择" readonly="readonly" data-type="$!houseBase.houseType" id="J_typeIpt" value="$!houseTypeName"/>
+	                            <i class="S_item_jiantou2"></i>
+	                            <ul class="S_xiala" style="display: none;" id="J_typeUl">
+									#foreach( $!houseType in $!houseTypeList)
+										<li data-type="$!houseType.key">$!houseType.text</li>
+									#end
+	                            </ul>
+								<p class="S_tishi_txt J_tishi_txt">请选择房源类型</p>
+	                        </div>
+	                    </li>
+	                    <li>
+	                        <p>您的出租类型是什么？</p>
+	                        <div class="S_module_enter clearfix">
+	                            <input type="hidden" id="J_chuzuType" value="$!houseBase.rentWay"/>
+								<input type="hidden" id="J_isNone" value="$!nowStep">
+	                            <div class="S_whole on" id="J_whole">
+	                                <p>整套出租</p>
+	                            </div>
+	                            <div class="S_one" id="J_one">
+	                                <p>独立房间</p>
+	                            </div>
+								<p class="S_demo_txt">
+									整套出租：您的房子整套出租，包括所有的房间和公共区域
+									<br>
+									独立房间：您的一套房子可按多个独立房间出租
+								</p>
+	                            <i class="S_demo_txt_jiantou"></i>
+	                        </div>
+	                    </li>
+					</ul>
+					<p class="S_smallTit">房源位于</p>
+					<table class="S_table">
+						<tr>
+							<td width="290">
+								<input type="text" #if($!isModify==1) disabled="disabled" #end class="S_select_ipt" placeholder="请选择国家/地区、省份、城市、行政区" readonly="readonly" id="J_select_ipt" data-code="$!codeArr" value="$!nameArr"/>
+								<i class="S_item_jiantou"></i>
+								<div class="S_position_select" style="display: none;" id="J_position_select">
+									<ul class="S_select_tit clearfix" id="J_select_tit">
+										<li class="on">国家/地区</li>
+										<li>城市</li>
+										<li>行政区</li>
+									</ul>
+									<!-- 国家 -->
+									<ul class="S_select_content clearfix" id="J_select_guojia" style="display: block;">
+										<li data-code="">中国</li>
+									</ul>
+									<!-- 城市 -->
+									<ul class="S_select_content clearfix" id="J_select_city" style="display: none;">
+
+									</ul>
+									<!-- 行政区 -->
+									<ul class="S_select_content clearfix" id="J_select_qu" style="display: none">
+										
+									</ul>
+								</div>
+							</td>
+							<!-- 地址信息隐藏域 -->
+							<input type="hidden" id="nowCodeArr" value="$!codeArr"/>
+							<!-- 坐标经纬度 -->
+							<input type="hidden" id="longitude" value="$!housePhy.longitude"/>
+							<input type="hidden" id="latitude" value="$!housePhy.latitude"/>
+							<!-- 隐藏房源fid和物理地址fid   -->
+							<input type="hidden" id="roomFid" value="$!roomFid"/>
+							<input type="hidden" id="houseFid" value="$!houseBase.fid"/>
+							<input type="hidden" id="housePhyFid" value="$!housePhy.fid"/>
+							<input type="hidden" id="operateSeq" value="$!houseBase.operateSeq"/>
+							<td width="230">
+								<input type="text" #if($!isModify==1) disabled="disabled" #end class="S_enter_ipt1" placeholder="请填写房屋所在街道／路" id="J_enter_ipt2" value="$!houseBase.houseBaseExt.houseStreet" maxlength="30"/>
+							</td>
+							<td width="220">
+								<input type="text" #if($!isModify==1) disabled="disabled" #end class="S_enter_ipt2" placeholder="请填写房屋所在小区名称" id="J_enter_ipt1" value="$!housePhy.communityName" maxlength="30"/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" #if($!isModify==1) disabled="disabled" #end class="S_select_ipt" placeholder="请填写楼号-门牌号信息(用户支付后可见)" id="J_menpai" value="$!houseBase.houseBaseExt.detailAddress" maxlength="30"/>
+							</td>
+						</tr>
+					</table>
+					<p class="S_red_tishi" id="J_red_tishi"></p>
+					<div class="map_box">
+						<div id="allmap" class="map"></div>
+					</div>
+					<div class="clearfix">
+						<a href="javascript:;" class="S_next" id="J_next">下一步</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+#end
+#override("leftNavigation")
+#end
+#override("header_img")
+#end
+#extends("/template/conmmonTem.vm")

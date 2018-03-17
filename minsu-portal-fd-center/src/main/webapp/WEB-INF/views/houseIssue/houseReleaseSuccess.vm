@@ -1,0 +1,83 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源房间信息（整租）">
+    <meta name="description" content="自如民宿房源房间信息（整租）">
+#end
+
+#override("title")
+房源 - 发布成功
+#end
+#override("inHeader")
+<!-- 自定义css -->
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("leftHouseIssue")
+#end
+#override("inBody_footer")
+       <div class="publish_success">
+        <div class="publish_success_main">
+          <div class="publish">
+            <div class="publish_message" style="border-bottom:0px">
+              <dt class="publish_icon publish_icon_s"></dt>
+              <dd class="s">您的房源信息已提交！</dd>
+              <dd style="text-align:left;">您的房源已经提交审核，我们会在1个工作日内通知您审核结果,请您关注短信和系统消息。<br/>房源上架后，您可通过自如民宿PC版的出租日历同步airbnb日历，同时提升房源排名。</dd>
+            </div>
+            <div class="publish_house clearfix">
+              <dd></dd>
+              <dd></dd>
+            </div>
+            <ul class="publish_house clearfix">
+			#foreach($item in $list)
+				<li class="clearfix">
+                  <div class="publish_house_l clearfix">
+                    <div class="publish_house_img">
+                      <img src="$!item.url">
+                    </div>
+                    <div class="publish_house_txt">
+                      <div class="publish_house_tt">$!item.name</div>
+                      <ul class="publish_house_tag">
+                        <li>$!item.rentWayName</li>
+                        <li>#if($!item.checkInLimit == 0)不限制入住人数#else可住$!item.checkInLimit人#end</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="publish_house_r ">
+					#if($!item.rentWay == 0)
+                    <a href="/preview/$!item.rentWay/$!item.houseFid" target="_blank" class="lookBtn">预览房源</a>
+                    <a href="/house/$!item.rentWay/$!item.houseFid/calendar" target="_blank" class="lookBtn">出租日历</a>
+					#end
+					#if($!item.rentWay == 1)
+					<a href="/preview/$!item.rentWay/$!item.roomFid" target="_blank" class="lookBtn">预览房源</a>
+					<a href="/house/$!item.rentWay/$!item.roomFid/calendar" target="_blank" class="lookBtn">出租日历</a>
+					#end
+                  </div>
+			  </li>
+			#end
+            </ul>
+		  </div>
+          <ul class="publish_house_footer clearfix">
+              <li>
+                <div class="txt">您还可以下载自如手机端，完成房源价格、房态管理，及时掌握订单、消息等更新。</div>
+              </li>
+               <li class="b_r">
+                <div class="txt">
+                  <div class="img"><img src="${staticResourceUrl}/images/common/ewm.png"></div>
+                  <span class="weibo">下载自如App</span>
+                </div>
+              </li>
+               <li>
+                <div class="txt">为了提升房源的吸引力，获取更多的浏览量和订单量，请完善房源可选信息，包括入住规则、交易规则等</div>
+              </li>
+            </ul>
+        </div>
+      </div>
+	</div>
+</section>
+#end
+#override("leftNavigation")
+#end
+#override("header_img")
+#end
+#extends("/template/conmmonTem.vm")

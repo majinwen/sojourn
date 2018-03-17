@@ -1,0 +1,284 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源可选信息">
+    <meta name="description" content="自如民宿房源可选信息">
+#end
+
+#override("title")
+房源可选信息
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" href="${staticResourceUrl}/css/manage/m_buchong.css$!{VERSION}">
+
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+	<form id="form" accept="" method="">
+		
+		
+		 <div class="part_r" id="J_delegate">
+            <div class="part_r_tt c4">可选信息</div>
+            <div class="part_r_box c4">
+                <div class="S_part1">
+                    <ul class="S_item_content">
+
+                        <li class="J_xiala">
+                            <p class="S_helpInfo J_helpInfo">
+                                <span>预订类型</span>
+                                <i></i>
+                                <div style="width: 350px;padding: 10px 15px;line-height: 20px;font-size: 12px;color: #999999;background-color: #f7f7f7; position:absolute;right:0;top:0;margin-left: 35px;display:block;border-radius: 4px;">申请预订：用户需要提前发送预订申请，您同意申请后用户才可以完成预订<br/>立即预订：用户可直接预订您的房源，不需要经过您的同意。为避免因纠纷而导致经济损失，房源日历需保持最新状态。同时，打开立即预订可以帮助提高排名</div>
+                            </p> 
+                            #set ($orderTypeHtm="")
+							#foreach( $!orderTypeObj in $!orderTypeList)
+		                      #if( $!orderTypeObj.key == $!houseBaseExtDto.houseBaseExt.orderType  )
+								#set ($orderTypeHtm="$!orderTypeObj.text")
+							  #end 
+							#end 
+                            <input type="text" id="orderType" name="orderType" class="S_normal_ipt" readonly="readonly"  value="$orderTypeHtm" data-value="$!houseBaseExtDto.houseBaseExt.orderType" />
+                            <i class="S_jiantou_right"></i>
+                            <ul class="S_xiala S_xiala2">
+                            	#foreach( $!orderTypeObj in $!orderTypeList)
+			                        <li data-value="$!orderTypeObj.key">$!orderTypeObj.text</li>
+								#end 
+                            </ul>
+                        </li>
+
+                        #*<li class="J_xiala">
+                            <p class="S_helpInfo">
+                                <span>民宿类型</span>
+                            </p>
+                            #set ($homestayTypeHtm="")
+							#foreach( $!homestayObj in $!homeStayList)
+		                      #if( $!homestayObj.key == $!houseBaseExtDto.houseBaseExt.homestayType  )
+								#set ($homestayTypeHtm="$!homestayObj.text")
+							  #end 
+							#end 
+                            <input type="text" id="homestayType" name="homestayType"  class="S_normal_ipt" readonly="readonly"  value="$!homestayTypeHtm" data-value="$!houseBaseExtDto.houseBaseExt.homestayType" />
+                            <i class="S_jiantou_right"></i>
+                            <ul class="S_xiala S_xiala2">
+	                            #foreach( $!homestayObj in $!homeStayList)
+	                                <li data-value="$!homestayObj.key">$!homestayObj.text</li>
+		                        #end 
+                            </ul>
+                        </li>*#
+
+                        <li>
+                            <p class="S_helpInfo ">
+                                <span>押金规则</span>                                
+                            </p>
+                            <!--
+                            <div class="S_bed_info clearfix">
+                                <div class="S_bed_info_item J_xiala">
+	                                <script>
+										depositRulesListJson = $!depositRulesListStr;
+									</script>
+                                    <input type="text" name="depositRules1" id="depositRules1" readonly="readonly"  data-value="$!houseBaseExtDto.houseBaseExt.depositRulesCode" />
+                                    
+                                    <i class="S_bed_jiantou"></i>
+                                    <ul name="houseConfList[0].dicCode" class="S_xiala S_xiala3">
+                                         
+                                    </ul>
+                                </div>
+                                <div class="S_bed_info_item J_xiala">
+                                    <input type="text" name="depositRules2" id="depositRules2" readonly="readonly" data-value="$!houseConfMsg.dicVal"  />
+                                    <i class="S_bed_jiantou"></i>
+                                    <ul name="houseConfList[0].dicVal" class="S_xiala S_xiala3">
+                                    </ul>
+                                </div>
+                            </div>
+                            -->
+                          <div class="S_module_enter">
+                            <input type="hidden" id="depositMin" value="$!depositMin"   />
+                            <input type="hidden" id="depositMax" value="$!depositMax"   />
+                            <input type="text" name="curDeposit" id="curDeposit" maxlength="6" class="S_normal_ipt" data-value="$!houseConfMsg.dicCode" value="$!houseConfMsg.dicVal"   />
+							<p class="S_tishi J_tishi_txt" style="display: none;" >请填写正确的押金，只能输入整数</p>
+                          </div>
+                            
+                        </li>
+
+                        <li class="J_xiala">
+                            <p class="S_helpInfo J_helpInfo">
+                                <span>退订政策</span>
+                                <b></b>
+                                <i></i>
+                                <span class="S_helpTxt">
+                                
+                                	#foreach( $!obj in $!checkOutList)
+				                       #if($obj.checkOutRulesCode !='TradeRulesEnum005005' && $obj.checkOutRulesCode !='TradeRulesEnum005004')
+				                       	 $!obj.checkOutRulesName <br/>
+				                          $!obj.checkOutRulesVal1
+									      $!obj.checkOutRulesVal2
+									      $!obj.checkOutRulesVal3
+					                      $!obj.checkOutRulesVal4
+				                       #end	
+				                       #if($obj.checkOutRulesCode =='TradeRulesEnum005004' && $!longTermLimit < 500)
+				                       	 $!obj.checkOutRulesName <br/>
+				                          $!obj.checkOutRulesVal1
+									      $!obj.checkOutRulesVal2
+									      $!obj.checkOutRulesVal3
+					                      $!obj.checkOutRulesVal4
+				                       #end	
+				                       #if($obj.checkOutRulesCode =='TradeRulesEnum005005' && $obj.explain)
+				                       		$!obj.checkOutRulesName <br/>
+				                       		$!obj.explain
+				                       #end			                       	
+									   <br/>
+									#end 
+								</span>
+                            </p>
+                            #set ($checkOutRulesCodeHtm="")
+							#foreach( $!checkOutObj in $!checkOutListOld)
+		                      #if( $!checkOutObj.key == $!houseBaseExtDto.houseBaseExt.checkOutRulesCode  )
+								#set ($checkOutRulesCodeHtm="$!checkOutObj.text")
+							  #end 
+							#end 
+                            <input type="text" id="checkOutRulesCode" name="checkOutRulesCode" class="S_normal_ipt" readonly="readonly"  value="$!checkOutRulesCodeHtm" data-value="$!houseBaseExtDto.houseBaseExt.checkOutRulesCode" />
+                            <i class="S_jiantou_right"></i>
+                            <ul class="S_xiala S_xiala2">
+                            	#foreach( $!checkOutObj in $!checkOutListOld)
+                            		#if($!checkOutObj.key !='TradeRulesEnum005005' && $!checkOutObj.key !='TradeRulesEnum005004')
+	                                <li data-value="$!checkOutObj.key">$!checkOutObj.text</li>
+	                                #end 
+		                        #end 
+                            </ul>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="S_part3">
+                    <ul class="S_item_content">
+
+                        <li class="J_xiala">
+                            <p class="S_helpInfo">
+                                <span>最小入住天数</span>
+                            </p>
+                            #set ($minDayHtm="")
+							#foreach( $!minDayObj in $!minDayList)
+		                      #if( $!minDayObj.key == $!houseBaseExtDto.houseBaseExt.minDay  )
+								#set ($minDayHtm="$!minDayObj.text")
+							  #end 
+							#end 
+                            <input type="text" name="minDay" id="minDay" class="S_normal_ipt" readonly="readonly"  value="$!minDayHtm" data-value="$!houseBaseExtDto.houseBaseExt.minDay" />
+                            <i class="S_jiantou_right"></i>
+                            <ul class="S_xiala S_xiala2">
+                            	#foreach( $!minDayObj in $!minDayList)
+	                                <li data-value="$!minDayObj.key">$!minDayObj.text</li>
+		                        #end	
+                            </ul>
+                        </li>
+
+                        <li class="J_xiala">
+                            <p class="S_helpInfo">
+                                <span>入住时间</span>
+                            </p>
+                            #set ($checkInTimeHtm="")
+							#foreach( $!checkInTimeObj in $!checkInTimeList)
+		                      #if( $!checkInTimeObj.key == $!houseBaseExtDto.houseBaseExt.checkInTime  )
+								#set ($checkInTimeHtm="$!checkInTimeObj.text")
+							  #end 
+							#end 
+                            <input type="text" id="checkInTime" name="checkInTime" class="S_normal_ipt" readonly="readonly"  value="$!checkInTimeHtm" data-value="$!houseBaseExtDto.houseBaseExt.checkInTime" />
+                            <i class="S_jiantou_right"></i>
+                            <ul class="S_xiala S_xiala2">
+                            	#foreach( $!checkInTimeObj in $!checkInTimeList)
+	                                <li data-value="$!checkInTimeObj.key">$!checkInTimeObj.text</li>
+		                        #end
+                            </ul>
+                        </li>
+
+                        <li class="J_xiala">
+                            <p class="S_helpInfo">
+                                <span>退房时间</span>
+                            </p>
+                            #set ($checkOutTimeHtm="")
+							#foreach( $!checkOutTimeObj in $!checkOutTimeList)
+		                      #if( $!checkOutTimeObj.key == $!houseBaseExtDto.houseBaseExt.checkOutTime  )
+								#set ($checkOutTimeHtm="$!checkOutTimeObj.text")
+							  #end 
+							#end 
+                            <input type="text" id="checkOutTime" name="checkOutTime" class="S_normal_ipt" readonly="readonly"  value="$!checkOutTimeHtm" data-value="$!houseBaseExtDto.houseBaseExt.checkOutTime"  />
+                            <i class="S_jiantou_right"></i>
+                            <ul class="S_xiala S_xiala2">
+                            	#foreach( $!checkOutTimeObj in $!checkOutTimeList)
+	                                <li data-value="$!checkOutTimeObj.key">$!checkOutTimeObj.text</li>
+		                        #end	
+                            </ul>
+                        </li>
+
+                        #*<li class="J_xiala">
+                            <p class="S_helpInfo">
+                                <span>被单更换</span>
+                            </p>
+                            #set ($sheetsReplaceRulesHtm="")
+							#foreach( $!sheetReplaceObj in $!sheetReplaceList)
+		                      #if( $!sheetReplaceObj.key == $!houseBaseExtDto.houseBaseExt.sheetsReplaceRules  )
+								#set ($sheetsReplaceRulesHtm="$!sheetReplaceObj.text")
+							  #end 
+							#end 
+                            <input type="text" id="sheetsReplaceRules" name="sheetsReplaceRules" class="S_normal_ipt" readonly="readonly"  value="$!sheetsReplaceRulesHtm" data-value="$!houseBaseExtDto.houseBaseExt.sheetsReplaceRules" />
+                            <i class="S_jiantou_right"></i>
+                            <ul class="S_xiala S_xiala2">
+                            	#foreach( $!sheetReplaceObj in $!sheetReplaceList)
+	                                <li data-value="$!sheetReplaceObj.key">$!sheetReplaceObj.text</li>
+		                        #end
+                            </ul>
+                        </li>*#
+
+                        <li>
+                            <p class="S_helpInfo">
+                                <span>房屋守则</span>
+                            </p>
+                            <div class="S_house_miaoshu clearfix">
+                                <textarea  name="houseDescEntity.houseRules" id="houseRules" placeholder="很重要，为避免因纠纷而导致经济损失，请填写房屋守则。限50-1000字。" value="$!houseDescDto.houseRules">$!houseDescDto.houseRules</textarea>
+                                <p class="S_miaoshu_tishi">
+                                    <span>禁止吸烟
+										不适合宠物
+												入住时间为14:00-23:00
+                                                    1、进门请更换拖鞋
+                                                    2、请按预定人数入住,入住期间如有朋友探访或额外人员入住请事先告知
+                                                    3、半夜归来时请勿在楼梯口喧哗
+                                                    4、所有的浴巾毛巾以及床上用品,每次更换我们都会消毒处理,所以请放心使用并加以爱惜。
+                                                    5、出门时请记得关空调等
+                                                    6、请每天自行扔掉蔬果垃圾,保持房屋干净
+                                                    7、请勿携带宠物入住,如有宠物随身可以寄放在临近的宠物店
+                                                    8、如有老人、小孩同行请提前告知
+                                    </span>
+                                    <i></i>
+                                </p>
+                                <p id="J_shouze_tishi" class="S_tishi J_tishi">房屋守则字数为50-1000字</p>
+                                <p class="S_tongji J_tongji">
+	                                <span>65</span>
+	                                <span>/</span>
+	                                <span>1000</span>
+	                            </p>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="clearfix">
+                	<!-- 隐藏域房源fid-->
+                    <input type="hidden" id="roomFid" value="$!roomFid"/>
+					<input type="hidden" id="houseFid" value="$!houseBaseExtDto.fid"/>
+                    <a href="javascript:;" class="S_next" id="J_next">下一步</a>
+                </div>
+            </div>
+        </div>
+			 
+	
+		</form>	
+		
+	<!-- 自定义js -->
+    <script type="text/javascript" src="${staticResourceUrl}/js/manage/m_buchong.js$!{VERSION}"></script>
+		
+		</div>
+	</section>
+#end
+#override("leftNavigation")
+#end
+#override("header_img")
+#end 
+#extends("/template/conmmonTem.vm")

@@ -1,0 +1,142 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿认证资料">
+    <meta name="description" content="自如民宿认证资料">
+#end
+
+#override("title")
+认证资料
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" href="${staticResourceUrl}/css/manage/m_identInfo.css$!{VERSION}">
+<!-- 自定义js -->
+<script type="text/javascript" src="${staticResourceUrl}/js/manage/m_identInfo.js$!{VERSION}"></script>
+<!-- 图片裁切 -->
+<script type="text/javascript" src="${staticResourceUrl}/js/ShearPhoto.js"></script>
+<script type="text/javascript" src="${staticResourceUrl}/js/handle.js"></script>
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+		<div class="part_r" id="J_all_box">
+				<div class="part_r_tt c4">认证资料</div>
+				<div class="part_r_box c4">
+					<div class="S_table">
+						<table>
+							<tbody>
+							<form action="" method="post" id="authForm">	
+							<tr>
+								<td width="87">真实姓名</td>
+								<td width="320">
+									<input type="text" #if($!customerAuthVo.auditStatus==1)disabled="disabled"#end placeholder="请填写与证件信息一致的姓名" id="J_name_ipt" value="$!customerAuthVo.realName" name="realName">
+								</td>
+								<td width="300">
+									<span class="S_tishi_span" id="J_name_tishi" style="display: none;">请填写真实姓名</span>
+								</td>
+							</tr>
+							<tr>
+								<td>证件类型</td>
+								<td>
+									<input type="hidden" value="$!customerAuthVo.idType" name="idType" id="idType"/>
+									<input type="text" #if($!customerAuthVo.auditStatus==1)disabled="disabled"#end readonly="readonly" class="S_select_input" placeholder="请选择" id="J_zhengjian_ipt" data-type="$!customerAuthVo.idType" value="$!idTypeName"/>
+									<i class="S_item_xiala"></i>
+									<ul class="S_select_content" style="display: none;" id="J_zhengjian">
+										 #foreach( $!idType in $!idTypeList) 
+											#if($!velocityCount==$!idTypeList.size())
+											<li class="S_noBorder" data-type="$!idType.code">$!idType.name</li>
+											#else
+											<li data-type="$!idType.code">$!idType.name</li>
+											#end
+										 #end
+									</ul>
+								</td>
+								<td width="300">
+									<span class="S_tishi_span" id="J_zhengjianType_tishi" style="display: none;">请选择证件类型</span>
+								</td>
+							</tr>
+							<tr>
+								<td>证件号码</td>
+								<td>
+									<input type="text" #if($!customerAuthVo.auditStatus==1)disabled="disabled"#end placeholder="请输入证件号码" value="$!customerAuthVo.idNo" name="idNo" id="idNo"/>
+								</td>
+								<td width="300">
+									<span class="S_tishi_span" id="J_idno_tishi" style="display: none;">请正确填写证件号码</span>
+								</td>
+							</tr>
+							<input type="hidden" name="voucherFrontPic.fid" value="$!customerAuthVo.voucherFrontPic.fid" id="frontFid"/>
+							<input type="hidden" name="voucherFrontPic.picServerUuid" value="$!customerAuthVo.voucherFrontPic.picServerUuid" id="frontPicUuid"/>
+							<input type="hidden" name="frontPicStr" value="" id="frontPicStr"/>
+						    <input type="hidden" name="voucherBackPic.fid" value="$!customerAuthVo.voucherBackPic.fid" id="backFid"/>
+							<input type="hidden" name="voucherBackPic.picServerUuid" value="$!customerAuthVo.voucherBackPic.picServerUuid" id="backPicUuid"/>
+							<input type="hidden" name="backPicStr" value="" id="backPicStr"/>
+							<input type="hidden" name="voucherHandPic.fid" value="$!customerAuthVo.voucherHandPic.fid" id="handFid"/>
+							<input type="hidden" name="voucherHandPic.picServerUuid" value="$!customerAuthVo.voucherHandPic.picServerUuid" id="handPicUuid"/>
+							<input type="hidden" name="handPicStr" value="" id="handPicStr"/>
+							</form>
+							<tr>
+								<td>
+									<p class="S_abs_tit">证件照</p>
+								</td>
+								<td class="S_zhengjian_td">
+										<p id="identyFront">证件正面照片</p>
+										<div class="clearfix S_filesBox">
+											<div class="S_files">
+												<div><img id="frontPic" width="140" height="104" src="$!picBaseAddrMona$!customerAuthVo.voucherFrontPic.picBaseUrl$!customerAuthVo.voucherFrontPic.picSuffix$!picSize$!customerAuthVo.voucherFrontPic.picSuffix" #if(!$customerAuthVo.voucherFrontPic.picBaseUrl)style="display: none;"#end/></div>	
+												<form action="/customer/landlordAuth/imgFileToBase64" method="post" enctype="multipart/form-data">
+												#if($!customerAuthVo.auditStatus!=1)<input type="file" name="picFile" id="frontPicUp">#end
+												</form>
+											</div>
+											<img src="${staticResourceUrl}/images/ident_info/f_1.png" width="140" height="104">
+										</div>
+
+										<p class="mt20" id="identyBack">证件反面照片</p>
+										<div class="clearfix S_filesBox">
+											<div class="S_files">
+												<div><img id="backPic" width="140" height="104" src="$!picBaseAddrMona$!customerAuthVo.voucherBackPic.picBaseUrl$!customerAuthVo.voucherBackPic.picSuffix$!picSize$!customerAuthVo.voucherBackPic.picSuffix" #if(!$customerAuthVo.voucherBackPic.picBaseUrl)style="display: none;"#end/></div>
+												<form action="/customer/landlordAuth/imgFileToBase64" method="post" enctype="multipart/form-data">
+												#if($!customerAuthVo.auditStatus!=1)<input type="file" name="picFile" id="backPicUp">#end
+												</form>	
+											</div>
+											<img src="${staticResourceUrl}/images/ident_info/f_2.png" width="140" height="104">
+										</div>
+
+										<p class="mt20" id="identyOther">本人手持证件照片</p>
+										<div class="clearfix S_filesBox">
+											<div class="S_files">
+												<div><img id="handPic" width="140" height="104" src="$!picBaseAddrMona$!customerAuthVo.voucherHandPic.picBaseUrl$!customerAuthVo.voucherHandPic.picSuffix$!picSize$!customerAuthVo.voucherHandPic.picSuffix" #if(!$customerAuthVo.voucherHandPic.picBaseUrl)style="display: none;"#end/></div>
+												<form action="/customer/landlordAuth/imgFileToBase64" method="post" enctype="multipart/form-data">
+												#if($!customerAuthVo.auditStatus!=1)<input type="file" name="picFile" id="handPicUp">#end
+												</form>	
+											</div>
+											<img src="${staticResourceUrl}/images/ident_info/f_3.png" width="140" height="104">
+										</div>
+								</td>
+								<td>
+									<span class="S_tishi_span" id="J_zhaopian_tishi" style="display: none;">请上传证件照片</span>
+								</td>
+							</tr>
+							#if($!customerAuthVo.auditStatus!=1)
+							<tr>
+								<td></td>
+								<td colspan="2">
+									<input type="button" value="保存" class="S_submit_btn" id="authButton">
+								</td>
+							</tr>
+							#end
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+#end
+#override("leftHouseIssue")
+#end
+#extends("/template/conmmonTem.vm")
+<script type="text/javascript" src="${staticResourceUrl}/js/jquery-form.js$!{VERSION}"></script>
+<script type="text/javascript" src="${staticResourceUrl}/js/jqueryExt.js$!{VERSION}"></script>
+<script type="text/javascript" src="${staticResourceUrl}/js/uploadPreview.js$!{VERSION}"></script>
+<script type="text/javascript" src="${staticResourceUrl}/js/manage/userAuthpc.js$!{VERSION}"></script>

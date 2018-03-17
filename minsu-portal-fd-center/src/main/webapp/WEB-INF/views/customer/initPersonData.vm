@@ -1,0 +1,156 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿个人资料">
+    <meta name="description" content="自如民宿个人资料">
+#end
+
+#override("title")
+个人资料
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" href="${staticResourceUrl}/css/manage/m_userInfo.css$!{VERSION}">
+<!-- 自定义js -->
+<script type="text/javascript" src="${staticResourceUrl}/js/manage/m_userInfo.js$!{VERSION}"></script>
+<!-- 图片裁切 -->
+<script type="text/javascript" src="${staticResourceUrl}/js/ShearPhoto.js"></script>
+<script type="text/javascript" src="${staticResourceUrl}/js/handle.js"></script>
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+			<div class="part_r" id="J_all_box">
+				<div class="part_r_tt c4">个人信息</div>
+				<div class="part_r_box c4">
+					<div class="S_table">
+					<input type="hidden" id="uid" value="$!customerBase.uid">	
+						<table>
+							<tbody>
+							<tr>
+								<td width="87">昵称</td>
+								<td width="320">
+									<input type="text" id="nickName" value="$!customerBase.nickName" maxlength="30">
+								</td>
+								<td width="300">
+									<span class="S_tishi_span" id="J_nicheng_tishi" style="display: none;">请填写您的昵称</span>
+								</td>
+							</tr>
+							<tr>
+								<td>性别</td>
+								<td colspan="2">
+
+								  <span class="S_ui_radio #if($customerBase.customerSex==2) on #else  #end J_radio">
+									<label for="man">
+										<input type="radio" id="man" name="customerSex" value="2" #if($customerBase.customerSex==2) checked="checked" #else  #end> <b class="icon"></b>男
+									</label>
+								  </span>
+
+								  <span class="S_ui_radio #if($customerBase.customerSex==1) on #else  #end J_radio">
+									<label for="woman">
+										<input type="radio" id="woman" name="customerSex" value="1" #if($customerBase.customerSex==1) checked="checked" #else  #end> <b class="icon"></b>女
+									</label>
+								  </span>
+
+								</td>
+							</tr>
+							<tr>
+								<td>出生日期</td>
+								<td colspan="2">
+									<input type="text" readonly="readonly" class="S_select_input" placeholder="请选择出生日期" id="J_birth_input"  value="$!date.format('yyyy-MM-dd',$!customerBase.customerBirthday)"/>
+									<i class="S_item_dateIcon"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>联系方式</td>
+								<td colspan="2">
+									<span>$!customerBase.customerMobile</span>
+								</td>
+							</tr>
+							<tr>
+								<td>邮箱</td>
+								<td>
+									<input type="text" id="J_email"  value="$!customerBase.customerEmail" maxlength="40"/>
+								</td>
+								<td>
+									<span class="S_tishi_span" id="J_email_tishi" style="display: none;">请填写正确的邮箱地址</span>
+								</td>
+							</tr>
+							<tr>
+								<td>居住地址</td>
+								<td>
+									<input type="text" id="resideAddr" value="$!customerBase.resideAddr" maxlength="50"/>
+								</td>
+								<td>
+									<span class="S_tishi_span" id="J_dizhi_tishi" style="display: none;">请填您的居住地址</span>
+								</td>
+								</td>
+							</tr>
+							<tr>
+								<td>教育背景</td>
+								<td colspan="2">
+									<input type="text" readonly="readonly" class="S_select_input" placeholder="请选择教育背景" id="J_jiaoyu_ipt" data-xueli="$!customerBase.customerEdu"  value="$!customerEduName"/>
+									<i class="S_item_xiala"></i>
+									<ul class="S_select_content" style="display: none;" id="J_jiaoyu">
+										<li data-xueli="0">其他</li>
+										<li data-xueli="1">小学</li>
+										<li data-xueli="2">初中</li>
+										<li data-xueli="3">高中</li>
+										<li data-xueli="4">中技</li>
+										<li data-xueli="5">中专</li>
+										<li data-xueli="6">大专</li>
+										<li data-xueli="7">本科</li>
+										<li data-xueli="8">MBA</li>
+										<li data-xueli="9">硕士</li>
+										<li class="S_noBorder" data-xueli="10">博士</li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<td>职业</td>
+								<td>
+									<input type="text" id="customerJob" value="#if($customerBase.customerJob=='')#else$!customerBase.customerJob#end"/>
+								</td>
+								<td>
+									<span class="S_tishi_span" id="J_zhiye_tishi" style="display: none;">请填写您的职业</span>
+								</td>
+							</tr>
+							<tr>
+								<td>个人介绍</td>
+								<td rowspan="2">
+									<textarea name="" placeholder="中英文双语皆可，有个人特色，语言生动有趣为佳,能够体现出如热情好客，友善的特征。70-500字。" id="J_user_jieshao" maxlength="500">$!customerExt.customerIntroduce</textarea>
+									<p class="S_tongji J_tongji">
+										<span>0</span>
+										<span>/</span>
+										<span>500</span>
+									</p>
+									<span class="S_tishi_span3" id="J_jieshaon_tishi" style="display: none;">请填写您的个人介绍</span>
+								</td>
+								<td rowspan="2">
+									<p class="S_demo_txt J_jieshao_tishi" style="display: none">例如：我是一个美国留学生，刚毕业回国，喜欢舞蹈，也喜欢旅行，对室内装修有自己的想法，喜欢跟大家聊天，交朋友，欢迎大家来到我布置的房间入住。</p>
+									<i class="S_demo_txt_jiantou J_jieshao_tishi" style="display: none;"></i>
+								</td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td colspan="2">
+									<input type="button" value="保存" class="S_submit_btn" id="userInfoButton">
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<input type="hidden" id="currentDate" value="$!nowDate" />
+#end
+#override("leftHouseIssue")
+
+#end
+#extends("/template/conmmonTem.vm")
+<script type="text/javascript" src="${staticResourceUrl}/js/manage/userInfopc.js$!{VERSION}"></script>

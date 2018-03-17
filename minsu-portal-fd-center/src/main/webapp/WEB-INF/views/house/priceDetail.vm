@@ -1,0 +1,297 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源管理">
+    <meta name="description" content="自如民宿房源管理">
+#end
+
+#override("title")
+价格设置
+#end
+#override("inHeader")
+<!-- 自定义css -->
+<link rel="stylesheet" type="text/css" href="${staticResourceUrl}/css/manage/m_date.css$!{VERSION}">
+<link rel="stylesheet" type="text/css" href="${staticResourceUrl}/css/manage/m_setPrice.css$!{VERSION}">
+<script type="text/javascript" src="${staticResourceUrl}/js/ShearPhoto.js$!{VERSION}"></script>
+<script type="text/javascript" src="${staticResourceUrl}/js/handle.js$!{VERSION}"></script>
+<!-- 图片裁切 -->
+<link  href="${staticResourceUrl}/js/cropper/dist/cropper.css" rel="stylesheet">
+<script src="${staticResourceUrl}/js/cropper/dist/cropper.js$!{VERSION}"></script>
+#end
+#override("inBody_header")
+<section class="main" >
+            <div class="area clearfix">
+#end
+#override("inBody_footer")
+    <div class="part_r">
+        <div class="part_r_tt">
+            <div id="houseBox" class="select_box">
+                <span >$!selectHR.name</span>
+
+                #*<i class="jt"></i>
+                <div class="selects_ul">
+                    <ul id="houseSelect" class="selects" >
+                        #foreach($item in $houseList)
+                            <li data-rent="$!item.rentWay" data-hfid="$!item.houseFid" data-rfid="$!item.roomFid" #if($item.isSelect == 1)class="active"#end ><a href="javascript:;">$!item.name</a></li>
+                        #end
+                    </ul>
+                </div>*#
+            </div>
+        </div>
+        <div class="part_r_box">
+            <div class="set_price_box">
+                <div class="set_price_tt">价格设置</div>
+                <div class="set_price_main">
+                    <dl>
+                        <dt>固定价格</dt>
+                        <dd>
+                            <div class="price_ipt_box">
+                                #if($rentWay == 1)<input type="text" class="price_ipt j_price_ipt" id="fixPrice" value="$!roomPrice" placeholder="当晚价格" maxlength="5">#end
+                                #if($rentWay == 0)<input type="text" class="price_ipt j_price_ipt" id="fixPrice" value="$!housePrice" placeholder="当晚价格" maxlength="5">#end
+                                <i>¥</i>
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+				#*
+                <div class="set_price_main" id="gapFlexT">
+                    <dl>
+                        #if($gapFlexT ==0)
+                            <dt class="j_round_box">今日特惠折扣<span class="round_bg org j_round"><i class="round"></i></span></dt>
+                            #foreach( $item in $gapList)
+                                #if($item.dicCode =='ProductRulesEnum020001')
+                                    <dd class="m clearfix j_round_s ">
+                                        <span>预订当日折扣</span>
+                                        <div class="price_ipt_box">
+                                            <input id="gap0" type="text" class="price_ipt" value="$item.dicVal" readonly="readonly">
+                                            <i>折</i>
+                                        </div>
+                                    </dd>
+                                #end
+                            #end
+                        #else
+                            <dt class="j_round_box">今日特惠折扣<span class="round_bg gray j_round"><i class="round"></i></span></dt>
+                            #foreach( $item in $gapList)
+                                #if($item.dicCode =='ProductRulesEnum020001')
+                                    <dd class="m clearfix j_round_s hide">
+                                        <span>预订当日折扣</span>
+                                        <div class="price_ipt_box">
+                                            <input id="gap0" type="text" class="price_ipt" value="$item.dicVal" readonly="readonly">
+                                            <i>折</i>
+                                        </div>
+                                    </dd>
+                                #end
+                            #end
+                        #end
+                    </dl>
+                </div>
+				
+				<div class="set_price_main" id="gapList">
+                    <dl>
+                        #if($gapSwitch ==0)
+                            <dt class="j_round_box">空间间夜自动折扣<i class="item_help" id="paryPriceHelp"></i><span class="round_bg org j_round"><i class="round"></i></span></dt>
+                            #foreach( $item in $gapList)
+                                #if($item.dicCode =='ProductRulesEnum020002')
+                                    <dd class="m clearfix j_round_s ">
+                                        <span>仅1日可连续预订折扣</span>
+                                        <div class="price_ipt_box">
+                                            <input id="gap1" type="text" class="price_ipt" value="$item.dicVal" readonly="readonly" >
+                                            <i>折</i>
+                                        </div>
+                                    </dd>
+                                #end
+                                #if($item.dicCode =='ProductRulesEnum020003')
+                                    <dd class="m clearfix j_round_s ">
+                                        <span>仅2日可连续预订折扣</span>
+                                        <div class="price_ipt_box">
+                                            <input id="gap2" type="text" class="price_ipt" value="$item.dicVal" readonly="readonly" >
+                                            <i>折</i>
+                                        </div>
+                                    </dd>
+                                #end
+                            #end
+                        #else
+                            <dt class="j_round_box">空间间夜自动折扣<i class="item_help" id="paryPriceHelp"></i><span class="round_bg gray j_round"><i class="round"></i></span></dt>
+                            #foreach( $item in $gapList)
+                                #if($item.dicCode =='ProductRulesEnum020002')
+                                    <dd class="m clearfix j_round_s hide">
+                                        <span>仅1日可连续预订折扣</span>
+                                        <div class="price_ipt_box">
+                                            <input id="gap1" type="text" class="price_ipt" value="$item.dicVal" readonly="readonly" >
+                                            <i>折</i>
+                                        </div>
+                                    </dd>
+                                #end
+                                #if($item.dicCode =='ProductRulesEnum020003')
+                                    <dd class="m clearfix j_round_s hide">
+                                        <span>仅2日可连续预订折扣</span>
+                                        <div class="price_ipt_box">
+                                            <input id="gap2" type="text" class="price_ipt" value="$item.dicVal" readonly="readonly" >
+                                            <i>折</i>
+                                        </div>
+                                    </dd>
+                                #end
+                            #end
+                        #end
+                    </dl>
+                </div>
+				*#
+                <div class="set_price_main bm" id="weekList">
+                    #if($weekendPriceFlag == 0)
+                        <dl>
+                            <input type="hidden" id="weekendPriceFlag" name="weekendPriceFlag" value="0">
+                            <dt class="j_round_box">周末价格<span class="round_bg gray j_round"><i class="round"></i></span></dt>
+                            <dd class="j_round_s hide">
+                                <div class="S_module_enter">
+                                    <input type="text" placeholder="选择日期" name="setTime" id="week" readonly="readonly" data-type="" value="">
+                                    <i class="S_item_jiantou2"></i>
+                                    <ul class="S_xiala" id="J_typeUl">
+                                        #foreach($item in $weekendData)
+                                            <li data-type="$item.value">$item.text</li>
+                                        #end
+                                    </ul>
+                                </div>
+                            </dd>
+                            <dd class="j_round_s hide">
+                                <div class="price_ipt_box">
+                                    <input type="text" class="price_ipt j_price_ipt" name="specialPrice" id="weekPrice" placeholder="周末价格" maxlength="5" >
+                                    <i>¥</i>
+                                </div>
+                            </dd>
+                        </dl>
+                    #end
+                    #if($weekendPriceFlag == 1)
+                        <dl>
+                            <input type="hidden" id="weekendPriceFlag" name="weekendPriceFlag" value="1">
+                            <dt class="j_round_box">周末价格<span class="round_bg org j_round"><i class="round"></i></span></dt>
+                            <dd class="j_round_s ">
+                                <div class="S_module_enter">
+                                    <input type="text" placeholder="选择日期" name="setTime" id="week" readonly="readonly" data-type="$!weekendPriceValue" value="$!weekendPriceText">
+                                    <i class="S_item_jiantou2"></i>
+                                    <ul class="S_xiala" id="J_typeUl">
+                                        #foreach($item in $weekendData)
+                                            <li data-type="$item.value">$item.text</li>
+                                        #end
+                                    </ul>
+                                </div>
+                            </dd>
+                            <dd class="j_round_s ">
+                                <div class="price_ipt_box">
+                                    <input type="text" class="price_ipt j_price_ipt" name="specialPrice" id="weekPrice" placeholder="周末价格" maxlength="5" value="$!weekendPrice">
+                                    <i>¥</i>
+                                </div>
+                            </dd>
+                        </dl>
+                    #end
+                    #if($weekendPriceFlag == 2)
+                        <dl>
+                            <input type="hidden" id="weekendPriceFlag" name="weekendPriceFlag" value="2">
+                            <dt class="j_round_box">周末价格<span class="round_bg org j_round"><i class="round"></i></span></dt>
+                            <dd class="j_round_s">
+                                <div class="S_module_enter">
+                                    <input type="text" placeholder="选择日期" name="setTime" id="week" readonly="readonly" data-type="$!weekendPriceValue" value="$!weekendPriceText">
+                                    <i class="S_item_jiantou2"></i>
+                                    <ul class="S_xiala" id="J_typeUl">
+                                        #foreach($item in $weekendData)
+                                            <li data-type="$item.value">$item.text</li>
+                                        #end
+                                    </ul>
+                                </div>
+                            </dd>
+                            <dd class="j_round_s">
+                                <div class="price_ipt_box">
+                                    <input type="text" class="price_ipt j_price_ipt" name="specialPrice" id="weekPrice" placeholder="周末价格" maxlength="5" value="$!weekendPrice">
+                                    <i>¥</i>
+                                </div>
+                            </dd>
+                        </dl>
+                    #end
+                </div>
+                <div class="set_price_main" id="rebateList">
+                    #if($!sevenRate)
+                    <div class="set_price_tt j_round_box">折扣设置<i class="item_help" id="rebateHelp"></i><span class="round_bg org j_round"><i class="round"></i></span></div>
+                    <dl class="j_round_s ">
+                        <dt>入住满7天折扣</dt>
+                        <dd>
+                            <div class="price_ipt_box ">
+                            #if($sevenRate.dicVal == -1)
+                                <input type="text" class="price_ipt j_price_ipt" id="qRebate" placeholder="请输入入住满7天折扣" maxlength="2">
+                            #else
+                                <input type="text" class="price_ipt j_price_ipt" id="qRebate" value="$sevenRate.dicVal" placeholder="请输入入住满7天折扣" maxlength="2">
+                            #end
+                                <i>%</i>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl class="j_round_s ">
+                        <dt>入住满30天折扣</dt>
+                        <dd>
+                            <div class="price_ipt_box ">
+                            #if($thirtyRate.dicVal == -1)
+                                <input type="text" class="price_ipt j_price_ipt" id="ssRebate" placeholder="请输入入住满30天折扣"  maxlength="2">
+                            #else
+                                <input type="text" class="price_ipt j_price_ipt" id="ssRebate" value="$thirtyRate.dicVal" placeholder="请输入入住满30天折扣"  maxlength="2">
+                            #end
+                                <i>%</i>
+                            </div>
+                        </dd>
+                    </dl>
+                    #else
+                        <div class="set_price_tt j_round_box">折扣设置<i class="item_help" id="rebateHelp"></i><span class="round_bg gray j_round"><i class="round"></i></span></div>
+                        <dl class="j_round_s hide">
+                            <dt>入住满7天折扣</dt>
+                            <dd>
+                                <div class="price_ipt_box">
+                                    <input type="text" class="price_ipt j_price_ipt" id="qRebate" placeholder="请输入入住满7天折扣" maxlength="2">
+                                    <i>%</i>
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl class="j_round_s hide">
+                            <dt>入住满30天折扣</dt>
+                            <dd>
+                                <div class="price_ipt_box">
+                                    <input type="text" class="price_ipt j_price_ipt" id="ssRebate" placeholder="请输入入住满30天折扣"  maxlength="2">
+                                    <i>%</i>
+                                </div>
+                            </dd>
+                        </dl>
+                    #end
+                </div>
+                <div class="error"></div>
+                <div class="ipt_btns">
+                    <input type="button" class="ipt_btn active" id="submitSetPriceBtn" value="保存">
+                    <input type="button" class="ipt_btn" id="cancel" value="取消">
+                </div>
+            </div>
+        </div>
+    </div>
+	</div>
+    </section>
+
+	#end
+
+	#override("bottom")
+    <input type="hidden" id="houseFid" value="$!selectHR.houseFid">
+	<input type="hidden" id="roomFid" value="$!selectHR.roomFid">
+    <input type="hidden" id="rentWay" value="$!selectHR.rentWay">
+    <input type="hidden" id="priceLow" value="$!priceLow">
+    <input type="hidden" id="priceHigh" value="$!priceHigh">
+    <input type="hidden" id="seven" value="$!seven.dicVal">
+    <input type="hidden" id="thirty" value="$!thirty.dicVal">
+    <input type="hidden" id="statFlag" value="$!statFlag">
+
+    <input type="hidden" id="sevenFid" value="$!seven.fid">
+    <input type="hidden" id="thirtyFid" value="$!thirty.fid">
+    <input type="hidden" id="sevenRateFid" value="$!sevenRate.fid">
+    <input type="hidden" id="thirtyRateFid" value="$!thirtyRate.fid">
+	<input type="hidden" id="isRent" value="0">
+    <script type="text/javascript" src="${staticResourceUrl}/js/common1.js$!{VERSION}"></script>
+    <script type="text/javascript" src="${staticResourceUrl}/js/manage/m_setPrice.js$!{VERSION}"></script>
+    #*<script type="text/javascript" src="${basePath}/js/manage/m_setPrice.js$!{VERSION}"></script>*#
+	#end
+	
+	#override("leftHouseIssue")
+	#end
+	#override("goTop")
+	#end
+
+#extends("/template/conmmonTem.vm")

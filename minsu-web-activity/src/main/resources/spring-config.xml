@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016. Copyright (c) 2016. ziroom.com.
+  -->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        ">
+
+    <!--interceptor-->
+    <context:property-placeholder location="classpath:application.properties,classpath:redis.properties" local-override="true"/>
+
+    <!-- 扫描注解Bean -->
+    <context:component-scan base-package="com.asura" />
+    <context:component-scan base-package="com.ziroom.minsu.activity">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--
+        启用 aspectj 动态代理
+        proxy-target-class属性若此值为true强制使用CGLIB代理
+        expose-proxy属性若此值为true时，是为了目标对象内部的自我调用也可实施切面
+    -->
+    <aop:aspectj-autoproxy proxy-target-class="true" expose-proxy="true"/>
+    
+    <!-- 读取配置文件 -->
+    <bean id="propertyConfigurer"
+		class="com.ziroom.minsu.activity.common.utils.PropertiesUtil">
+		<property name="locations">
+			<list>
+				<value>classpath:wonderful.properties</value>
+			</list>
+		</property>
+	</bean>
+
+    <!--redis哨兵模式配置-->
+    <bean id="sentinelJedisClient" class="com.ziroom.minsu.services.common.utils.SentinelJedisUtil"  init-method="initSentinelJedisPool" destroy-method="destorySentinelJedisPool">
+        <property name="sentinelOneServer" value="${sentinel.one.server}"/>
+        <property name="sentinelTwoServer" value="${sentinel.two.server}"/>
+        <property name="sentinelThreeServer" value="${sentinel.three.server}"/>
+        <property name="redisMasterServer" value="${redis.master.server}"/>
+        <property name="poolMinIdle" value="${redis.pool.minIdle}"/>
+        <property name="poolMaxIdle" value="${redis.pool.maxIdle}"/>
+        <property name="poolMaxTotal" value="${redis.pool.maxtotal}"/>
+        <property name="poolMaxWait" value="${redis.pool.maxwait}"/>
+        <property name="poolTimeOut" value="${redis.timeout}"/>
+        <property name="redisApp" value="${redis.app}"/>
+    </bean>
+
+    <!-- dubbo消费者配置 -->
+    <import resource="dubbo-consumer.xml"/>
+    
+    <import resource="classpath:META-INF/spring/search-inner-consumer.xml"/>
+    <import resource="classpath:META-INF/spring/cms-inner-consumer.xml"/>
+    <import resource="classpath:META-INF/spring/basedata-inner-consumer.xml"/>
+    <import resource="classpath:META-INF/spring/customer-inner-consumer.xml"/>
+    <import resource="classpath:META-INF/spring/house-inner-consumer.xml"/>
+    <import resource="classpath:META-INF/spring/evaluate-inner-consumer.xml"/>
+    <import resource="classpath:META-INF/spring/order-inner-consumer.xml"/>
+</beans>

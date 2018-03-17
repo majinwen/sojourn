@@ -1,0 +1,283 @@
+#override("commonMeta")
+    <meta name="keywords" content="自如民宿房源房间信息（整租）">
+    <meta name="description" content="自如民宿房源房间信息（整租）">
+#end
+
+#override("title")
+房源 - 上传照片
+#end
+#override("inHeader")
+<link rel="stylesheet" type="text/css" href="${staticResourceUrl}/css/manage/m_photo.css$!{VERSION}">
+<!-- 自定义css -->
+<script type="text/javascript" src="${staticResourceUrl}/js/jquery-ui.min.js$!{VERSION}"></script>
+<script type="text/javascript" src="${staticResourceUrl}/js/jquery.uploadify.js$!{VERSION}"></script>
+<script type="text/javascript" src="${staticResourceUrl}/js/jquery.SuperSlide.2.1.1-1.js$!{VERSION}"></script>
+<script type="text/javascript" src="${staticResourceUrl}/js/manage/m_photo.js$!{VERSION}0001"></script>
+#end
+#override("inBody_header")
+<section class="main">
+		<div class="area clearfix">
+#end
+#override("inBody_footer")
+       <div class="part_r">
+         <div class="part_r_tt">真实照片</div>
+           <div id="photosPart" class="part_r_box clearfix">
+              <ul id="photos" class="photos clearfix">
+                
+              </ul>
+              <div class="txt_r">
+				1、每张照片请上传至对应区域，例如卧室的所有照片上传至”卧室“区域，卫生间的所有照片上传至”卫生间“区域；
+				<br>2、每间卧室、客厅至少2张照片，卫生间至少1张照片，上传照片总数不得少于10张；
+				<br>3、请上传清晰无水印的照片，请勿加边框，各区域至少有一张可以看清房间全景的照片；
+				<br>4、照片大于300K，格式支持jpg、png；
+				<br>5、建议上传横图。首图需选择横图，首图可选择卧室、客厅、室外等区域。
+              </div>
+              <div class="p_btns">
+				#if($isShow == 1)
+                <a href="javascript:;" class="p_btn active" id="sentHouseBtn">发布房源</a>
+				#end
+                <a href="javascript:;" class="p_btn" id="lookHouseBtn">预览房源</a>
+              </div>
+            </div>
+            <div id="photoListPart" class="part_r_box clearfix">
+				<ul id="imageBox" class="photos photo_list clearfix">
+					<li id="thumbnails">
+    				   <a class="img_box">
+    				      <div class="txt">
+    				        <dt>添加更多照片</dt>
+    				        <dd>按住Ctrl可多选</dd>
+    				      </div>
+    				      <input type="file" name="file_upload" class="file_upload" id="file_upload" multiple="multiple"/>
+    				      <div class="add_pic_btn"></div>
+    				   </a>
+				  </li>
+               </ul>
+			   #if($!rentWay == 1)
+                <div class="p_txt">没有满意的封面 <a href="javascript:;" id="setFaceBtn">设置其他区域照片为封面照片</a> </div>
+			   #end
+			   <p class="photoMessage" style="display:none;color:red;font-size:14px;height:30px;line-height:30px;position:absolute;bottom:110px;left:30px;">每个区域最多可添加10张照片</p>
+                <div class="p_btns" style="bottom:60px">
+                  <a href="javascript:;" class="p_btn active" id="sava_pic">完成</a>
+				  <a href="$!currentUrl" class="p_btn">返回</a>
+                </div>
+          </div>
+        </div>
+	</div>
+</section>
+
+<div id="modal" class="modal">
+    <div class="modal-mask">
+      <div class="modal-content" id="delPhoto">
+        <div class="modal-tt"><span>删除照片</span> <i class="close"></i></div>
+        <div class="control-group">
+          <div id="delPhotoTxt" class="control-txt"></div>
+          <ul class="btn-group clearfix">
+            <li><input type="button" value="确定" class="btn-right btn active" id="sureRemoveImageBtn"></li>
+            <li><input type="button" value="取消" class="btn-left btn" onclick="closeModalBox()"></li>
+          </ul>
+          <p class="message"></p>
+        </div>
+      </div>
+      <div class="modal-content" id="setFace" style="width:600px;">
+        <div class="modal-tt"><span>设置封面照片</span> <i class="close"></i> </div>
+        <div class="control-group">
+          <div class="control-list">
+              <ul id="faceImageList" class="control-ul clearfix">
+				
+			  </ul>
+          </div>
+          <ul class="btn-group clearfix">
+            <li><input type="button" value="确定" class="btn-right btn active" id="sureSetFaceBtn"></li>
+            <li><input type="button" value="取消" class="btn-left btn" onclick="closeModalBox()"></li>
+          </ul>
+        </div>
+      </div>
+	   <div class="modal-content" id="sentHouse" style="width:580px;">
+        <div class="modal-tt"><span>选择需要发布的房间</span> <i class="close"></i> </div>
+        <div class="control-group">
+          <div class="control-list">
+              <ul id="sentHouseList" class="house-ul clearfix">
+                
+              </ul>
+          </div>
+          <ul class="btn-group clearfix">
+            <li><input type="button" value="确定" class="btn-right btn active" id="sureSentHouseBtn"></li>
+            <li><input type="button" value="取消" class="btn-left btn" onclick="closeModalBox()"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-content" id="lookHouse" style="width:580px;">
+        <div class="modal-tt"><span>选择需要预览的房间</span> <i class="close"></i> </div>
+        <div class="control-group">
+          <div class="control-list">
+              <ul id="lookHouseList" class="house-ul clearfix">
+              </ul>
+          </div>
+          <ul class="btn-group clearfix">
+            <li><input type="button" value="确定" class="btn-right btn active" id="sureLookHouseBtn"></li>
+            <li><input type="button" value="取消" class="btn-left btn" onclick="closeModalBox()"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-content" id="outSlideBox" style="width:750px;background:transparent;overflow:visible;">
+          <div class="outslide">
+                <ul class="bd">
+                </ul>
+                <div class="nav_slide">
+                  <ul class="hd clearfix">
+                  </ul>
+                </div>
+                <div class="close"></div>
+                <div class="btn">
+                  <a class="prev" href="javascript:void(0)"></a>
+                  <a class="next" href="javascript:void(0)"></a>
+                </div>
+              </div>
+      </div>
+    </div>
+ </div>
+  
+  <!-- 房源id -->
+  <input type="hidden" id="houseFid" value="$!houseFid">
+  <input type="hidden" id="roomFid" value="$!roomFid">
+  <input type="hidden" id="rentWay" value="$!rentWay">
+	
+  <input type="hidden" id="picSmallSize" value="$!picSmallSize">
+  <input type="hidden" id="picBigSize" value="$!picBigSize">
+  <input type="hidden" id="picBaseAddrMona" value="$!picBaseAddrMona">
+  <!-- 封面 -->
+  <input type="hidden" id="status" value="$!status">
+  <input type="hidden" id="faceImageUrl" value="">
+  <input type="hidden" id="faceImageRoomType" value="">
+  <input type="hidden" id="faceImageRoomCode" value=''>
+  
+#end
+#override("leftNavigation")
+#end
+#override("header_img")
+#end
+#override("bottom")
+<script>
+  function uploadifyImg(){
+    $('#file_upload').uploadify({
+      'auto' : true,
+      'multi' : true,
+      'removeCompleted' : true,
+      'fileSizeLimit' : '5120KB',
+      'queueID'  : 'some_file_queue',    
+      'queueSizeLimit' : queueSizeLimit,
+      'fileTypeExts' : '*.jpg;*.jpeg;*.png',
+      'buttonClass' : 'add_pic_btn',
+      'buttonText' : '',
+      'width': 180,
+      'height': 180,
+      'swf'      : '/js/uploadify.swf',
+      'uploader' : '/housePic/upload',
+      'overrideEvents': ['onSelectError', 'onDialogClose'],
+      'onSelectError': function (file, errorCode, errorMsg) {
+       switch (errorCode) {
+        case -110:
+        showConfirm("照片大小不能超过5M，请重新选择","确定");
+        break;
+      }
+      return false;
+    },
+    'onDialogClose'  : function(queueData) {
+      changeFlag = true;
+      imgErr = false; 
+      queueNum += queueData.filesQueued;
+      filesErrored += queueData.filesErrored;
+      var lenLi = $("#imageBox .pho_bg").length;
+      if(queueNum>0){
+        if(lenLi == maxImgLen){
+          showConfirm('每个区域最多可上传10张照片','确定');
+          return;
+        }
+        if((queueNum+lenLi) > maxImgLen){
+          queueNum = maxImgLen-lenLi ;
+          $(".photoMessage").show();
+          setTimeout(function(){
+        	  $(".photoMessage").hide();
+          },3000);
+        }
+        idArr = [];
+        idNum = 0;
+        n = $("#imageBox").find(".pho_bg").length;
+        for (var i=queueNum-queueData.filesQueued;i<queueNum;i++){
+        	n++;
+            _successid = 'Success_'+roomType+'_'+n;
+            idArr.push(_successid);
+          var innerHTML = '<li id="'+_successid+'" class="pho_bg new" data-isdefault="0" data-picserveruuid=""  data-picfid="" data-suffix=""><a class="img_box upload_img"><div class="progress">0%</div></a></li>';
+          $('#thumbnails').before(innerHTML);
+ 
+        }
+      }
+    },
+    'onSelect' :function(file){
+    }, 
+    'onUploadStart' : function(file) {
+    	
+    },
+    'onUploadSuccess' : function(file, data, response) {
+      $("#sava_pic").addClass("disabled")
+      $('#'+file.id).hide();
+      
+      var result = JSON.parse(data);
+      var imgDesc = result.data.file;
+     
+      _successid = idArr[idNum];
+     
+      _degreesid =_successid.split('_')[2];
+      $('#'+_successid).attr("data-picserveruuid",imgDesc.uuid);
+      $('#'+_successid).attr("data-suffix",imgDesc.urlExt);
+      var picSmallSize = $("#picSmallSize").val();
+      var picBigSize = $("#picBigSize").val();
+      var picBaseAddrMona = $("#picBaseAddrMona").val();
+      var small_pic = picBaseAddrMona+imgDesc.urlBase+imgDesc.urlExt+picSmallSize+'.jpg';
+      var big_pic = picBaseAddrMona+imgDesc.urlBase+imgDesc.urlExt+picBigSize+'.jpg';
+      var img_str = '';
+      img_str = '<img src="'+small_pic+'" _src="'+imgDesc.urlBase+'" data-bigpic="'+big_pic+'"><ul class="set_img clearfix">'
+      var rentWay = $("#rentWay").val();
+      if(rentWay == 0){//整
+        if(roomType ==2 || roomType ==3){
+          img_str+='<li class="face"></li>'
+        }else{
+          img_str+='<li class="face" onclick="setImageFace(\''+_successid+'\')">设为封面</li>'
+        }
+      }else if(rentWay == 1){//分
+        if(roomType != 0){
+          img_str+='<li class="face"></li>'
+        }else{
+          img_str+='<li class="face" onclick="setImageFace(\''+_successid+'\')">设为封面</li>'
+        }
+      }
+      
+
+      img_str+='<li class="rotate" onclick="rotateImage(\''+_degreesid+'\')"></li><li class="del" onclick="removeImage(\''+_successid+'\')"></li></ul><input type="hidden" id="'+_degreesid+'" class="degreesIpt" value="0"><div class="face_img"></div>'
+      $('#'+_successid).children('.upload_img').html(img_str);
+                    // $('#'+_successid).children('.upload_img').html('<img src="'+imgDesc.url+'" _src="'+imgDesc.urlBase+'"><ul class="set_img clearfix"><li class="face" onclick="setImageFace(\''+_successid+'\')">设为封面</li><li class="rotate" onclick="rotateImage(\''+_degreesid+'\')"></li><li class="del" onclick="removeImage(\''+_successid+'\')"></li></ul><input type="hidden" id="'+_degreesid+'" class="degreesIpt" value="0"><div class="face_img"></div>');
+                    isSave = false;
+                    idNum++;
+
+                  },
+                'onUploadError' : function(file,errorCode,errorMsg,errorString,swfuploadifyQueue) {//上传文件出错是触发（每个出错文件触发一次\）
+                 　
+               },
+               'onClearQueue' : function(queueItemCount){
+                $('#file_upload-queue').hide();
+              },
+              'onUploadProgress' : function(file, bytesUploaded, bytesTotal, totalBytesUploaded, totalBytesTotal){
+                var percentage = Math.round(bytesUploaded/bytesTotal*100);
+                $(".progress").html(percentage+'%').css({'height':percentage+'%'});
+              },
+              'onQueueComplete' : function(queueData){
+                $("#sava_pic").removeClass("disabled");
+                
+              }
+            });
+	}
+  </script>
+#end
+#override("goTop")
+#end
+#extends("/template/conmmonTem.vm")
