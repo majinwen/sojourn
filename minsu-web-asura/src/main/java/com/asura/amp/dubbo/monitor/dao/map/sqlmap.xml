@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.asura.management.servicecenter.monitor.dao">
+
+	<select id="getStatisticsKey" parameterClass="map" resultClass="int">
+		SELECT id FROM sys_statistics_key WHERE checkcode = #checkcode#
+	</select>
+
+	<insert id="saveStatisticsKey" parameterClass="com.asura.amp.dubbo.monitor.entity.Statistics">
+		INSERT INTO `sys_statistics_key`
+					(`checkcode`,
+					 `application`,
+					 `service`,
+					 `method`,
+					 `version`,
+					 `provider`,
+					 `consumer`)
+		VALUES (#checkcode#,
+				#application#,
+		        #service#,
+		        #method#,
+		        #version#,
+		        #provider#,
+		        #consumer#);
+		<selectKey resultClass="int" keyProperty="id">
+			SELECT LAST_INSERT_ID() as id;
+		</selectKey>
+	</insert>
+
+	<insert id="saveStatisticsDetail" parameterClass="com.asura.amp.dubbo.monitor.entity.Statistics">
+		INSERT INTO `sys_statistics_detail`
+		            (`keyid`,
+		             `type`,
+		             `success`,
+		             `failure`,
+		             `elapsed`,
+		             `concurrent`,
+		             `max_elapsed`,
+		             `max_concurrent`,
+		             `dtime`)
+		VALUES (#keyid#,
+		        #type#,
+		        #success#,
+		        #failure#,
+		        #elapsed#,
+		        #concurrent#,
+		        #max_elapsed#,
+		        #max_concurrent#,
+		        #dtime#);
+	</insert>
+	<select id="summary" parameterClass="map" resultClass="com.asura.amp.dubbo.monitor.entity.Summary">
+		SELECT  d.dtime time,
+				<isEqual property="statisticstype" compareValue="success">
+					SUM(success) summary
+				</isEqual>
+				<isEqual property="statisticstype" compareValue="failure">
+					SUM(failure) summary
+				</isEqual>
+				<isEqual property="statisticstype" compareValue="elapsed">
+					SUM(elapsed) summary
+				</isEqual>
+				<isEqual property="statisticstype" compareValue="concurrent">
+					SUM(concurrent) summary
+				</isEqual>
+				<isEqual property="statisticstype" compareValue="max_elapsed">
+					SUM(max_elapsed) summary
+				</isEqual>
+				<isEqual property="statisticstype" compareValue="max_concurrent">
+					SUM(max_concurrent) summary
+				</isEqual>
+		FROM `sys_statistics_detail` d LEFT JOIN `sys_statistics_key` k ON d.keyid = k.id
+		WHERE 	k.service = #service#
+			AND k.method = #method#
+			AND d.dtime &gt;= #strTime#
+			AND d.dtime &lt;= #endTime#
+		GROUP BY d.dtime
+	</select>
+</sqlMap>

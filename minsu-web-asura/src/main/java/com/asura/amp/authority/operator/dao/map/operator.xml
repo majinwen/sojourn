@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.asura.management.authority.operator.dao">
+
+	
+	<!-- 返回结果 -->
+	<resultMap class="com.asura.amp.authority.entity.Operator" id="operatorResultId">
+		<result property="operatorId" column="operator_id"/>
+		<result property="operatorName" column="operator_name"/>
+		<result property="loginName" column="login_name"/>
+		<result property="loginPwd" column="login_pwd"/>
+		<result property="jobNum" column="job_num"/>
+		<result property="telephone" column="telephone"/>
+		<result property="operatorStatus" column="operator_status"/>
+		<result property="operatorType" column="operator_type"/>
+		<result property="operatorEmail" column="operator_email"/>
+		<result property="operatorDepartment" column="operator_department"/>
+	</resultMap>
+	
+	<!-- 增加 -->
+	<insert id="save" parameterClass="com.asura.amp.authority.entity.Operator">
+		insert into sys_operator (operator_name,login_name,login_pwd,job_num,telephone,operator_status,operator_email,operator_type,operator_department)
+		               values('$operatorName$','$loginName$','$loginPwd$','$jobNum$','$telephone$','$operatorStatus$','$operatorEmail$','$operatorType$','$operatorDepartment$')
+		<selectKey resultClass="int" keyProperty="operatorId"> 
+         SELECT LAST_INSERT_ID() as operatorId;
+       </selectKey>
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterClass="com.asura.amp.authority.entity.Operator">
+		update sys_operator set operator_name=#operatorName#,login_name=#loginName#,job_num=#jobNum#,telephone=#telephone#,operator_status=#operatorStatus#,operator_email=#operatorEmail#,operator_type=#operatorType#,operator_department=#operatorDepartment#
+		where operator_id = #operatorId#;
+	</update>
+	
+	<!-- 修改密码 -->
+	<update id="updatePassword" parameterClass="com.asura.amp.authority.entity.Operator">
+		update sys_operator set login_pwd=#loginPwd#
+		where operator_id = #operatorId#;
+	</update>
+	
+	<!-- 按照条件查询 -->
+	<select id="findBySearchCondition" parameterClass="java.util.Map" resultMap="operatorResultId">
+		select operator_id,operator_name,login_name,login_pwd,job_num,telephone,operator_status,operator_email,operator_type,operator_department
+		from sys_operator
+		where login_name &lt;&gt; 'admin'
+		<isNotEmpty prepend="and" property="operatorName">
+			operator_name = #operatorName#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="loginName">
+			login_name = #loginName#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="jobNum">
+			job_num = #jobNum#
+		</isNotEmpty>
+		;
+	</select>
+	
+	<!-- 按照条件查询总的记录数 -->
+	<select id="findCountBySearchCondition" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select count(*) from sys_operator
+		where login_name &lt;&gt; 'admin'
+		<isNotEmpty prepend="and" property="operatorName">
+			operator_name = #operatorName#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="loginName">
+			login_name = #loginName#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="jobNum">
+			job_num = #jobNum#
+		</isNotEmpty>
+		;
+	</select>
+	
+	<!-- 物理删除数据 -->
+	<delete id="delete" parameterClass="java.util.Map">
+	     delete from sys_operator where operator_id in ($ids$);
+	</delete>
+	
+	<!-- 删除数据 改变状态 -->
+	<update id="updateStatu" parameterClass="java.util.Map">
+	    update sys_operator set operator_status = 2 where operator_id in ($ids$);
+	</update>
+	
+	<!-- 登录查询 -->
+	<select id="logon" parameterClass="java.util.Map" resultMap="operatorResultId">
+		select operator_id,operator_name,login_name,login_pwd,job_num,telephone,operator_status,operator_email,operator_type,operator_department
+		from sys_operator
+		where operator_status = 1 and login_pwd = #loginPwd# and login_name = #loginName#;
+	</select>
+	
+	<select id="findOperatorByLoginName" parameterClass="java.util.Map" resultMap="operatorResultId">
+		select operator_id,operator_name,login_name,login_pwd,job_num,telephone,operator_status,operator_email,operator_type,operator_department
+		from sys_operator
+		where operator_status = 1 and login_name = #loginName#;
+	</select>
+</sqlMap>

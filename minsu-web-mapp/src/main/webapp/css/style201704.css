@@ -1,0 +1,371 @@
+
+/*新增项目样式*/
+.S_newHeader{
+    position: relative;
+    height: 1.1733rem;
+    background-color: #fff;
+    margin-bottom: 0.64rem;
+}
+.S_newHeader h1{
+    width: 60%;
+    margin: 0 auto;
+    font-size: 0.48rem;
+    font-weight: normal;
+    line-height: 1.1733rem;
+    text-align: center;
+}
+.S_newHeader a{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.1733rem;
+    height: 1.1733rem;
+   	background: url(../images/back_dark2x.png) no-repeat center center;
+    background-size: 60% auto;
+}
+.S_ruleSelectBox{
+    background-color: #ffffff;
+    margin-bottom: 0.88rem;
+}
+.S_ruleSelectUl{
+    padding-left: 0.4267rem;
+}
+.S_ruleSelectUl>li{
+    position: relative;
+    height: 1.44rem;
+    border-bottom: 1px solid #eeeeee;
+    line-height: 1.44rem;
+    font-size: 0.3733rem;
+    color: #999;
+}
+.S_ruleSelectUl>li:nth-last-child(1){
+    border: none;
+}
+.S_ruleSelectUl i{
+    position: absolute;
+    right: 0.4267rem;
+    top: 50%;
+    margin-top: -0.2667rem;
+    width: 0.5333rem;
+    height: 0.5333rem;
+    background: url("../images/item_isSelect.png") 100% 50% no-repeat;
+    background-size: cover;
+}
+.S_ruleSelectUl i.on{
+    background: url("../images/item_isSelect.png") 0 50% no-repeat;
+    background-size: cover;
+}
+.S_elseRule{
+    position: relative;
+    padding-left: 0.4267rem;
+    height: 1.44rem;
+    background-color: #ffffff;
+}
+.S_elseRule>a{
+    display: block;
+    height: 1.44rem;
+    line-height: 1.44rem;
+    color: #999;
+    font-size: 0.3733rem;
+}
+.S_elseRule i{
+    position: absolute;
+    right: 0.4267rem;
+    top: 50%;
+    margin-top: -0.24rem;
+    width: 0.48rem;
+    height: 0.48rem;
+    background: url("../images/item_goNext.png") 50% 50% no-repeat;
+    background-size: cover;
+}
+.S_ruleSelectSubmit{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1.3067rem;
+    line-height: 1.3067rem;
+    text-align: center;
+    background-color: #ffa000;
+    color: #ffffff;
+    font-size: 0.5067rem;
+}
+/*联系方式页面样式*/
+.S_contactBox{
+    padding: 0.5333rem 0.8rem 0;
+}
+.S_contactList{
+    margin-bottom: 0.64rem;
+}
+.S_contactList>li{
+    position: relative;
+    height: 1.0667rem;
+    border-bottom: 1px solid #eee;
+    padding-left: 2.8267rem;
+}
+.S_contactList span{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2.8267rem;
+    height: 1.0667rem;
+    line-height: 1.0667rem;
+    font-size: 0.4267rem;
+    color: #999;
+}
+.S_contactList p{
+    height: 1.0667rem;
+    line-height: 1.0667rem;
+    font-size: 0.4267rem;
+    color: #666;
+}
+.S_contactLiTel{
+    padding-top: 0.1334rem;
+}
+.S_contactList input[type=tel]{
+    width: 100%;
+    height: 0.8rem;
+    line-height: 0.8rem;
+    font-size: 0.4267rem;
+    color: #666;
+    outline:none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+}
+.S_contactNext{
+    display: block;
+    width: 8.4rem;
+    height:1.1733rem;
+    margin: 0 auto;
+    background-color: #ffa000;
+    line-height: 1.1733rem;
+    text-align: center;
+    color: #fff;
+    font-size: 0.48rem;
+    border-radius: 0.08rem;
+}
+.S_contactCountryBox{
+    display: none;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    box-sizing: border-box;
+    padding: 0.2667rem 0.48rem 0;
+    background-color: #fff;
+}
+.S_contactCountryTit{
+    height: 0.64rem;
+    position: relative;
+    padding-bottom: 0.64rem;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 0.32rem;
+}
+.S_contactCountryTit i{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0.64rem;
+    height: 0.64rem;
+    background: url("../img/item_countryBoxClose.png") 50% 50% no-repeat;
+    background-size: contain;
+}
+.S_contactCountryTit p{
+    width: 60%;
+    height: 0.64rem;
+    margin: 0 auto;
+    line-height: 0.64rem;
+    text-align: center;
+    font-size: 0.48rem;
+    color: #333;
+}
+.S_countryList>li{
+    height: 0.48rem;
+    padding: 0.32rem 0;
+}
+.S_countryList>li>*{
+    height: 0.48rem;
+    line-height: 0.48rem;
+    font-size: 0.3733rem;
+}
+.S_itemCountry{
+    float: left;
+    color: #444;
+}
+.S_itemCountryTelNum{
+    float: right;
+    text-align: right;
+    color: #999;
+}
+
+
+/*覆盖原本layer样式*/
+.layermmain .section {
+    display: block;
+    margin: -1.6rem auto;
+    position: relative;
+    top: 30%;
+}
+.layermcont {
+    padding: 0 0.5334rem;
+    line-height: 1.1734rem;
+    text-align: center;
+    color:#fff;
+}
+.regAuthCode {
+    width: 6.4rem;
+    padding: 0.5334rem 0;
+    font-size: .0.4267rem;
+    color: #666;
+    position: relative;
+}
+.regAuthCode input {
+    border-bottom: solid 1px #ddd;
+    font-size: 0.3733rem;
+    height: 1.0667rem;
+    width: 3.2rem;
+    text-align: center;
+    margin-right: 0.2667rem;
+}
+.regAuthCode img {
+	display:inline-block;
+    height: 1.0667rem;
+    width: 2.6667rem;
+    vertical-align: middle;
+}
+#rTips {
+    color: red;
+    font-size: 0.32rem;
+    position: absolute;
+    left: 0;
+    top: 1.7067rem;
+    width: 100%;
+    height: 0.5334rem;
+    line-height: 0.5334rem;
+}
+.layermbtn {
+    position: relative;
+    height: 1.3067rem;
+    line-height: 1.3067rem;
+    font-size: 0;
+    text-align: center;
+    border-top: 1px solid #eee;
+    overflow: hidden;
+}
+.layermchild {
+    font-size:0.3733rem;
+    border-radius: 0.2667rem;
+}
+.layermbtn span:first-child {
+    height: auto;
+    border-radius: 0 0 0 0.2667rem;
+    top: 0;
+}
+.layermbtn span {
+    font-size: 0.4267rem;
+}
+body{
+	background-color:#fff;
+}
+input {
+    -webkit-appearance: none;
+}
+input {
+    -webkit-appearance: none;
+    border: none;
+}
+#regStep_2 {
+    display: none;
+    box-sizing: border-box;
+}
+#regStep_2 *{
+	 box-sizing: border-box;
+}
+.header {
+    background: #fff;
+    border-bottom: solid 1px #ddd;
+    height: 1.1733rem;
+    line-height: 1.1733rem;
+    text-align: center;
+    position: relative;
+}
+.header h1 {
+    font-size: 0.48rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 60%;
+    margin: 0 auto;
+    height: 1.1733rem;
+    line-height: 1.1733rem;
+}
+#regStep_2 .content {
+    text-align: center;
+    font-size: 0.32rem;
+    padding-top: 0.2667rem;
+}
+.loginBox .content {
+    padding: 0 0.4rem;
+}
+#regStep_2 h2, #regStep_2 h3 {
+    font-size: 0.4267rem;
+    line-height: 0.64rem;
+    color: #666;
+}
+#regStep_2 .inputs {
+    position: relative;
+    width: 4.2667rem;
+    height: 1.0667rem;
+    margin: 0 auto 0.5333rem auto;
+    background: url(../images/login/line.png) repeat-x left bottom;
+    background-size: 0.6933rem 1px;
+}
+#regStep_2 input.val {
+    height:1.0667rem;
+    width: 100%;
+    text-align: center;
+    font-size: 0.64rem;
+    color: #333;
+    letter-spacing: 0.3467rem;
+    text-align: left;
+    background: none;
+    padding-left: 0.1067rem;
+}
+.org {
+    color: #ffa000;
+}
+.gray {
+    color: #999;
+}
+.mt85 {
+    margin-bottom: 0.4533rem;
+}
+.mt85 {
+    margin-top: 0.4533rem;
+}
+.boxP075 {
+    padding: 0 0.4rem;
+}
+.org_btn {
+    background: #ffa000;
+    height: 1.0667rem;
+    width: 100%;
+    color: #fff;
+    border: none;
+    border-radius: 0.1067rem;
+    font-size: 0.3733rem;
+    margin-top: 0.2667rem;
+}
+
+.disabled_btn, .disabled_btn2 {
+    background: #ddd;
+    height: 1.0667rem;
+    width: 100%;
+    color: #fff;
+    border: none;
+    border-radius: 0.1067rem;
+    font-size: 0.3733rem;
+    margin-top: 0.2667rem;
+}

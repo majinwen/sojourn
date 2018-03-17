@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.asura.management.quartz.dao.map">
+	<!-- 返回结果 -->
+	<resultMap class="com.asura.amp.quartz.entity.Trigger" id="triggerResultMapId">
+		<result property="name" column="TRIGGER_NAME"/>
+		<result property="group" column="TRIGGER_GROUP"/>
+		<result property="jobName" column="JOB_NAME"/>
+		<result property="jobGroup" column="JOB_GROUP"/>
+		<result property="description" column="DESCRIPTION"/>
+		<result property="nextFireTime" column="NEXT_FIRE_TIME"/>
+		<result property="prevFireTime" column="PREV_FIRE_TIME"/>
+		<result property="priority" column="PRIORITY"/>
+		<result property="state" column="TRIGGER_STATE"/>
+		<result property="type" column="TRIGGER_TYPE"/>
+		<result property="startTime" column="START_TIME"/>
+	</resultMap>
+	
+	<!-- 按照条件查询 -->
+	<select id="findBySearchCondition" parameterClass="java.util.Map" resultMap="triggerResultMapId">
+		select TRIGGER_NAME,TRIGGER_GROUP,JOB_NAME,JOB_GROUP,DESCRIPTION,NEXT_FIRE_TIME,PREV_FIRE_TIME,PRIORITY,TRIGGER_STATE
+			   ,TRIGGER_TYPE,START_TIME
+		from QRTZ_TRIGGERS
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="group">
+				TRIGGER_GROUP = #group#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="name">
+				TRIGGER_NAME = #name#
+			</isNotEmpty>
+		</dynamic>
+		;
+	</select>
+	
+	<!-- 按照条件查询总的记录数 -->
+	<select id="findCountBySearchCondition" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select count(*) from QRTZ_TRIGGERS
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="group">
+				TRIGGER_GROUP = #group#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="name">
+				TRIGGER_NAME = #name#
+			</isNotEmpty>
+		</dynamic>
+		;
+	</select>
+	
+</sqlMap>

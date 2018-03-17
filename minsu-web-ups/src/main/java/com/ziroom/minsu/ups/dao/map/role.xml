@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ups.roleDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.sys.RoleEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="systems_fid" property="systemsFid" jdbcType="VARCHAR"/>
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="role_type" property="roleType" jdbcType="INTEGER" />
+    <result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    ro.id, ro.fid,ro.systems_fid, ro.role_name, ro.role_type, ro.role_desc, ro.is_del, ro.create_date, ro.modify_date, ro.create_fid
+  </sql>
+
+  <resultMap type="com.ziroom.minsu.ups.vo.RoleListVo" id="listResultMap" extends="BaseResultMap">
+    <result column="sys_name" property="systemName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="findRoleListByPage" resultMap="listResultMap" parameterType="com.ziroom.minsu.services.basedata.dto.RoleRequest" >
+    SELECT <include refid="Base_Column_List" />,tss.`sys_name` FROM `t_sys_role` ro
+    LEFT JOIN `t_sys_systems` tss ON ro.`systems_fid`=tss.`fid`
+    <where>
+      <if test="roleName!=null and roleName!=''">
+        and ro.role_name = #{roleName,jdbcType=VARCHAR}
+      </if>
+      <if test="isVail!=null">
+        and ro.is_del=#{isVail}
+      </if>
+      <if  test="systemFid!=null and systemFid!=''">
+        and tss.fid=#{systemFid,jdbcType=VARCHAR}
+      </if>
+      <if  test="roleType!=null ">
+        and ro.role_type=#{roleType,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+
+  <select id="findRoleListByUserFid" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.entity.sys.RoleEntity" >
+    select
+    <include refid="Base_Column_List" />
+    from t_sys_role ro
+    inner join t_sys_currentuser_role t on t.role_fid = ro.fid
+
+    where ro.is_del = 0
+    and t.currenuser_fid = #{userFid,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="findRoleByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_sys_role ro
+    where ro.fid = #{roleFid,jdbcType=VARCHAR}
+    limit 1
+  </select>
+
+  <insert id="insertRole" parameterType="com.ziroom.minsu.entity.sys.RoleEntity" >
+    insert into t_sys_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="systemsFid != null" >
+        systems_fid,
+      </if>
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="roleType != null" >
+        role_type,
+      </if>
+      <if test="roleDesc != null" >
+        role_desc,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="modifyDate != null" >
+        modify_date,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="systemsFid != null" >
+        #{systemsFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleType != null" >
+        #{roleType,jdbcType=VARCHAR},
+      </if>
+      <if test="roleDesc != null" >
+        #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateRoleByFid" parameterType="com.ziroom.minsu.entity.sys.RoleEntity" >
+    update t_sys_role
+    <set >
+      <if test="systemsFid != null" >
+        systems_fid = #{systemsFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null" >
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleType != null" >
+        role_type = #{roleType,jdbcType=VARCHAR},
+      </if>
+      <if test="roleDesc != null" >
+        role_desc = #{roleDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询拥有此角色用户和系统信息-->
+  <select id="getSysUserByRole"  parameterType="string"  resultType="map">
+  	SELECT tss.`sys_code`,tscr.`currenuser_fid`,tsr.`systems_fid` FROM `t_sys_currentuser_role` tscr
+	LEFT JOIN `t_sys_currentuser` tsc ON tscr.`currenuser_fid`=tsc.`fid`
+	LEFT JOIN `t_sys_role` tsr ON tsr.`fid`=tscr.`role_fid`
+	LEFT JOIN `t_sys_systems` tss ON tsr.`systems_fid`= tss.`fid`
+	WHERE tscr.`role_fid`=#{roleFid,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 角色查询系统code -->
+  <select id="getSysCodeByRole"  parameterType="string" resultType="string">
+  	SELECT tss.`sys_code` FROM `t_sys_role` tsr
+	LEFT JOIN `t_sys_systems` tss ON tsr.`systems_fid`=tss.`fid`
+	WHERE tsr.`fid`=#{roleFid,jdbcType=VARCHAR}
+  </select>
+</mapper>

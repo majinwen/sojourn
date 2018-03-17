@@ -1,0 +1,12 @@
+/target/
+.project
+.classpath
+/.git/
+/.settings/
+
+
+# idea ignore
+.idea/
+*.ipr
+*.iml
+*.iws

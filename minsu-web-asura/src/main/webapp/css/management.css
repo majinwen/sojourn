@@ -1,0 +1,5 @@
+ul.pageContent_opt {list-style:none;margin:0px;}
+ul.pageContent_opt li {float:left;}
+ul.pageContent_opt li a {padding:5px; color:#00f;}
+
+div.pageFormContent p span {float:left;line-height:21px}

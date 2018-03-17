@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.asura.management.sysconfig.dao">
+
+	<resultMap class="com.asura.amp.sysconfig.entity.SysConfig" id="SysConfig">
+		<result property="type" javaType="java.lang.String" column="type" />
+		<result property="code" javaType="java.lang.String" column="code" />
+		<result property="name" javaType="java.lang.String" column="name" />
+		<result property="value" javaType="java.lang.String" column="value" />
+		<result property="notes" javaType="java.lang.String" column="notes" />
+		<result property="isDelete" javaType="java.lang.Integer" column="is_delete" />
+		<result property="updateDate" javaType="java.sql.Timestamp" column="update_date" />
+	</resultMap>
+	
+	<select id="findSysConfigByCondition" parameterClass="java.util.HashMap" resultMap="SysConfig">
+		SELECT 	 
+				`type`, 
+				`code`, 
+				`name`, 
+				`value`, 
+				`notes`, 
+				`is_delete`, 
+				`update_date`
+		 FROM sys_config
+		 WHERE is_delete = 0
+		 <isNotEmpty prepend="AND" property="type">
+            type=#type#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="code">
+            code=#code#
+        </isNotEmpty>
+	</select>
+	
+	<select id="countSysConfigByCondition" parameterClass="java.util.HashMap" resultClass="long">
+		SELECT 	count(1)
+		 FROM sys_config
+		 WHERE is_delete = 0
+		 <isNotEmpty prepend="AND" property="type">
+            type=#type#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="code">
+            code=#code#
+        </isNotEmpty>
+	</select>
+	
+	<select id="findAllSysConfig" resultMap="SysConfig">
+		SELECT 	 
+				`type`, 
+				`code`, 
+				`name`, 
+				`value`, 
+				`notes`, 
+				`is_delete`, 
+				`update_date`
+		 FROM sys_config
+		 WHERE is_delete = 0;
+	</select>
+
+	<insert id="saveSysConfig" parameterClass="com.asura.amp.sysconfig.entity.SysConfig">
+	    insert into sys_config (type,code,name,value,notes)
+	    values (#type#,#code#,#name#,#value#,#notes#);
+		<selectKey resultClass="java.lang.Integer" keyProperty="id">
+            SELECT LAST_INSERT_ID() as id;
+        </selectKey>
+	</insert>
+
+	<update id="updateSysConfig" parameterClass="com.asura.amp.sysconfig.entity.SysConfig">
+		UPDATE sys_config
+		<dynamic prepend="set">
+			<isNotEmpty prepend="," property="type">
+				type=#type#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="code">
+				code=#code#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="name">
+				name=#name#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="value">
+				value=#value#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="notes">
+				notes=#notes#
+			</isNotEmpty>
+		</dynamic>
+		WHERE type=#type# AND code = #code#;
+	</update>
+	
+	<update id="deleteSysConfig" parameterClass="java.util.HashMap">
+	    update sys_config set is_delete = 1 where type = #type# AND code = #code#;
+	</update>
+
+</sqlMap>

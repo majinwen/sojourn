@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.asura.management.authority.resource.dao">
+	
+	
+	<!-- 返回结果 -->
+	<resultMap class="com.asura.amp.authority.entity.Resource" id="resourceResultId">
+		<result property="resId" column="res_id"/>
+		<result property="resName" column="res_name"/>
+		<result property="parentId" column="parent_id"/>
+		<result property="resUrl" column="res_url"/>
+		<result property="resUrlParam" column="res_urlparam"/>
+		<result property="resType" column="res_type"/>
+		<result property="resOrder" column="res_order"/>
+		<result property="resLevel" column="res_level"/>
+		<result property="resFunctionType" column="res_function_type"/>
+		<result property="resDesc" column="res_desc"/>
+		<result property="isAdminMenu" column="is_admin_menu"/>
+	</resultMap>
+    
+    
+	<!-- 增加 -->
+	<insert id="save" parameterClass="com.asura.amp.authority.entity.Resource">
+		insert into sys_resource (res_name,parent_id,res_url,res_urlparam,res_type,res_order,res_level,res_function_type,res_desc,is_admin_menu)
+		               values('$resName$','$parentId$','$resUrl$','$resUrlParam$','$resType$',$resOrder$,'$resLevel$','$resFunctionType$','$resDesc$',$isAdminMenu$)
+		<selectKey resultClass="int" keyProperty="resId"> 
+         SELECT LAST_INSERT_ID() as resId;
+       </selectKey>
+	</insert>
+	
+	<!-- 查询所有的资源信息 -->
+	<select id="findAll" resultMap="resourceResultId">
+		select res_id,res_name,parent_id,res_url,res_urlparam,res_type,res_order,res_level,res_function_type,res_desc,is_admin_menu from sys_resource where is_shield = 0;
+	</select>
+	
+	<!-- 查询所有的资源信息 -->
+	<select id="findAllResourcesByResType" parameterClass="java.util.Map" resultMap="resourceResultId">
+		select res_id,res_name,parent_id,res_url,res_urlparam,res_type,res_order,res_level,res_function_type,res_desc,is_admin_menu 
+		from sys_resource
+		where is_shield = 0 and res_type = #resType#
+		
+	</select>
+	
+	<!-- 更新  -->
+	<update id="update" parameterClass="com.asura.amp.authority.entity.Resource">
+		update sys_resource set res_name=#resName#,res_url=#resUrl#,res_urlparam=#resUrlParam#,res_type=#resType#,res_order=#resOrder#,res_function_type=#resFunctionType#,res_desc=#resDesc#,is_admin_menu=#isAdminMenu# where res_id = #resId#;
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterClass="java.util.Map">
+		delete from sys_resource where res_id=#resId#;
+	</delete>
+	
+	<!-- 根据角色id查询对应的功能资源信息  -->
+	<select id="findResourcesByRole" parameterClass="java.util.Map" resultMap="resourceResultId">
+		SELECT sr.res_id,sr.res_name,sr.parent_id,sr.res_url,sr.res_urlparam,sr.res_type,sr.res_order,sr.res_level,sr.res_function_type,sr.res_desc,sr.is_admin_menu
+		FROM sys_resource sr JOIN sys_role_resource srr ON sr.res_id = srr.res_id
+		WHERE sr.res_type ='02' AND is_shield = 0 AND srr.role_id = #roleId#
+	</select>
+	
+	<!-- 根据角色id查询对应的资源信息（菜单和功能）  -->
+	<select id="findAllResourcesByRole" parameterClass="java.util.Map" resultMap="resourceResultId">
+		SELECT sr.res_id,sr.res_name,sr.parent_id,sr.res_url,sr.res_urlparam,sr.res_type,sr.res_order,sr.res_level,sr.res_function_type,sr.res_desc,sr.is_admin_menu
+		FROM sys_resource sr JOIN sys_role_resource srr ON sr.res_id = srr.res_id
+		WHERE is_shield = 0 AND srr.role_id = #roleId#
+	</select>
+	
+	<!-- 查询所有的资源信息 -->
+	<select id="findResourcesByParentId" parameterClass="java.util.Map" resultMap="resourceResultId">
+		SELECT 
+		      sr.res_id,
+		      sr.res_name,
+		      sr.parent_id,
+		      sr.res_url,
+		      sr.res_urlparam,
+		      sr.res_type,
+		      sr.res_order,
+		      sr.res_level,
+		      sr.res_function_type,
+		      sr.res_desc,
+		      sr.is_admin_menu
+		FROM sys_resource sr
+		WHERE is_shield = 0 AND sr.res_id = #parentId#;
+	</select>
+	
+	<!-- 登录查询资源信息 -->
+	<select id="findResourceByLogon" parameterClass="java.util.Map" resultMap="resourceResultId">
+		SELECT 
+			 sr.res_id,
+		     sr.res_name,
+		     sr.parent_id,
+		     sr.res_url,
+		     sr.res_urlparam,
+		     sr.res_type,
+		     sr.res_order,
+		     sr.res_level,
+		     sr.res_function_type,
+		     sr.res_desc,
+		     sr.is_admin_menu
+		FROM sys_resource sr RIGHT JOIN 
+			(
+			SELECT DISTINCT(rr.res_id) FROM sys_operator op RIGHT JOIN sys_operator_role opr
+			ON op.operator_id = opr.operator_id
+			RIGHT JOIN sys_role_resource rr
+			ON opr.role_id = rr.role_id
+			WHERE op.operator_id = #operatorId#
+			) tt
+			ON sr.res_id = tt.res_id
+		WHERE sr.is_shield = 0 AND sr.res_type = #resType#
+		ORDER BY res_order
+	</select>
+	
+</sqlMap>

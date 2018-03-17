@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ups.currentuserRoleDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.sys.CurrentuserRoleEntity" >
+    <!-- -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="currenuser_fid" property="currenuserFid" jdbcType="VARCHAR" />
+    <result column="role_fid" property="roleFid" jdbcType="VARCHAR" />
+
+  </resultMap>
+
+
+  <insert id="insertCurrentuserRole" parameterType="com.ziroom.minsu.entity.sys.EmployeeEntity" >
+    insert into t_sys_currentuser_role (currenuser_fid, role_fid)
+    values (#{currenuserFid,jdbcType=VARCHAR}, #{roleFid,jdbcType=VARCHAR})
+  </insert>
+
+
+  <delete id="delCurrentuserRoleByUserFid" parameterType="java.util.Map">
+    delete from t_sys_currentuser_role
+    where currenuser_fid = #{userFid,jdbcType=VARCHAR}
+  </delete>
+
+  <select id="queryRoleFidsByCurFid" resultType="java.lang.String" parameterType="java.lang.String" >
+    select  role_fid roleFid
+    from t_sys_currentuser_role ro
+    where ro.currenuser_fid = #{curFid,jdbcType=VARCHAR}
+  </select>
+</mapper>

@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ups.currentuserDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.sys.CurrentuserEntity" >
+    <!--
+      基础map
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="user_account" property="userAccount" jdbcType="VARCHAR" />
+    <result column="user_password" property="userPassword" jdbcType="VARCHAR" />
+    <result column="employee_fid" property="employeeFid" jdbcType="VARCHAR" />
+    <result column="is_admin" property="isAdmin" jdbcType="INTEGER" />
+    <result column="account_status" property="accountStatus" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="nation_code" property="nationCode" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />    
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 后台用户信息map  -->
+  <resultMap type="com.ziroom.minsu.services.basedata.entity.CurrentuserVo" id="listResultMap" extends="BaseResultMap">
+      <result column="emp_name" property="fullName" jdbcType="VARCHAR" />
+      <result column="post_name" property="postName" jdbcType="VARCHAR" />
+      <result column="depart_name" property="departmentName" jdbcType="VARCHAR" />
+      <collection column="fid" property="roles" javaType="ArrayList" select="ups.roleDao.findRoleListByUserFid"/>
+  </resultMap>
+  
+  <!-- 用户权限列表map -->
+  <resultMap type="com.ziroom.minsu.services.basedata.entity.CurrentuserVo" id="resUrlMap" extends="BaseResultMap">
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    <!--
+      基础列集合
+    -->
+    cr.id, cr.fid, cr.user_account, cr.user_password, cr.employee_fid, cr.is_admin, cr.account_status, cr.city_code, cr.nation_code,cr.province_code,cr.area_code,
+    cr.is_del, cr.last_modify_date, cr.create_date, cr.create_fid
+  </sql>
+
+  <select id="getCurrentuserByFid" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    <!-- 通过fid获取用户信息 -->
+    select
+    <include refid="Base_Column_List" />
+    from t_sys_currentuser cr
+    where fid = #{userFid,jdbcType=VARCHAR}
+    limit 1
+  </select>
+  
+  <select id="getCurrentuserByUserAccount" resultMap="resUrlMap" parameterType="string" >
+    <!-- 通过fid获取用户信息 -->
+    select
+    <include refid="Base_Column_List" />
+    from t_sys_currentuser cr
+    where user_account = #{userAccount,jdbcType=VARCHAR}
+    limit 1
+  </select>
+  
+  <select id="getCurrentByUserAccount" resultMap="BaseResultMap" parameterType="string" >
+    <!-- 通过Account获取用户信息 -->
+    select
+    <include refid="Base_Column_List" />
+    from t_sys_currentuser cr
+    where cr.user_account = #{userAccount,jdbcType=VARCHAR}
+    limit 1
+  </select>
+
+    <select id="getCurrentByEmpFid" resultMap="BaseResultMap" parameterType="string" >
+        <!-- 根据员工fid查询用户信息 -->
+        select
+        <include refid="Base_Column_List" />
+        from t_sys_currentuser cr
+        where cr.employee_fid = #{employeeFid,jdbcType=VARCHAR}
+        limit 1
+    </select>
+
+  <!-- 编辑查询后台用户 -->
+  <select id="getCurrentuserVoByfid"  resultMap="listResultMap" parameterType="string">
+  	SELECT <include refid="Base_Column_List" /> FROM t_sys_currentuser cr
+	WHERE cr.fid=#{fid}
+  </select>
+  
+   <!--
+    列表查询
+    -->
+  <select id="findCurrentuserByCondition" resultMap="listResultMap" parameterType="map" >
+  	SELECT <include refid="Base_Column_List" />,tse.`emp_name`,tse.`post_name`,tse.`depart_name`
+  	FROM t_sys_currentuser cr
+	LEFT JOIN t_sys_currentuser_role scrr ON cr.fid=scrr.currenuser_fid
+    LEFT JOIN t_sys_role sr ON scrr.role_fid=sr.fid
+    LEFT JOIN `t_sys_employee` tse ON tse.`fid`=cr.`employee_fid`
+	WHERE cr.is_del = 0
+	<if test="userName!=null and userName!=''">
+	    AND cr.user_account = #{userName,jdbcType=VARCHAR}
+	</if>
+	<if test="accountStatus!=null">
+		AND cr.account_status = #{accountStatus}
+	</if>
+	<if test="roleName!=null and roleName!=''">
+		AND sr.role_name = #{roleName}
+	</if>
+	<if test="fullName!=null and fullName!=''">
+	   AND tse.`emp_name` =#{fullName}
+	</if>
+	<if test="empMobile!=null and empMobile!=''">
+	   AND tse.`emp_mobile`=#{empMobile}
+	</if>
+	GROUP BY cr.fid
+  </select>
+
+  <!--
+      插入后台用户
+    -->
+  <insert id="insertCurrentuser" parameterType="com.ziroom.minsu.entity.sys.CurrentuserEntity" >
+    insert into t_sys_currentuser
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="userAccount != null" >
+        user_account,
+      </if>
+      <if test="userPassword != null" >
+        user_password,
+      </if>
+      <if test="employeeFid != null" >
+        employee_fid,
+      </if>
+      <if test="isAdmin != null" >
+        is_admin,
+      </if>
+      <if test="accountStatus != null" >
+        account_status,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="nationCode != null" >
+        nation_code,
+      </if>
+      <if test="provinceCode != null" >
+        province_code,
+      </if>
+      <if test="areaCode != null" >
+        area_code,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createFid != null" >
+        create_fid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="userAccount != null" >
+        #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null" >
+        #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeFid != null" >
+        #{employeeFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isAdmin != null" >
+        #{isAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="accountStatus != null" >
+        #{accountStatus,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="nationCode != null" >
+        #{nationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+        #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        #{createFid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.entity.sys.CurrentuserEntity" >
+    update t_sys_currentuser
+    <set >
+      <if test="userAccount != null" >
+        user_account = #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null" >
+        user_password = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeFid != null" >
+        employee_fid = #{employeeFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isAdmin != null" >
+        is_admin = #{isAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="accountStatus != null" >
+        account_status = #{accountStatus,jdbcType=INTEGER},
+      </if>
+      	nation_code=#{nationCode,jdbcType=VARCHAR},
+      	province_code=#{provinceCode,jdbcType=VARCHAR},
+      	city_code=#{cityCode,jdbcType=VARCHAR},
+      	area_code=#{areaCode,jdbcType=VARCHAR},
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 插入后台用户角色关系表 -->
+  <insert id="insertUserRole"  parameterType="map">
+	  INSERT INTO t_sys_currentuser_role (currenuser_fid,role_fid)
+	  VALUES(#{currenuserFid,jdbcType=VARCHAR},#{roleFid,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateCurrentuserByFid" parameterType="com.ziroom.minsu.entity.sys.CurrentuserEntity" >
+    update t_sys_currentuser
+    <set >
+      <if test="userAccount != null" >
+        user_account = #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null" >
+        user_password = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeFid != null" >
+        employee_fid = #{employeeFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isAdmin != null" >
+        is_admin = #{isAdmin,jdbcType=INTEGER},
+      </if>
+      <if test="accountStatus != null" >
+        account_status = #{accountStatus,jdbcType=INTEGER},
+      </if>
+      <if test="nationCode != null" >
+      	nation_code=#{nationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+      	province_code=#{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+      	city_code=#{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null" >
+      	area_code=#{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createFid != null" >
+        create_fid = #{createFid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询权限角色类型 -->
+  <select id="findRoleTypeByMenu" parameterType="map" resultType="int">
+  	SELECT tsr.`role_type` FROM `t_sys_currentuser_role` tscr
+	LEFT JOIN `t_sys_role` tsr ON tscr.`role_fid`=tsr.`fid`
+	LEFT JOIN `t_sys_role_resource` tsrr ON tsrr.`role_fid`=tscr.`role_fid`
+	LEFT JOIN `t_sys_resource` tsre ON tsre.`fid`=tsrr.`resource_fid`
+	WHERE tsre.`res_url`=#{resUrl,jdbcType=VARCHAR}
+	AND tscr.`currenuser_fid`=#{currentuserFid,jdbcType=VARCHAR}
+	AND tsre.systems_fid=#{systemsFid,jdbcType=VARCHAR}
+	ORDER BY tsr.`role_type`
+  </select>
+</mapper>

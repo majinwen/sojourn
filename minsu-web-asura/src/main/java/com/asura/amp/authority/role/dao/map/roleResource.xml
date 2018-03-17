@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.asura.management.authority.roleResource.dao">
+
+	
+	<!-- 返回结果 -->
+	<resultMap class="com.asura.amp.authority.entity.RoleResource" id="roleResourceResultId">
+		<result property="rrId" column="rr_id"/>
+		<result property="roleId" column="role_id"/>
+		<result property="resId" column="res_id"/>
+	</resultMap>
+	
+	<!-- 增加 -->
+	<insert id="save" parameterClass="com.asura.amp.authority.entity.RoleResource">
+		insert into sys_role_resource (role_id, res_id)
+		               values('$roleId$','$resId$')
+		<selectKey resultClass="int" keyProperty="rrId"> 
+         SELECT LAST_INSERT_ID() as rrId;
+       </selectKey>
+	</insert>
+	
+	<!-- 根据角色id删除对应的资源信息 -->
+	<delete id="deleteByRoleId" parameterClass="java.util.Map">
+		delete from sys_role_resource where role_id in($roleId$)
+	</delete>
+	
+	<!-- 根据资源id删除对应信息 -->
+	<delete id="deleteByResId" parameterClass="java.util.Map">
+		delete from sys_role_resource where res_id in($resId$)
+	</delete>
+	
+</sqlMap>

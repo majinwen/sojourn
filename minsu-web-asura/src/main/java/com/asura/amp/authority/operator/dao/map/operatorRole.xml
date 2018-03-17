@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.asura.management.authority.operatorRole.dao">
+
+	<!-- 返回结果 -->
+	<resultMap class="com.asura.amp.authority.entity.OperatorRole" id="operatorRoleResultId">
+		<result property="orId" column="or_id"/>
+		<result property="operatorId" column="operator_id"/>
+		<result property="roleId" column="role_id"/>
+	</resultMap>
+
+	<!-- 增加 -->
+	<insert id="save" parameterClass="com.asura.amp.authority.entity.OperatorRole">
+		insert into sys_operator_role (operator_id, role_id)
+		               values('$operatorId$','$roleId$')
+		<selectKey resultClass="int" keyProperty="orId"> 
+         SELECT LAST_INSERT_ID() as orId;
+       </selectKey>
+	</insert>
+	
+	<!-- 根据操作员id删除对应的角色关联信息 -->
+	<delete id="deleteByOperatorId" parameterClass="java.util.Map">
+		delete from sys_operator_role where operator_id in($operatorId$)
+	</delete>
+	
+	<!-- 根据操作员id查询对应的角色信息 -->
+	<select id="findAllByOperatorId" parameterClass="java.util.Map" resultMap="operatorRoleResultId">
+		select or_id, operator_id, role_id from  sys_operator_role where operator_id = #operatorId#;
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.asura.management.authority.role.dao">
+
+	
+	<!-- 返回结果 -->
+	<resultMap class="com.asura.amp.authority.entity.Role" id="roleResultId">
+		<result property="roleId" column="role_id"/>
+		<result property="roleName" column="role_name"/>
+		<result property="roleDesc" column="role_desc"/>
+	</resultMap>
+	
+	<!-- 增加 -->
+	<insert id="save" parameterClass="com.asura.amp.authority.entity.Role">
+		insert into sys_role (role_name, role_desc)
+		               values('$roleName$','$roleDesc$')
+		<selectKey resultClass="int" keyProperty="roleId"> 
+         SELECT LAST_INSERT_ID() as roleId;
+       </selectKey>
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterClass="com.asura.amp.authority.entity.Role">
+		update sys_role set role_name=#roleName#, role_desc=#roleDesc#
+		where role_id = #roleId#;
+	</update>
+	
+	<!-- 按照条件查询 -->
+	<select id="findBySearchCondition" parameterClass="java.util.Map" resultMap="roleResultId">
+		select role_id, role_name, role_desc
+		from sys_role
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="roleName">
+				role_name = #roleName#
+			</isNotEmpty>
+		</dynamic>
+		;
+	</select>
+	
+	<!-- 按照条件查询总的记录数 -->
+	<select id="findCountBySearchCondition" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select count(*) from sys_role
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="roleName">
+				role_name = #roleName#
+			</isNotEmpty>
+		</dynamic>
+		;
+	</select>
+	
+	<!-- 删除数据 -->
+	<delete id="delete" parameterClass="java.util.Map">
+		delete from sys_role where role_id in ($ids$);
+	</delete>
+	
+	<!-- 查询所有的角色信息 -->
+	<select id="findAll" resultMap="roleResultId">
+		select role_id, role_name, role_desc from sys_role;
+	</select>
+</sqlMap>

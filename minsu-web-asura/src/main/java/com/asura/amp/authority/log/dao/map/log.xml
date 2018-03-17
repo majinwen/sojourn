@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.asura.management.authority.log.dao">
+
+
+	<!-- 增加 -->
+	<insert id="save" parameterClass="com.asura.amp.authority.entity.Log">
+		insert into sys_log (logonName,jobNum,logonDate,operationUrl,clientIp,isNormalOperation)
+		               values('$logonName$','$jobNum$','$logonDate$','$operationUrl$','$clientIp$','$isNormalOperation$')
+		<selectKey resultClass="int" keyProperty="logId"> 
+         SELECT LAST_INSERT_ID() as logId;
+       </selectKey>
+	</insert>
+	
+	
+	
+	<!-- 按照条件查询 -->
+	<select id="findBySearchCondition" parameterClass="java.util.Map" resultClass="com.asura.amp.authority.entity.Log">
+		select logId,logonName,jobNum,logonDate,operationUrl,clientIp,isNormalOperation
+		from sys_log
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="logonName">
+				logonName = #logonName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="operationUrl">
+				operationUrl like '%$operationUrl$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="jobNum">
+				jobNum = #jobNum#
+			</isNotEmpty>
+		</dynamic>
+		;
+	</select>
+	
+	<!-- 按照条件查询总的记录数 -->
+	<select id="findCountBySearchCondition" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select count(*) from sys_log
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="logonName">
+				logonName = #logonName#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="operationUrl">
+				operationUrl like '%$operationUrl$%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="jobNum">
+				jobNum = #jobNum#
+			</isNotEmpty>
+		</dynamic>
+		;
+	</select>
+	
+	
+</sqlMap>

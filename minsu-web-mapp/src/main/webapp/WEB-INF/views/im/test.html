@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <style type="text/css">
+        body{margin:0;padding:0;font:14px/28px \5b8b\4f53,tahoma,arial;background:#fff; color:#000; text-align:center; overflow-x:hidden;}
+        div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,blockquote,p{padding:0;margin:0;}
+        table,td,tr,th{font-size:14px;}li{list-style-type:none;}
+        img{vertical-align:top;border:0;}
+        ol,ul{list-style:none;}
+        h1,h2,h3,h4,h5,h6{font-size:12px;FONT-WEIGHT:normal;}
+        address,cite,code,em,th,i{FONT-WEIGHT:normal;font-style:normal;}
+        label{vertical-align:middle}
+        .under_line{text-decoration:underline;}
+        input{border:none; font-size:14px;}
+
+        .fb{FONT-WEIGHT:bold;}
+        table{border-collapse:collapse;}
+
+        .tr{text-align:right;}
+
+
+        .hArea{width: 800px; margin:0px auto; text-align:left; background:#fff; padding:10px 10px;
+            font-size:14px; line-height: 2;}
+
+        .tit{font-size:24px;FONT-WEIGHT:800; font-family:'Microsoft Yahei'; color:#000000; line-height:50px; height:50px; text-align:center;}
+
+
+        /*以下是新增样式 by mqz 2016.4.30*/
+        .suojin{
+            text-indent: 2em;
+        }
+        .suojin1{
+            padding-left: 2em;
+        }
+        .suojin2{
+            padding-left: 4em;
+        }
+
+        .font12{
+            font-size: 12px;
+        }
+
+
+        .s-table_base tr{
+            height: 30px;
+            font-size: 12px;
+        }
+
+        .s-table_base td{
+            padding-left: 10px;
+            padding-right: 10px;
+            height: 30px;
+            font-size: 12px;
+            border: 1px solid #303030;
+        }
+
+        .s-table_base .text_left{
+            text-align: left;
+        }
+        .s-table_base .text_center{
+            text-align: center;
+        }
+        .s-table_base .text_right{
+            text-align: right;
+        }
+        .s-table_base tbody{width: 100%;}
+        .s-table_base .bg_eaf1de{
+            background-color: #eaf1de;
+        }
+        .s-table_base td.bg1{
+            background-color: #b6dde8;
+        }
+        .s-table_base td.bg2{
+            background-color: #daeef3;
+        }
+        .s-table_base td.bg3{
+            background-color: #c2d69b;
+        }
+        .s-table_base td.bg4{
+            background-color: #d6e3bc;
+        }
+        .page{min-height: 1000px;}
+        .span_bor{display:inline-block; border-bottom:solid 1px #000;
+            height:20px; line-height:20px; padding:0px 5px;}
+        h1{text-align: center; font-size: 30px; line-height: 2;}
+        .weixin{text-align: center; padding: 20px 0; border:solid 1px #ddd; width:90%; margin: 50px auto;}
+        .weixin img{margin: 0 auto;}
+        .weixin .tel{font-size: 30px;}
+        .red{color: #f00;}
+    </style>
+    <!-- <style type="text/css">
+          .hArea{font-size: 20px;}
+          .span_bor{font-size: 30px; padding-bottom: 5px; display: inline-block;}
+
+          h1{text-align: center; font-size:40px; line-height: 3;}
+          .tit{font-size:30px;}
+
+          .hArea{width:100%; box-sizing: border-box; padding: 20px 40px;}
+      </style> -->
+    <script type="text/javascript">
+        function IsPC()
+        {
+            var userAgentInfo = navigator.userAgent;
+            var Agents = new Array("Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod");
+            var flag = true;
+            for (var v = 0; v < Agents.length; v++) {
+                if (userAgentInfo.indexOf(Agents[v]) > 0) { flag = false; break; }
+            }
+            return flag;
+        }
+        if(!IsPC()){
+            var head = document.getElementsByTagName('head')[0];
+            var style = document.createElement('style');
+            style.type = 'text/css';
+            style.innerHTML=".hArea{font-size: 20px;} .span_bor{font-size: 30px; padding-bottom: 5px; display: inline-block;}  h1{text-align: center; font-size:40px; line-height: 3;} .tit{font-size:30px;} .hArea{width:100%; box-sizing: border-box; padding: 20px 40px;} .red{color: #000000;}";
+            head.appendChild(style);
+            //var style = document.getElementsByTagName('style')[1];
+            //head.removeChild(style);
+
+            //var link1 = document.createElement('link');
+            //link1.setAttribute('rel', 'stylesheet');
+            //link1.setAttribute('type', 'text/css');
+            //link1.setAttribute('href', 'ht20171025.css');
+            //document.head.appendChild(link1);
+        }
+    </script>
+</head>
+<body>
+<font face="SimSun">
+    <div class="hArea" style="border:none;">
+        <div class="page">
+            <h1>自如寓签约提示</h1>
+            <p class="tr">合同编号【BJZS051754013】</p>
+            <p>1.请您确认，在签署合同前，<span class="fb under_line">您已仔细阅读过合同条款（包括并不限于房屋(个人生活单元)信息、租赁期限、费用信息及其他合同条款）并予以理解和接受，</span>同时我公司经办人员已向您告知与租赁房屋及合同签署有关的信息。</p>
+            <p>2.企业签约请在48小时内足额支付（如应付金额大于人民币五万元的，请在72小时内足额支付）。如果您未能在上述要求的时限内完成相应支付，则该房源将被释放【“释放”是指：该房源恢复可使用状态，其他用户均可就该房源与我公司签约】。</p>
+            <p>3.请您核查一式两份合同的内容（包括手工填写的部分）<span class="fb under_line">应完全一致。</span></p>
+            <p>4.在您签署的合同中，除需手工填写的地方以外，其他部分均<span class="fb under_line">不得随意进行手写补充和修改，</span>否则将会影响合同或条款的有效性。</p>
+            <p>5.在您向我公司支付相关交易费用后，<span class="under_line">请向我司经办人员索取由我公司加盖印章的专用收据及POS机小票</span>，并请妥善保管交款凭证至租赁期届满；如该经办人员不能提供上述专用收据的，请<span class="under_line">拒绝付款</span>。</p>
+            <p>6.在填写相关合同文本时，如遇“【　】”或“□”等需要选择的内容，<span class="fb under_line">请务必做出明确的勾选</span>，以划“√ ”方式选定您选择的事项；对于实际情况未发生、或双方当事人不作约定、或该条不适用时，应当划“&times;”，以示删除。</p>
+            <p>7.<span class="fb">需要特别提示您的是</span>：为了保证您的资金安全，请您勿将与房屋租赁相关的租金、押金等相关费用直接交付给我公司的经办人员个人，否则需自行承担可能的钱财损失。上述费用应优先选择如下方式：</p>
+            <p>▶ <span class="fb under_line">POS机刷卡</span>——您可以使用本人或亲朋的银行卡刷卡（本地卡、异地卡均可），刷卡后请持卡人在POS小票上亲笔签字，并保留该POS机小票作为交款凭证。</p>
+            <div class="weixin">
+                <p>如您对我们的服务有任何问题、意见或建议，请您拨打我们的服务热线：</p>
+                <p class="tel">400 100 1111</p>
+                <img src="http://image.ziroom.com/g2/M00/89/42/ChAFfVnoGvuANhUdAABxf2g2Kck783.png" alt="" />
+            </div>
+        </div>
+        <div class="page">
+            <p>签署时间：<span class="span_bor">2017</span>年 <span class="span_bor">08</span>月 <span class="span_bor">30</span>日 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 验证码：<span class="span_bor"></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 合同编号：<span class="span_bor">BJZS051754013</span></p>
+            <p class="tr">（□是/□否为续租合同，前合同编号：）</p>
+            <h1>房屋租赁合同</h1>
+            <p>出租人（甲方）：自如寓（北京）酒店管理有限公司</p>
+            <p>承租人（乙方）：贾子轩</p>
+            <p class="suojin1">依据《中华人民共和国合同法》及有关法律、法规的规定，甲乙双方在平等、自愿的基础上，就房屋出租的有关事宜达成协议如下：</p>
+            <p class="fb">第一条房屋出租形式</p>
+            <p>本合同约定的房屋出租形式包括以房间为单位出租和以个人生活单元为单位出租。</p>
+            <p class="fb">第二条房屋基本情况</p>
+            <p>（一）房屋坐落：<span class="span_bor">北京</span>市 <span class="span_bor">北京望京阳光自如寓</span> 自如寓，乙方承租的房源或个人生活单元的具体情况参见本合同《附件二：承租房屋信息列表》。</p>
+            <p>（二）房屋类型：<span class="span_bor">自如寓</span>。</p>
+            <p>（三）房屋配置：甲方已对房屋进行了相关物品和设备设施的配置，具体内容详见附件三《房屋交割清单》。</p>
+            <p>（四）房屋供暖情况：房屋的供暖方式为（□集中供暖/□自采暖/□中央空调/□无供暖）。</p>
+            <p class="fb">第三条房屋租赁情况及登记备案</p>
+            <p>（一）租赁用途： <span class="span_bor">居住</span> ；</p>
+            <p>（二）签约人员要求：签约人员年龄须为18周岁以上（含18周岁）、40周岁以下，且须提供真实有效的工作信息或学校信息。</p>
+            <p>（三）居住人员要求:一居室或开间居住人数不得超过2人，两居室及以上居住人数不得超过3人，个人生活单元按1人/床承租；居住人员年龄须为6周岁以上（含6周岁）、40周岁以下，且须提供真实有效的工作信息或学校信息。</p>
+            <p>（四）乙方租赁甲方房屋期间不得饲养宠物。</p>
+            <p>（五）甲乙双方应按照相关法律、法规的规定，到房屋所在地的社区外来人员服务站办理房屋出租登记手续。居住人员中有外地来 <span class="span_bor">0</span> 人员、境外人员的，应按相关法律、法规的规定办理居住登记（外地来<span class="span_bor">0</span>人员）或临时住宿登记（境外人员）等手续。</p>
+            <p class="fb">第四条租赁期限</p>
+            <p>（一） 房屋租赁期自<span class="span_bor">2017</span> 年<span class="span_bor">08</span>月<span class="span_bor">30</span>日至<span class="span_bor">2017</span>年<span class="span_bor">09</span>月<span class="span_bor">29</span>日，共计<span class="span_bor">1</span>个月<span class="span_bor"></span>天。本合同生效后，甲方应于<span class="span_bor">2017</span>年<span class="span_bor">08</span>月<span class="span_bor">30</span>日前将房屋按规定条件交付给乙方，甲乙双方依据《房屋交割清单》（见附件三）完成房屋交验并在《房屋交割清单》上签字盖章，且交付租赁房屋钥匙后，视为甲乙双方完成房屋的交付。</p>
+            <p>（二）本合同期限届满后乙方欲继续承租本合同项下房屋的，应当与甲方另行签署合同，租金以届时甲方报价为准。</p>
+            <p class="fb">第五条租金及押金</p>
+            <p>(一)租金标准：人民币（大写）<span class="span_bor">柒仟壹佰玖拾捌元零角</span>元整/月（￥：<span class="span_bor">7198.0</span>元/月） ，总计：人民币（大写）<span class="span_bor">零元整</span>元整　（￥：<span class="span_bor">0</span>元） 。</p>
+            <p>(二）租金付款方式为以下第<span class="span_bor"> 4 </span>种：</p>
+            <p>1.押一付一，租金支付日期为：</p>
+            <p>第一次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，第二次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，</p>
+            <p>第三次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，第四次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，</p>
+            <p>第五次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，第六次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，</p>
+            <p>第七次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，第八次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，</p>
+            <p>第九次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，第十次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，</p>
+            <p>第十一次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，第十二次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日。</p>
+            <p>2.押一付三，租金支付日期为：</p>
+            <p>第一次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月 <span class="span_bor"></span>日，第二次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月 <span class="span_bor"></span>日，</p>
+            <p>第三次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，第四次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日。</p>
+            <p>3.押一半年付，租金支付日期为：</p>
+            <p>第一次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日，第二次付款：<span class="span_bor"></span>年<span class="span_bor"></span>月<span class="span_bor"></span>日。</p>
+            <p>4.押一年付，租金支付日期为：</p>
+            <div class="txtIn">
+                <p>（三）房屋押金共计：人民币（大写）<span class="span_bor">柒仟壹佰玖拾捌元零角</span>（￥：<span class="span_bor">7198.0</span>元）。租赁期满或合同解除后，房屋租赁押金除抵扣应由乙方承担的费用、租金，以及乙方应当承担的违约赔偿责任外，剩余部分应如数无息返还给乙方。乙方应按照合同付款规定，按时足额向甲方支付房屋租金，除上述约定外，在其他任何情况下，乙方不得以任何理由以押金冲抵租金。</p>
+                <p class="fb">第六条管理服务费 </p>
+                <p class="suojin1">本合同签订之日，乙方应向甲方支付总租金的<span class="span_bor">10</span>%，即：人民币（大写）<span class="span_bor">柒佰壹拾玖元零角</span>元整（￥：<span class="span_bor">719.0</span>）作为管理服务费，关于管理服务费，甲方向乙方提供的服务包括但不限于专属管家、租务管理、维修服务、客服电话、Wi-Fi等。</p>
+                <p class="fb">第七条其他相关费用</p>
+                <p>（一）租赁期限内的下列费用中，<span class="span_bor">（3）（4）（5）（6）（7）（8）（9）（10）（11）</span>由甲方承担，<span class="span_bor">（1）（2）</span>由乙方承担（如有）： （1）水费（2）电费（3）网络（有线电视使用费）（4）供暖费（5）燃气费（6）物业管理费（7）房屋租赁税费（8）卫生费（9）上网费（10）室内设施维修费（应由乙方承担的除外）（11）公共区域保洁费。</p>
+                <p>（二）除上述约定的情形外，本合同中未列明的与租赁房屋有关的费用，均由乙方承担。如甲方垫付了应由乙方支付的费用，甲方有权根据相关缴费凭据要求乙方予以返还。</p>
+                <p>（三）租赁期限内，就生活费用中乙方应缴的部分，甲方统一代收代付，并不定期生成相应账单，乙方应于收到账单后3日内支付相应费用，乙方逾期交付的或单份合同账单累计未付金额超过500元的，甲方有权解除合同并要求乙方搬离房屋。乙方退租时，乙方应缴纳的上述费用甲方有权从押金和剩余房租、服务费中抵扣。</p>
+                <p class="fb">第八条房屋维护与维修</p>
+                <p>(一)甲方应保证租赁房屋的建筑结构和设备设施符合建筑、消防、治安、卫生等方面的安全条件，不得危及人身安全；房屋租赁期间，乙方应遵守国家法律法规、市区级管理规定及自如寓的物业管理规约，乙方严禁在房屋内摆放易燃、易爆、剧毒等危险、违禁物品，或持有法律、法规禁止的各类物品。</p>
+                <p>(二)承租期内，甲方承担房屋及附属物品、设备设施因老化产生的维护、维修事宜（不含乙方自带物品、设备设施，甲方有权根据房屋及附属物品、设备设施的实际情况设定维修方案，具体方案以甲方和实际维修商共同出具的房屋维修/鉴定方案表为准）；乙方承担房屋及附属物品、设备设施因使用不当或人为造成的维护、维修事宜。如维护维修项目不在前述范围之内，应依据谁导致谁承担的原则，由甲乙双方另行协商解决。</p>
+                <p>(三)租赁期限内，甲乙双方应共同保障租赁房屋及其附属物品、设备设施处于适用和安全的状态。乙方应维护租赁房屋既有的设备和设施的正常使用，如需调整、更换的，应事先征得甲方的书面同意，因乙方保管不当或不合理使用，致使该房屋及附属物品、设备设施发生损坏、故障或丢失的（包括公共区域内的设备设施），乙方应负责维修、承担维修费用或承担相应赔偿责任（维修范围内无法界定的共用设施维修责任由共用设施的全体承租人共同承担），甲方有权从押金中扣除前述相关费用，不足部分由乙方承担赔偿责任。</p>
+                <p>(四)租赁期限内，甲方对房屋进行维护、维修时，乙方须予以配合。如因乙方怠于或拒绝配合，导致甲方无法及时维护、维修以及检查的，由此产生的一切损失（包括但不限于租金损失、违约责任以及由此给甲方造成的其他损失等）均由乙方承担。</p>
+                <p class="fb">第九条 其他权利义务</p>
+                <p>(一)甲方有权对乙方提供的所有证件和个人资料进行审查并保存复印件。甲方承诺，非经乙方同意，乙方提供的复印件仅供本次租赁及乙方存档备查使用。乙方应按照甲方要求提供本人身份证件原件、工作单位证明文件及其他相关文件、联系方式等资料，且乙方保证其所提供的个人资料真实、合法、有效。如乙方未按要求提供相关证明文件、提供的文件有虚假，或其合租人发生变化时未按要求提供上述信息及资料，甲方可随时要求解除本合同及相关补充协议，并要求乙方承担相当于一个月租金金额的违约金。乙方信息如发生变更的，乙方应立即以书面形式通知甲方，如因乙方未能及时通知导致的任何损失，责任由乙方自行承担。</p>
+                <p>(二)甲方的房屋管理权：甲方有权对租赁房屋进行不定时公共区域查验及保洁工作。</p>
+                <p>(三)甲方向乙方交付的房屋及附属物品、设备设施符合安全条件即视为甲方履行了安全保障义务。租赁期限内，乙方应保障自身及同住人的人身及财产安全，如出现人身及财产损害，应遵循“谁导致谁承担”的原则进行处理，但甲方有义务协助配合乙方及有关部门处理相关问题。</p>
+                <p>(四)乙方应妥善保管甲方提供的自如账户、密码和（或）其他安全产品。乙方的手机号码、自如账户、密码和（或）其他安全产品是甲方识别承租人身份及指令的标志，所有使用乙方自如账户、密码和（或）其他安全产品的操作即为乙方的（授权）操作行为，因乙方自如账户、密码和（或）其他安全产品遗失、泄露、被窃所导致的损失由乙方独自承担。任何使用乙方的自如账户、密码和（或）其他安全产品发送至甲方软件系统的指令构成甲方不可撤销的指示，甲方对于依照该指示进行的行为及其结果不承担任何责任。</p>
+                <p>(五)租赁期限内，乙方应自行注意甲方及小区、物业等部门发布的通知（含生活费用缴纳通知、试水通知、设施检查通知等），并妥善处理相关事项。必要时，应及时联系甲方工作人员。乙方处理前述通知及事项时，应辨别真伪，避免损失。</p>
+                <p>(六)如附件二《承租房屋信息列表》中的房屋已配备智能密码锁，乙方须妥善保管开锁密码并合理使用智能锁具，因乙方擅自将密码泄露给他人导致房屋内乙方、第三方人身财产受到损害的，或给房屋造成损坏或给甲方造成损失的，乙方自行承担责任。</p>
+                <p class="fb">第十条 合同变更</p>
+                <p>(一)合同租赁期限内，经甲乙双方协商一致，双方可办理变更（仅包含乙方将租赁房屋的承租使用权全部转让给他人或乙方搬移至甲方管理的其他房屋的情况,新签合同租赁期限必须为一年）。乙方应向甲方支付房屋月租金50%的手续费，甲方有权从押金中扣除。甲乙双方结清各项费用后，甲方应无息退还乙方未发生的押金、租金和管理服务费。未发生租金计算方式：总租金-日租金&times;已发生天数，其中日租金=合同总租金/合同总天数。未发生管理服务费计算方式：总服务费-日服务费&times;已发生天数。办理租金或服务费退费时，乙方须将发票原件（如有）交还甲方，如乙方此前取得的发票为增值税专用发票的，须配合甲方进行税务专票红字发票处理，否则甲方有权拒绝向乙方退还租金或服务费。乙方与甲方办理承租人变更的，变更后的房屋租金应以甲方公示的最新价格为准。</p>
+                <p>(二)房屋租赁期限届满乙方如欲继续承租的：</p>
+                <p class="suojin1">1. 非短租产品的合同应于租赁期限届满前三十日内向甲方提出书面续租申请；</p>
+                <p class="suojin1">2. 短租产品的合同应于租赁期限届满前七日内向甲方提出书面续租申请；</p>
+                <p class="suojin1">经甲乙双方协商一致后另行签署协议（乙方提前续租的，如甲方有相应优惠政策，具体规则以甲方公示为准），但甲方可于租赁期限届满前14日（短租产品为7日）内释放房源供第三方预订，如乙方在甲方释放房源前仍未与甲方就续租签署协议的，房源释放后因第三方已预订导致乙方无法续租的，甲方不承担任何责任，乙方须于租赁期限届满后立即办理解约并腾退房屋。</p>
+                <p class="fb">第十一条 合同解除及终止</p>
+                <p>(一)甲乙双方协商一致，可以解除本合同。</p>
+                <p>(二)因不可抗力、政府行为等原因导致本合同无法继续履行的，本合同自行解除，双方均不承担任何违约责任。</p>
+                <p>(三)甲方有下列情形之一的，乙方有权单方解除合同：</p>
+                <p class="suojin1">1.延迟交付房屋达 七 日的；</p>
+                <p class="suojin1">2.拒绝承担约定的维修义务，致使乙方无法正常使用房屋的。</p>
+                <p>(四)乙方或其房屋共同使用人有下列情形之一的，甲方有权单方解除合同，收回房屋：</p>
+                <p class="suojin1">1.租赁期限内，累计拖欠租金达三日的，或欠缴各项费用总和达月租金额15%的；</p>
+                <p class="suojin1">2.擅自改变房屋用途、拆改变动、损害房屋主体结构，私自更换屋内装修配置，或保管不当、不合理使用导致房屋附属物品、设备设施损坏并拒不赔偿的；</p>
+                <p class="suojin1">3.擅自将房屋全部或部分转租给第三人、或通过网络、传单等途径发布房屋转租信息、或租赁期间违反约定的租住人数或年龄标准的；</p>
+                <p class="suojin1">4.拒不配合甲方其他对于房屋的经营管理活动的【包括但不限于怠于或拒绝配合甲方对房屋进行的维护维修、消防安全检查，拒不服从屋内禁止饲养宠物的规定等】；</p>
+                <p class="suojin1">5.因扰民（如交谈或播放音乐声音过大、休息时间演奏乐器、乱放垃圾等）、卫生状况、邻里关系、拒不承担生活费用、过度占用公共区域等原因干扰影响他人或其他相邻权人正常生活，导致周边邻居、居委会书面投诉或派出所出警协调的；</p>
+                <p class="suojin1">6.违反本合同约定（包括《自如寓住户公约》），经甲方提出更正要求，拒不改正的；</p>
+                <p class="suojin1">7.违反法律法规、政策关于建筑物和建筑设施的规定或甲方出租的管理规定在房屋或公共区域搭建建筑物或设施的(包括但不限于钢混、玻璃类建构筑物，木质架构，大面积棚状设施等)；</p>
+                <p class="suojin1">8.违反国家法律法规规定，利用租赁房屋从事违法活动、损害公共利益的；</p>
+                <p class="suojin1">9.其他因乙方原因损害甲方利益或导致本合同无法继续履行的情形。</p>
+                <p>(五) 出现其他法定的合同解除情形或甲乙双方另有约定的，遵照法律规定或双方约定解除合同。</p>
+                <p>(六） 本条第（四）款情形发生后，达到合同解除条件当日甲方即有权向乙方发出合同解除通知（短信/微信的正式沟通亦具同等效力），本合同及相关协议即告解除。在合同解除当日，乙方应依据本合同之附件三《房屋交割清单》将租赁房屋及设施交还甲方，并清空乙方物品。</p>
+                <p>（七）合同到期或解除次日，甲方有权通过强制手段将房屋及设施收回，如乙方留存任何物品，均视为乙方抛弃，甲方有权进行处置。</p>
+                <p class="fb">第十二条 违约责任</p>
+                <p>（一）甲方有本合同第十一条第（三）款约定的情形之一的，应按月租金100％向乙方支付违约金；乙方有本合同第十条第（四）款约定的情形之一的，应按月租金100％向甲方支付违约金，且应将租赁房屋恢复原状并赔偿甲方因乙方的违约行为而遭受的相应损失。因乙方违反第十一条第（四）款规定，导致甲方被有关行政机关处罚的，乙方应当承担相应责任，包括但不限于赔偿损失、消除影响、排除妨害等。</p>
+                <p>（二）租赁期限内，甲方需提前收回房屋，或乙方需提前退租的，按如下方式处理：</p>
+                <p class="suojin1">1.甲方需提前收回该房屋的，应提前30日通知乙方，并按月租金的100％支付违约金。</p>
+                <p class="suojin1">2.合同生效后，乙方提前退租的：</p>
+                <p class="suojin1">1 ）应在拟解约日前20个自然日内向管家提出解约申请，甲方可于乙方提出解约日期前7日内释放房源供第三方预订，如乙方在甲方释放房源前未更改解约申请的，房源释放后因第三方已预订导致乙方无法继续居住的，甲方不承担任何责任，乙方须于租赁期限届满后立即办理解约并腾退房屋，并按月租金的100%向甲方支付违约金；若客户实际办理日期早于申请之日后20日的，客户应缴租金的截止日为提出退租申请之日后第20日；若客户实际办理日期晚于申请之日后20日的，客户应缴租金的截止日为实际解约日期。提交解约申请后45个自然日内未实际办理解约的，该申请失效，如后续仍有提前解约需求，应再次提前20个自然日提交解约申请，费用结算以新的退租申请日期为准。 </p>
+                <p class="suojin1">2 ）如在租赁期限起始日之前乙方提出解除本合同的，须按照本合同约定月租金的100%向甲方支付违约金，甲方有权在乙方已经预先支付的款项中直接扣除。</p>
+                <p class="suojin1" style="background:#ffff00">3 ）乙方提出解约申请的日期以甲方收到乙方申请之日为准；乙方向甲方提前通申请天数的计算公式为：乙方向甲方提前通知的天数=甲乙双方签署解约协议约定的房屋使用权交还日期-甲方收到乙方解约申请的日期。</p>
+                <p class="suojin1">3.乙方结清应承担的各项费用及乙方应当承担的违约赔偿责任后，甲方应无息退还乙方尚未发生的相应租金及服务费。未发生租金及服务费的计算方式参照本合同第十条的约定。</p>
+                <p>（三）违约方有下列情形之一的，每逾期一日，应向守约方支付当次应缴纳房租金额的5‰的违约金，并赔偿守约方因此遭受的相应损失（具体收取规则以甲方公示为准）：</p>
+                <p class="suojin1">1.甲方未按约定时间交付该房屋的；</p>
+                <p class="suojin1">2.乙方未按约定时间支付租金的但未达到解除合同条件的；</p>
+                <p class="suojin1">3.乙方未按约定时间返还房屋的。</p>
+                <p class="fb">第十三条合同争议的解决办法</p>
+                <p class="suojin1">本合同项下发生的争议，由双方当事人协商解决；协商不成的，双方当事人约定将争议提交北京市海淀区人民法院解决。</p>
+                <p class="fb">第十四条其他约定的事项</p>
+                <p>(一)本合同自双方签字盖章后或乙方全额支付其首次应付的款项之日生效（包括房屋租赁押金、房屋首次应付租金、服务费）。本合同（及附件）一式贰份，甲方、乙方各执壹份。合同附件与正文具有同等的法律效力。</p>
+                <p>(二)本合同生效后，双方对合同内容的变更或补充应采取书面形式，作为合同的附件。</p>
+                <p>(三)本合同涉及违约金计算规则时，违约金金额存有小数的，四舍五入，取整到元。</p>
+                <p>(四)本合同涉及各类租约规则、优惠活动、促销活动的，具体规则以甲方公示为准。乙方通过上述方式获得服务费减免的，减免部分视为乙方虚拟支付。如乙方提前解除合同，甲方对上述虚拟支付部分无退还义务，且乙方自始不享受减免优惠，如乙方实付服务费金额（不含虚拟支付部分）低于无优惠时应付服务费金额的，甲方同意不再要求乙方补足；如实付服务费金额（不含虚拟支付部分）高于无优惠时应付服务费金额的，甲方应予退还。双方认可费用金额以甲方系统记载数据为准。</p>
+                <p>(以下无正文)</p>
+                <div class="fb">
+                    <p>出租人（甲方）签章：自如寓（北京）酒店管理有限公司 承租人（乙方）签章：</p>
+                    <p>经办人：__________________________________ </p>
+                </div>
+                <div>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <p class="fb">附件一 租客信息表</p>
+                    <p>尊敬的客户： </p>
+                    <p>为了更好的为交易双方服务，维护双方的合法权益，请您协助我公司完整填写下列表格内容。 </p>
+                    <p>对您提供的信息，我公司将恪守职业道德，依法进行保密。 </p>
+                    <p>我公司保证：除为您提供服务及本公司留存备查之目的使用外，下述信息我公司不会非法滥用。 </p>
+                    <table class="s-table_base">
+                        <tbody>
+                        <tr>
+                            <td class="fb">*姓名</td>
+                            <td width="80"></td>
+                            <td class="fb">*性别</td>
+                            <td width="130"> </td>
+                            <td width="48" class="fb">*年龄</td>
+                            <td width="170"></td>
+                        </tr>
+                        <tr>
+                            <td class="fb">学历</td>
+                            <td> </td>
+                            <td class="fb">职业</td>
+                            <td></td>
+                            <td class="fb">婚姻状况</td>
+                            <td> </td>
+                        </tr>
+                        <tr>
+                            <td class="fb">*联系电话</td>
+                            <td></td>
+                            <td class="fb">新浪微博ID（其他平台请注明）</td>
+                            <td></td>
+                            <td class="fb">*电子邮箱</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fb">*紧急联系人</td>
+                            <td></td>
+                            <td class="fb">*紧急联系人电话</td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td class="fb">*信息获取渠道</td>
+                            <td class="text_left" colspan="5">
+                                <!--  □ 自如网 □ 店面接待 □ 社区开发 □ 400□热线 □ 自如客户推荐 □ 朋友介绍 □大客户渠道 □ 丁丁接待 □其他 -->
+                                <!--□ 自如网 □ 店面接待 □ 社区开发 □ 400热线 □ 自如客户推荐 □ 朋友介绍 □其他  --> <input type="checkbox" name="cusFrom" value="1" />自如网 <input type="checkbox" name="cusFrom" value="2" />店面接待 <input type="checkbox" name="cusFrom" value="3" />社区开发 <input type="checkbox" name="cusFrom" value="4" />400 <input type="checkbox" name="cusFrom" value="5" />热线 <input type="checkbox" name="cusFrom" value="6" />自如客户推荐 <input type="checkbox" name="cusFrom" value="7" />朋友介绍 <input type="checkbox" name="cusFrom" value="8" />大客户渠道 <input type="checkbox" name="cusFrom" value="9" />丁丁接待 <input type="checkbox" name="cusFrom" value="0" />其他 </td>
+                        </tr>
+                        <tr>
+                            <td class="fb">*身份证件类别</td>
+                            <td class="text_left" colspan="5">
+                                <!-- □身份证□ 护照 □ 军官证   □台湾居民往来大陆通行证□ 社保卡  □ 港澳通行证  □ 户口本  □ 居住证  □ 其他 --> <input type="checkbox" name="certType" value="1" />身份证 <input type="checkbox" name="certType" value="2" />护照 <input type="checkbox" name="certType" value="3" />军官证 <input type="checkbox" name="certType" value="6" />台湾居民往来大陆通行证 <input type="checkbox" name="certType" value="7" />社保卡 <input type="checkbox" name="certType" value="13" />港澳通行证 <input type="checkbox" name="certType" value="14" />户口本 <input type="checkbox" name="certType" value="15" />居住证 <input type="checkbox" name="certType" value="0" />其他 </td>
+                        </tr>
+                        <tr>
+                            <td class="fb">*身份证件号</td>
+                            <td colspan="5"></td>
+                        </tr>
+                        <tr>
+                            <td class="fb">*通讯地址</td>
+                            <td colspan="5"></td>
+                        </tr>
+                        <tr>
+                            <td class="fb">*工作单位/学校</td>
+                            <td colspan="5"></td>
+                        </tr>
+                        <tr>
+                            <td class="fb">*工作证件类别</td>
+                            <td colspan="5" class="text_left">
+                                <!--  □单位工牌□ 工作证  □ 学生证  □ 劳动合同  □ 工作证明  □ 就业协议  □ 营业执照副本 --> <input type="checkbox" name="socialProof" value="1" />单位工牌 <input type="checkbox" name="socialProof" value="2" />工作证 <input type="checkbox" name="socialProof" value="3" />学生证 <input type="checkbox" name="socialProof" value="4" />劳动合同 <input type="checkbox" name="socialProof" value="5" />工作证明 <input type="checkbox" name="socialProof" value="6" />就业协议 <input type="checkbox" name="socialProof" value="7" />营业执照副本 </td>
+                        </tr>
+                        <tr>
+                            <td class="fb">工作证件号</td>
+                            <td colspan="5"></td>
+                        </tr>
+                        <tr>
+                            <td class="fb">付款周期</td>
+                            <td colspan="5">
+                                <!--  □月付  □季付□半年付  □ 年付  □ 一次性付清 --> <input type="checkbox" name="payCycle" value="1" />月付 <input type="checkbox" name="payCycle" value="3" />季付 <input type="checkbox" name="payCycle" value="6" />半年付 <input type="checkbox" name="payCycle" value="12" />年付 <input type="checkbox" name="payCycle" value="9" checked="checked" />一次性付清 </td>
+                        </tr>
+                        <tr>
+                            <td class="fb">备注</td>
+                            <td colspan="5"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="fb">委托代理人（如有，请填写以下信息）</td>
+                        </tr>
+                        <tr>
+                            <td class="fb">姓名</td>
+                            <td colspan="5"></td>
+                        </tr>
+                        <tr>
+                            <td class="fb">证件名称及号码</td>
+                            <td colspan="5"> </td>
+                        </tr>
+                        <tr>
+                            <td class="fb">通讯地址</td>
+                            <td colspan="3"></td>
+                            <td class="fb">邮政编码</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="fb">联系电话</td>
+                            <td colspan="3"></td>
+                            <td class="fb">电子邮箱</td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p>说明：表中带“*”的项为必填项</p>
+                    <p class="fb suojin1">本人承诺，本人所填上述信息均真实、合法、有效。</p>
+                    <p class="tr fb">房屋承租人（签章）：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <p class="tr fb">签署日期：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日</p>
+                </div>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p class="fb">附件二承租房屋信息列表</p>
+                <table class="s-table_base" cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tbody>
+                    <tr>
+                        <td class="bg_eaf1de">房屋地址（房间/个人生活单元）</td>
+                        <td class="bg_eaf1de">房间/个人生活单元号</td>
+                        <td class="bg_eaf1de">租金标准（元/月）</td>
+                        <td class="bg_eaf1de">服务费（元）</td>
+                        <td class="bg_eaf1de"> 押金（元）</td>
+                        <td class="bg_eaf1de">备注</td>
+                    </tr>
+                    <tr>
+                        <td>北京市朝阳区广顺北大街与利泽中街交汇处</td>
+                        <td>D-12</td>
+                        <td>7198.0</td>
+                        <td>719.0</td>
+                        <td>7198.0</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="fb">附件三房屋交割清单（房间/个人生活单元号） </p>
+                <table class="s-table_base" cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tbody>
+                    <tr class="fb">
+                        <td colspan="5" class="bg1 text_center">房屋交割清单（一）</td>
+                    </tr>
+                    <tr class="fb">
+                        <td class="bg2" width="20%">项目</td>
+                        <td class="bg2" width="20%"> 单价</td>
+                        <td class="bg2" width="20%"> 是否预付费 </td>
+                        <td class="bg2" width="20%"> 表底示数/卡显示余额 </td>
+                        <td class="bg2" width="30%"> 备注</td>
+                    </tr>
+                    <tr>
+                        <td>电</td>
+                        <td>1.4</td>
+                        <td> 是 </td>
+                        <td>27.2 \ 38.08</td>
+                        <td>2016年</td>
+                    </tr>
+                    <tr>
+                        <td>水</td>
+                        <td>9.0</td>
+                        <td> 是 </td>
+                        <td>3.6 \ 32.40</td>
+                        <td>2016年</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="s-table_base" cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tbody>
+                    <tr class="fb">
+                        <td colspan="4" class="bg3 text_center">房屋交割清单（二） </td>
+                    </tr>
+                    <tr>
+                        <td class="bg4">物品类型</td>
+                        <td class="bg4">物品名称</td>
+                        <td class="bg4">数量 </td>
+                        <td class="bg4">损坏赔付金额（元/件）</td>
+                    </tr>
+                    <tr>
+                        <td>家具</td>
+                        <td> 1.5床 </td>
+                        <td> 1 </td>
+                        <td> 1490.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家具</td>
+                        <td> 1.5床垫 </td>
+                        <td> 1 </td>
+                        <td> 900.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家具</td>
+                        <td> 衣柜（定制） </td>
+                        <td> 1 </td>
+                        <td> 750.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家具</td>
+                        <td> 书桌（定制） </td>
+                        <td> 1 </td>
+                        <td> 800.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家具</td>
+                        <td> 床头柜 </td>
+                        <td> 1 </td>
+                        <td> 500.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家具</td>
+                        <td> 书架/隔板 </td>
+                        <td> 1 </td>
+                        <td> 1200.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家具</td>
+                        <td> 办公椅 </td>
+                        <td> 1 </td>
+                        <td> 300.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家具</td>
+                        <td> 木门 </td>
+                        <td> 1 </td>
+                        <td> 1700.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家具</td>
+                        <td> 电视柜/隔板 </td>
+                        <td> 1 </td>
+                        <td> 480.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家具</td>
+                        <td> 橱柜 </td>
+                        <td> 1 </td>
+                        <td> 1500.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家具</td>
+                        <td> 马桶 </td>
+                        <td> 1 </td>
+                        <td> 800.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家电</td>
+                        <td> 壁挂式空调 </td>
+                        <td> 1 </td>
+                        <td> 1500.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家电</td>
+                        <td> 32寸电视 </td>
+                        <td> 1 </td>
+                        <td> 1500.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家电</td>
+                        <td> 单开门冰箱 </td>
+                        <td> 1 </td>
+                        <td> 1300.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家电</td>
+                        <td> 滚筒洗衣机 </td>
+                        <td> 1 </td>
+                        <td> 1650.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家电</td>
+                        <td> 电磁炉 </td>
+                        <td> 1 </td>
+                        <td> 170.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家电</td>
+                        <td> 欧式抽油烟机 </td>
+                        <td> 1 </td>
+                        <td> 800.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家电</td>
+                        <td> 热水器 </td>
+                        <td> 1 </td>
+                        <td> 1230.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家电</td>
+                        <td> 微波炉 </td>
+                        <td> 1 </td>
+                        <td> 500.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家电</td>
+                        <td> 乐视盒子 </td>
+                        <td> 1 </td>
+                        <td> 500.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家电</td>
+                        <td> 路由器 </td>
+                        <td> 1 </td>
+                        <td> 100.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家居</td>
+                        <td> 窗帘 </td>
+                        <td> 1 </td>
+                        <td> 300.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家居</td>
+                        <td> 穿衣镜 </td>
+                        <td> 1 </td>
+                        <td> 80.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家居</td>
+                        <td> 花洒 </td>
+                        <td> 1 </td>
+                        <td> 300.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家居</td>
+                        <td> 厨房背漆玻璃 </td>
+                        <td> 1 </td>
+                        <td> 720.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家居</td>
+                        <td> 卫生间镜子 </td>
+                        <td> 1 </td>
+                        <td> 80.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家居</td>
+                        <td> 卫生间毛巾架 </td>
+                        <td> 1 </td>
+                        <td> 50.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家居</td>
+                        <td> 水卡 </td>
+                        <td> 1 </td>
+                        <td> 30.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家居</td>
+                        <td> 电卡 </td>
+                        <td> 1 </td>
+                        <td> 30.0 </td>
+                    </tr>
+                    <tr>
+                        <td>家居</td>
+                        <td> 住户门卡 </td>
+                        <td> 1 </td>
+                        <td> 30.0 </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">注：对上述物品，乙方经验收，认为符合房屋交验条件，并且双方已对水、电、燃气等费用确认完结，同意接收。如乙方损坏物品乙方同意按上述赔付金额赔付。</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: left;"> <p>出租人(甲方）签章： </p> <p>&nbsp;</p> <p>&nbsp;</p> <p>签字日期：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日 </p> </td>
+                        <td colspan="2" style="text-align: left;"> <p>承租人(乙方）签章： </p> <p>&nbsp;</p> <p>&nbsp;</p> <p>签字日期：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日 </p> </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                <p class="fb">附件四 自如寓住户公约</p>
+                <h1 class="tit">自如寓住户公约</h1>
+                <p>亲爱的自如客，</p>
+                <p>欢迎您来到自如寓！为了让所有自如客拥有一个和谐、舒适、安全的品质居住生活，特制定此公约。请仔细阅读并遵守，维护好我们共同的社区。</p>
+                <p>1.请勿在公寓内饲养宠物；</p>
+                <p>2.严禁在房间内进行任何形式的电路改造、乱拉电线或使用不合格电器；由此原因引起的电线短路或设备损坏所产生的费用，由您自行承担；由此引发事故，导致他人人身或财产受到损害的，将由您自行承担相应的法律责任（包括但不限于赔偿损失、人身损害赔偿责任等）；</p>
+                <p>3.请保持室内墙面整洁，禁止乱涂乱画，严禁室内及窗外私自搭建、改造、涂抹、破坏墙体、改变楼体等行为，一经发现，强制复原，所产生的费用将由您个人承担；</p>
+                <p>4.远亲不如近邻，邻里之间和睦相处，出现摩擦友好协商解决；</p>
+                <p class="red">5.租住个人生活单元房型的自如客：水电费由同一个房间的自如客自行缴纳、互相协商平摊费用；请不要在房间公共区域堆放个人物品，公共储物柜为大家共享；洗漱池、卫生间错峰使用，实时整理清洁，共同维护室内卫生；</p>
+                <p>6.请将自行车及机动车整齐停放在指定地点；</p>
+                <p>7.生活垃圾请扔在楼层垃圾筒或指定垃圾投放处，切忌放在门口或随处乱扔；</p>
+                <p>8.请勿在楼道、Z-Space等公共区域堆放鞋架、晾衣架、储物盒等私人物品及任何杂物，一经发现，将视为您已抛弃该物品，保洁人员将视为垃圾收走；</p>
+                <p class="red">9.请文明使用Z-Space，使用后带走垃圾，并遵守自如寓公共区域管理规定，不在Z-Space无端聚众、喧哗、打牌、抽烟等，不影响其他人的正常使用或打扰其他人休息；</p>
+                <p>10.禁止在公寓内从事任何违法行为，一经发现，自如寓有权按照合同约定解除合同、收回房屋<span class="red">并交由公安部门依法处理；</span></p>
+                <p>11.如发现可疑人员，请及时通知保安及管家。</p>
+                <p>请大家一起做到：</p>
+                <p>包容 互助 分享 —— 爱生活 爱社区里的每一位伙伴</p>
+                <p>随寓而安 愿你自如</p>
+                <p class="tr">自如寓团队 敬上</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+                <p>&nbsp;</p>
+            </div>
+        </div>
+    </div>  </font>
+</body>
+</html>

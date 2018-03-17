@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ups.systemsDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.entity.sys.SystemsEntity" >
+    <!--
+    基础map
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="sys_code" property="sysCode" jdbcType="VARCHAR" />
+    <result column="sys_name" property="sysName" jdbcType="VARCHAR" />
+    <result column="sys_url" property="sysUrl" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    <!--
+    基础字段
+    -->
+    id, fid, sys_code, sys_name, sys_url, create_date, last_modify_date, is_del
+  </sql>
+
+  <select id="getSystemsEntityByFid" resultMap="BaseResultMap" parameterType="string" >
+    <!--
+    fid查询系统信息
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_sys_systems
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getSystemsEntityByCode" resultMap="BaseResultMap" parameterType="string" >
+    <!--
+   code查询系统信息
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_sys_systems
+    where sys_code = #{sysCode,jdbcType=VARCHAR}
+    limit 1
+  </select>
+  
+  <select id="findSystemsByPage" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.ups.dto.SystemsRequest" >
+    <!--
+    分页查询系统信息
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_sys_systems
+    where is_del=0
+    <if test="systemName!=null and systemName!=''">
+    and sys_name=#{systemName,jdbcType=VARCHAR}
+    </if>
+    <if test="systemCode!=null and systemCode!=''">
+    and sys_code=#{systemCode,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+
+  <insert id="insertSystems" parameterType="com.ziroom.minsu.entity.sys.SystemsEntity" >
+    <!--
+    插入系统信息
+    -->
+    insert into t_sys_systems
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="sysCode != null" >
+        sys_code,
+      </if>
+      <if test="sysName != null" >
+        sys_name,
+      </if>
+      <if test="sysUrl != null" >
+        sys_url,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCode != null" >
+        #{sysCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sysName != null" >
+        #{sysName,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUrl != null" >
+        #{sysUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+
+  <update id="updateSystems" parameterType="com.ziroom.minsu.entity.sys.SystemsEntity" >
+    <!--
+    更新系统信息
+    -->
+    update t_sys_systems
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="sysCode != null" >
+        sys_code = #{sysCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sysName != null" >
+        sys_name = #{sysName,jdbcType=VARCHAR},
+      </if>
+      <if test="sysUrl != null" >
+        sys_url = #{sysUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=TINYINT},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询所有系统列表 -->
+  <select id="findAllSystem" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from t_sys_systems
+    where is_del=0
+  </select>
+
+  <!--查询用户拥有权限的系统-->
+  <select id="findHasSysByUid" resultMap="BaseResultMap">
+    SELECT
+    DISTINCT sys_name, sys_url,sys_code
+    FROM
+    t_sys_currentuser_role t
+    LEFT JOIN t_sys_role r ON t.role_fid = r.fid
+    LEFT JOIN t_sys_systems s ON r.systems_fid = s.fid
+    WHERE t.currenuser_fid = #{fid,jdbcType=VARCHAR}
+    AND r.is_del = 0 AND s.is_del = 0
+  </select>
+</mapper>
