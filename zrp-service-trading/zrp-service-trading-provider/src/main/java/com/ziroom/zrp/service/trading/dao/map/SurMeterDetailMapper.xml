@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ziroom.zrp.service.trading.dao.SurMeterDetailDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.SurMeterDetailEntity">
+        <result column="fid" property="fid" jdbcType="VARCHAR"/>
+        <result column="fcontractId" property="fcontractid" jdbcType="VARCHAR"/>
+        <result column="fsurrenderid" property="fsurrenderid" jdbcType="VARCHAR"/>
+        <result column="room_id" property="roomId" jdbcType="VARCHAR"/>
+        <result column="fwaterMeterType" property="fwatermetertype" jdbcType="VARCHAR"/>
+        <result column="felectricMeterType" property="felectricmetertype" jdbcType="VARCHAR"/>
+        <result column="fwaterprenumber" property="fwaterprenumber" jdbcType="DECIMAL"/>
+        <result column="fwaternumber" property="fwaternumber" jdbcType="DECIMAL"/>
+        <result column="felectricprenumber" property="felectricprenumber" jdbcType="DECIMAL"/>
+        <result column="felectricnumber" property="felectricnumber" jdbcType="DECIMAL"/>
+        <result column="fsurwaterprice" property="fsurwaterprice" jdbcType="DECIMAL"/>
+        <result column="fsurelecprice" property="fsurelecprice" jdbcType="DECIMAL"/>
+        <result column="fwaterMeterPic" property="fwatermeterpic" jdbcType="VARCHAR"/>
+        <result column="felectricMeterPic" property="felectricmeterpic" jdbcType="VARCHAR"/>
+        <result column="fisDel" property="fisdel" jdbcType="INTEGER"/>
+        <result column="fvalid" property="fvalid" jdbcType="INTEGER"/>
+        <result column="fcityId" property="fcityid" jdbcType="VARCHAR"/>
+        <result column="fupdateTime" property="fupdatetime" jdbcType="TIMESTAMP"/>
+        <result column="fupdaterId" property="fupdaterid" jdbcType="VARCHAR"/>
+        <result column="fcreateTime" property="fcreatetime" jdbcType="TIMESTAMP"/>
+        <result column="fcreaterId" property="fcreaterid" jdbcType="VARCHAR"/>
+        <result column="cityid" property="cityid" jdbcType="VARCHAR"/>
+    </resultMap>
+	<sql id="Base_Column_List" >
+	    fid, fcontractId, fsurrenderid, 
+      room_id, fwaterMeterType, felectricMeterType, 
+      fwaterprenumber, fwaternumber, felectricprenumber, 
+      felectricnumber, fsurwaterprice, fsurelecprice, 
+      fwaterMeterPic, felectricMeterPic, fisDel, 
+      fvalid, fcityId, fupdateTime, 
+      fupdaterId, fcreateTime, fcreaterId, 
+      cityid
+	 </sql>
+    <insert id="insert" parameterType="com.ziroom.zrp.trading.entity.SurMeterDetailEntity">
+        insert into tsurmeterdetail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="fcontractid != null">
+                fcontractId,
+            </if>
+            <if test="fsurrenderid != null">
+                fsurrenderid,
+            </if>
+            <if test="roomId != null">
+                room_id,
+            </if>
+            <if test="fwatermetertype != null">
+                fwaterMeterType,
+            </if>
+            <if test="felectricmetertype != null">
+                felectricMeterType,
+            </if>
+            <if test="fwaterprenumber != null">
+                fwaterprenumber,
+            </if>
+            <if test="fwaternumber != null">
+                fwaternumber,
+            </if>
+            <if test="felectricprenumber != null">
+                felectricprenumber,
+            </if>
+            <if test="felectricnumber != null">
+                felectricnumber,
+            </if>
+            <if test="fsurwaterprice != null">
+                fsurwaterprice,
+            </if>
+            <if test="fsurelecprice != null">
+                fsurelecprice,
+            </if>
+            <if test="fwatermeterpic != null">
+                fwaterMeterPic,
+            </if>
+            <if test="felectricmeterpic != null">
+                felectricMeterPic,
+            </if>
+            <if test="fisdel != null">
+                fisDel,
+            </if>
+            <if test="fvalid != null">
+                fvalid,
+            </if>
+            <if test="fcityid != null">
+                fcityId,
+            </if>
+            <if test="fupdatetime != null">
+                fupdateTime,
+            </if>
+            <if test="fupdaterid != null">
+                fupdaterId,
+            </if>
+            <if test="fcreatetime != null">
+                fcreateTime,
+            </if>
+            <if test="fcreaterid != null">
+                fcreaterId,
+            </if>
+            <if test="cityid != null">
+                cityid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fid != null">
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="fcontractid != null">
+                #{fcontractid,jdbcType=VARCHAR},
+            </if>
+            <if test="fsurrenderid != null">
+                #{fsurrenderid,jdbcType=VARCHAR},
+            </if>
+            <if test="roomId != null">
+                #{roomId,jdbcType=VARCHAR},
+            </if>
+            <if test="fwatermetertype != null">
+                #{fwatermetertype,jdbcType=VARCHAR},
+            </if>
+            <if test="felectricmetertype != null">
+                #{felectricmetertype,jdbcType=VARCHAR},
+            </if>
+            <if test="fwaterprenumber != null">
+                #{fwaterprenumber,jdbcType=DECIMAL},
+            </if>
+            <if test="fwaternumber != null">
+                #{fwaternumber,jdbcType=DECIMAL},
+            </if>
+            <if test="felectricprenumber != null">
+                #{felectricprenumber,jdbcType=DECIMAL},
+            </if>
+            <if test="felectricnumber != null">
+                #{felectricnumber,jdbcType=DECIMAL},
+            </if>
+            <if test="fsurwaterprice != null">
+                #{fsurwaterprice,jdbcType=DECIMAL},
+            </if>
+            <if test="fsurelecprice != null">
+                #{fsurelecprice,jdbcType=DECIMAL},
+            </if>
+            <if test="fwatermeterpic != null">
+                #{fwatermeterpic,jdbcType=VARCHAR},
+            </if>
+            <if test="felectricmeterpic != null">
+                #{felectricmeterpic,jdbcType=VARCHAR},
+            </if>
+            <if test="fisdel != null">
+                #{fisdel,jdbcType=INTEGER},
+            </if>
+            <if test="fvalid != null">
+                #{fvalid,jdbcType=INTEGER},
+            </if>
+            <if test="fcityid != null">
+                #{fcityid,jdbcType=VARCHAR},
+            </if>
+            <if test="fupdatetime != null">
+                #{fupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fupdaterid != null">
+                #{fupdaterid,jdbcType=VARCHAR},
+            </if>
+            <if test="fcreatetime != null">
+                #{fcreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fcreaterid != null">
+                #{fcreaterid,jdbcType=VARCHAR},
+            </if>
+            <if test="cityid != null">
+                #{cityid,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+	<!-- 更新退租水电交割实体 -->
+	<update id="update" parameterType="com.ziroom.zrp.trading.entity.SurMeterDetailEntity" >
+    update tsurmeterdetail
+    <set >
+  		<if test="fid != null">
+            fid = #{fid,jdbcType=VARCHAR},
+        </if>
+        <if test="fcontractid != null">
+            fcontractId = #{fcontractid,jdbcType=VARCHAR},
+        </if>
+        <if test="fsurrenderid != null">
+            fsurrenderid = #{fsurrenderid,jdbcType=VARCHAR},
+        </if>
+        <if test="roomId != null">
+            room_id = #{roomId,jdbcType=VARCHAR},
+        </if>
+        <if test="fwatermetertype != null">
+            fwaterMeterType = #{fwatermetertype,jdbcType=VARCHAR},
+        </if>
+        <if test="felectricmetertype != null">
+            felectricMeterType =  #{felectricmetertype,jdbcType=VARCHAR},
+        </if>
+        <if test="fwaterprenumber != null">
+            fwaterprenumber = #{fwaterprenumber,jdbcType=DECIMAL},
+        </if>
+        <if test="fwaternumber != null">
+            fwaternumber =  #{fwaternumber,jdbcType=DECIMAL},
+        </if>
+        <if test="felectricprenumber != null">
+            felectricprenumber =  #{felectricprenumber,jdbcType=DECIMAL},
+        </if>
+        <if test="felectricnumber != null">
+            felectricnumber =  #{felectricnumber,jdbcType=DECIMAL},
+        </if>
+        <if test="fsurwaterprice != null">
+            fsurwaterprice = #{fsurwaterprice,jdbcType=DECIMAL},
+        </if>
+        <if test="fsurelecprice != null">
+            fsurelecprice =  #{fsurelecprice,jdbcType=DECIMAL},
+        </if>
+        <if test="fwatermeterpic != null">
+            fwaterMeterPic =  #{fwatermeterpic,jdbcType=VARCHAR},
+        </if>
+        <if test="felectricmeterpic != null">
+            felectricMeterPic = #{felectricmeterpic,jdbcType=VARCHAR},
+        </if>
+        <if test="fisdel != null">
+            fisDel = #{fisdel,jdbcType=INTEGER},
+        </if>
+        <if test="fvalid != null">
+            fvalid = #{fvalid,jdbcType=INTEGER},
+        </if>
+        <if test="fcityid != null">
+            fcityId = #{fcityid,jdbcType=VARCHAR},
+        </if>
+        <if test="fupdatetime != null">
+            fupdateTime =  #{fupdatetime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="fupdaterid != null">
+            fupdaterId =  #{fupdaterid,jdbcType=VARCHAR},
+        </if>
+        <if test="fcreatetime != null">
+            fcreateTime = #{fcreatetime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="fcreaterid != null">
+            fcreaterId =  #{fcreaterid,jdbcType=VARCHAR},
+        </if>
+        <if test="cityid != null">
+            cityid =  #{cityid,jdbcType=VARCHAR},
+        </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+    <select id="getSDPriceBySurrenderId" resultType="com.ziroom.zrp.trading.entity.SurMeterDetailEntity"
+            parameterType="java.lang.String">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            tsurmeterdetail
+        WHERE
+            fsurrenderid = #{surrenderId,jdbcType=VARCHAR}
+        AND fisDel = 0
+        AND fvalid = 1
+    </select>
+</mapper>

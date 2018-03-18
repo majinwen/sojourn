@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.receiptDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.ReceiptEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="parent_fid" property="parentFid" jdbcType="VARCHAR" />
+    <result column="bill_num" property="billNum" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+    <result column="pay_serial_num" property="paySerialNum" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="pay_time" property="payTime" jdbcType="VARCHAR" />
+    <result column="receipt_mothed" property="receiptMothed" jdbcType="VARCHAR" />
+    <result column="payer" property="payer" jdbcType="VARCHAR" />
+    <result column="pos_id" property="posId" jdbcType="VARCHAR" />
+    <result column="reference_num" property="referenceNum" jdbcType="VARCHAR" />
+    <result column="check_number" property="checkNumber" jdbcType="VARCHAR" />
+    <result column="maker_code" property="makerCode" jdbcType="VARCHAR" />
+    <result column="maker_name" property="makerName" jdbcType="VARCHAR" />
+    <result column="maker_dept" property="makerDept" jdbcType="VARCHAR" />
+    <result column="confirm_status" property="confirmStatus" jdbcType="INTEGER" />
+    <result column="receipt_status" property="receiptStatus" jdbcType="INTEGER" />
+    <result column="account_flag" property="accountFlag" jdbcType="INTEGER" />
+    <result column="attach" property="attach" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="is_sync_finance" property="isSyncFinance" jdbcType="INTEGER" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="remittance_account" property="remittanceAccount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, parent_fid,bill_num, amount, pay_serial_num, pay_type, pay_time, receipt_mothed, payer,
+    pos_id, reference_num, check_number, maker_code, maker_name, maker_dept, confirm_status,
+    receipt_status, account_flag, attach, create_time, update_time, is_del, is_valid,
+    is_sync_finance,contract_id,remittance_account
+  </sql>
+
+  <select id="countSyncReceiptByContractId" resultType="long"  parameterType="map" >
+    select
+    COUNT(1)
+    from t_fin_receipt
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+    AND is_sync_finance = 1
+    AND is_del = 0 AND is_valid = 1
+  </select>
+
+  <select id="getReceiptByBillNum" resultMap="BaseResultMap"  parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_fin_receipt
+    where bill_num = #{receiptBillNum,jdbcType=VARCHAR}
+    AND is_del = 0 AND is_valid = 1
+  </select>
+
+  <select id="getReceivableBillNumsByBillNum" resultType="java.lang.String"  parameterType="java.lang.String" >
+    SELECT
+    receiptable_no
+    FROM t_fin_receipt_rel
+    WHERE receipted_no = #{receiptBillNum,jdbcType=VARCHAR}
+    AND is_del = 0
+  </select>
+
+  <!-- 保存收款单 created by cuigh6 -->
+  <insert id="saveReceipt" parameterType="com.ziroom.zrp.trading.entity.ReceiptEntity" >
+    insert into t_fin_receipt
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="parentFid != null" >
+        parent_fid,
+      </if>
+      <if test="billNum != null" >
+        bill_num,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="paySerialNum != null" >
+        pay_serial_num,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="receiptMothed != null" >
+        receipt_mothed,
+      </if>
+      <if test="payer != null" >
+        payer,
+      </if>
+      <if test="posId != null" >
+        pos_id,
+      </if>
+      <if test="referenceNum != null" >
+        reference_num,
+      </if>
+      <if test="checkNumber != null" >
+        check_number,
+      </if>
+      <if test="makerCode != null" >
+        maker_code,
+      </if>
+      <if test="makerName != null" >
+        maker_name,
+      </if>
+      <if test="makerDept != null" >
+        maker_dept,
+      </if>
+      <if test="confirmStatus != null" >
+        confirm_status,
+      </if>
+      <if test="receiptStatus != null" >
+        receipt_status,
+      </if>
+      <if test="accountFlag != null" >
+        account_flag,
+      </if>
+      <if test="attach != null" >
+        attach,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="isSyncFinance != null" >
+        is_sync_finance,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="remittanceAccount != null" >
+        remittance_account,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="parentFid != null" >
+        #{parentFid,jdbcType=VARCHAR},
+      </if>
+      <if test="billNum != null" >
+        #{billNum,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="paySerialNum != null" >
+        #{paySerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptMothed != null" >
+        #{receiptMothed,jdbcType=VARCHAR},
+      </if>
+      <if test="payer != null" >
+        #{payer,jdbcType=VARCHAR},
+      </if>
+      <if test="posId != null" >
+        #{posId,jdbcType=VARCHAR},
+      </if>
+      <if test="referenceNum != null" >
+        #{referenceNum,jdbcType=VARCHAR},
+      </if>
+      <if test="checkNumber != null" >
+        #{checkNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="makerCode != null" >
+        #{makerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="makerName != null" >
+        #{makerName,jdbcType=VARCHAR},
+      </if>
+      <if test="makerDept != null" >
+        #{makerDept,jdbcType=VARCHAR},
+      </if>
+      <if test="confirmStatus != null" >
+        #{confirmStatus,jdbcType=INTEGER},
+      </if>
+      <if test="receiptStatus != null" >
+        #{receiptStatus,jdbcType=INTEGER},
+      </if>
+      <if test="accountFlag != null" >
+        #{accountFlag,jdbcType=INTEGER},
+      </if>
+      <if test="attach != null" >
+        #{attach,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="isSyncFinance != null" >
+        #{isSyncFinance,jdbcType=INTEGER},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="remittanceAccount != null" >
+        #{remittanceAccount,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByBillNum" parameterType="com.ziroom.zrp.trading.entity.ReceiptEntity" >
+    update t_fin_receipt
+    <set >
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="paySerialNum != null" >
+        pay_serial_num = #{paySerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptMothed != null" >
+        receipt_mothed = #{receiptMothed,jdbcType=VARCHAR},
+      </if>
+      <if test="payer != null" >
+        payer = #{payer,jdbcType=VARCHAR},
+      </if>
+      <if test="posId != null" >
+        pos_id = #{posId,jdbcType=VARCHAR},
+      </if>
+      <if test="referenceNum != null" >
+        reference_num = #{referenceNum,jdbcType=VARCHAR},
+      </if>
+      <if test="checkNumber != null" >
+        check_number = #{checkNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="makerCode != null" >
+        maker_code = #{makerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="makerName != null" >
+        maker_name = #{makerName,jdbcType=VARCHAR},
+      </if>
+      <if test="makerDept != null" >
+        maker_dept = #{makerDept,jdbcType=VARCHAR},
+      </if>
+      <if test="confirmStatus != null" >
+        confirm_status = #{confirmStatus,jdbcType=INTEGER},
+      </if>
+      <if test="receiptStatus != null" >
+        receipt_status = #{receiptStatus,jdbcType=INTEGER},
+      </if>
+      <if test="accountFlag != null" >
+        account_flag = #{accountFlag,jdbcType=INTEGER},
+      </if>
+      <if test="attach != null" >
+        attach = #{attach,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="isSyncFinance != null" >
+        is_sync_finance = #{isSyncFinance,jdbcType=INTEGER},
+      </if>
+      <if test="contractId != null" >
+        contract_id = #{contractId,jdbcType=INTEGER},
+      </if>
+      <if test="remittanceAccount != null" >
+        remittance_account = #{remittanceAccount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where bill_num = #{billNum,jdbcType=VARCHAR}
+  </update>
+</mapper>

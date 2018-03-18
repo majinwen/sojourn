@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.rentCheckinPersonDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.RentCheckinPersonEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="nationality" property="nationality" jdbcType="VARCHAR" />
+    <result column="hometown" property="hometown" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="emergency_contact" property="emergencyContact" jdbcType="VARCHAR" />
+    <result column="relationship" property="relationship" jdbcType="VARCHAR" />
+    <result column="social_proof" property="socialProof" jdbcType="INTEGER" />
+    <result column="city_id" property="cityId" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="job" property="job" jdbcType="VARCHAR" />
+    <result column="cert_num" property="certNum" jdbcType="VARCHAR" />
+    <result column="cert_pic_1" property="certPic1" jdbcType="VARCHAR" />
+    <result column="cert_pic_2" property="certPic2" jdbcType="VARCHAR" />
+    <result column="social_proof_pic" property="socialProofPic" jdbcType="VARCHAR" />
+    <result column="organization" property="organization" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone_num" property="phoneNum" jdbcType="VARCHAR" />
+    <result column="degree" property="degree" jdbcType="INTEGER" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="marriage" property="marriage" jdbcType="INTEGER" />
+    <result column="cert_type" property="certType" jdbcType="INTEGER" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="creator_id" property="creatorId" jdbcType="VARCHAR" />
+    <result column="create_name" property="createName" jdbcType="VARCHAR" />
+    <result column="updater_id" property="updaterId" jdbcType="VARCHAR" />
+    <result column="update_name" property="updateName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="postal_code" property="postalCode" jdbcType="VARCHAR" />
+    <result column="customer_from" property="customerFrom" jdbcType="INTEGER" />
+    <result column="emcy_cnt_phone" property="emcyCntPhone" jdbcType="VARCHAR" />
+    <result column="birthday_year" property="birthdayYear" jdbcType="INTEGER" />
+    <result column="birthday_monday" property="birthdayMonday" jdbcType="VARCHAR" />
+    <result column="work_address" property="workAddress" jdbcType="VARCHAR" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 入住人列表map -->
+  <resultMap id="personListMap" type="com.ziroom.zrp.service.trading.entity.RentCheckinPersonVo" >
+    <result column="uid" property="personUid" jdbcType="VARCHAR" />
+    <result column="con_rent_code" property="rentCode" jdbcType="VARCHAR" />
+    <result column="ftype" property="rentType" jdbcType="INTEGER" />
+    <result column="room_code" property="roomCode" jdbcType="VARCHAR" />
+    <result column="con_sign_date" property="conSignDate" jdbcType="INTEGER" />
+    <result column="con_status_code" property="conStatus" jdbcType="VARCHAR" />
+    <result column="person_data_status" property="personDataStatus" jdbcType="INTEGER" />
+    <result column="contractid" property="contractId" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="customer_type" property="customerType" jdbcType="INTEGER" />
+    <result column="name" property="personName" jdbcType="VARCHAR" />
+    <result column="rentedetail_id" property="rentedetailId" jdbcType="VARCHAR" />
+  </resultMap>
+
+    <resultMap id="PersonAndSharerResultMap" type="com.ziroom.zrp.service.trading.pojo.PersonAndSharerPojo">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="update_name" property="updateName" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <collection column="{rentId=id}" property="sharerEntities" javaType="ArrayList" select="selectSharers" />
+    </resultMap>
+
+    <resultMap id="SharerMap" type="com.ziroom.zrp.trading.entity.SharerEntity">
+        <id column="fid" property="fid" jdbcType="VARCHAR" />
+        <result column="fname" property="fname" jdbcType="VARCHAR" />
+    </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, nationality, hometown, age, emergency_contact, relationship, social_proof, city_id, 
+    uid, job, cert_num, cert_pic_1, cert_pic_2, social_proof_pic, organization, name, 
+    phone_num, degree, sex, marriage, cert_type, email, is_valid, is_del, creator_id,
+    create_name, updater_id, update_name, create_time, update_time, postal_code, customer_from, emcy_cnt_phone,
+    birthday_year, birthday_monday,work_address,contract_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from rent_checkin_person
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findCheckinPersonByContractId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from rent_checkin_person
+    where contract_id = #{contractId,jdbcType=INTEGER}
+    and is_valid = 1
+    and is_del = 0
+  </select>
+    <select id="findCheckinPerson" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from rent_checkin_person
+        where contract_id = #{contractId,jdbcType=INTEGER}
+        <if test="uid != null and uid != ''" >
+            and uid = #{uid,jdbcType=VARCHAR}
+        </if>
+        and is_valid = 1
+        and is_del = 0
+    </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from rent_checkin_person
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="saveCheckinPerson" parameterType="com.ziroom.zrp.trading.entity.RentCheckinPersonEntity"
+  useGeneratedKeys="true" keyProperty="id">
+    insert into rent_checkin_person
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="nationality != null" >
+        nationality,
+      </if>
+      <if test="hometown != null" >
+        hometown,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="emergencyContact != null" >
+        emergency_contact,
+      </if>
+      <if test="relationship != null" >
+        relationship,
+      </if>
+      <if test="socialProof != null" >
+        social_proof,
+      </if>
+      <if test="cityId != null" >
+        city_id,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="job != null" >
+        job,
+      </if>
+      <if test="certNum != null" >
+        cert_num,
+      </if>
+      <if test="certPic1 != null" >
+        cert_pic_1,
+      </if>
+      <if test="certPic2 != null" >
+        cert_pic_2,
+      </if>
+      <if test="socialProofPic != null" >
+        social_proof_pic,
+      </if>
+      <if test="organization != null" >
+        organization,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="phoneNum != null" >
+        phone_num,
+      </if>
+      <if test="degree != null" >
+        degree,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="marriage != null" >
+        marriage,
+      </if>
+      <if test="certType != null" >
+        cert_type,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="creatorId != null" >
+        creator_id,
+      </if>
+      <if test="createName != null" >
+        create_name,
+      </if>
+      <if test="updaterId != null" >
+        updater_id,
+      </if>
+      <if test="updateName != null" >
+        update_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="postalCode != null" >
+        postal_code,
+      </if>
+      <if test="customerFrom != null" >
+        customer_from,
+      </if>
+      <if test="emcyCntPhone != null" >
+        emcy_cnt_phone,
+      </if>
+      <if test="birthdayYear != null" >
+        birthday_year,
+      </if>
+      <if test="birthdayMonday != null" >
+        birthday_monday,
+      </if>
+      <if test="workAddress != null" >
+        work_address,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="nationality != null" >
+        #{nationality,jdbcType=VARCHAR},
+      </if>
+      <if test="hometown != null" >
+        #{hometown,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="emergencyContact != null" >
+        #{emergencyContact,jdbcType=VARCHAR},
+      </if>
+      <if test="relationship != null" >
+        #{relationship,jdbcType=VARCHAR},
+      </if>
+      <if test="socialProof != null" >
+        #{socialProof,jdbcType=INTEGER},
+      </if>
+      <if test="cityId != null" >
+        #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="job != null" >
+        #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="certNum != null" >
+        #{certNum,jdbcType=VARCHAR},
+      </if>
+      <if test="certPic1 != null" >
+        #{certPic1,jdbcType=VARCHAR},
+      </if>
+      <if test="certPic2 != null" >
+        #{certPic2,jdbcType=VARCHAR},
+      </if>
+      <if test="socialProofPic != null" >
+        #{socialProofPic,jdbcType=VARCHAR},
+      </if>
+      <if test="organization != null" >
+        #{organization,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum != null" >
+        #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="degree != null" >
+        #{degree,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="marriage != null" >
+        #{marriage,jdbcType=INTEGER},
+      </if>
+      <if test="certType != null" >
+        #{certType,jdbcType=INTEGER},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="createName != null" >
+        #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="updaterId != null" >
+        #{updaterId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateName != null" >
+        #{updateName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="postalCode != null" >
+        #{postalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="customerFrom != null" >
+        #{customerFrom,jdbcType=INTEGER},
+      </if>
+      <if test="emcyCntPhone != null" >
+        #{emcyCntPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="birthdayYear != null" >
+        #{birthdayYear,jdbcType=INTEGER},
+      </if>
+      <if test="birthdayMonday != null" >
+        #{birthdayMonday,jdbcType=VARCHAR},
+      </if>
+      <if test="workAddress != null" >
+        #{workAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateCheckinPerson" parameterType="com.ziroom.zrp.trading.entity.RentCheckinPersonEntity" >
+    update rent_checkin_person
+    <set >
+      <if test="nationality != null" >
+        nationality = #{nationality,jdbcType=VARCHAR},
+      </if>
+      <if test="hometown != null" >
+        hometown = #{hometown,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="emergencyContact != null" >
+        emergency_contact = #{emergencyContact,jdbcType=VARCHAR},
+      </if>
+      <if test="relationship != null" >
+        relationship = #{relationship,jdbcType=VARCHAR},
+      </if>
+      <if test="socialProof != null" >
+        social_proof = #{socialProof,jdbcType=INTEGER},
+      </if>
+      <if test="cityId != null" >
+        city_id = #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="job != null" >
+        job = #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="certNum != null" >
+        cert_num = #{certNum,jdbcType=VARCHAR},
+      </if>
+      <if test="certPic1 != null" >
+        cert_pic_1 = #{certPic1,jdbcType=VARCHAR},
+      </if>
+      <if test="certPic2 != null" >
+        cert_pic_2 = #{certPic2,jdbcType=VARCHAR},
+      </if>
+      <if test="socialProofPic != null" >
+        social_proof_pic = #{socialProofPic,jdbcType=VARCHAR},
+      </if>
+      <if test="organization != null" >
+        organization = #{organization,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum != null" >
+        phone_num = #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="degree != null" >
+        degree = #{degree,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="marriage != null" >
+        marriage = #{marriage,jdbcType=INTEGER},
+      </if>
+      <if test="certType != null" >
+        cert_type = #{certType,jdbcType=INTEGER},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="creatorId != null" >
+        creator_id = #{creatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="createName != null" >
+        create_name = #{createName,jdbcType=VARCHAR},
+      </if>
+      <if test="updaterId != null" >
+        updater_id = #{updaterId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateName != null" >
+        update_name = #{updateName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="postalCode != null" >
+        postal_code = #{postalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="customerFrom != null" >
+        customer_from = #{customerFrom,jdbcType=INTEGER},
+      </if>
+      <if test="emcyCntPhone != null" >
+        emcy_cnt_phone = #{emcyCntPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="birthdayYear != null" >
+        birthday_year = #{birthdayYear,jdbcType=INTEGER},
+      </if>
+      <if test="birthdayMonday != null" >
+        birthday_monday = #{birthdayMonday,jdbcType=VARCHAR},
+      </if>
+      <if test="workAddress != null" >
+        work_address = #{workAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        contract_id = #{contractId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!-- 根据用户uid查询用户验签信息 -->
+  <select id="findCheckSignCusInfoVoByUid" resultType="com.ziroom.zrp.service.trading.entity.CheckSignCusInfoVo" parameterType="com.ziroom.zrp.trading.entity.RentContractEntity" >
+    SELECT
+      trc.contractid as contractId,
+      trc.customer_uid as customerUid,
+      trc.customer_name as customerName,
+      trc.con_cycle_code as conCycleCode,
+      trc.con_start_date as conStartDate,
+      trc.con_end_date as conEndDate,
+      trc.room_id as roomId
+    FROM `trentcontract` trc
+    WHERE trc.contractid =  #{contractId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 条件查询入住人列表 -->
+  <select id="searchByCriteria"  resultMap="personListMap" parameterType="map">
+  	SELECT detail.`person_uid` AS uid,person.name,
+      con.`con_rent_code`,con.`con_sign_date`,con.`con_status_code`,con.`contractid`,con.`project_id`,con.customer_type,
+      detail.`id` AS rentedetail_id,detail.`room_id`,detail.`ftype`,detail.`room_code`,detail.`person_data_status`
+  	FROM trentcontract con
+	LEFT JOIN rent_rentedetail detail ON con.`contractid`=detail.`contract_id`
+	LEFT JOIN `rent_checkin_person` person ON detail.`person_uid`=person.uid AND con.`contractid`=person.contract_id
+	WHERE (person.is_valid=1 OR person.id IS NULL) AND (person.is_del=0 OR person.id IS NULL) AND con.`con_rent_code` IS NOT NULL
+	<if test="projectId!=null and projectId!=''">
+		AND con.`project_id`= #{projectId,jdbcType=VARCHAR}
+	</if>
+	<if test="intoState!=null and intoState!=''">
+		AND detail.`person_data_status`= #{intoState,jdbcType=INTEGER}
+	</if>
+	<if test="checkinPersonName!=null and checkinPersonName!=''">
+		AND person.`name`=#{checkinPersonName,jdbcType=VARCHAR}
+	</if>
+	<if test="contractSn!=null and contractSn!=''">
+		AND con.`con_rent_code`=#{contractSn,jdbcType=VARCHAR}
+	</if>
+	<if test="conTractStatus!=null and conTractStatus!=''">
+		AND con.`con_status_code`=#{conTractStatus,jdbcType=VARCHAR}
+	</if>
+	<if test="signingStartDate!=null and signingStartDate!=''">
+		AND con.`con_sign_date`>#{signingStartDate,jdbcType=VARCHAR}
+	</if>
+	<if test="signingEndDate!=null and signingEndDate!=''">
+		AND con.`con_sign_date`<![CDATA[<]]>#{signingEndDate,jdbcType=VARCHAR}
+	</if>
+	<if test="checkinPersonPhone!=null and checkinPersonPhone!=''">
+		AND person.`phone_num`=#{checkinPersonPhone,jdbcType=VARCHAR}
+	</if>
+    <if test="roomSn!=null and roomSn!=''">
+		AND detail.`room_code`=#{roomSn,jdbcType=VARCHAR}
+	</if>
+	<if test="rentType!=null and rentType!=''">
+		AND detail.`ftype`=#{rentType,jdbcType=VARCHAR}
+	</if>
+	<if test="projectIdList.size() > 0">  
+		AND con.`project_id` IN  
+            <foreach  
+                collection="projectIdList"  
+                item="pid"  
+                open="("  
+                separator=","  
+                close=")">  
+                #{pid}  
+            </foreach>  
+	</if>
+	order by IF(ISNULL(detail.`person_data_status`),1,detail.`person_data_status`),con.`con_sign_date` desc
+  </select>
+
+    <!-- 查询历史入住人 -->
+    <select id="selectHistoryPersonAndSharer" resultMap="PersonAndSharerResultMap" >
+        select
+        id, name, update_name, update_time
+        from rent_checkin_person
+        where contract_id = #{contractId,jdbcType=VARCHAR}
+        and is_del = 1
+        and is_valid = 0
+        order by update_time desc
+    </select>
+
+    <!-- 根据历史入住人查询历史合住人 -->
+    <select id="selectSharers" resultMap="SharerMap" >
+        select fid,fcontractid,fname,uid
+        from tsharer
+        where rent_id = #{rentId,jdbcType=INTEGER}
+        and fisdel = 1
+        and fvalid = 0
+    </select>
+
+  <!-- 根据合同与uid查询入住人详情 -->
+  <select id="selectHistoryCheckinPerson" resultMap="BaseResultMap" >
+      select
+      <include refid="Base_Column_List" />
+      from rent_checkin_person
+      where id = #{id,jdbcType=INTEGER}
+      and is_del = 1
+  </select>
+
+  <!-- 删除入住人 根据合同号-->
+  <update id="deleteByContractIdAndRecord" parameterType="com.ziroom.zrp.trading.entity.RentContractEntity">
+    UPDATE
+      rent_checkin_person
+    SET
+      updater_id = #{updaterId,jdbcType=VARCHAR},
+      update_name = #{updateName,jdbcType=VARCHAR},
+      is_valid = 0,
+      is_del = 1
+    WHERE
+      is_valid = 1
+    AND
+      is_del = 0
+    AND
+      contract_id = #{contractId,jdbcType=VARCHAR}
+      <if test="uid != null and uid != ''" >
+          and uid = #{uid,jdbcType=VARCHAR}
+      </if>
+  </update>
+
+  <!--查询入住人 有效的合同 created by cuigh6-->
+  <select id="findCheckInPersonContractList" parameterType="java.lang.String" resultType="com.ziroom.zrp.trading.entity.RentContractEntity">
+    SELECT
+      b.contractid,
+      b.`customer_type` as customerType,
+      b.con_rent_code as conRentCode,
+      b.pro_name as proName,
+      b.house_room_no as houseRoomNo,
+      b.room_id as roomId,
+      b.project_id as projectId,
+      a.name as customerName,
+      a.phone_num as customerMobile,
+      b.cityid
+    FROM rent_checkin_person as a
+    LEFT JOIN trentcontract as b
+    ON a.contract_id = b.contractid
+    WHERE
+      a.uid=#{uid,jdbcType=VARCHAR}
+    AND
+      a.is_del=0
+    AND
+      a.is_valid=1
+    AND
+      (b.con_status_code='yqy'
+    OR
+      b.con_status_code='yxy'
+    OR
+      b.con_status_code='xyz')
+  </select>
+
+</mapper>

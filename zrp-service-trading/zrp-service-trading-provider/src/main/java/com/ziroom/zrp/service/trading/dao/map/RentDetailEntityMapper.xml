@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.rentDetailDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.RentDetailEntity" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="delivery_state" property="deliveryState" jdbcType="INTEGER" />
+    <result column="must_commission" property="mustCommission" jdbcType="DECIMAL" />
+    <result column="discount_commission" property="discountCommission" jdbcType="DECIMAL" />
+    <result column="must_deposit" property="mustDeposit" jdbcType="DECIMAL" />
+    <result column="discount_deposit" property="discountDeposit" jdbcType="DECIMAL" />
+    <result column="base_price" property="basePrice" jdbcType="DECIMAL" />
+    <result column="actual_price" property="actualPrice" jdbcType="DECIMAL" />
+    <result column="discount_price" property="discountPrice" jdbcType="DECIMAL" />
+    <result column="room_area" property="roomArea" jdbcType="DOUBLE" />
+    <result column="application_date" property="applicationDate" jdbcType="TIMESTAMP" />
+    <result column="expected_date" property="expectedDate" jdbcType="TIMESTAMP" />
+    <result column="actual_date" property="actualDate" jdbcType="TIMESTAMP" />
+    <result column="current_state" property="currentState" jdbcType="INTEGER" />
+    <result column="room_code" property="roomCode" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="deleter_id" property="deleterId" jdbcType="VARCHAR" />
+    <result column="deleted_time" property="deletedTime" jdbcType="TIMESTAMP" />
+    <result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="updater_id" property="updaterId" jdbcType="VARCHAR" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="person_uid" property="personUid" jdbcType="VARCHAR" />
+    <result column="person_data_status" property="personDataStatus" jdbcType="INTEGER" />
+    <result column="ftype" property="ftype" jdbcType="INTEGER" />
+    <result column="fvalid" property="fvalid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, contract_id, room_id, delivery_state, must_commission, discount_commission, must_deposit, 
+    discount_deposit, base_price, actual_price, discount_price, room_area, application_date, 
+    expected_date, actual_date, current_state, room_code, is_deleted, deleter_id, deleted_time, 
+    creater_id, created_time, updater_id, updated_time, person_uid, person_data_status, 
+    ftype, fvalid
+  </sql>
+
+  <sql id="Join_Column_List" >
+    t1.id, t1.contract_id, t1.room_id, t1.delivery_state, t1.must_commission, t1.discount_commission, t1.must_deposit,
+    t1.discount_deposit, t1.base_price, t1.actual_price, t1.discount_price, t1.room_area, t1.application_date,
+    t1.expected_date, t1.actual_date, t1.current_state, t1.room_code, t1.is_deleted, t1.deleter_id, t1.deleted_time,
+    t1.creater_id, t1.created_time, t1.updater_id, t1.updated_time, t1.person_uid, t1.person_data_status,
+    t1.ftype, t1.fvalid
+  </sql>
+
+  <select id="findRentDetailById" resultMap="BaseResultMap" parameterType="com.ziroom.zrp.service.trading.dto.ContractRoomDto" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    rent_rentedetail t
+    WHERE t.`contract_id` = #{contractId,jdbcType=VARCHAR}
+    AND t.`room_id` = #{roomId,jdbcType=VARCHAR}
+    AND t.`is_deleted` = 0 AND t.`fvalid` = 1
+  </select>
+
+  <select id="findRentDetailByContractId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    rent_rentedetail t
+    WHERE t.`contract_id` = #{contractId,jdbcType=VARCHAR}
+    AND t.`is_deleted` = 0 AND t.`fvalid` = 1
+  </select>
+
+  <select id="listUnDeliveryContract" resultType="com.ziroom.zrp.service.trading.entity.DeliveryContractNotifyVo">
+    SELECT
+  t.`contractid` AS contractId,
+  t.`con_rent_code` AS contractCode,
+  t.`pro_name` AS projectName,
+  t.`house_room_no` AS roomName,
+  t.`room_id` AS roomId,
+  t.`customer_name` AS customerName,
+  t.`customer_mobile` AS customerMobile,
+  t.`fhandleZO` AS zoName,
+  t.`fhandleZOcode` AS zoCode,
+  t.`first_pay_time` AS firstPayTime,
+  t.`customer_uid` AS customerUid
+FROM
+  trentcontract t
+  LEFT JOIN rent_rentedetail t1
+    ON t.`contractid` = t1.`contract_id`
+WHERE t.`con_status_code` = 'yqy'
+  AND t.`customer_type` = 1
+  AND t.`fsource` = 3
+  AND t.fsigntype = 0
+  AND t1.delivery_state = 0
+  AND t.`first_pay_time` IS NOT NULL
+  </select>
+
+  <update id="updateHasDelivery" parameterType="com.ziroom.zrp.service.trading.dto.ContractRoomDto">
+    UPDATE
+    rent_rentedetail
+    SET
+    delivery_state = 1
+    WHERE contract_id = #{contractId,jdbcType=VARCHAR}
+    AND room_id = #{roomId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateHaveNotDelivery" parameterType="com.ziroom.zrp.service.trading.dto.ContractRoomDto">
+    UPDATE
+    rent_rentedetail
+    SET
+    delivery_state = 0
+    WHERE contract_id = #{contractId,jdbcType=VARCHAR}
+    AND room_id = #{roomId,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="insert" parameterType="com.ziroom.zrp.trading.entity.RentDetailEntity" >
+    insert into rent_rentedetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="deliveryState != null" >
+        delivery_state,
+      </if>
+      <if test="mustCommission != null" >
+        must_commission,
+      </if>
+      <if test="discountCommission != null" >
+        discount_commission,
+      </if>
+      <if test="mustDeposit != null" >
+        must_deposit,
+      </if>
+      <if test="discountDeposit != null" >
+        discount_deposit,
+      </if>
+      <if test="basePrice != null" >
+        base_price,
+      </if>
+      <if test="actualPrice != null" >
+        actual_price,
+      </if>
+      <if test="discountPrice != null" >
+        discount_price,
+      </if>
+      <if test="roomArea != null" >
+        room_area,
+      </if>
+      <if test="applicationDate != null" >
+        application_date,
+      </if>
+      <if test="expectedDate != null" >
+        expected_date,
+      </if>
+      <if test="actualDate != null" >
+        actual_date,
+      </if>
+      <if test="currentState != null" >
+        current_state,
+      </if>
+      <if test="roomCode != null" >
+        room_code,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="deleterId != null" >
+        deleter_id,
+      </if>
+      <if test="deletedTime != null" >
+        deleted_time,
+      </if>
+      <if test="createrId != null" >
+        creater_id,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="updaterId != null" >
+        updater_id,
+      </if>
+      <if test="updatedTime != null" >
+        updated_time,
+      </if>
+      <if test="personUid != null" >
+        person_uid,
+      </if>
+      <if test="personDataStatus != null" >
+        person_data_status,
+      </if>
+      <if test="ftype != null" >
+        ftype,
+      </if>
+      <if test="fvalid != null" >
+        fvalid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryState != null" >
+        #{deliveryState,jdbcType=INTEGER},
+      </if>
+      <if test="mustCommission != null" >
+        #{mustCommission,jdbcType=DECIMAL},
+      </if>
+      <if test="discountCommission != null" >
+        #{discountCommission,jdbcType=DECIMAL},
+      </if>
+      <if test="mustDeposit != null" >
+        #{mustDeposit,jdbcType=DECIMAL},
+      </if>
+      <if test="discountDeposit != null" >
+        #{discountDeposit,jdbcType=DECIMAL},
+      </if>
+      <if test="basePrice != null" >
+        #{basePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="actualPrice != null" >
+        #{actualPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discountPrice != null" >
+        #{discountPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="roomArea != null" >
+        #{roomArea,jdbcType=DOUBLE},
+      </if>
+      <if test="applicationDate != null" >
+        #{applicationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expectedDate != null" >
+        #{expectedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualDate != null" >
+        #{actualDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currentState != null" >
+        #{currentState,jdbcType=INTEGER},
+      </if>
+      <if test="roomCode != null" >
+        #{roomCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="deleterId != null" >
+        #{deleterId,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedTime != null" >
+        #{deletedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrId != null" >
+        #{createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null" >
+        #{updaterId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="personUid != null" >
+        #{personUid,jdbcType=VARCHAR},
+      </if>
+      <if test="personDataStatus != null" >
+        #{personDataStatus,jdbcType=INTEGER},
+      </if>
+      <if test="ftype != null" >
+        #{ftype,jdbcType=INTEGER},
+      </if>
+      <if test="fvalid != null" >
+        #{fvalid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <!-- 根据多个合同id，查询合同明细 -->
+  <select id="findRentDetailByContractIds" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM  rent_rentedetail
+    WHERE
+    fvalid = 1
+    AND
+    is_deleted = 0
+    AND
+    contract_id IN
+    <foreach collection="contractIds" item="item" index="index" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="listRentDetailBySurParentRentId" resultMap="BaseResultMap" parameterType="com.ziroom.zrp.service.trading.dto.ContractPageDto">
+  SELECT
+  <include refid="Join_Column_List"/>
+  FROM
+  trentcontract t
+  LEFT JOIN rent_rentedetail t1
+    ON t.`contractid` = t1.`contract_id`
+  WHERE t.`sur_parent_rent_id` = #{surParentRentId,jdbcType=VARCHAR}
+
+  </select>
+
+
+  <update id="updateRentDetailByContractId" parameterType="com.ziroom.zrp.trading.entity.RentDetailEntity" >
+    update rent_rentedetail
+    <set >
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryState != null" >
+        delivery_state = #{deliveryState,jdbcType=INTEGER},
+      </if>
+      <if test="mustCommission != null" >
+        must_commission = #{mustCommission,jdbcType=DECIMAL},
+      </if>
+      <if test="discountCommission != null" >
+        discount_commission = #{discountCommission,jdbcType=DECIMAL},
+      </if>
+      <if test="mustDeposit != null" >
+        must_deposit = #{mustDeposit,jdbcType=DECIMAL},
+      </if>
+      <if test="discountDeposit != null" >
+        discount_deposit = #{discountDeposit,jdbcType=DECIMAL},
+      </if>
+      <if test="basePrice != null" >
+        base_price = #{basePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="actualPrice != null" >
+        actual_price = #{actualPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="discountPrice != null" >
+        discount_price = #{discountPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="roomArea != null" >
+        room_area = #{roomArea,jdbcType=DOUBLE},
+      </if>
+      <if test="applicationDate != null" >
+        application_date = #{applicationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expectedDate != null" >
+        expected_date = #{expectedDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="actualDate != null" >
+        actual_date = #{actualDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="currentState != null" >
+        current_state = #{currentState,jdbcType=INTEGER},
+      </if>
+      <if test="roomCode != null" >
+        room_code = #{roomCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="deleterId != null" >
+        deleter_id = #{deleterId,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedTime != null" >
+        deleted_time = #{deletedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrId != null" >
+        creater_id = #{createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null" >
+        updater_id = #{updaterId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="personUid != null" >
+        person_uid = #{personUid,jdbcType=VARCHAR},
+      </if>
+      <if test="personDataStatus != null" >
+        person_data_status = #{personDataStatus,jdbcType=INTEGER},
+      </if>
+      <if test="ftype != null" >
+        ftype = #{ftype,jdbcType=INTEGER},
+      </if>
+      <if test="fvalid != null" >
+        fvalid = #{fvalid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+      <if test="id != null" >
+          and id = #{id,jdbcType=VARCHAR}
+      </if>
+  </update>
+
+  <!--根据合同id回滚app提交合同保存的合同子表数据 -->
+  <update id="updateRentDetailRollBackForSubmit" parameterType="com.ziroom.zrp.trading.entity.RentDetailEntity">
+    UPDATE
+    rent_rentedetail
+    SET must_deposit = NULL,
+    must_commission = NULL,
+    discount_commission = NULL
+    WHERE contract_id = #{contractId, jdbcType=VARCHAR}
+  </update>
+
+    <!--根据合同id和房间id，更新子表uid -->
+    <update id="updateUidByContractIdAndRoomId" parameterType="com.ziroom.zrp.trading.entity.RentDetailEntity" >
+        UPDATE
+        rent_rentedetail
+        SET person_uid = #{personUid,jdbcType=VARCHAR}
+        WHERE contract_id = #{contractId, jdbcType=VARCHAR}
+        AND room_id = #{roomId, jdbcType=VARCHAR}
+    </update>
+
+
+</mapper>

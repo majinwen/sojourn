@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.syncc.dao.ZraZrCallDetailMapper">
+    
+     <!-- 查询400库的得到自如寓 400来电详情-->
+    <select id="getCallDetailFromNewCC" resultType="com.zra.syncc.entity.ZraZrCallDetailEntity" parameterType = "String">   
+                SELECT
+                    CALLID AS callId,
+                    TRANSFEREDCALLID AS transferedCallId,
+                    ENTRYTYPE AS entryType,
+                    REMOTENUMBERFMT AS remoteNumberFmt,
+                    EXTENSIONNUMBER AS extensionNumber,
+                    DIALBEGINDATE AS dialBeginDate,
+                    DIALENDDATE AS dialEndDate,
+                    DIALNUMBER AS dialNumber,
+                    DIALRESULT AS dialResult,
+                    INITIATEDDATE AS initiatedDate,
+                    CONNECTEDDATE AS connectedDate,
+                    TERMINATEDDATE AS terminatedDate,
+                    CONNECTDURATIONTIME AS connectDurationTime,
+                    RECORDINGFILENAME AS recordingFileName,
+                    EICSTATE AS eicState,
+                    ISDNCAUSECODE AS isdnCauseCode,
+                    SERVICENO AS serviceNo
+                FROM
+                    ZIRU_CC.ZRCALLDETAIL T
+                WHERE
+                    T .initiateddate <![CDATA[ <= ]]>#{endDate}
+                AND T .initiateddate <![CDATA[ >= ]]>#{startDate}
+                AND T .EXTENSIONNUMBER IN (${extNum})
+                AND T .DIALNUMBER != '00'
+                ORDER BY
+                    T .initiateddate
+    </select>
+    
+    <!-- 根据callid获取通话详情 -->
+   	<select id="getCallDetailById" resultType="com.zra.syncc.entity.ZraZrCallDetailEntity" parameterType = "String">   
+			SELECT
+				t.bid AS bid,
+				t.fcall_id AS callId,
+				t.ftransfered_call_id AS transferedCallId,
+				t.fentry_type AS entryType,
+				t.fremote_number_fmt AS remoteNumberFmt,
+				t.fextension_number AS extensionNumber,
+				t.fdial_begin_date AS dialBeginDate,
+				t.fdial_end_date AS dialEndDate,
+				t.fdial_number AS dialNumber,
+				t.fdial_result AS dialResult,
+				t.finitiated_date AS initiatedDate,
+				t.fconnected_date AS connectedDate,
+				t.fterminated_date AS terminatedDate,
+				t.fconnect_duration_time AS connectDurationTime,
+				t.frecording_file_name AS recordingFileName,
+				t.feic_state AS eicState,
+				t.fisdn_cause_code AS isdnCauseCode,
+				t.fservice_no AS serviceNo,
+				fcreate_time AS createTime,
+				fis_del AS isDel
+			FROM
+				tzrazrcalldetail t
+			WHERE
+				t.fcall_id = #{callId}
+				AND t.fis_del = 0;
+    </select>
+    
+    <!--保存 通话详情-->
+    <insert id="saveCallDetail" parameterType="com.zra.syncc.entity.ZraZrCallDetailEntity" >
+	    insert into tzrazrcalldetail (  id, bid,fcall_id,ftransfered_call_id,
+	                                    fentry_type,fremote_number_fmt,fextension_number,fdial_begin_date,
+                                        fdial_end_date,fdial_number,fdial_result,finitiated_date,
+                                        fconnected_date,fterminated_date,fconnect_duration_time, frecording_file_name,
+                                        feic_state,fisdn_cause_code,fservice_no,fcreate_time,
+                                        fis_del)
+	    values (#{id,jdbcType=INTEGER}, #{bid,jdbcType=VARCHAR}, #{callId,jdbcType=VARCHAR},#{transferedCallId,jdbcType=VARCHAR}, 
+	            #{entryType,jdbcType=VARCHAR}, #{remoteNumberFmt,jdbcType=VARCHAR}, #{extensionNumber,jdbcType=VARCHAR}, #{dialBeginDate,jdbcType=VARCHAR},
+	            #{dialEndDate,jdbcType=VARCHAR},#{dialNumber,jdbcType=VARCHAR}, #{dialResult,jdbcType=VARCHAR}, #{initiatedDate,jdbcType=VARCHAR}, 
+	            #{connectedDate,jdbcType=VARCHAR}, #{terminatedDate,jdbcType=VARCHAR},#{connectDurationTime,jdbcType=VARCHAR},#{recordingFileName,jdbcType=VARCHAR},
+	            #{eicState,jdbcType=VARCHAR},#{isdnCauseCode,jdbcType=VARCHAR},#{serviceNo,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP},
+	            #{isDel,jdbcType=INTEGER})
+    </insert>
+    
+    <update id="updateCallDetailEntity" parameterType="com.zra.syncc.entity.ZraZrCallDetailEntity">
+    UPDATE tzrazrcalldetail
+	SET 
+	    fdial_begin_date = #{dialBeginDate,jdbcType=VARCHAR},
+		fdial_end_date = #{dialEndDate,jdbcType=VARCHAR},
+		fdial_number = #{dialNumber,jdbcType=VARCHAR},
+		fdial_result = #{dialResult,jdbcType=VARCHAR},
+		fconnected_date = #{connectedDate,jdbcType=VARCHAR},
+		fterminated_date = #{terminatedDate,jdbcType=VARCHAR},
+		fconnect_duration_time = #{connectDurationTime,jdbcType=VARCHAR},
+		frecording_file_name = #{recordingFileName,jdbcType=VARCHAR},
+		feic_state = #{eicState,jdbcType=VARCHAR},
+		fisdn_cause_code = #{isdnCauseCode,jdbcType=VARCHAR} 
+	WHERE
+		fcall_id = #{callId,jdbcType=VARCHAR}
+    </update>
+</mapper>

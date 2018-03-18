@@ -1,0 +1,705 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.business.dao.BusinessMapper">
+	<resultMap id="BaseResultMap" type="com.zra.business.entity.BusinessEntity">
+		<id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="business_bid" property="businessBid" jdbcType="VARCHAR" />
+	    <result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="updater_id" property="updaterId" jdbcType="VARCHAR" />
+	    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+	    <result column="city_id" property="cityId" jdbcType="VARCHAR" />
+	    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+	    <result column="step" property="step" jdbcType="TINYINT" />
+	    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+	    <result column="hand_state" property="handState" jdbcType="TINYINT" />
+	    <result column="message" property="message" jdbcType="VARCHAR" />
+	    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+	    <result column="house_type_id" property="houseTypeId" jdbcType="VARCHAR" />
+	    <result column="source" property="source" jdbcType="TINYINT" />
+	    <result column="source_zra" property="sourceZra" jdbcType="VARCHAR" />
+	    <result column="expect_time" property="expectTime" jdbcType="TIMESTAMP" />
+	    <result column="expect_in_start_time" property="expectInStartTime" jdbcType="TIMESTAMP" />
+	    <result column="expect_in_end_time" property="expectInEndTime" jdbcType="TIMESTAMP" />
+	    <result column="expect_low_price" property="expectLowPrice" jdbcType="DOUBLE" />
+	    <result column="expect_high_price" property="expectHighPrice" jdbcType="DOUBLE" />
+	    <result column="type" property="type" jdbcType="TINYINT" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="zo_id" property="zoId" jdbcType="VARCHAR" />
+	    <result column="zo_name" property="zoName" jdbcType="VARCHAR" />
+	    <result column="callbid" property="callBid" jdbcType="VARCHAR" />
+	    <result column="is_answer" property="isAnswer" jdbcType="VARCHAR" />
+	    <result column="come_source" property="comeSource" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, business_bid, creater_id, create_time, updater_id, update_time,
+		is_del, city_id, customer_id, step, end_time, hand_state, message, project_id, house_type_id,
+		source, source_zra, expect_time, expect_in_start_time, expect_in_end_time,
+		expect_low_price, expect_high_price, type, remark, zo_id, zo_name,callbid,is_answer
+	</sql>
+
+	<insert id="insert" parameterType="com.zra.business.entity.BusinessEntity">
+		INSERT INTO bo_business
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="businessBid != null">
+				business_bid,
+			</if>
+			<if test="createrId != null">
+				creater_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updaterId != null">
+				updater_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="isDel != null">
+				is_del,
+			</if>
+			<if test="cityId != null">
+				city_id,
+			</if>
+			<if test="customerId != null">
+				customer_id,
+			</if>
+			<if test="step != null">
+				step,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="handState != null">
+				hand_state,
+			</if>
+			<if test="message != null">
+				message,
+			</if>
+			<if test="projectId != null">
+				project_id,
+			</if>
+			<if test="houseTypeId != null">
+				house_type_id,
+			</if>
+			<if test="source != null">
+				source,
+			</if>
+			<if test="sourceZra != null">
+				source_zra,
+			</if>
+			<if test="expectTime != null">
+				expect_time,
+			</if>
+			<if test="expectInStartTime != null">
+				expect_in_start_time,
+			</if>
+			<if test="expectInEndTime != null">
+				expect_in_end_time,
+			</if>
+			<if test="expectLowPrice != null">
+				expect_low_price,
+			</if>
+			<if test="expectHighPrice != null">
+				expect_high_price,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="zoId != null">
+				zo_id,
+			</if>
+			<if test="zoName != null">
+				zo_name,
+			</if>
+			<if test="callBid != null">
+				callbid,
+			</if>
+			<if test="isAnswer != null">
+				is_answer,
+			</if>
+			<if test="comeSource != null">
+				come_source,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="businessBid != null">
+				#{businessBid,jdbcType=VARCHAR},
+			</if>
+			<if test="createrId != null">
+				#{createrId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updaterId != null">
+				#{updaterId,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDel != null">
+				#{isDel,jdbcType=TINYINT},
+			</if>
+			<if test="cityId != null">
+				#{cityId,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				#{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="step != null">
+				#{step,jdbcType=TINYINT},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="handState != null">
+				#{handState,jdbcType=TINYINT},
+			</if>
+			<if test="message != null">
+				#{message,jdbcType=VARCHAR},
+			</if>
+			<if test="projectId != null">
+				#{projectId,jdbcType=VARCHAR},
+			</if>
+			<if test="houseTypeId != null">
+				#{houseTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="source != null">
+				#{source,jdbcType=TINYINT},
+			</if>
+			<if test="sourceZra != null">
+				#{sourceZra,jdbcType=VARCHAR},
+			</if>
+			<if test="expectTime != null">
+				#{expectTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expectInStartTime != null">
+				#{expectInStartTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expectInEndTime != null">
+				#{expectInEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expectLowPrice != null">
+				#{expectLowPrice,jdbcType=DOUBLE},
+			</if>
+			<if test="expectHighPrice != null">
+				#{expectHighPrice,jdbcType=DOUBLE},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="zoId != null">
+				#{zoId,jdbcType=VARCHAR},
+			</if>
+			<if test="zoName != null">
+				#{zoName,jdbcType=VARCHAR},
+			</if>
+			<if test="callBid != null">
+				#{callBid,jdbcType=VARCHAR},
+			</if>
+			<if test="isAnswer != null">
+				#{isAnswer,jdbcType=VARCHAR},
+			</if>
+			<if test="comeSource != null">
+				#{comeSource,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据指定项目，指定周几获取ZO列表 -->
+	<select id="getZOByProIdAndWeek" resultType="com.zra.system.entity.EmployeeEntity">
+		SELECT
+			p.employId AS id,
+			e.fname AS name
+		FROM
+			tschedule AS s,
+			tscheduleperson AS p,
+			temployee AS e
+		WHERE
+			p.employId = e.fid
+		AND p.scheduleId = s.bid
+		AND s.projectId = #{projectId}
+		AND s.fweek = #{week}
+		AND s.fisdel = 0
+		AND p.fisdel = 0
+	</select>
+
+	<!-- 根据管家列表，查出其中当日（也可能是次日）分配商机数最少的管家 -->
+	<select id="getLeastBusinessZO" resultType="com.zra.system.entity.EmployeeEntity">
+		SELECT
+			zo_id AS id,
+			zo_name AS name,
+			COUNT(id) AS csrType
+		FROM
+			bo_business AS b
+		WHERE
+			zo_id IN (${zOids})
+		AND create_time BETWEEN DATE_FORMAT(NOW(), '%Y-%m-%d')
+		AND DATE_FORMAT(
+			DATE_ADD(NOW(), INTERVAL 1 DAY),
+			'%Y-%m-%d'
+		)
+		AND b.hand_state = #{handState}
+		AND is_del = 0
+		GROUP BY
+			zo_id,
+			zo_name
+		ORDER BY
+			csrType
+	</select>
+	
+	
+	<!-- 根据项目id，周几，处理状态判断分配给哪个管家这个商机 -->
+	<select id="getLeastZOOfBusiness" resultType="com.zra.system.entity.EmployeeEntity">
+		SELECT
+			a.id,
+			a.`name`,
+			COUNT(t.zo_id) AS csrType
+		FROM
+			(
+				SELECT
+					p.employId AS id,
+					e.fname AS `name`
+				FROM
+					tschedule AS s,
+					tscheduleperson AS p,
+					temployee AS e
+				WHERE
+					p.employId = e.fid
+				AND p.scheduleId = s.bid
+				AND s.projectId = #{projectId}
+				AND s.fweek = #{week}
+				AND s.fisdel = 0
+				AND p.fisdel = 0
+			) AS a
+		LEFT JOIN (
+			SELECT
+				b.zo_id
+			FROM
+				bo_business AS b
+			LEFT JOIN (
+				SELECT DISTINCT
+					business_id AS buid
+				FROM
+					bo_business_result
+				WHERE
+					is_del = 0
+			) AS r ON r.buid = b.business_bid
+			WHERE
+				b.create_time BETWEEN DATE_FORMAT(NOW(), '%Y-%m-%d')
+			AND DATE_FORMAT(
+				DATE_ADD(NOW(), INTERVAL 1 DAY),
+				'%Y-%m-%d'
+			)
+			AND b.project_id = #{projectId}
+		<if test="handState == 2">
+			AND (b.hand_state = #{handState} OR b.hand_state = 1)
+		</if>
+		<if test="handState == 3">
+			AND b.hand_state = #{handState}
+		</if>
+			AND b.is_del = 0
+			AND r.buid IS NULL
+			AND b.zo_id IS NOT NULL
+		) AS t ON a.id = t.zo_id
+		GROUP BY
+			a.id,
+			a.`name`
+		ORDER BY
+			csrType
+	</select>
+
+	<update id="updateBusiness" parameterType="com.zra.business.entity.BusinessEntity">
+		UPDATE bo_business
+		<set>
+			<if test="businessBid != null">
+				business_bid = #{businessBid,jdbcType=VARCHAR},
+			</if>
+			<if test="createrId != null">
+				creater_id = #{createrId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updaterId != null">
+				updater_id = #{updaterId,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDel != null">
+				is_del = #{isDel,jdbcType=TINYINT},
+			</if>
+			<if test="cityId != null">
+				city_id = #{cityId,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="step != null">
+				step = #{step,jdbcType=TINYINT},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="handState != null">
+				hand_state = #{handState,jdbcType=TINYINT},
+			</if>
+			<if test="message != null">
+				message = #{message,jdbcType=VARCHAR},
+			</if>
+			<if test="projectId != null">
+				project_id = #{projectId,jdbcType=VARCHAR},
+			</if>
+			<if test="houseTypeId != null">
+				house_type_id = #{houseTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="source != null">
+				source = #{source,jdbcType=TINYINT},
+			</if>
+			<if test="sourceZra != null">
+				source_zra = #{sourceZra,jdbcType=VARCHAR},
+			</if>
+			<if test="expectTime != null">
+				expect_time = #{expectTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expectInStartTime != null">
+				expect_in_start_time = #{expectInStartTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expectInEndTime != null">
+				expect_in_end_time = #{expectInEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expectLowPrice != null">
+				expect_low_price = #{expectLowPrice,jdbcType=DOUBLE},
+			</if>
+			<if test="expectHighPrice != null">
+				expect_high_price = #{expectHighPrice,jdbcType=DOUBLE},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="zoId != null">
+				zo_id = #{zoId,jdbcType=VARCHAR},
+			</if>
+			<if test="zoName != null">
+				zo_name = #{zoName,jdbcType=VARCHAR},
+			</if>
+			<if test="isAnswer != null">
+				is_answer = #{isAnswer,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!--add by tianxf9 查询商机  -->
+	<select id="query" resultType="com.zra.common.dto.business.BusinessShowDto" parameterType = "com.zra.common.dto.business.BOQueryParamDto">   
+			SELECT
+				bob.business_bid AS businessBid,
+  				bob.zo_name AS zoName,
+  				boc.`name` AS cusName,
+  				boc.phone AS cusPhone,
+  				bob.step  AS step,
+  				bob.hand_state AS handState,
+  				bob.create_time AS createTime,
+  				bob.end_time AS endTime,
+  				bob.project_id AS projectId,
+  				bob.source AS source
+			FROM
+				bo_business bob
+			LEFT JOIN bo_customer boc ON bob.customer_id = boc.cus_bid
+			WHERE
+				bob.is_del = 0
+			<if test="filter_and_projectId!=null and filter_and_projectId!=''">
+			AND bob.project_id =#{filter_and_projectId}
+			</if> 
+			<if test="filter_and_projectZOId!=null and filter_and_projectZOId!=''">
+			AND bob.zo_id = #{filter_and_projectZOId}
+			</if>
+			<if test='filter_and_step!=null and filter_and_step!="0"'>
+			AND bob.step in (${filter_and_step})
+			</if>
+			<if test='filter_and_handState!=null and filter_and_handState!="0"'>
+			AND bob.hand_state in (${filter_and_handState})
+			</if>
+			<if test='filter_and_source!=null and filter_and_source!="0"'>
+			AND bob.source in (${filter_and_source})
+			</if>
+			<if test='filter_and_typeBusiness!=null and filter_and_typeBusiness!="0"'>
+			AND bob.type in (${filter_and_typeBusiness})
+			</if>
+			<if test="filter_and_createTimeBeg!=null and filter_and_createTimeBeg!=''">
+			AND bob.create_time <![CDATA[ >= ]]> #{filter_and_createTimeBeg}
+			</if>
+			<if test="filter_and_createTimeEnd!=null and filter_and_createTimeEnd!=''">
+			AND bob.create_time <![CDATA[ <= ]]> #{filter_and_createTimeEnd}
+			</if>
+			<if test="filter_and_endTimeBeg!=null and filter_and_endTimeBeg!=''">
+			AND bob.end_time <![CDATA[ >= ]]> #{filter_and_endTimeBeg}
+			</if>
+			<if test="filter_and_endTimeEnd!=null and filter_and_endTimeEnd!=''">
+			AND bob.end_time <![CDATA[ <= ]]> #{filter_and_endTimeEnd}
+			</if>
+			<if test="filter_and_customerName!=null and filter_and_customerName!=''">
+			AND boc.`name` = #{filter_and_customerName}
+			</if>
+			<if test="filter_and_customerNumber!=null and filter_and_customerNumber!=''">
+			AND boc.phone = #{filter_and_customerNumber}
+			</if>
+			<if test="(filter_and_customerName != null and filter_and_customerName != '') or (filter_and_customerNumber!=null and filter_and_customerNumber!='')">
+			AND boc.is_del = 0
+		    </if>
+		    
+		    <!-- 为了解决管家查询商机能查到所有项目商机的问题   添加当前用户有权限的项目的筛选，如果是管家，筛选管家商机 wangws21 2017-7-25 start -->
+		    <if test="projectIdStr != null and projectIdStr != ''">
+            AND bob.project_id IN (${projectIdStr})
+            </if>
+            <!-- 为了解决管家查询商机能查到所有项目商机的问题   添加当前用户有权限的项目的筛选，如果是管家，筛选管家商机 wangws21 2017-7-25 end -->
+		    ORDER BY bob.hand_state,bob.update_time desc
+    </select>
+    
+    <select id="queryByYkInfo" resultType="java.lang.Integer" parameterType = "String">   
+            SELECT
+                count(1)
+            FROM
+                bo_business bob
+            LEFT JOIN bo_customer boc ON bob.customer_id = boc.cus_bid
+            WHERE
+                bob.is_del = 0
+            AND bob.project_id = #{projectId}
+            AND bob.house_type_id = #{houseTypeId}
+            AND bob.hand_state != 6
+            AND boc.phone = #{phone}
+            AND boc.is_del = 0
+          
+    </select>
+    
+    <!--查询根据条件查询最近一次  -->
+   	<select id="getNearesetBusiness" resultMap="BaseResultMap" parameterType = "String">
+   	      SELECT
+			business.*
+		FROM
+			bo_business business,bo_customer cust
+		WHERE
+			business.project_id = #{projectId}
+		AND business.customer_id = cust.cus_bid
+        AND cust.phone = #{customerPhone}
+        ORDER BY business.create_time DESC
+    </select>
+    
+    <!--根据bid得到business wangws21 2016-8-5 -->
+	<select id="getBusinessByBid" resultMap="BaseResultMap" parameterType="String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bo_business
+		WHERE business_bid = #{businessBid,jdbcType=INTEGER}
+	</select>
+
+	<select id="getBusinessById" resultMap="BaseResultMap" parameterType="String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bo_business
+		WHERE id = #{businessId,jdbcType=INTEGER}
+	</select>
+	
+	<update id="update" parameterType="com.zra.business.entity.BusinessEntity">
+		UPDATE bo_business
+		<set>
+			<if test="updaterId != null">
+				updater_id = #{updaterId,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDel != null">
+				is_del = #{isDel,jdbcType=TINYINT},
+			</if>
+			<if test="cityId != null">
+				city_id = #{cityId,jdbcType=VARCHAR},
+			</if>
+			<if test="customerId != null">
+				customer_id = #{customerId,jdbcType=VARCHAR},
+			</if>
+			<if test="step != null">
+				step = #{step,jdbcType=TINYINT},
+			</if>
+				end_time = #{endTime,jdbcType=TIMESTAMP},   <!-- 截止处理时间在成交和未成交阶段可为空 -->
+			<if test="handState != null">
+				hand_state = #{handState,jdbcType=TINYINT},
+			</if>
+			<if test="message != null">
+				message = #{message,jdbcType=VARCHAR},
+			</if>
+			<if test="projectId != null">
+				project_id = #{projectId,jdbcType=VARCHAR},
+			</if>
+			<if test="houseTypeId != null">
+				house_type_id = #{houseTypeId,jdbcType=VARCHAR},
+			</if>
+			<if test="source != null">
+				source = #{source,jdbcType=TINYINT},
+			</if>
+			<if test="sourceZra != null">
+				source_zra = #{sourceZra,jdbcType=VARCHAR},
+			</if>
+			<if test="expectTime != null">
+				expect_time = #{expectTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expectInStartTime != null">
+				expect_in_start_time = #{expectInStartTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expectInEndTime != null">
+				expect_in_end_time = #{expectInEndTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="expectLowPrice != null">
+				expect_low_price = #{expectLowPrice,jdbcType=DOUBLE},
+			</if>
+			<if test="expectHighPrice != null">
+				expect_high_price = #{expectHighPrice,jdbcType=DOUBLE},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="zoId != null">
+				zo_id = #{zoId,jdbcType=VARCHAR},
+			</if>
+			<if test="zoName != null">
+				zo_name = #{zoName,jdbcType=VARCHAR},
+			</if>
+			<if test="callBid != null">
+				callbid = #{callbid,jdbcType=VARCHAR},
+			</if>
+			<if test="isAnswer != null">
+				is_answer = #{isAnswer,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE business_bid = #{businessBid,jdbcType=VARCHAR}
+	</update>
+	
+	<!--add by tianxf9 获取所有待处理的商机-->
+	<select id="getTODOBusiness" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bo_business bo
+		WHERE bo.is_del = 0 AND bo.step in('1','2','3')
+	</select>
+	
+	<!--根据商机业务id集合查询商机信息列表-->
+	<select id="getBusinessListByBidList" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bo_business bo
+		WHERE bo.is_del = 0 
+		AND bo.business_bid in
+        <foreach collection="listBusinessBid"  item="businessBid" index="index" open="(" separator="," close=")">
+            #{businessBid,jdbcType=VARCHAR}
+        </foreach> 
+	</select>
+
+	<!--根据商机【未完成】或【已完成】和客户uuid查询商机列表-->
+	<select id="findUserBusinessList" resultType="com.zra.business.entity.BusinessListBusInfoEntity">
+		SELECT
+			b.business_bid AS busiBid,
+			b.create_time AS createTime,
+			b.id AS busiId,
+			DATE_FORMAT(
+			b.expect_time,
+			'%Y/%m/%d %H:%i'
+			) AS expectTime,
+			p.fAddress AS proAddress,
+			CASE b.step
+				WHEN '1' THEN
+				'待确认'
+				WHEN '2' THEN
+				'已确认'
+				WHEN '3' THEN
+				'已带看'
+				WHEN '4' THEN
+				'已带看'
+				ELSE
+				'已带看'
+				END AS busiStep,
+			b.project_id AS projectId,
+			e.fid AS employeeId,
+			e.fname AS zoName,
+			t.fouroo_tel AS zoMobile
+		FROM
+			bo_business AS b,
+			tproject AS p,
+			bo_customer AS c,
+			t_bind_phone AS t,
+			temployee AS e
+		WHERE
+				b.project_id = p.fId
+			AND b.is_del = 0
+			AND b.customer_id = c.cus_bid
+			AND b.zo_id = e.fid
+			AND e.fid = t.fid
+		<if test="state == 0">
+			AND b.step IN (1, 2)
+		</if>
+		<if test="state == 1">
+			AND b.step IN (3, 4, 5)
+		</if>
+			AND c.cus_uuid = #{uid}
+		LIMIT 50
+	</select>
+
+	<!--查询今日待办且已经处理了的管家分配商机数-->
+	<select id="getTodayDealCount" resultType="com.zra.system.entity.EmployeeEntity">
+		SELECT
+			e.fid AS id,
+			e.fname AS `name`,
+			COUNT(b.zo_id) AS csrType
+		FROM
+			bo_business AS b,
+			(
+				SELECT DISTINCT
+				business_id AS buid
+				FROM
+				bo_business_result
+			) AS r,
+			temployee AS e,
+			tschedule AS s,
+			tscheduleperson AS p
+		WHERE
+			r.buid = b.business_bid
+		AND b.zo_id = e.fid
+		AND p.employId = e.fid
+		AND p.scheduleId = s.bid
+		AND b.create_time BETWEEN DATE_FORMAT(NOW(), '%Y-%m-%d')
+		AND DATE_FORMAT(
+			DATE_ADD(NOW(), INTERVAL 1 DAY),
+			'%Y-%m-%d'
+			)
+		AND b.project_id = #{projectId}
+		AND s.projectId = #{projectId}
+		AND s.fweek = #{week}
+		AND b.is_del = 0
+		AND s.fisdel = 0
+		AND p.fisdel = 0
+		GROUP BY
+			e.fid,
+			e.fname
+	</select>
+</mapper>

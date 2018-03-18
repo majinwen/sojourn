@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zra.room.dao.RoomDao">
+    <resultMap id="RoomResult" type="RoomModel">
+        <id property="id" column="fid"/>
+        <result property="projectId" column="projectid"/>
+        <result property="buildingId" column="buildingid"/>
+        <result property="floorNumber" column="ffloornumber"/>
+        <result property="roomNumber" column="froomnumber"/>
+        <result property="roomArea" column="froomarea"/>
+    </resultMap>
+
+    <select id="getRoomInfo" parameterType="java.lang.String" resultMap="RoomResult">
+        SELECT * FROM troominfo WHERE fid=#{id}
+    </select>
+
+</mapper>

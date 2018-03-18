@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.rentLifeItemDetailDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.RentLifeItemDetailEntity" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="lifeitem_bid" property="lifeitemBid" jdbcType="VARCHAR" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="expenseitem_id" property="expenseitemId" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="payment_amount" property="paymentAmount" jdbcType="DECIMAL" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="deleter_id" property="deleterId" jdbcType="VARCHAR" />
+    <result column="deleted_time" property="deletedTime" jdbcType="TIMESTAMP" />
+    <result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="updater_id" property="updaterId" jdbcType="VARCHAR" />
+    <result column="fvalid" property="fvalid" jdbcType="INTEGER" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, lifeitem_bid, contract_id, expenseitem_id, room_id, payment_amount, is_deleted, 
+    deleter_id, deleted_time, creater_id, created_time, updater_id, fvalid, updated_time
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from rent_lifeitemdetail
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <update id="deleteLifeItem" parameterType="map">
+    UPDATE
+    rent_lifeitemdetail
+    SET
+    is_deleted = 1,
+    fvalid = 0
+    WHERE contract_id = #{contractId,jdbcType=VARCHAR}
+    AND room_id = #{roomId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="listLifeItemEntityByContractIdAndRoomId" parameterType="com.ziroom.zrp.service.trading.dto.ContractRoomDto" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    rent_lifeitemdetail
+    WHERE contract_id = #{contractId,jdbcType=VARCHAR}
+    AND room_id = #{roomId,jdbcType=VARCHAR}
+    AND is_deleted = 0
+    AND fvalid = 1
+  </select>
+
+  <!--查询费用项-->
+  <select id="listLifeItemByContractIdAndRoomId" resultType="com.ziroom.zrp.service.trading.entity.LifeItemVo">
+    SELECT
+      t.`contract_id` AS contractId,t.`room_id` AS roomId,t.`expenseitem_id` AS expenseItemId
+      ,t.`payment_amount` AS paymentAmount,t1.`item_name` AS itemName,t1.`item_code` AS itemCode
+    FROM
+      rent_lifeitemdetail t
+      LEFT JOIN texpenseitem t1
+        ON t.`expenseitem_id` = t1.`fid`
+    WHERE t.`contract_id` = #{contractId,jdbcType=VARCHAR}
+    AND t.`room_id` = #{roomId,jdbcType=VARCHAR}
+    AND t.is_deleted = 0
+    AND t.fvalid = 1
+  </select>
+
+  <select id="listLifeItemByContractIds" resultType="com.ziroom.zrp.service.trading.entity.LifeItemVo">
+    SELECT
+    t.`contract_id` AS contractId,t.`room_id` AS roomId,t.`expenseitem_id` AS expenseItemId
+    ,t.`payment_amount` AS paymentAmount,t1.`item_name` AS itemName,t1.`item_code` AS itemCode
+    FROM
+    rent_lifeitemdetail t
+    LEFT JOIN texpenseitem t1
+    ON t.`expenseitem_id` = t1.`fid`
+    WHERE t.`contract_id` IN
+    <foreach collection="contractIds" index="index" item="item" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+    AND t.is_deleted = 0
+    AND t.fvalid = 1
+  </select>
+
+  <insert id="insert" parameterType="com.ziroom.zrp.trading.entity.RentLifeItemDetailEntity" >
+    insert into rent_lifeitemdetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="lifeitemBid != null" >
+        lifeitem_bid,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="expenseitemId != null" >
+        expenseitem_id,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="paymentAmount != null" >
+        payment_amount,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="deleterId != null" >
+        deleter_id,
+      </if>
+      <if test="deletedTime != null" >
+        deleted_time,
+      </if>
+      <if test="createrId != null" >
+        creater_id,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="updaterId != null" >
+        updater_id,
+      </if>
+      <if test="fvalid != null" >
+        fvalid,
+      </if>
+      <if test="updatedTime != null" >
+        updated_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="lifeitemBid != null" >
+        #{lifeitemBid,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="expenseitemId != null" >
+        #{expenseitemId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentAmount != null" >
+        #{paymentAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="deleterId != null" >
+        #{deleterId,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedTime != null" >
+        #{deletedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrId != null" >
+        #{createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null" >
+        #{updaterId,jdbcType=VARCHAR},
+      </if>
+      <if test="fvalid != null" >
+        #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.trading.entity.RentLifeItemDetailEntity" >
+    update rent_lifeitemdetail
+    <set >
+      <if test="lifeitemBid != null" >
+        lifeitem_bid = #{lifeitemBid,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        contract_id = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="expenseitemId != null" >
+        expenseitem_id = #{expenseitemId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentAmount != null" >
+        payment_amount = #{paymentAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="deleterId != null" >
+        deleter_id = #{deleterId,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedTime != null" >
+        deleted_time = #{deletedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrId != null" >
+        creater_id = #{createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null" >
+        updater_id = #{updaterId,jdbcType=VARCHAR},
+      </if>
+      <if test="fvalid != null" >
+        fvalid = #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="updatedTime != null" >
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <display-name>Demo - Restful Web Application</display-name>
+
+    <!-- encodingFilter -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:spring/applicationContext.xml
+        </param-value>
+    </context-param>
+    <context-param>
+        <param-name>contextInitializerClasses</param-name>
+        <param-value>com.ziroom.platform.tesla.config.spring.TeslaSpringApplicationContextInitializer</param-value>
+    </context-param>
+    <filter>
+        <filter-name>requestContextFilter</filter-name>
+        <filter-class>org.springframework.web.filter.RequestContextFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>requestContextFilter</filter-name>
+        <servlet-name>*</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+
+    <!--过滤验证签名值 注意配置顺序 created by cuigh6-->
+    <filter>
+        <filter-name>serverParamFilter</filter-name>
+        <filter-class>com.zra.common.filter.ServerParamFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>serverParamFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- <filter>
+        <filter-name>clientParamFilter</filter-name>
+        <filter-class>com.zra.common.filter.ClientParamFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>clientParamFilter</filter-name>
+        <url-pattern>/client/*</url-pattern>
+    </filter-mapping> -->
+
+    <servlet>
+        <servlet-name>jersey-servlet</servlet-name>
+        <servlet-class>com.ziroom.platform.tesla.server.setup.JerseyServletContainer</servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>com.zra.app.ZraapiApplication</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>jersey-servlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>harmonia</servlet-name>
+        <servlet-class>com.ziroom.platform.harmonia.application.HarmoniaServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>harmonia</servlet-name>
+        <url-pattern>/harmonia/*</url-pattern>
+    </servlet-mapping>
+    
+</web-app>

@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--suppress ALL -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.report.dao.ReportPaymentDao">
+    <resultMap id="BaseResultMap" type="com.zra.report.entity.ReportPaymentEntity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="report_payment_id" property="reportPaymentId" jdbcType="VARCHAR"/>
+        <result column="project_id" property="projectId" jdbcType="VARCHAR"/>
+        <result column="record_date" property="recordDate" jdbcType="TIMESTAMP"/>
+        <result column="house_type_id" property="houseTypeId" jdbcType="VARCHAR"/>
+        <result column="payment_count" property="paymentCount" jdbcType="INTEGER"/>
+        <result column="payment_count_range" property="paymentCountRange" jdbcType="INTEGER"/>
+        <result column="voucher_count" property="voucherCount" jdbcType="INTEGER"/>
+        <result column="delay_voucher_count" property="delayVoucherCount" jdbcType="INTEGER"/>
+        <result column="voucher_rate" property="voucherRate" jdbcType="DECIMAL"/>
+        <result column="voucher_intime_rate" property="voucherIntimeRate" jdbcType="DECIMAL"/>
+        <result column="payment_amount" property="paymentAmount" jdbcType="DECIMAL"/>
+        <result column="payment_amount_range" property="paymentAmountRange" jdbcType="DECIMAL"/>
+        <result column="voucher_amount" property="voucherAmount" jdbcType="DECIMAL"/>
+        <result column="delay_voucher_amount" property="delayVoucherAmount" jdbcType="DECIMAL"/>
+        <result column="is_del" property="isDel" jdbcType="BIT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_id" property="createId" jdbcType="VARCHAR"/>
+        <result column="update_id" property="updateId" jdbcType="VARCHAR"/>
+        <result column="delete_id" property="deleteId" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <resultMap id="TaskResultMap" type="com.zra.report.entity.ReportPaymenTaskEntity">
+        <result column="house_type_id" property="houseTypeId" jdbcType="VARCHAR"/>
+        <result column="count" property="count" jdbcType="DECIMAL"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id, report_payment_id, project_id, record_date, house_type_id, payment_count,payment_count_range, voucher_count, delay_voucher_count, voucher_rate, voucher_intime_rate, payment_amount,payment_amount_range, voucher_amount, delay_voucher_amount, 
+        is_del, create_time, delete_time, update_time, create_id, update_id, delete_id
+    </sql>
+    
+    <select id="selectReportPaymentByRecordDate" resultMap="BaseResultMap">
+    	SELECT 
+    	<include refid="Base_Column_List"/>
+    	FROM report_payment 
+    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+    	AND is_del = 0 
+    	AND DATE_FORMAT(record_date, '%Y-%m') = #{recordDate,jdbcType=VARCHAR} 
+    	ORDER BY house_type_id
+    </select>
+    
+    <insert id="insertReportPayment" parameterType="com.zra.report.entity.ReportPaymentEntity" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO report_payment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="reportPaymentId != null">
+                report_payment_id,
+            </if>
+            <if test="projectId != null">
+                project_id,
+            </if>
+            <if test="recordDate != null">
+                record_date,
+            </if>
+            <if test="houseTypeId != null">
+                house_type_id,
+            </if>
+            <if test="paymentCount != null">
+                payment_count,
+            </if>
+            <if test="paymentCountRange != null">
+                payment_count_range,
+            </if>
+            <if test="voucherCount != null">
+                voucher_count,
+            </if>
+            <if test="delayVoucherCount != null">
+                delay_voucher_count,
+            </if>
+            <if test="voucherRate != null">
+                voucher_rate,
+            </if>
+            <if test="voucherIntimeRate != null">
+                voucher_intime_rate,
+            </if>
+            <if test="paymentAmount != null">
+                payment_amount,
+            </if>
+            <if test="paymentAmountRange != null">
+                payment_amount_range,
+            </if>
+            <if test="voucherAmount != null">
+                voucher_amount,
+            </if>
+            <if test="delayVoucherAmount != null">
+                delay_voucher_amount,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createId != null">
+                create_id,
+            </if>
+            <if test="updateId != null">
+                update_id,
+            </if>
+            <if test="deleteId != null">
+                delete_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="reportPaymentId != null">
+                #{reportPaymentId,jdbcType=VARCHAR},
+            </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDate != null">
+                #{recordDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="houseTypeId != null">
+                #{houseTypeId,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentCount != null">
+                #{paymentCount,jdbcType=INTEGER},
+            </if>
+            <if test="paymentCountRange != null">
+                #{paymentCountRange,jdbcType=INTEGER},
+            </if>
+            <if test="voucherCount != null">
+                #{voucherCount,jdbcType=INTEGER},
+            </if>
+            <if test="delayVoucherCount != null">
+                #{delayVoucherCount,jdbcType=INTEGER},
+            </if>
+            <if test="voucherRate != null">
+                #{voucherRate,jdbcType=DECIMAL},
+            </if>
+            <if test="voucherIntimeRate != null">
+                #{voucherIntimeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="paymentAmount != null">
+                #{paymentAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="paymentAmountRange != null">
+                #{paymentAmountRange,jdbcType=DECIMAL},
+            </if>
+            <if test="voucherAmount != null">
+                #{voucherAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="delayVoucherAmount != null">
+                #{delayVoucherAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=BIT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createId != null">
+                #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateId != null">
+                #{updateId,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteId != null">
+                #{deleteId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateReportPayment" parameterType="com.zra.report.entity.ReportPaymentEntity">
+        UPDATE report_payment
+        <set>
+            <if test="projectId != null">
+                project_id = #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDate != null">
+                record_date = #{recordDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="houseTypeId != null">
+                house_type_id = #{houseTypeId,jdbcType=VARCHAR},
+            </if>
+            <if test="paymentCount != null">
+                payment_count = #{paymentCount,jdbcType=INTEGER},
+            </if>
+            <if test="paymentCountRange != null">
+                payment_count_range = #{paymentCountRange,jdbcType=INTEGER},
+            </if>
+            <if test="voucherCount != null">
+                voucher_count = #{voucherCount,jdbcType=INTEGER},
+            </if>
+            <if test="delayVoucherCount != null">
+                delay_voucher_count = #{delayVoucherCount,jdbcType=INTEGER},
+            </if>
+            <if test="voucherRate != null">
+                voucher_rate = #{voucherRate,jdbcType=DECIMAL},
+            </if>
+            <if test="voucherIntimeRate != null">
+                voucher_intime_rate = #{voucherIntimeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="paymentAmount != null">
+                payment_amount = #{paymentAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="paymentAmountRange != null">
+                payment_amount_range = #{paymentAmountRange,jdbcType=DECIMAL},
+            </if>
+            <if test="voucherAmount != null">
+                voucher_amount = #{voucherAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="delayVoucherAmount != null">
+                delay_voucher_amount = #{delayVoucherAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=BIT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createId != null">
+                create_id = #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateId != null">
+                update_id = #{updateId,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteId != null">
+                delete_id = #{deleteId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE report_payment_id = #{reportPaymentId,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="deleteReportPaymentByBid" parameterType="com.zra.report.entity.ReportPaymentEntity">
+        UPDATE report_payment
+        <set>
+        	is_del = 1,
+			delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            delete_id = #{deleteId,jdbcType=VARCHAR},
+        </set>
+        WHERE report_payment_id = #{reportPaymentId,jdbcType=VARCHAR}
+    </update>
+    
+    <!-- 定时任务数据收集 -->
+    <!--本月 应收回款单量 -->
+    <select id="selectPaymentCount" resultMap="TaskResultMap">
+    	SELECT 
+    		room.housetypeid AS house_type_id, 
+    		COUNT(room.fid) AS count 
+    	FROM 
+    		trentpaymentitem tpamentitem 
+    	JOIN trentpayment tpayment ON tpamentitem.payment_id = tpayment.payment_id 
+    	AND tpayment.payNum > 1 
+		AND tpayment.fisdel = 0 
+		AND DATE_FORMAT(tpayment.ought_payment_date, '%Y-%m') = #{recordDate,jdbcType=VARCHAR} 
+		JOIN trentcontract trc ON tpayment.contract_id = trc.contractid 
+		AND trc.con_status_code = 'yqy' 
+		AND trc.fisdel = 0 
+		AND trc.project_id = #{projectId,jdbcType=VARCHAR} 
+		AND tpamentitem.expense_item_id = 1 
+		JOIN troominfo room ON room.fid = tpamentitem.room_id 
+		GROUP BY room.housetypeid 
+    </select>
+    
+    <!--时间段内 应收回款单量  -->
+    <select id="selectPaymentCountRange" resultMap="TaskResultMap">
+        SELECT 
+    		room.housetypeid AS house_type_id, 
+    		COUNT(room.fid) AS count 
+    	FROM 
+    		trentpaymentitem tpamentitem 
+    	JOIN trentpayment tpayment ON tpamentitem.payment_id = tpayment.payment_id 
+    	AND tpayment.payNum > 1 
+		AND tpayment.fisdel = 0 
+		AND tpayment.ought_payment_date <![CDATA[ >= ]]> #{startDate}
+		AND tpayment.ought_payment_date <![CDATA[ <= ]]> #{endDate} 
+		JOIN trentcontract trc ON tpayment.contract_id = trc.contractid 
+		AND trc.con_status_code = 'yqy' 
+		AND trc.fisdel = 0 
+		AND trc.project_id = #{projectId,jdbcType=VARCHAR} 
+		AND tpamentitem.expense_item_id = 1 
+		JOIN troominfo room ON room.fid = tpamentitem.room_id 
+		GROUP BY room.housetypeid 
+    </select>
+    
+    <!-- 实际回款单量 -->
+    <select id="selectVoucherCount" resultMap="TaskResultMap">
+    	SELECT 
+			room.housetypeid AS house_type_id, 
+		  	COUNT(room.fid) AS count 
+		FROM 
+			troominfo room 
+		JOIN ( 
+			SELECT 
+				tpamentitem.room_id, 
+			IF ( 
+				tv.factPrice IS NULL, 
+				0, 
+				tv.factPrice 
+			) AS factPrice, 
+		IF ( 
+			tpamentitem.total_amount IS NULL, 
+			0, 
+			tpamentitem.total_amount 
+		) - 
+		IF ( 
+			tv.factPrice IS NULL, 
+			0, 
+			tv.factPrice 
+		) AS debt 
+		FROM 
+			trentpaymentitem tpamentitem 
+		JOIN trentpayment tpayment ON tpamentitem.payment_id = tpayment.payment_id 
+		AND tpayment.payNum > 1 
+		AND tpayment.fisdel = 0 
+		AND DATE_FORMAT(tpayment.ought_payment_date, '%Y-%m') = #{recordDate,jdbcType=VARCHAR} 
+		JOIN trentcontract trc ON tpayment.contract_id = trc.contractid 
+		AND trc.con_status_code = 'yqy' 
+		AND trc.fisdel = 0 
+		AND trc.project_id = #{projectId,jdbcType=VARCHAR} 
+		AND tpamentitem.expense_item_id = 1 
+		LEFT JOIN ( 
+			SELECT 
+				tpv.payment_id, 
+				tpvitem.room_id, 
+				tpvitem.expense_item_id, 
+		
+			IF ( 
+				sum(tpvitem.actual_amount) IS NULL, 
+				0, 
+				sum(tpvitem.actual_amount) 
+			) AS factPrice 
+			FROM 
+				trentpaymentvoucher tpv, 
+				trentvoucheritem tpvitem 
+			WHERE 
+				tpvitem.voucher_id = tpv.voucher_id 
+			AND tpv.state = '2' 
+			AND DATE_FORMAT(tpv.payment_time, '%Y-%m') &lt;= #{recordDate,jdbcType=VARCHAR} 
+			AND tpvitem.expense_item_id = 1 
+			AND tpv.fisdel = 0 
+			AND tpvitem.fisdel = 0 
+			AND tpvitem.fvalid = 1 
+			AND tpv.payment_id IS NOT NULL 
+			AND tpv.project_id = #{projectId,jdbcType=VARCHAR} 
+			GROUP BY tpvitem.room_id, tpvitem.payment_id 
+		) tv ON tpamentitem.payment_id = tv.payment_id 
+		AND tpamentitem.room_id = tv.room_id 
+		AND tv.expense_item_id = tpamentitem.expense_item_id 
+		) AS tvv ON tvv.room_id = room.fid 
+		AND tvv.debt = 0 
+		GROUP BY room.housetypeid 
+    </select>
+    
+    <!-- 及时回款单量 -->
+    <select id="selectIntimeVoucherCount" resultMap="TaskResultMap">
+    	SELECT
+			room.housetypeid AS house_type_id, 
+		  	COUNT(room.fid) AS count 
+		FROM
+			troominfo room 
+		JOIN ( 
+			SELECT 
+				tpamentitem.room_id, 
+			IF ( 
+				tv.factPrice IS NULL, 
+				0, 
+				tv.factPrice 
+			) AS factPrice, 
+		IF ( 
+			tpamentitem.total_amount IS NULL, 
+			0, 
+			tpamentitem.total_amount 
+		) - 
+		IF ( 
+			tv.factPrice IS NULL, 
+			0, 
+			tv.factPrice 
+		) AS debt, 
+		 TIMESTAMPDIFF( 
+			DAY, 
+			tv.payment_time, 
+			tpayment.ought_payment_date 
+		) AS dbalance 
+		FROM 
+			trentpaymentitem tpamentitem 
+		JOIN trentpayment tpayment ON tpamentitem.payment_id = tpayment.payment_id 
+		AND tpayment.payNum > 1 
+		AND tpayment.fisdel = 0 
+		AND tpayment.ought_payment_date <![CDATA[ >= ]]> #{startDate}
+		AND tpayment.ought_payment_date <![CDATA[ <= ]]> #{endDate}
+		JOIN trentcontract trc ON tpayment.contract_id = trc.contractid 
+		AND trc.con_status_code = 'yqy' 
+		AND trc.fisdel = 0 
+		AND trc.project_id = #{projectId,jdbcType=VARCHAR} 
+		AND tpamentitem.expense_item_id = 1 
+		JOIN ( 
+			SELECT 
+				tpv.payment_id, 
+				tpvitem.room_id, 
+				tpvitem.expense_item_id, 
+				tpv.payment_time, 
+		
+			IF ( 
+				sum(tpvitem.actual_amount) IS NULL, 
+				0, 
+				sum(tpvitem.actual_amount) 
+			) AS factPrice 
+			FROM 
+				trentpaymentvoucher tpv, 
+				trentvoucheritem tpvitem 
+			WHERE 
+				tpvitem.voucher_id = tpv.voucher_id 
+			AND tpv.state = '2' 
+			AND tpvitem.expense_item_id = 1 
+			AND tpv.fisdel = 0 
+			AND tpvitem.fisdel = 0 
+			AND tpvitem.fvalid = 1 
+			AND tpv.payment_id IS NOT NULL 
+			AND tpv.project_id = #{projectId,jdbcType=VARCHAR} 
+			GROUP BY 
+				tpvitem.room_id, 
+				tpvitem.payment_id 
+		) tv ON tpamentitem.payment_id = tv.payment_id 
+		AND tpamentitem.room_id = tv.room_id 
+		AND tv.expense_item_id = tpamentitem.expense_item_id 
+		) AS tvv ON tvv.room_id = room.fid 
+		AND tvv.debt = 0 
+		AND tvv.dbalance >= 0 
+		GROUP BY 
+			room.housetypeid 
+    </select>
+    
+    <!-- 应收回款金额 -->
+    <select id="selectPaymentAmount" resultMap="TaskResultMap">
+    	SELECT 
+			room.housetypeid AS house_type_id, 
+			SUM(tpamentitem.total_amount) AS count 
+		FROM 
+			trentpaymentitem tpamentitem 
+		JOIN trentpayment tpayment ON tpamentitem.payment_id = tpayment.payment_id 
+		AND tpayment.payNum > 1 
+		AND tpayment.fisdel = 0 
+		AND DATE_FORMAT(tpayment.ought_payment_date, '%Y-%m') = #{recordDate,jdbcType=VARCHAR} 
+		JOIN trentcontract trc ON tpayment.contract_id = trc.contractid 
+		AND trc.con_status_code = 'yqy' 
+		AND trc.fisdel = 0 
+		AND trc.project_id = #{projectId,jdbcType=VARCHAR} 
+		AND tpamentitem.expense_item_id = 1 
+		JOIN troominfo room ON room.fid = tpamentitem.room_id 
+		GROUP BY room.housetypeid 
+    </select>
+    
+    <!-- 时间段内应收回款金额 -->
+    <select id="selectPaymentAmountRange" resultMap="TaskResultMap">
+        SELECT 
+			room.housetypeid AS house_type_id, 
+			SUM(tpamentitem.total_amount) AS count 
+		FROM 
+			trentpaymentitem tpamentitem 
+		JOIN trentpayment tpayment ON tpamentitem.payment_id = tpayment.payment_id 
+		AND tpayment.payNum > 1 
+		AND tpayment.fisdel = 0 
+		AND tpayment.ought_payment_date <![CDATA[ >= ]]> #{startDate}
+		AND tpayment.ought_payment_date <![CDATA[ <= ]]> #{endDate} 
+		JOIN trentcontract trc ON tpayment.contract_id = trc.contractid 
+		AND trc.con_status_code = 'yqy' 
+		AND trc.fisdel = 0 
+		AND trc.project_id = #{projectId,jdbcType=VARCHAR} 
+		AND tpamentitem.expense_item_id = 1 
+		JOIN troominfo room ON room.fid = tpamentitem.room_id 
+		GROUP BY room.housetypeid
+    </select>
+    <!-- 实际回款金额 -->
+    <select id="selectVoucherAmount" resultMap="TaskResultMap">
+    	SELECT
+			room.housetypeid AS house_type_id, 
+			SUM(factPrice) AS count 
+		FROM 
+			troominfo room 
+		JOIN ( 
+			SELECT 
+				tpamentitem.room_id, 
+		
+			IF ( 
+				tv.factPrice IS NULL, 
+				0, 
+				tv.factPrice 
+			) AS factPrice 
+		FROM 
+			trentpaymentitem tpamentitem 
+		JOIN trentpayment tpayment ON tpamentitem.payment_id = tpayment.payment_id 
+		AND tpayment.payNum > 1 
+		AND tpayment.fisdel = 0 
+		AND DATE_FORMAT(tpayment.ought_payment_date, '%Y-%m') = #{recordDate,jdbcType=VARCHAR} 
+		JOIN trentcontract trc ON tpayment.contract_id = trc.contractid 
+		AND trc.con_status_code = 'yqy' 
+		AND trc.fisdel = 0 
+		AND trc.project_id = #{projectId,jdbcType=VARCHAR} 
+		AND tpamentitem.expense_item_id = 1 
+		LEFT JOIN ( 
+			SELECT 
+				tpv.payment_id, 
+				tpvitem.room_id, 
+				tpvitem.expense_item_id, 
+		
+			IF ( 
+				sum(tpvitem.actual_amount) IS NULL, 
+				0, 
+				sum(tpvitem.actual_amount) 
+			) AS factPrice 
+			FROM 
+				trentpaymentvoucher tpv, 
+				trentvoucheritem tpvitem 
+			WHERE 
+				tpvitem.voucher_id = tpv.voucher_id 
+			AND tpv.state = '2' 
+			AND tpvitem.expense_item_id = 1 
+			AND tpv.fisdel = 0 
+			AND tpvitem.fisdel = 0 
+			AND tpvitem.fvalid = 1 
+			AND tpv.payment_id IS NOT NULL 
+			AND tpv.project_id = #{projectId,jdbcType=VARCHAR} 
+			AND DATE_FORMAT(tpv.payment_time, '%Y-%m') &lt;= #{recordDate,jdbcType=VARCHAR} 
+			GROUP BY 
+				tpvitem.room_id, 
+				tpvitem.payment_id 
+		) tv ON tpamentitem.payment_id = tv.payment_id 
+		AND tpamentitem.room_id = tv.room_id 
+		AND tv.expense_item_id = tpamentitem.expense_item_id 
+		) AS tvv ON tvv.room_id = room.fid 
+		GROUP BY 
+			room.housetypeid 
+    </select>
+    
+    <!-- 及时回款金额 -->
+    <select id="selectIntimeVoucherAmount" resultMap="TaskResultMap">
+    	SELECT 
+			room.housetypeid AS house_type_id, 
+			SUM(factPrice) AS count 
+		FROM 
+			troominfo room 
+		JOIN ( 
+			SELECT 
+				tpamentitem.room_id, 
+		
+			IF ( 
+				tv.factPrice IS NULL, 
+				0, 
+				tv.factPrice 
+			) AS factPrice, 
+		 TIMESTAMPDIFF( 
+			DAY, 
+			tv.payment_time, 
+			tpayment.ought_payment_date 
+		) AS dbalance 
+		FROM 
+			trentpaymentitem tpamentitem 
+		JOIN trentpayment tpayment ON tpamentitem.payment_id = tpayment.payment_id 
+		AND tpayment.payNum > 1 
+		AND tpayment.fisdel = 0 
+		AND tpayment.ought_payment_date <![CDATA[ >= ]]>#{startDate}
+		AND tpayment.ought_payment_date <![CDATA[ <= ]]>#{endDate}
+		JOIN trentcontract trc ON tpayment.contract_id = trc.contractid 
+		AND trc.con_status_code = 'yqy' 
+		AND trc.fisdel = 0 
+		AND trc.project_id = #{projectId,jdbcType=VARCHAR} 
+		AND tpamentitem.expense_item_id = 1 
+		JOIN ( 
+			SELECT 
+				tpv.payment_id, 
+				tpvitem.room_id, 
+				tpvitem.expense_item_id, 
+				tpv.payment_time, 
+		
+			IF ( 
+				sum(tpvitem.actual_amount) IS NULL, 
+				0, 
+				sum(tpvitem.actual_amount) 
+			) AS factPrice 
+			FROM 
+				trentpaymentvoucher tpv, 
+				trentvoucheritem tpvitem 
+			WHERE 
+				tpvitem.voucher_id = tpv.voucher_id 
+			AND tpv.state = '2' 
+			AND tpvitem.expense_item_id = 1 
+			AND tpv.fisdel = 0 
+			AND tpvitem.fisdel = 0 
+			AND tpvitem.fvalid = 1 
+			AND tpv.payment_id IS NOT NULL 
+			AND tpv.project_id = #{projectId,jdbcType=VARCHAR} 
+			GROUP BY 
+				tpvitem.room_id, 
+				tpvitem.payment_id 
+		) tv ON tpamentitem.payment_id = tv.payment_id 
+		AND tpamentitem.room_id = tv.room_id 
+		AND tv.expense_item_id = tpamentitem.expense_item_id 
+		) AS tvv ON tvv.room_id = room.fid 
+		AND tvv.dbalance >= 0 
+		GROUP BY 
+			room.housetypeid 
+    </select>
+    
+    <update id="delEntitysByRecordDate">
+	    UPDATE report_payment 
+        <set>
+        	is_del = 1, 
+			delete_time = #{delTime,jdbcType=TIMESTAMP}, 
+            delete_id = #{delId,jdbcType=VARCHAR}
+        </set>
+        WHERE DATE_FORMAT(record_date, '%Y-%m') = #{recordDate,jdbcType=VARCHAR} 
+	</update>
+	
+	<!-- add by tianxf9 计算实际回款率为目标看板 -->
+	<select id="getPaymentCountForKB" resultType="com.zra.report.entity.dto.ReportPaymentForKBDto" parameterType="String">
+			SELECT
+				trc.project_id AS projectId,
+				COUNT(billdetail.fid) AS count
+			FROM
+				fin_recei_bill_detail billdetail
+			JOIN fin_recei_bill bill ON billdetail.bill_fid = bill.fid
+			AND bill.pay_num > 1
+			AND bill.is_del = 0
+			AND bill.bill_type = 0
+            AND bill.bill_state !=3
+			AND billdetail.is_del = 0
+			AND bill.plan_gather_date <![CDATA[ >= ]]> #{startDate}
+			AND bill.plan_gather_date <![CDATA[ <= ]]> #{endDate}
+			JOIN trentcontract trc ON bill.contract_id = trc.contractid
+			AND trc.fisdel = 0
+			AND billdetail.expense_item_id = 1
+			GROUP BY
+				trc.project_id;
+	</select>
+	
+	<select id="getVoucherCountForKB" resultType="com.zra.report.entity.dto.ReportPaymentForKBDto" parameterType="String">
+		SELECT
+			tvv.project_id AS projectId,
+			COUNT(tvv.room_id) AS count
+		FROM
+			(
+				SELECT
+					DISTINCT billdetail.room_id,
+					trc.project_id,
+		
+				IF (
+					tv.factPrice IS NULL,
+					0,
+					tv.factPrice
+				) AS factPrice,
+		
+			IF (
+				billdetail.ought_amount IS NULL,
+				0,
+				billdetail.ought_amount
+			) -
+			IF (
+				tv.factPrice IS NULL,
+				0,
+				tv.factPrice
+			) AS debt
+			FROM
+				fin_recei_bill_detail billdetail
+			JOIN fin_recei_bill bill ON billdetail.payment_id = bill.payment_id
+			AND bill.pay_num > 1
+			AND bill.is_del = 0
+			AND bill.bill_type = 0
+            AND bill.bill_state !=3
+			AND billdetail.is_del = 0 
+			AND bill.plan_gather_date <![CDATA[ >= ]]> #{startDate}
+			AND bill.plan_gather_date <![CDATA[ <= ]]> #{endDate}
+			JOIN trentcontract trc ON bill.contract_id = trc.contractid
+			AND trc.fisdel = 0
+			AND billdetail.expense_item_id = 1
+			LEFT JOIN (
+				SELECT
+					tpv.payment_id,
+					tpvitem.room_id,
+					tpvitem.expense_item_id,
+		
+				IF (
+					sum(tpvitem.actual_amount) IS NULL,
+					0,
+					sum(tpvitem.actual_amount)
+				) AS factPrice
+				FROM
+					trentpaymentvoucher tpv,
+					trentvoucheritem tpvitem
+				WHERE
+					tpvitem.voucher_id = tpv.voucher_id
+				AND tpv.state = '2'
+				AND tpvitem.expense_item_id = 1
+				AND tpv.fisdel = 0
+				AND tpvitem.fisdel = 0
+				AND tpvitem.fvalid = 1
+				AND tpv.payment_id IS NOT NULL
+				GROUP BY
+					tpvitem.room_id,
+					tpvitem.payment_id
+			) tv ON billdetail.payment_id = tv.payment_id
+			AND billdetail.room_id = tv.room_id
+			AND tv.expense_item_id = billdetail.expense_item_id
+			) tvv
+		WHERE
+			tvv.debt = 0
+		GROUP BY
+			tvv.project_id
+	</select>
+	<!-- end by tianxf9 计算实际回款率  -->
+</mapper>

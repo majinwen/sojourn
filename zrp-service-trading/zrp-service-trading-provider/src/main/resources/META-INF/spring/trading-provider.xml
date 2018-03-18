@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2011 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	
+	<dubbo:provider filter="catFilter,asyncFilter"></dubbo:provider>
+	<dubbo:service interface="com.ziroom.zrp.service.trading.api.RentContractService" ref="trading.rentContractServiceProxy">
+        <!--<dubbo:method name="findContractByRentCode" timeout="3000" retries="3"/>-->
+        <dubbo:method name="findContractBaseByContractId" timeout="3000" retries="3"/>
+        <dubbo:method name="findContractByContractId" timeout="6000" retries="3"/>
+        <dubbo:method name="updatePayCodeByContractId" timeout="3000" retries="0"/>
+        <dubbo:method name="closeContract" timeout="3000" retries="0"/>
+        <dubbo:method name="invalidContract" timeout="3000" retries="0"/>
+        <dubbo:method name="findCheckinPersonEntityByContractId" timeout="3000" retries="3"/>
+        <dubbo:method name="findLatelyContractByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="findContractListByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="findRentRoomsInfoByParentId" timeout="3000" retries="3" />
+        <dubbo:method name="saveContractBySignInvite" timeout="3000" retries="0" />
+        <dubbo:method name="saveContractByFirst" timeout="3000" retries="0" />
+        <dubbo:method name="findOneRentContractByParentId" timeout="3000" retries="3" />
+        <dubbo:method name="rollBackContractInfoForZramsSubmit" timeout="10000" retries="0" />
+        <dubbo:method name="findWqyContractInviteByRoomIds" timeout="3000" retries="3" />
+        <dubbo:method name="isExistNotFinishedBill" timeout="3000" retries="3" />
+        <dubbo:method name="getBatchParentContractCode" timeout="3000" retries="3" />
+        <dubbo:method name="getBatchContractCodeByParentCode" timeout="3000" retries="3" />
+        <dubbo:method name="getCodesByParentCodeOnCondition" timeout="3000" retries="3" />
+        <dubbo:method name="getContractActivityList" timeout="3000" retries="3" />
+        <dubbo:method name="findInvalidContractList" timeout="10000" retries="3" />
+        <dubbo:method name="updateContractInfoForSubmit" timeout="10000" retries="0" />
+        <dubbo:method name="rollBackContractInfoForAppSubmit" timeout="10000" retries="0" />
+        <dubbo:method name="findWqyEpsContractPageInfo" timeout="30000" retries="1" />
+        <dubbo:method name="findContractAndDetailsByContractId" timeout="30000" retries="3" />
+        <dubbo:method name="listContractByPage" timeout="600000" retries="1" />
+        <dubbo:method name="findContractListByParentCode" timeout="50000" retries="3" />
+        <dubbo:method name="findCheckinPerson" timeout="8000" retries="0" />
+        <dubbo:method name="findCurrentContract" timeout="10000" retries="3" />
+    </dubbo:service>
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.PaymentService" ref="trading.paymentServiceProxy">
+        <dubbo:method name="getPaymentDetail" timeout="3000" retries="3"/>
+        <dubbo:method name="getContractTerms" timeout="3000" retries="3"/>
+        <dubbo:method name="findBillPayDetail" timeout="3000" retries="3"/>
+        <dubbo:method name="findBillListByContractId" timeout="3000" retries="3"/>
+        <dubbo:method name="findPayPageDetail" timeout="3000" retries="3"/>
+        <dubbo:method name="validPayForFinance" timeout="3000" retries="3" />
+        <dubbo:method name="findHistoryLifeFeeList" timeout="3000" retries="3" />
+        <dubbo:method name="getMustPayBillList" timeout="3000" retries="3" />
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.CheckSignService" ref="trading.checkSignServiceProxy">
+        <dubbo:method name="findCheckSignCusInfoVoByUid" timeout="3000" retries="3"/>
+        <dubbo:method name="createUser" timeout="3000" retries="3"/>
+        <dubbo:method name="getUserByIdCardNum" timeout="3000" retries="3"/>
+        <dubbo:method name="getCertsByUser" timeout="3000" retries="3"/>
+        <dubbo:method name="sign" timeout="3000" retries="3"/>
+        <dubbo:method name="getSignContract" timeout="3000" retries="3"/>
+        <dubbo:method name="verify" timeout="3000" retries="3"/>
+        <dubbo:method name="saveCheckSignErrorLog" timeout="3000" retries="0"/>
+        <dubbo:method name="generatePDFContractAndSignature" timeout="15000" retries="0"/>
+        <dubbo:method name="getContractHtml" timeout="3000" retries="3"/>
+        <dubbo:method name="getContractPdf" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.ItemDeliveryService" ref="trading.itemDeliveryServiceProxy">
+        <dubbo:method name="saveOrUpdateSharer" timeout="3000" retries="0"/>
+        <dubbo:method name="deleteSharerByFid" timeout="3000" retries="0"/>
+        <dubbo:method name="listSharerByContractId" timeout="3000" retries="3"/>
+        <dubbo:method name="saveDeliveryInfo" timeout="15000" retries="0"/>
+        <dubbo:method name="findDeliveryInfo" timeout="3000" retries="3"/>
+        <dubbo:method name="listExpenseByItemCodes" timeout="3000" retries="3"/>
+        <dubbo:method name="listItemDeliverysByItemIds" timeout="3000" retries="3"/>
+        <dubbo:method name="confirmDelivery" timeout="15000" retries="0"/>
+        <dubbo:method name="copyMeterInfo" timeout="6000" retries="0"/>
+        <dubbo:method name="generatingElectricityBill" timeout="10000" retries="0"/>
+        <dubbo:method name="readSmartDeviceByRoomInfo" timeout="6000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.CallFinanceService" ref="trading.callFinanceServiceProxy">
+        <dubbo:method name="createBillNum" timeout="3000" retries="0"/>
+        <dubbo:method name="createBillNumBatch" timeout="3000" retries="0" />
+        <dubbo:method name="getReceiptBillByContracts" timeout="3000" retries="3" />
+        <dubbo:method name="getReceiptMethod" timeout="3000" retries="3" />
+        <dubbo:method name="createReceiptBill" timeout="20000" retries="0" />
+        <dubbo:method name="syncContract" timeout="6000" retries="0" />
+        <dubbo:method name="updateContractForOldEsp" timeout="15000" retries="0" />
+        <dubbo:method name="modifyReceiptBill" timeout="3000" retries="0" />
+        <dubbo:method name="getReceivableBillListByCondition" timeout="3000" retries="3" />
+        <dubbo:method name="getFollowupRecord" timeout="3000" retries="3" />
+        <dubbo:method name="getRecordList" timeout="3000" retries="3" />
+        <dubbo:method name="getFzckList" timeout="3000" retries="3" />
+        <dubbo:method name="getFzckCount" timeout="3000" retries="3" />
+        <dubbo:method name="saveFollowupRecord" timeout="3000" retries="0" />
+        <dubbo:method name="createReceipt" timeout="10000" retries="0" />
+        <dubbo:method name="getZRAReceiptBill" timeout="3000" retries="3" />
+        <dubbo:method name="getZRAReceiptBillListForMS" timeout="3000" retries="3" />
+        <dubbo:method name="receiptBillCallbackUpdateStatus" timeout="3000" retries="0" />
+        <dubbo:method name="updateReceipt" timeout="3000" retries="0" />
+        <dubbo:method name="getReceivableBillInfo" timeout="5000" retries="3" />
+        <dubbo:method name="paymentCallback" timeout="8000" retries="0" />
+        <dubbo:method name="checkContractAudit" timeout="8000" retries="3" />
+        <dubbo:method name="checkContractAuditForEspOld" timeout="15000" retries="3" />
+        <dubbo:method name="getReceiptListByBillnum" timeout="5000" retries="3" />
+    </dubbo:service>
+
+    <!--定时任务-->
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.TradingTaskService" ref="trading.tradingTaskServiceProxy">
+        <dubbo:method name="notifyUserDelivery" timeout="3000" retries="0"/>
+        <dubbo:method name="firstBillPayOvertimeCloseContract" timeout="3000" retries="0"/>
+        <dubbo:method name="sameDayUnsignedCloseContract" timeout="3000" retries="0"/>
+        <dubbo:method name="sameDayUnrenewedCloseContract" timeout="3000" retries="0"/>
+        <dubbo:method name="syncExpireContractToFin" timeout="5000" retries="0"/>
+        <dubbo:method name="firstBillPayBeforeOvertimeRemind" timeout="3000" retries="0"/>
+        <dubbo:method name="sameDayBeforeOvertimeUnsignedRemind" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.ShortUrlService" ref="trading.shortUrlServiceProxy">
+        <dubbo:method name="saveShortUrlEntity" timeout="3000" retries="0"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.ZiroomCustomerService" ref="trading.ziroomCustomerServiceProxy">
+        <dubbo:method name="queryUidByPhone" timeout="3000" retries="0"/>
+        <dubbo:method name="getUserAuthInfo" timeout="3000" retries="3"/>
+        <dubbo:method name="findAuthInfoFromCustomer" timeout="5000" retries="3"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.SurrenderService" ref="trading.surrenderServiceProxy">
+        <dubbo:method name="getCostItemAccount" timeout="3000" retries="0"/>
+        <dubbo:method name="saveSurrenderCost" timeout="3000" retries="0"/>
+        <dubbo:method name="cancelSurrender" timeout="3000" retries="0"/>
+        <dubbo:method name="doSurrender" timeout="8000" retries="0"/>
+        <dubbo:method name="getSurRoomList" timeout="3000" retries="3"/>
+        <dubbo:method name="editCommitAudit" timeout="3000" retries="0"/>
+        <dubbo:method name="queryConStatus" timeout="3000" retries="3"/>
+        <dubbo:method name="findSurrenderById" timeout="3000" retries="3"/>
+        <dubbo:method name="getSDPriceBySurrenderId" timeout="3000" retries="3"/>
+        <dubbo:method name="saveOrUpdateSurMeterDetail" timeout="3000" retries="0"/>
+        <dubbo:method name="selectSurrenderCostByParam" timeout="3000" retries="3"/>
+        <dubbo:method name="findMaxDate" timeout="3000" retries="3"/>
+        <dubbo:method name="findSurrenderCostByFid" timeout="3000" retries="3"/>
+        <dubbo:method name="updateBySurId" timeout="3000" retries="3"/>
+        <dubbo:method name="saveOrUpdateSurrrendBackRecord" timeout="3000" retries="0"/>
+        <dubbo:method name="confirmSurrAudit" timeout="3000" retries="0"/>
+        <dubbo:method name="findSurrendBackRecordEntityByParam" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.RentCustomerService" ref="trading.rentCustomerServiceProxy">
+        <dubbo:method name="findTempRentEpsCustomerInfo" timeout="3000" retries="3"/>
+        <dubbo:method name="findRentEpsCustomerById" timeout="3000" retries="3"/>
+        <dubbo:method name="saveOrUpdateEnterpriseContractCustomerInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="saveOrUpdatePersonCustomerInfo" timeout="3000" retries="0" />
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.EnterpriseSigningService" ref="trading.enterpriseSigningServiceProxy">
+        <dubbo:method name="updateContractInfoBySecond" timeout="30000" retries="0" />
+        <dubbo:method name="queryFinReceiBillInfo" timeout="30000" retries="1" />
+        <dubbo:method name="querySignRoomList" timeout="30000" retries="1" />
+        <dubbo:method name="customerSignature" timeout="30000" retries="0" />
+        <dubbo:method name="listRentDetailBySurParentRentId" timeout="30000" retries="1" />
+        <dubbo:method name="findRenewRootParentContractIds" timeout="30000" retries="1" />
+        <dubbo:method name="saveEnterpriseReceiBill" timeout="600000" retries="0" />
+        <dubbo:method name="findOnePreContractInfoByPreSurParentRentId" timeout="3000" retries="0" />
+        <dubbo:method name="asyncEntContractAndBillsToFin" timeout="3000" retries="0" />
+        <dubbo:method name="asyncRetrySyncEntSubContractToFin" timeout="3000" retries="0" />
+        <dubbo:method name="asyncSubContractTransferToPdfByParentId" timeout="3000" retries="0" />
+        <dubbo:method name="asyncRetrySubContractTransferToPdf" timeout="3000" retries="0" />
+        <dubbo:method name="contractNotModifyBySurParentRentId" timeout="30000" retries="0" />
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.BindPhoneService" ref="trading.bindPhoneServiceProxy">
+        <dubbo:method name="findBindPhoneByEmployeeId" timeout="3000" retries="3" />
+        <dubbo:method name="findBindPhoneByEmployeeCode" timeout="3000" retries="3" />
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.ReceiptService" ref="trading.receiptServiceProxy">
+        <dubbo:method name="updateBatchByBillNum" timeout="3000" retries="0" />
+        <dubbo:method name="saveBatchReceipt" timeout="3000" retries="0" />
+        <dubbo:method name="saveReceiptAndReturnFid" timeout="3000" retries="0" />
+        <dubbo:method name="saveBatchReceiptAndRel" timeout="120000" retries="0" />
+        <dubbo:method name="getReceiptByBillNum" timeout="3000" retries="3" />
+        <dubbo:method name="getReceivableBillNumsByBillNum" timeout="3000" retries="3" />
+        <dubbo:method name="deleteReceiptAndRel" timeout="3000" retries="0" />
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.FinReceiBillService" ref="trading.finReceiBillServiceProxy">
+        <dubbo:method name="getReceiptContractByDate" timeout="3000" retries="3" />
+        <dubbo:method name="saveFinReceiBillAndDetail" timeout="3000" retries="0" />
+        <dubbo:method name="updateFinReceivableBill" timeout="3000" retries="0" />
+        <dubbo:method name="getFinReceiBillByContractId" timeout="3000" retries="3" />
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.RentCheckinService" ref="trading.rentCheckinServiceProxy">
+
+        <dubbo:method name="saveCheckinAndSharer" timeout="3000" retries="0" />
+        <dubbo:method name="findByContractId" timeout="3000" retries="3" />
+        <dubbo:method name="searchByCriteria" timeout="30000" retries="3" />
+        <dubbo:method name="findCheckInPersonInfo" timeout="3000" retries="3" />
+        <dubbo:method name="selectHistoryPersonAndSharer" timeout="30000" retries="3" />
+
+    </dubbo:service>
+    
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.IntellectWaterMeterService" ref="trading.intellectWaterMeterServiceProxy">
+        <dubbo:method name="getLastIntellectWatermeterReadByRoomId" timeout="3000" retries="3" />
+        <dubbo:method name="getIntellectWaterMeterBillLogByBillFid" timeout="3000" retries="3" />
+        <dubbo:method name="getIntellectWatermeterReadByPage" timeout="3000" retries="3" />
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.IntellectWattMeterService" ref="trading.intellectWattMeterServiceProxy">
+        <dubbo:method name="checkValidContractAndModifyWattPayType" timeout="5000" retries="0" />
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.trading.api.WaterClearingService" ref="trading.waterClearingServiceProxy">
+    </dubbo:service>
+</beans>

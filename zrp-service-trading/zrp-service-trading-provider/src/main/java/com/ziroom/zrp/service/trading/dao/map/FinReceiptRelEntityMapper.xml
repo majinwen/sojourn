@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.finReceiptRelDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.FinReceiptRelEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="receipted_no" property="receiptedNo" jdbcType="VARCHAR" />
+    <result column="receiptable_no" property="receiptableNo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, receipted_no, receiptable_no, create_time, update_time, is_del
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_fin_receipt_rel
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!-- 根据应收账单编号获取对应的首款单编号 -->
+  <select id="findReceiNumsByBillNum" resultType="java.lang.String" parameterType="java.lang.String" >
+    SELECT  t.`receipted_no`
+    FROM zra.`t_fin_receipt_rel` t
+    WHERE t.`receiptable_no` = #{receiptableNo,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateByReceiptedNo" parameterType="com.ziroom.zrp.trading.entity.FinReceiptRelEntity" >
+    update t_fin_receipt_rel
+    <set >
+      <if test="receiptableNo != null" >
+        receiptable_no = #{receiptableNo,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where receipted_no = #{receiptedNo,jdbcType=VARCHAR}
+  </update>
+
+  <insert id="insert" parameterType="com.ziroom.zrp.trading.entity.FinReceiptRelEntity" >
+    insert into t_fin_receipt_rel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="receiptedNo != null" >
+        receipted_no,
+      </if>
+      <if test="receiptableNo != null" >
+        receiptable_no,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptedNo != null" >
+        #{receiptedNo,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptableNo != null" >
+        #{receiptableNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.trading.entity.FinReceiptRelEntity" >
+    update t_fin_receipt_rel
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptedNo != null" >
+        receipted_no = #{receiptedNo,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptableNo != null" >
+        receiptable_no = #{receiptableNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

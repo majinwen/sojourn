@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.house.dao.ProjectMapper">
+
+
+    <!-- for 项目筛选 -->
+    <resultMap id="SearchProjectResultMap" type="com.zra.house.entity.SearchProjectEntity">
+        <result column="projectId" property="projectId" jdbcType="VARCHAR"/>
+        <result column="projectName" property="projectName" jdbcType="VARCHAR"/>
+        <result column="projectAddr" property="projectAddr" jdbcType="VARCHAR"/>
+        <result column="projectImgUrl" property="projectImgUrl" jdbcType="VARCHAR"/>
+        <result column="htId" property="htId" jdbcType="VARCHAR"/>
+        <result column="htName" property="htName" jdbcType="VARCHAR"/>
+        <result column="htImgUrl" property="htImgUrl" jdbcType="VARCHAR"/>
+        <result column="htArea" property="htArea" jdbcType="DOUBLE"/>
+        <result column="htMinPrice" property="htMinPrice" jdbcType="DOUBLE"/>
+        <result column="htMaxPrice" property="htMaxPrice" jdbcType="DOUBLE"/>
+        <result column="htAvaRoomAcc" property="htAvaRoomAcc" jdbcType="INTEGER"/>
+        <result column="htAvaRoomState" property="htAvaRoomState" jdbcType="VARCHAR"/>
+        <result column="showImg" property="showImg" jdbcType="VARCHAR"/>
+        <result column="lng" property="lng" jdbcType="DOUBLE"/>
+        <result column="lat" property="lat" jdbcType="DOUBLE"/>
+        <result column="proCode" property="proCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        fId AS id, 
+		fCode AS code,
+		fCompanyId AS companyId,
+		fName AS name,
+		fTitle AS title,
+		fDescribe AS projectDescribe,
+		fAddress AS address,
+		fLon AS lon,
+		fLat AS lat,
+		fBusinessDistrict AS businessDistrict,
+		fRegion AS region,
+		fArea AS area,
+		fBuildingNum AS buildingNum,
+		fCarPortNum AS carPortNum,
+		fBuildingStructure AS buildingStruture,
+		fRoomNum AS roomNum,
+		fHouseTypeNum AS houseTypeNum,
+		fPublicArea AS publicArea,
+		fElectricityType AS electricityType,
+		fWaterType AS waterType,
+		fCooperationModel AS cooperationModel,
+		fOwnerType AS ownerType,
+		fOwnerName AS ownerName,
+		fPropertyType AS propertyType,
+		fFinishYear AS finishYear,
+		fContractBegin AS contractBegin,
+		fContractCycle AS contractCycle,
+		fContractEnd AS contractEnd,
+		fOpeningTime AS openingTime,
+		fVacancyDay AS vacancyDay,
+		fProjectManager AS projectManager,
+		fMarketTel AS marketTel,
+		fLockType AS lockType,
+		fIsDel AS isDel,
+		cityid AS cityId,
+		fAfaProNum AS afaProNum,
+		fProjectShowImage AS projectShowImage,
+		f_panoramic_url AS panoramicUrl,
+		f_peripheral_url AS peripheralUrl,
+		f_share_url AS shareUrl,
+		f_head_figure_url AS headFigureUrl,
+		f_peripheral_name AS peripheralName,
+		f_address_desc AS addressDesc
+      </sql>
+    <!-- 项目筛选 -->
+    <select id="getSearchProject" resultMap="SearchProjectResultMap">
+        SELECT
+            p.fId AS projectId,
+            p.fName AS projectName,
+            p.fAddress AS projectAddr,
+            p.f_head_figure_url AS projectImgUrl,
+            h.fid AS htId,
+            h.fhousetypename AS htName,
+            h.f_head_figure_url AS htImgUrl,
+            GROUP_CONCAT(DISTINCT r.fcurrentstate SEPARATOR ',') AS htAvaRoomState,
+            MIN(r.froomarea) AS htArea,
+            MIN(r.flongprice) AS htMinPrice,
+            MAX(r.flongprice) AS htMaxPrice,
+            COUNT(r.fid) AS htAvaRoomAcc,
+            p.fProjectShowImage AS showImg,
+            p.fLon AS lng,
+            p.fLat AS lat,
+            p.fCode AS proCode
+        FROM
+            tproject AS p,
+            thousetype AS h,
+            troominfo AS r
+        <if test="cityCode!=null and cityCode!=''">
+            , tcity AS c
+        </if>
+        WHERE
+                h.projectid = p.fId
+            AND r.projectid = p.fId
+            AND r.housetypeid = h.fid
+            AND r.fcurrentstate IN ('0', '8')
+            <if test="cityCode!=null and cityCode!=''">
+                AND p.cityid = c.fid
+                AND c.citycode = #{cityCode}
+            </if>
+            <if test="minPrice!=null and minPrice!=''">
+                AND r.flongprice &gt;= #{minPrice}
+            </if>
+            <if test="maxPrice!=null and maxPrice!=''">
+                AND r.flongprice &lt;= #{maxPrice}
+            </if>
+            <if test="checkInTime!=null and checkInTime!=''">
+                AND r.fcurrentstate IN (${checkInTime})
+            </if>
+            AND p.fIsDel = 0
+            AND h.fisdel = 0
+            AND h.fvalid = 1
+            AND r.fisdel = 0
+            AND r.fvalid = 1
+            AND r.fisnetshow = 1
+            AND r.fisused = 1
+        GROUP BY
+            p.fId,
+            p.fName,
+            p.fAddress,
+            p.f_head_figure_url,
+            h.fid,
+            h.fhousetypename,
+            h.f_head_figure_url,
+            p.fProjectShowImage,
+            p.fLon,
+            p.fLat,
+            p.fCode
+        ORDER BY htAvaRoomAcc DESC
+    </select>
+
+    <!-- 项目筛选 -->
+    <select id="getSearchProjectAnother" resultMap="SearchProjectResultMap">
+        SELECT
+            p.fId AS projectId,
+            p.fName AS projectName,
+            p.fAddress AS projectAddr,
+            m.head_img AS projectImgUrl,
+            h.fid AS htId,
+            h.fhousetypename AS htName,
+            h.f_head_figure_url AS htImgUrl,
+            GROUP_CONCAT(
+            DISTINCT r.fcurrentstate SEPARATOR ','
+            ) AS htAvaRoomState,
+            MIN(r.froomarea) AS htArea,
+            MIN(r.flongprice) AS htMinPrice,
+            MAX(r.flongprice) AS htMaxPrice,
+            COUNT(r.fid) AS htAvaRoomAcc,
+            m.show_img AS showImg,
+            p.fLon AS lng,
+            p.fLat AS lat,
+            p.fCode AS proCode
+        FROM
+            thousetype AS h,
+            troominfo AS r,
+        <if test="cityCode!=null and cityCode!='' and cityCode!='86'">
+            tcity AS c,
+        </if>
+            tproject AS p
+            LEFT JOIN cms_project AS m ON p.fId = m.project_id
+        WHERE
+              h.projectid = p.fId
+            AND r.projectid = p.fId
+            AND r.housetypeid = h.fid
+            AND r.fcurrentstate IN ('0', '8')
+        <if test="cityCode!=null and cityCode!='' and cityCode!='86'">
+            AND p.cityid = c.fid
+            AND c.citycode = #{cityCode}
+        </if>
+            AND p.fIsDel = 0
+            AND h.fisdel = 0
+            AND h.fvalid = 1
+            AND r.fisdel = 0
+            AND r.fvalid = 1
+            AND r.fisnetshow = 1
+            AND r.fisused = 1
+        GROUP BY
+            p.fId,
+            p.fName,
+            p.fAddress,
+            m.head_img,
+            h.fid,
+            h.fhousetypename,
+            h.f_head_figure_url,
+            m.show_img,
+            p.fLon,
+            p.fLat,
+            p.fCode
+        ORDER BY
+            htAvaRoomAcc DESC
+    </select>
+    
+    <!-- 0608app首页优化 add by tianxf9-->
+    <select id="getSearchProject2" resultMap="SearchProjectResultMap">
+        SELECT
+            p.fId AS projectId,
+            p.fName AS projectName,
+            p.fAddress AS projectAddr,
+            m.head_img AS projectImgUrl,
+            h.fid AS htId,
+            h.fhousetypename AS htName,
+            h.f_head_figure_url AS htImgUrl,
+            GROUP_CONCAT(
+            DISTINCT r.fcurrentstate SEPARATOR ','
+            ) AS htAvaRoomState,
+            MIN(r.froomarea) AS htArea,
+            MIN(r.flongprice) AS htMinPrice,
+            MAX(r.flongprice) AS htMaxPrice,
+            COUNT(r.fid) AS htAvaRoomAcc,
+            m.show_img AS showImg,
+            p.fLon AS lng,
+            p.fLat AS lat,
+            p.fCode AS proCode
+        FROM
+            thousetype AS h,
+            troominfo AS r,
+        <if test="cityCode!=null and cityCode!='' and cityCode!='86'">
+            tcity AS c,
+        </if>
+            tproject AS p
+            LEFT JOIN cms_project AS m ON p.fId = m.project_id
+        WHERE
+              h.projectid = p.fId
+            AND r.projectid = p.fId
+            AND r.housetypeid = h.fid
+        <if test="checkInTime==null or checkInTime==''">
+            AND r.fcurrentstate IN ('0', '8')
+        </if>
+
+        <if test="checkInTime!=null and checkInTime!=''">
+            AND (r.fcurrentstate ='0' or (r.fcurrentstate = '8' and r.favasigndate <![CDATA[ <= ]]> #{checkInTime}))
+        </if>
+
+        <if test="cityCode!=null and cityCode!='' and cityCode!='86'">
+            AND p.cityid = c.fid
+            AND c.citycode = #{cityCode}
+        </if>
+            AND p.fIsDel = 0
+            AND h.fisdel = 0
+            AND h.fvalid = 1
+            AND r.fisdel = 0
+            AND r.fvalid = 1
+            AND r.fisnetshow = 1
+            AND r.fisused = 1
+		<if test="minPrice!=null and minPrice!='' and minPrice!=0">
+		    AND r.flongprice &gt;= #{minPrice}
+		</if>
+		<if test="maxPrice!=null and maxPrice!='' and maxPrice!=0">
+			AND r.flongprice &lt;= #{maxPrice}
+		</if>
+        GROUP BY
+            p.fId,
+            p.fName,
+            p.fAddress,
+            m.head_img,
+            h.fid,
+            h.fhousetypename,
+            h.f_head_figure_url,
+            m.show_img,
+            p.fLon,
+            p.fLat,
+            p.fCode
+        ORDER BY
+            htAvaRoomAcc DESC
+    </select>
+
+    <!-- 项目筛选 -->
+    <select id="getSearchProjectAnotherAgain" resultMap="SearchProjectResultMap">
+        SELECT
+            p.fId AS projectId,
+            p.fName AS projectName,
+            p.fAddress AS projectAddr,
+            m.head_img AS projectImgUrl,
+            h.fid AS htId,
+            h.fhousetypename AS htName,
+            h.f_head_figure_url AS htImgUrl,
+            '' AS htAvaRoomState,
+            MIN(r.froomarea) AS htArea,
+            MIN(r.flongprice) AS htMinPrice,
+            MAX(r.flongprice) AS htMaxPrice,
+            0 AS htAvaRoomAcc,
+            m.show_img AS showImg,
+            p.fLon AS lng,
+            p.fLat AS lat,
+            p.fCode AS proCode
+        FROM
+            thousetype AS h,
+            troominfo AS r,
+        <if test="cityCode!=null and cityCode!='' and cityCode!='86'">
+            tcity AS c,
+        </if>
+            tproject AS p
+            LEFT JOIN cms_project AS m ON p.fId = m.project_id
+        WHERE
+            h.projectid = p.fId
+            AND p.fId IN (${proBids})
+            AND r.projectid = p.fId
+            AND r.housetypeid = h.fid
+            <if test="cityCode!=null and cityCode!='' and cityCode!='86'">
+                AND p.cityid = c.fid
+                AND c.citycode = #{cityCode}
+            </if>
+            AND p.fIsDel = 0
+            AND h.fisdel = 0
+            AND h.fvalid = 1
+            AND r.fisdel = 0
+            AND r.fvalid = 1
+            AND r.fisnetshow = 1
+            AND r.fisused = 1
+        GROUP BY
+            p.fId,
+            p.fName,
+            p.fAddress,
+            m.head_img,
+            h.fid,
+            h.fhousetypename,
+            h.f_head_figure_url,
+            m.show_img,
+            p.fLon,
+            p.fLat,
+            p.fCode
+        ORDER BY
+          htAvaRoomAcc DESC
+    </select>
+
+    <!-- 项目筛选-当没有过滤条件时 -->
+    <select id="getSearchProjectOther" resultMap="SearchProjectResultMap">
+        SELECT
+            p.fId AS projectId,
+            p.fName AS projectName,
+            p.fAddress AS projectAddr,
+            p.f_head_figure_url AS projectImgUrl,
+            h.fid AS htId,
+            h.fhousetypename AS htName,
+            h.f_head_figure_url AS htImgUrl,
+            temp.htAvaRoomState,
+            MIN(r.froomarea) AS htArea,
+            MIN(r.flongprice) AS htMinPrice,
+            MAX(r.flongprice) AS htMaxPrice,
+            IFNULL(temp.htAvaRoomAcc, 0) AS htAvaRoomAcc
+        FROM
+            tproject AS p,
+            troominfo AS r,
+            thousetype AS h
+        LEFT JOIN (
+            SELECT
+                h.fid,
+                GROUP_CONCAT(DISTINCT r.fcurrentstate SEPARATOR ',') AS htAvaRoomState,
+                COUNT(r.fid) AS htAvaRoomAcc
+            FROM
+                tproject AS p,
+                thousetype AS h,
+                troominfo AS r
+            WHERE
+                h.projectid = p.fId
+            AND r.projectid = p.fId
+            AND r.housetypeid = h.fid
+            AND r.fcurrentstate IN ('0', '8')
+            AND p.fIsDel = 0
+            AND h.fisdel = 0
+            AND h.fvalid = 1
+            AND r.fisdel = 0
+            AND r.fvalid = 1
+            AND r.fisnetshow = 1
+            AND r.fisused = 1
+            GROUP BY
+                h.fid
+        ) AS temp ON temp.fid = h.fid
+        WHERE
+            h.projectid = p.fId
+        AND r.projectid = p.fId
+        AND r.housetypeid = h.fid
+        AND p.fIsDel = 0
+        AND h.fisdel = 0
+        AND h.fvalid = 1
+        AND r.fisdel = 0
+        AND r.fvalid = 1
+        AND r.fisnetshow = 1
+        AND r.fisused = 1
+        GROUP BY
+            p.fId,
+            p.fName,
+            p.fAddress,
+            p.f_head_figure_url,
+            h.fid,
+            h.fhousetypename,
+            h.f_head_figure_url
+        ORDER BY
+            htAvaRoomAcc DESC
+    </select>
+    
+    <!-- 获取所有项目列表  wangws21 2016-8-2 -->
+    <select id="getAllProjectList" resultType="com.zra.common.dto.house.ProjectDto">
+    	SELECT 
+    		 p.fid AS id,
+    		 p.fname AS name,
+    		 p.fMarketTel AS marketTel,
+    		 p.cityId AS cityId,
+    		 p.fAddress AS address
+		FROM tproject p 
+    	WHERE p.fIsDel=0
+    	<if test="cityId != null and cityId != '' and cityId != '86'">
+            and p.cityid = #{cityId, jdbcType=VARCHAR}
+        </if>
+    	ORDER BY p.fName
+    </select>
+    
+    <!-- 根据员工id获取其有权限的项目列表 wangws21 2016-8-2 -->
+    <select id="getProjectListByEmployeeId" resultType="com.zra.common.dto.house.ProjectDto">
+    	SELECT 
+    		 pz.projectId AS id,
+    		 pz.projectName AS name
+		FROM tprojectzo pz 
+    	WHERE pz.fIsDel=0 and pz.cityid=#{cityId} and pz.userZOId in (${eid})
+    	ORDER BY pz.projectName
+    </select>
+
+    <!-- for房型筛选-根据项目id获取项目信息 -->
+    <select id="getProjectDetailInfo" parameterType="java.lang.String" resultType="com.zra.common.dto.house.ProjectDto">
+        SELECT
+            p.fId AS id,
+            p.fName AS name,
+            p.fAddress AS address,
+            p.fLon AS lon,
+            p.fLat AS lat,
+            p.fMarketTel AS marketTel,
+            p.f_share_url AS shareUrl,
+            p.f_panoramic_url AS panoramicUrl,
+            p.f_peripheral_url AS peripheralUrl,
+            i.fimages AS headFigureUrl,
+            p.f_peripheral_name AS peripheralName
+        FROM
+            tproject AS p,
+            tprojectimages AS i
+        WHERE
+            i.projectid = p.fId
+        AND p.fId = #{projectId}
+        AND p.fIsDel = 0
+        AND i.fisdel = 0
+        AND i.fvalid = 1
+        ORDER BY
+            i.f_priority_val
+    </select>
+
+    <!-- 房型筛选-根据项目id获取房型信息 -->
+    <select id="getHTInfoByProId" resultMap="SearchProjectResultMap">
+        SELECT
+            p.fId AS projectId,
+            h.fid AS htId,
+            h.fhousetypename AS htName,
+            h.f_head_figure_url AS htImgUrl,
+            GROUP_CONCAT(DISTINCT r.fcurrentstate SEPARATOR ',') AS htAvaRoomState,
+            MIN(r.froomarea) AS htArea,
+            MIN(r.flongprice) AS htMinPrice,
+            MAX(r.flongprice) AS htMaxPrice,
+            COUNT(r.fid) AS htAvaRoomAcc
+        FROM
+            tproject AS p,
+            thousetype AS h,
+            troominfo AS r
+        WHERE
+                p.fId = #{projectId}
+            AND h.projectid = p.fId
+            AND r.projectid = p.fId
+            AND r.housetypeid = h.fid
+            AND r.fcurrentstate IN ('0', '8')
+        <if test="minPrice!=null and minPrice!=''">
+            AND r.flongprice &gt;= #{minPrice}
+        </if>
+        <if test="maxPrice!=null and maxPrice!=''">
+            AND r.flongprice &lt;= #{maxPrice}
+        </if>
+        <if test="minArea!=null and minArea!=''">
+            AND r.froomarea &gt;= #{minArea}
+        </if>
+        <if test="maxArea!=null and maxArea!=''">
+            AND r.froomarea &lt;= #{maxArea}
+        </if>
+        <if test="checkInTime!=null and checkInTime!=''">
+            AND r.fcurrentstate IN (${checkInTime})
+        </if>
+        <if test="floor!=null and floor!=''">
+            AND r.ffloornumber IN (${floor})
+        </if>
+        <if test="direction!=null and direction!=''">
+            AND r.fdirection IN (${direction})
+        </if>
+            AND p.fIsDel = 0
+            AND h.fisdel = 0
+            AND h.fvalid = 1
+            AND r.fisdel = 0
+            AND r.fvalid = 1
+            AND r.fisnetshow = 1
+            AND r.fisused = 1
+        GROUP BY
+            p.fId,
+            h.fid,
+            h.fhousetypename,
+            h.f_head_figure_url
+        ORDER BY
+            htAvaRoomAcc DESC
+    </select>
+
+    <!-- 房型筛选-根据项目id获取房型信息-当没有筛选条件时 -->
+    <select id="getHTInfoByProIdOther" resultMap="SearchProjectResultMap">
+        SELECT
+            p.fId AS projectId,
+            h.fid AS htId,
+            h.fhousetypename AS htName,
+            h.f_head_figure_url AS htImgUrl,
+            temp.htAvaRoomState,
+            MIN(r.froomarea) AS htArea,
+            MIN(r.flongprice) AS htMinPrice,
+            MAX(r.flongprice) AS htMaxPrice,
+            IFNULL(temp.htAvaRoomAcc, 0) AS htAvaRoomAcc
+        FROM
+            tproject AS p,
+            troominfo AS r,
+            thousetype AS h
+        LEFT JOIN (
+            SELECT
+                h.fid,
+                GROUP_CONCAT(DISTINCT r.fcurrentstate SEPARATOR ',') AS htAvaRoomState,
+                COUNT(r.fid) AS htAvaRoomAcc
+            FROM
+                tproject AS p,
+                thousetype AS h,
+                troominfo AS r
+            WHERE
+                p.fId = #{projectId}
+            AND h.projectid = p.fId
+            AND r.projectid = p.fId
+            AND r.housetypeid = h.fid
+            AND r.fcurrentstate IN ('0', '8')
+            AND p.fIsDel = 0
+            AND h.fisdel = 0
+            AND h.fvalid = 1
+            AND r.fisdel = 0
+            AND r.fvalid = 1
+            AND r.fisnetshow = 1
+            AND r.fisused = 1
+            GROUP BY
+                h.fid
+        ) AS temp ON temp.fid = h.fid
+        WHERE
+            p.fId = #{projectId}
+        AND h.projectid = p.fId
+        AND r.projectid = p.fId
+        AND r.housetypeid = h.fid
+        AND p.fIsDel = 0
+        AND h.fisdel = 0
+        AND h.fvalid = 1
+        AND r.fisdel = 0
+        AND r.fvalid = 1
+        AND r.fisnetshow = 1
+        AND r.fisused = 1
+        GROUP BY
+            p.fId,
+            h.fid,
+            h.fhousetypename,
+            h.f_head_figure_url
+        ORDER BY
+            htAvaRoomAcc DESC
+    </select>
+    
+    <!-- 房型筛选-根据项目id获取房型信息 -->
+    <select id="getHouseTypeByProjectId" resultType="com.zra.common.dto.house.HouseTypeDto">
+	    SELECT 
+			h.fid AS id,
+			h.fhousetypename AS houseTypeName
+		FROM 
+			thousetype h ,tproject p
+		WHERE h.projectid=p.fId AND h.fisdel =0 AND p.fIsDel=0 AND p.fid=#{projectId}
+		ORDER BY h.fhousetypename
+    </select>
+
+    <!-- 根据项目id获取城市id -->
+    <select id="getCityIdByProjectId" resultType="java.lang.String">
+        SELECT
+            cityid
+        FROM
+            tproject
+        WHERE
+            fId = #{projectId}
+    </select>
+    
+    <!-- and by tianxf9 获取所有项目的分机号-->
+      <select id="getProjectMarketTel" resultType="com.zra.house.entity.dto.ProjectTelDto">
+        SELECT
+            fid AS projectId,
+			fMarketTel AS marketTel,
+			cityid AS cityId
+		FROM
+			tproject
+		WHERE
+			fIsDel = 0
+		AND fMarketTel IS NOT NULL
+    </select>
+
+    <!-- 获取项目列表 -->
+    <select id="getProjectList" resultType="com.zra.house.entity.dto.ProjectListReturnDto">
+        SELECT
+            p.fId AS projId,
+            p.fAddress AS projAddr,
+            p.fName AS projName,
+            p.f_head_figure_url AS projImgUrl,
+            MIN(r.flongprice) AS projMinPrice
+        FROM
+            tproject AS p,
+            troominfo AS r
+        WHERE
+            r.projectid = p.fId
+        AND p.fIsDel = 0
+        AND r.fisdel = 0
+        AND r.fvalid = 1
+        AND r.fisnetshow = 1
+        AND r.fisused = 1
+        GROUP BY
+            p.fId,
+            p.fAddress,
+            p.fName,
+            p.f_head_figure_url
+    </select>
+
+    <!-- for商机列表-查询项目信息 -->
+    <select id="getProInfoForBusinessList" resultType="com.zra.common.dto.house.BusinessListReturnDto">
+        SELECT
+            p.fId AS proId,
+            p.fName AS proName,
+            p.f_head_figure_url AS proHeadImg,
+            MIN(r.froomarea) AS minArea,
+            MIN(r.flongprice) AS minPrice
+        FROM
+            tproject AS p,
+            troominfo AS r
+        WHERE
+            r.projectid = p.fId
+        AND p.fIsDel = 0
+        AND r.fisnetshow = 1
+        AND r.fvalid = 1
+        AND r.fisdel = 0
+        AND p.fId IN (${bids})
+        GROUP BY
+            p.fId,
+            p.fName,
+            p.f_head_figure_url
+    </select>
+    
+    <select id="getProjectCodeByBillFid" resultType="java.lang.String">
+        SELECT
+            p.fCode
+        FROM
+            fin_recei_bill AS r,
+            trentcontract AS c,
+            tproject AS p
+        WHERE
+            r.fid = #{billFid}
+        AND r.contract_id = c.contractid
+        AND c.project_id = p.fId
+    </select>
+    
+    <select id="getAllProjects" resultType="com.zra.common.dto.house.ProjectDto">
+        SELECT
+            p.fId AS id,
+            p.fName AS name,
+            p.fAddress AS address,
+            p.fLon AS lon,
+            p.fLat AS lat,
+            p.fMarketTel AS marketTel,
+            p.f_share_url AS shareUrl,
+            p.f_panoramic_url AS panoramicUrl,
+            p.f_peripheral_url AS peripheralUrl,
+            p.f_peripheral_name AS peripheralName
+        FROM
+            tproject AS p
+        WHERE
+             p.fIsDel = 0
+        ORDER BY p.fCode
+    </select>
+    
+    <select id="getProjectDtoById" resultType="com.zra.common.dto.house.ProjectDto" parameterType="String">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			tproject
+		WHERE
+			fid = #{projectId}
+		AND fIsDel = 0
+    </select>
+
+    <select id="getProjectInfoByHtFid" resultType="com.zra.house.entity.dto.ProjectListReturnDto" parameterType="String">
+        SELECT
+            p.fName AS projName,
+            p.fAddress AS projAddr,
+            p.f_head_figure_url AS projImgUrl
+        FROM
+            tproject AS p,
+            thousetype AS h
+        WHERE
+            h.fid = #{houseTypeId}
+        AND h.projectid = p.fId
+        AND h.fisdel = 0
+        AND h.fvalid = 1
+        AND p.fIsDel = 0
+    </select>
+
+    <select id="getProAndHtInfo" resultType="com.zra.house.entity.ProAndHtInfoEntity">
+        SELECT
+            p.fId AS proId,
+            p.fName AS proName,
+            h.fid AS htId,
+            h.fhousetypename AS htName
+        FROM
+            tproject AS p,
+            thousetype AS h
+        WHERE
+            p.fId = h.projectid
+        AND p.fIsDel = 0
+        AND h.fisdel = 0
+        AND h.fvalid = 1
+        ORDER BY p.fCode
+    </select>
+
+    <select id="getProAndZOInfo" resultType="com.zra.m.entity.dto.MZOProDto">
+        SELECT
+            p.fid AS proId,
+            p.fName AS proName,
+            c.show_img AS proShowImg
+        FROM
+            cms_project AS c,
+            tproject AS p
+        WHERE
+            c.project_id = p.fId
+        AND c.is_del = 0
+        AND c.is_valid = 1
+        AND p.fIsDel = 0
+        ORDER BY
+            p.cityid,
+            p.fCode
+    </select>
+
+    <select id="getZOInfoList" resultType="com.zra.m.entity.dto.MZOListDto" parameterType="String">
+        SELECT
+            t.fid AS zoId,
+            t1.fname AS zoName,
+            t.fbigimg AS zoBigImg,
+            t.fzoIntroduction AS zoDesc,
+            t1.fid AS employeeId
+        FROM
+            tprojectzo t,
+            temployee t1
+        WHERE
+            t.userZOId = t1.fid
+        AND t.projectId = #{projectId}
+        AND t.fisdel = 0
+        AND t.fisshow = 1
+        AND t1.fisdel = 0
+        AND t1.fvalid = 1
+        ORDER BY
+            t.forderbynum
+    </select>
+
+    <select id="getLabelsByType" resultType="com.zra.m.entity.dto.ZOLabelDto" parameterType="java.lang.String">
+        SELECT
+            t.flabelid AS labelId,
+            t.flabelname AS labelName,
+            t.flabeltype AS labelType
+        FROM
+            tzolabel t
+        WHERE
+        <if test="type !=null and type != ''">
+            t.flabeltype = #{type} AND
+        </if>
+        t.fisdel = 0
+        AND t.fvalid = 1
+    </select>
+
+    <select id="getHasLabelsByZOIdAndType" resultType="com.zra.m.entity.dto.ZOLabelDto">
+        SELECT
+            t2.flabelid AS labelId,
+            t2.flabelname AS labelName,
+            t2.flabeltype AS labelType,
+            count(0) AS numVal
+        FROM
+              tzoevaluation t
+            JOIN tzoevaluationitem t1 ON t.fid = t1.fzoevaid
+            JOIN tzolabel t2 ON t1.flabelid = t2.flabelid
+        WHERE
+          t.fprojectzoid = #{zoId}
+        <if test="typeI !=null and typeI != ''">
+          AND t2.flabeltype = #{typeI}
+        </if>
+        AND t1.fisdel = 0
+        AND t1.fvalid = 1
+        AND t.fisdel = 0
+        AND t.fvalid = 1
+        GROUP BY
+          t2.flabelid
+        ORDER BY
+          count(0) DESC
+        LIMIT #{hasLabelsNum}
+    </select>
+
+    <select id="getZOInfoByZOId" resultType="com.zra.m.entity.dto.MZOListDto" parameterType="String">
+        SELECT
+            t.projectId AS proId,
+            t.projectName AS proName,
+            t.fid AS zoId,
+            t.fsmallimg AS zoSmallImg
+        FROM
+          tprojectzo t
+        JOIN temployee t1 ON t.userZOId = t1.fid
+        AND t.fid = #{zoId}
+        AND t.fisdel = 0
+        AND t.fisshow = 1
+        AND t1.fisdel = 0
+        AND t1.fvalid = 1
+    </select>
+</mapper>

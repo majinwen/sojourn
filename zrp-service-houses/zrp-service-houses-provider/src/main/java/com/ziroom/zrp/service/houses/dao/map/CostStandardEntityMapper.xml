@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.costStandardDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.CostStandardEntity">
+        <id column="fid" property="fid" jdbcType="VARCHAR"/>
+        <result column="projectid" property="projectid" jdbcType="VARCHAR"/>
+        <result column="fmetertype" property="fmetertype" jdbcType="VARCHAR"/>
+        <result column="fprice" property="fprice" jdbcType="DOUBLE"/>
+        <result column="read_cycle" property="readCycle" jdbcType="INTEGER"/>
+        <result column="fremark" property="fremark" jdbcType="VARCHAR"/>
+        <result column="fisdel" property="fisdel" jdbcType="INTEGER"/>
+        <result column="fvalid" property="fvalid" jdbcType="INTEGER"/>
+        <result column="createrid" property="createrid" jdbcType="VARCHAR"/>
+        <result column="updaterid" property="updaterid" jdbcType="VARCHAR"/>
+        <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP"/>
+        <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP"/>
+        <result column="cityid" property="cityid" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        fid, projectid, fmetertype, fprice, read_cycle, fremark, fisdel, fvalid, createrid, updaterid,
+        fcreatetime, fupdatetime, cityid
+    </sql>
+    <select id="findByProjectId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from tcoststandard
+        where projectid = #{projectId,jdbcType=VARCHAR}
+        AND fisdel = 0
+        AND fvalid = 1
+    </select>
+
+    <insert id="insert" parameterType="com.ziroom.zrp.houses.entity.CostStandardEntity">
+        insert into tcoststandard
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="projectid != null">
+                projectid,
+            </if>
+            <if test="fmetertype != null">
+                fmetertype,
+            </if>
+            <if test="fprice != null">
+                fprice,
+            </if>
+            <if test="readCycle != null">
+                read_cycle,
+            </if>
+            <if test="fremark != null">
+                fremark,
+            </if>
+            <if test="fisdel != null">
+                fisdel,
+            </if>
+            <if test="fvalid != null">
+                fvalid,
+            </if>
+            <if test="createrid != null">
+                createrid,
+            </if>
+            <if test="updaterid != null">
+                updaterid,
+            </if>
+            <if test="fcreatetime != null">
+                fcreatetime,
+            </if>
+            <if test="fupdatetime != null">
+                fupdatetime,
+            </if>
+            <if test="cityid != null">
+                cityid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fid != null">
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="projectid != null">
+                #{projectid,jdbcType=VARCHAR},
+            </if>
+            <if test="fmetertype != null">
+                #{fmetertype,jdbcType=VARCHAR},
+            </if>
+            <if test="fprice != null">
+                #{fprice,jdbcType=DOUBLE},
+            </if>
+            <if test="readCycle != null">
+                #{readCycle,jdbcType=INTEGER},
+            </if>
+            <if test="fremark != null">
+                #{fremark,jdbcType=VARCHAR},
+            </if>
+            <if test="fisdel != null">
+                #{fisdel,jdbcType=INTEGER},
+            </if>
+            <if test="fvalid != null">
+                #{fvalid,jdbcType=INTEGER},
+            </if>
+            <if test="createrid != null">
+                #{createrid,jdbcType=VARCHAR},
+            </if>
+            <if test="updaterid != null">
+                #{updaterid,jdbcType=VARCHAR},
+            </if>
+            <if test="fcreatetime != null">
+                #{fcreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fupdatetime != null">
+                #{fupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cityid != null">
+                #{cityid,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!--根据项目id和水电类型 更新水电费标准-->
+    <update id="updateByProjectId" parameterType="com.ziroom.zrp.houses.entity.CostStandardEntity">
+        update tcoststandard
+        <set>
+            <if test="fprice != null">
+                fprice = #{fprice,jdbcType=DOUBLE},
+            </if>
+            <if test="readCycle != null">
+                read_cycle = #{readCycle,jdbcType=INTEGER},
+            </if>
+            <if test="fremark != null">
+                fremark = #{fremark,jdbcType=VARCHAR},
+            </if>
+            <if test="fisdel != null">
+                fisdel = #{fisdel,jdbcType=INTEGER},
+            </if>
+            <if test="fvalid != null">
+                fvalid = #{fvalid,jdbcType=INTEGER},
+            </if>
+            <if test="createrid != null">
+                createrid = #{createrid,jdbcType=VARCHAR},
+            </if>
+            <if test="updaterid != null">
+                updaterid = #{updaterid,jdbcType=VARCHAR},
+            </if>
+            <if test="fcreatetime != null">
+                fcreatetime = #{fcreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fupdatetime != null">
+                fupdatetime = #{fupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cityid != null">
+                cityid = #{cityid,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where projectid = #{projectid,jdbcType=VARCHAR}
+        and fmetertype = #{fmetertype,jdbcType=VARCHAR}
+        and fisdel = 0
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.ziroom.zrp.houses.entity.CostStandardEntity">
+        update tcoststandard
+        set projectid = #{projectid,jdbcType=VARCHAR},
+        fmetertype = #{fmetertype,jdbcType=VARCHAR},
+        fprice = #{fprice,jdbcType=DOUBLE},
+        read_cycle = #{readCycle,jdbcType=INTEGER},
+        fremark = #{fremark,jdbcType=VARCHAR},
+        fisdel = #{fisdel,jdbcType=INTEGER},
+        fvalid = #{fvalid,jdbcType=INTEGER},
+        createrid = #{createrid,jdbcType=VARCHAR},
+        updaterid = #{updaterid,jdbcType=VARCHAR},
+        fcreatetime = #{fcreatetime,jdbcType=TIMESTAMP},
+        fupdatetime = #{fupdatetime,jdbcType=TIMESTAMP},
+        cityid = #{cityid,jdbcType=VARCHAR}
+        where fid = #{fid,jdbcType=VARCHAR}
+    </update>
+</mapper>

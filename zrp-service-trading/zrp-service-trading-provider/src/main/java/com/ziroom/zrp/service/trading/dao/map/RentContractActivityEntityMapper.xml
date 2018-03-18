@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.rentContractActivityDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.RentContractActivityEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="activity_id" property="activityId" jdbcType="INTEGER" />
+    <result column="discount_account" property="discountAccount" jdbcType="DECIMAL" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="deleter_id" property="deleterId" jdbcType="VARCHAR" />
+    <result column="deleted_time" property="deletedTime" jdbcType="TIMESTAMP" />
+    <result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="updater_id" property="updaterId" jdbcType="VARCHAR" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="expense_item_code" property="expenseItemCode" jdbcType="VARCHAR" />
+    <result column="discount" property="discount" jdbcType="DOUBLE" />
+    <result column="activity_number" property="activityNumber" jdbcType="VARCHAR" />
+    <result column="activity_name" property="activityName" jdbcType="VARCHAR" />
+    <result column="category" property="category" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, contract_id, activity_id, discount_account, is_deleted, deleter_id, deleted_time, 
+    creater_id, created_time, updater_id, updated_time, type, expense_item_code, discount, 
+    activity_number, activity_name, category
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from rent_contract_activity
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from rent_contract_activity
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.ziroom.zrp.trading.entity.RentContractActivityEntity" >
+    insert into rent_contract_activity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="activityId != null" >
+        activity_id,
+      </if>
+      <if test="discountAccount != null" >
+        discount_account,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="deleterId != null" >
+        deleter_id,
+      </if>
+      <if test="deletedTime != null" >
+        deleted_time,
+      </if>
+      <if test="createrId != null" >
+        creater_id,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="updaterId != null" >
+        updater_id,
+      </if>
+      <if test="updatedTime != null" >
+        updated_time,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="expenseItemCode != null" >
+        expense_item_code,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+      <if test="activityNumber != null" >
+        activity_number,
+      </if>
+      <if test="activityName != null" >
+        activity_name,
+      </if>
+      <if test="category != null" >
+        category,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="activityId != null" >
+        #{activityId,jdbcType=INTEGER},
+      </if>
+      <if test="discountAccount != null" >
+        #{discountAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="deleterId != null" >
+        #{deleterId,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedTime != null" >
+        #{deletedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrId != null" >
+        #{createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null" >
+        #{updaterId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="expenseItemCode != null" >
+        #{expenseItemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=DOUBLE},
+      </if>
+      <if test="activityNumber != null" >
+        #{activityNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="activityName != null" >
+        #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        #{category,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.trading.entity.RentContractActivityEntity" >
+    update rent_contract_activity
+    <set >
+      <if test="contractId != null" >
+        contract_id = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="activityId != null" >
+        activity_id = #{activityId,jdbcType=INTEGER},
+      </if>
+      <if test="discountAccount != null" >
+        discount_account = #{discountAccount,jdbcType=DECIMAL},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="deleterId != null" >
+        deleter_id = #{deleterId,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedTime != null" >
+        deleted_time = #{deletedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrId != null" >
+        creater_id = #{createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null" >
+        updater_id = #{updaterId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="expenseItemCode != null" >
+        expense_item_code = #{expenseItemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=DOUBLE},
+      </if>
+      <if test="activityNumber != null" >
+        activity_number = #{activityNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="activityName != null" >
+        activity_name = #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        category = #{category,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--  获取合同参加的活动 created by cuigh6 -->
+  <select id="getContractActivityList" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+      <include refid="Base_Column_List" />
+    FROM rent_contract_activity as a
+    WHERE a.contract_id = #{contractId,jdbcType=VARCHAR}
+    AND a.is_deleted = 0
+  </select>
+
+    <select id="havePlanOfHaiYanOfQiLing" resultType="java.lang.Integer">
+        SELECT
+            count(1)
+        FROM
+            rent_contract_activity tca,
+            tactivity t
+        WHERE
+            tca.activity_id = t.activity_id
+        AND tca.is_deleted = 0
+        AND tca.contract_id = #{contractId,jdbcType=VARCHAR}
+        AND t.tag = #{QLHY,jdbcType=VARCHAR}
+    </select>
+
+
+  <update id="deleteActivityByContractId" parameterType="string">
+    UPDATE
+    rent_contract_activity
+    SET
+    is_deleted = 1
+  WHERE contract_id = #{contractId,jdbcType=VARCHAR} ;
+  </update>
+</mapper>

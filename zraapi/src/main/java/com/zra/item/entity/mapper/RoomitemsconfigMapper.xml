@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.item.dao.RoomitemsconfigMapper" >
+    <resultMap id="BaseResultMap" type="com.zra.item.entity.RoomitemsconfigEntity" >
+        <id column="fid" property="fid" jdbcType="VARCHAR" />
+        <result column="roomid" property="roomid" jdbcType="VARCHAR" />
+        <result column="projectid" property="projectid" jdbcType="VARCHAR" />
+        <result column="fitemcode" property="fitemcode" jdbcType="CHAR" />
+        <result column="itemid" property="itemid" jdbcType="VARCHAR" />
+        <result column="fbrand" property="fbrand" jdbcType="VARCHAR" />
+        <result column="fnumber" property="fnumber" jdbcType="INTEGER" />
+        <result column="supplierid" property="supplierid" jdbcType="VARCHAR" />
+        <result column="fstartdate" property="fstartdate" jdbcType="VARCHAR" />
+        <result column="fqualityperiod" property="fqualityperiod" jdbcType="INTEGER" />
+        <result column="fcustomertel" property="fcustomertel" jdbcType="VARCHAR" />
+        <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+        <result column="fvalid" property="fvalid" jdbcType="INTEGER" />
+        <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP" />
+        <result column="createrid" property="createrid" jdbcType="VARCHAR" />
+        <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP" />
+        <result column="updaterid" property="updaterid" jdbcType="VARCHAR" />
+        <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+        <result column="fnum" property="fnum" jdbcType="INTEGER" />
+        <result column="fprice" property="fprice" jdbcType="DOUBLE" />
+        <result column="fregionmaintainid" property="fregionmaintainid" jdbcType="VARCHAR" />
+        <result column="ftype" property="ftype" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        fid, roomid, projectid, fitemcode, itemid, fbrand, fnumber, supplierid, fstartdate,
+        fqualityperiod, fcustomertel, cityid, fvalid, fcreatetime, createrid, fupdatetime,
+        updaterid, fisdel, fnum, fprice, fregionmaintainid, ftype
+    </sql>
+    <insert id="insert" parameterType="com.zra.item.entity.RoomitemsconfigEntity" >
+        <selectKey keyProperty="fid" resultType="String" order="BEFORE">
+            select  replace(uuid(),'-','')   from dual
+        </selectKey>
+
+        insert into troomitemsconfig
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="fid != null" >
+                fid,
+            </if>
+            <if test="roomid != null" >
+                roomid,
+            </if>
+            <if test="projectid != null" >
+                projectid,
+            </if>
+            <if test="fitemcode != null" >
+                fitemcode,
+            </if>
+            <if test="itemid != null" >
+                itemid,
+            </if>
+            <if test="fbrand != null" >
+                fbrand,
+            </if>
+            <if test="fnumber != null" >
+                fnumber,
+            </if>
+            <if test="supplierid != null" >
+                supplierid,
+            </if>
+            <if test="fstartdate != null" >
+                fstartdate,
+            </if>
+            <if test="fqualityperiod != null" >
+                fqualityperiod,
+            </if>
+            <if test="fcustomertel != null" >
+                fcustomertel,
+            </if>
+            <if test="cityid != null" >
+                cityid,
+            </if>
+            <if test="fvalid != null" >
+                fvalid,
+            </if>
+            <if test="fcreatetime != null" >
+                fcreatetime,
+            </if>
+            <if test="createrid != null" >
+                createrid,
+            </if>
+            <if test="fupdatetime != null" >
+                fupdatetime,
+            </if>
+            <if test="updaterid != null" >
+                updaterid,
+            </if>
+            <if test="fisdel != null" >
+                fisdel,
+            </if>
+            <if test="fnum != null" >
+                fnum,
+            </if>
+            <if test="fprice != null" >
+                fprice,
+            </if>
+            <if test="fregionmaintainid != null" >
+                fregionmaintainid,
+            </if>
+            <if test="ftype != null" >
+                ftype,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="fid != null" >
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="roomid != null" >
+                #{roomid,jdbcType=VARCHAR},
+            </if>
+            <if test="projectid != null" >
+                #{projectid,jdbcType=VARCHAR},
+            </if>
+            <if test="fitemcode != null" >
+                #{fitemcode,jdbcType=CHAR},
+            </if>
+            <if test="itemid != null" >
+                #{itemid,jdbcType=VARCHAR},
+            </if>
+            <if test="fbrand != null" >
+                #{fbrand,jdbcType=VARCHAR},
+            </if>
+            <if test="fnumber != null" >
+                #{fnumber,jdbcType=INTEGER},
+            </if>
+            <if test="supplierid != null" >
+                #{supplierid,jdbcType=VARCHAR},
+            </if>
+            <if test="fstartdate != null" >
+                #{fstartdate,jdbcType=VARCHAR},
+            </if>
+            <if test="fqualityperiod != null" >
+                #{fqualityperiod,jdbcType=INTEGER},
+            </if>
+            <if test="fcustomertel != null" >
+                #{fcustomertel,jdbcType=VARCHAR},
+            </if>
+            <if test="cityid != null" >
+                #{cityid,jdbcType=VARCHAR},
+            </if>
+            <if test="fvalid != null" >
+                #{fvalid,jdbcType=INTEGER},
+            </if>
+            <if test="fcreatetime != null" >
+                #{fcreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createrid != null" >
+                #{createrid,jdbcType=VARCHAR},
+            </if>
+            <if test="fupdatetime != null" >
+                #{fupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updaterid != null" >
+                #{updaterid,jdbcType=VARCHAR},
+            </if>
+            <if test="fisdel != null" >
+                #{fisdel,jdbcType=INTEGER},
+            </if>
+            <if test="fnum != null" >
+                #{fnum,jdbcType=INTEGER},
+            </if>
+            <if test="fprice != null" >
+                #{fprice,jdbcType=DOUBLE},
+            </if>
+            <if test="fregionmaintainid != null" >
+                #{fregionmaintainid,jdbcType=VARCHAR},
+            </if>
+            <if test="ftype != null" >
+                #{ftype,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+
+
+    <select id="getExistItemById" resultMap="BaseResultMap">
+    SELECT
+    *
+    FROM
+    troomitemsconfig roomConfig
+    WHERE
+    roomConfig.fisdel = 0
+    AND roomConfig.roomid = #{roomId}
+    AND roomConfig.ftype = #{typeInfo}
+    AND roomConfig.itemid in
+    <foreach item="itemId" index="index" collection="itemIds" open="(" separator="," close=")">
+        #{itemId}
+    </foreach>
+    </select>
+
+    <!--根据房间id更新对应的物品的数量-->
+    <update id="updateRoomItemCount">
+        UPDATE troomitemsconfig base
+        SET base.fnum = base.fnum+1
+        WHERE
+        base.fisdel = 0
+        AND	base.roomid = #{roomId}
+        AND base.itemid IN
+        <foreach item="itemId" index="index" collection="itemIds" open="(" separator="," close=")">
+            #{itemId}
+        </foreach>
+    </update>
+</mapper>

@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.house.dao.RoomInfoMapper">
+    <resultMap id="BaseResultMap" type="com.zra.house.entity.RoomInfoEntity" >
+        <id column="fid" property="id" jdbcType="VARCHAR" />
+        <result column="projectid" property="projectId" jdbcType="VARCHAR" />
+        <result column="buildingid" property="buildingId" jdbcType="VARCHAR" />
+        <result column="ffloornumber" property="floorNumber" jdbcType="INTEGER" />
+        <result column="froomnumber" property="roomNumber" jdbcType="VARCHAR" />
+        <result column="froomarea" property="roomArea" jdbcType="DOUBLE" />
+        <result column="housetypeid" property="houseTypeId" jdbcType="VARCHAR" />
+        <result column="roomliveid" property="roomLiveId" jdbcType="VARCHAR" />
+        <result column="fbaseprice" property="basePrice" jdbcType="DECIMAL" />
+        <result column="flongprice" property="longPrice" jdbcType="DECIMAL" />
+        <result column="fshortprice" property="shortPrice" jdbcType="DECIMAL" />
+        <result column="fshortprice2" property="shortPrice2" jdbcType="DECIMAL" />
+        <result column="fbedtype" property="bedType" jdbcType="VARCHAR" />
+        <result column="fdecorationstyle" property="decorationStyle" jdbcType="VARCHAR" />
+        <result column="fdirection" property="direction" jdbcType="VARCHAR" />
+        <result column="fshortrent" property="shortRent" jdbcType="VARCHAR" />
+        <result column="fcurrentstate" property="currentState" jdbcType="VARCHAR" />
+        <result column="fisnetshow" property="isNetShow" jdbcType="INTEGER" />
+        <result column="companyid" property="companyId" jdbcType="VARCHAR" />
+        <result column="fvalid" property="valid" jdbcType="INTEGER" />
+        <result column="fcreatetime" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="createrid" property="createrId" jdbcType="VARCHAR" />
+        <result column="fupdatetime" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="updaterid" property="updaterId" jdbcType="VARCHAR" />
+        <result column="fisdel" property="isDel" jdbcType="INTEGER" />
+        <result column="flocktime" property="lockTime" jdbcType="TIMESTAMP" />
+        <result column="fdisabletime" property="disableTime" jdbcType="TIMESTAMP" />
+        <result column="configcompletedate" property="configCompleteDate" jdbcType="DATE" />
+        <result column="fisused" property="isUsed" jdbcType="INTEGER" />
+        <result column="cityid" property="cityId" jdbcType="VARCHAR" />
+        <result column="flockroomsource" property="lockRoomSource" jdbcType="VARCHAR" />
+        <result column="favasigndate" property="avaSignDate" jdbcType="DATE" />
+        <result column="rent_type" property="rentType" jdbcType="BIT"/>
+    </resultMap>
+
+    <resultMap id="ResultMapWithBLOBs" type="com.zra.house.entity.RoomInfoEntity" extends="BaseResultMap" >
+        <result column="froomdesc" property="roomDesc" jdbcType="LONGVARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        fid, projectid, buildingid, ffloornumber, froomnumber, froomarea, housetypeid, roomliveid,
+        fbaseprice, flongprice, fshortprice, fshortprice2, fbedtype, fdecorationstyle, fdirection,
+        fshortrent, fcurrentstate, fisnetshow, companyid, fvalid, fcreatetime, createrid,
+        fupdatetime, updaterid, fisdel, flocktime, fdisabletime, configcompletedate, fisused,
+        cityid, flockroomsource,favasigndate,rent_type
+    </sql>
+    <sql id="Blob_Column_List" >
+        froomdesc
+    </sql>
+
+    <!--根据id查询房间信息-->
+    <select id="selectRoomInfoById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
+        from troominfo
+        where fid = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <!--条件查询房屋信息-->
+    <select id="findRoomInfoByCondition" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
+        from troominfo r
+        where r.fisdel = 0
+        AND r.fisnetshow = 1
+        AND r.fvalid = 1
+        AND r.fisused = 1
+         AND r.fcurrentstate in ('0','8')
+        <if test="roomNumber!=null and roomNumber!=''">
+            AND r.froomnumber = #{roomNumber}
+        </if>
+        <if test="houseTypeId!=null and houseTypeId!=''">
+            AND r.housetypeid = #{houseTypeId}
+        </if>
+        <if test="minPrice!=null and minPrice!=''">
+            AND r.flongprice &gt;= #{minPrice}
+        </if>
+        <if test="maxPrice!=null and maxPrice!=''">
+            AND r.flongprice &lt;= #{maxPrice}
+        </if>
+        <if test="minArea!=null and minArea!=''">
+            AND r.froomarea &gt;= #{minArea}
+        </if>
+        <if test="maxArea!=null and maxArea!=''">
+            AND r.froomarea &lt;= #{maxArea}
+        </if>
+        <if test="checkInTime!=null and checkInTime!=''">
+            AND r.fcurrentstate IN (${checkInTime})
+        </if>
+        <if test="floor!=null and floor!=''">
+            AND r.ffloornumber IN (${floor})
+        </if>
+        <if test="direction!=null and direction!=''">
+            AND r.fdirection IN (${direction})
+        </if>
+    </select>
+
+    <!--条件查询房屋信息-->
+    <select id="findRoomInfoByConditionOther" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
+        from troominfo r
+        where r.fisdel = 0
+        AND r.fisnetshow = 1
+        AND r.fvalid = 1
+        AND r.fisused = 1
+        AND r.housetypeid = #{houseTypeId}
+    </select>
+
+    <!--查询最高房价和最低房价-->
+    <select id="findMaxAndMinRoomPrice" resultType="com.zra.house.entity.dto.PriceDto">
+        SELECT
+          MIN(r.flongprice) AS minPrice,
+          MAX(r.flongprice) AS maxPrice
+        FROM troominfo r
+        WHERE r.fisdel = 0
+            AND r.fisnetshow = 1
+            AND r.fvalid = 1
+            AND r.fisused = 1
+            AND r.fcurrentstate in ('0','8')
+        <if test="projectId!=null and projectId!=''">
+            AND r.projectid = #{projectId}
+        </if>
+        <if test="houseTypeId!=null and houseTypeId!=''">
+            AND r.housetypeid = #{houseTypeId}
+        </if>
+        <if test="roomNumber!=null and roomNumber!=''">
+            AND r.froomnumber = #{roomNumber}
+        </if>
+        <if test="minPrice!=null and minPrice!=''">
+            AND r.flongprice &gt;= #{minPrice}
+        </if>
+        <if test="maxPrice!=null and maxPrice!=''">
+            AND r.flongprice &lt;= #{maxPrice}
+        </if>
+        <if test="minArea!=null and minArea!=''">
+            AND r.froomarea &gt;= #{minArea}
+        </if>
+        <if test="maxArea!=null and maxArea!=''">
+            AND r.froomarea &lt;= #{maxArea}
+        </if>
+        <if test="checkInTime!=null and checkInTime!=''">
+            AND r.fcurrentstate IN (${checkInTime})
+        </if>
+        <if test="floor!=null and floor!=''">
+            AND r.ffloornumber IN (${floor})
+        </if>
+        <if test="direction!=null and direction!=''">
+            AND r.fdirection IN (${direction})
+        </if>
+    </select>
+
+    <!--查询最高房价和最低房价-->
+    <select id="findMaxAndMinRoomPriceOther" resultType="com.zra.house.entity.dto.PriceDto">
+        SELECT
+        MIN(r.flongprice) AS minPrice,
+        MAX(r.flongprice) AS maxPrice
+        FROM troominfo r
+        WHERE r.fisdel = 0
+        AND r.fisnetshow = 1
+        AND r.fvalid = 1
+        AND r.fisused = 1
+        AND r.housetypeid = #{houseTypeId}
+    </select>
+
+    <!--查询房间最大最小面价-->
+    <select id="findMaxAndMinRoomArea" resultType="com.zra.house.entity.dto.AreaDto">
+        SELECT
+          MAX(r.froomarea) AS maxArea,
+          MIN(r.froomarea) AS minArea
+        FROM troominfo r
+        WHERE r.fisdel = 0
+            AND r.fisnetshow = 1
+            AND r.fvalid = 1
+            AND r.fisused = 1
+            AND r.fcurrentstate in ('0','8')
+        <if test="projectId!=null and projectId!=''">
+            AND r.projectid = #{projectId}
+        </if>
+        <if test="houseTypeId!=null and houseTypeId!=''">
+            AND r.housetypeid = #{houseTypeId}
+        </if>
+        <if test="roomNumber!=null and roomNumber!=''">
+            AND r.froomnumber = #{roomNumber}
+        </if>
+        <if test="minPrice!=null and minPrice!=''">
+            AND r.flongprice &gt;= #{minPrice}
+        </if>
+        <if test="maxPrice!=null and maxPrice!=''">
+            AND r.flongprice &lt;= #{maxPrice}
+        </if>
+        <if test="minArea!=null and minArea!=''">
+            AND r.froomarea &gt;= #{minArea}
+        </if>
+        <if test="maxArea!=null and maxArea!=''">
+            AND r.froomarea &lt;= #{maxArea}
+        </if>
+        <if test="checkInTime!=null and checkInTime!=''">
+            AND r.fcurrentstate IN (${checkInTime})
+        </if>
+        <if test="floor!=null and floor!=''">
+            AND r.ffloornumber IN (${floor})
+        </if>
+        <if test="direction!=null and direction!=''">
+            AND r.fdirection IN (${direction})
+        </if>
+    </select>
+    
+    <select id="queryPreStatus" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
+        FROM troominfo
+        WHERE
+        fcurrentstate = 1
+        AND fisdel = 0
+        AND favasigndate <![CDATA[<=]]> #{0,jdbcType=DATE}
+        
+    </select>
+    
+    <update id="modifyPreStatus" parameterType="java.lang.String">
+        update troominfo
+        set fcurrentstate = 8
+        where
+        fid = #{roomId,jdbcType=VARCHAR}
+        
+    </update>
+     <update id="modifyPreInfo">
+        update troominfo
+        set fcurrentstate = 8,
+        favasigndate = #{1,jdbcType=DATE},
+        fopenbookdate = now()
+        where
+        fid = #{0,jdbcType=VARCHAR}
+    </update>
+    
+    <select id="getRoomsEntityByProId" parameterType="String" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			troominfo room
+		WHERE
+		    room.fisdel = 0
+		    AND room.fcurrentstate is NOT NULL
+		    AND room.projectid IS NOT NULL
+		    AND (
+			(
+				room.ftype = 0
+				AND room.rent_type = 1
+			)
+			OR 
+			(
+				room.ftype = 1
+				AND room.rent_type = 2
+			)
+		        )
+		    <if test="projectId!='ALL'">
+		    AND room.projectid = #{projectId}
+		    </if>
+    </select>
+    
+    <select id="getRoomMaxPrice" resultType="java.lang.Double">
+        SELECT
+          MAX(r.flongprice) AS maxPrice
+        FROM troominfo r
+        WHERE r.fisdel = 0
+          AND r.fvalid = 1
+    </select>
+</mapper>

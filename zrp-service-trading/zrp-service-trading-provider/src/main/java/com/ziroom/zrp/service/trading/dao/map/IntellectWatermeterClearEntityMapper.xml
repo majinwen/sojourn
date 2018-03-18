@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.IntellectWatermeterClearDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.IntellectWatermeterClearEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="start_reading" property="startReading" jdbcType="DOUBLE" />
+    <result column="clearing_reading" property="clearingReading" jdbcType="DOUBLE" />
+    <result column="unit_price" property="unitPrice" jdbcType="DOUBLE" />
+    <result column="sum_money" property="sumMoney" jdbcType="INTEGER" />
+    <result column="share_factor" property="shareFactor" jdbcType="INTEGER" />
+    <result column="clearing_type" property="clearingType" jdbcType="INTEGER" />
+    <result column="settlement_status" property="settlementStatus" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, contract_id, start_reading, clearing_reading, unit_price, sum_money, share_factor, 
+    clearing_type, settlement_status, create_time, update_time, is_del
+  </sql>
+  
+  <select id="findIntellectWatermeterClearByFid" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_intellect_water_meter_clearing
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="findIntellectWatermeterClearByContractId" resultMap="BaseResultMap" parameterType="string" >
+    select
+    <include refid="Base_Column_List" />
+    from t_intellect_water_meter_clearing
+    where contract_id = #{contractId,jdbcType=VARCHAR}
+    and settlement_status = 0
+    and is_del = 0
+    order by create_time asc
+  </select>
+
+    <!-- 查询最新（不管未结算、已结算）的清算记录 -->
+    <select id="getLastClearingReading" resultMap="BaseResultMap" parameterType="string" >
+        select
+        <include refid="Base_Column_List" />
+        from t_intellect_water_meter_clearing
+        where contract_id = #{contractId,jdbcType=VARCHAR}
+        and is_del = 0
+        order by id desc
+        limit 1
+    </select>
+
+ 
+  <insert id="insertIntellectWatermeterClear" parameterType="com.ziroom.zrp.trading.entity.IntellectWatermeterClearEntity" >
+    insert into t_intellect_water_meter_clearing
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="startReading != null" >
+        start_reading,
+      </if>
+      <if test="clearingReading != null" >
+        clearing_reading,
+      </if>
+      <if test="unitPrice != null" >
+        unit_price,
+      </if>
+      <if test="sumMoney != null" >
+        sum_money,
+      </if>
+      <if test="shareFactor != null" >
+        share_factor,
+      </if>
+      <if test="clearingType != null" >
+        clearing_type,
+      </if>
+      <if test="settlementStatus != null" >
+        settlement_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="startReading != null" >
+        #{startReading,jdbcType=DOUBLE},
+      </if>
+      <if test="clearingReading != null" >
+        #{clearingReading,jdbcType=DOUBLE},
+      </if>
+      <if test="unitPrice != null" >
+        #{unitPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="sumMoney != null" >
+        #{sumMoney,jdbcType=INTEGER},
+      </if>
+      <if test="shareFactor != null" >
+        #{shareFactor,jdbcType=INTEGER},
+      </if>
+      <if test="clearingType != null" >
+        #{clearingType,jdbcType=INTEGER},
+      </if>
+      <if test="settlementStatus != null" >
+        #{settlementStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateIntellectWatermeterClear" parameterType="com.ziroom.zrp.trading.entity.IntellectWatermeterClearEntity" >
+    update t_intellect_water_meter_clearing
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="contractId != null" >
+        contract_id = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="startReading != null" >
+        start_reading = #{startReading,jdbcType=DOUBLE},
+      </if>
+      <if test="clearingReading != null" >
+        clearing_reading = #{clearingReading,jdbcType=DOUBLE},
+      </if>
+      <if test="unitPrice != null" >
+        unit_price = #{unitPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="sumMoney != null" >
+        sum_money = #{sumMoney,jdbcType=INTEGER},
+      </if>
+      <if test="shareFactor != null" >
+        share_factor = #{shareFactor,jdbcType=INTEGER},
+      </if>
+      <if test="clearingType != null" >
+        clearing_type = #{clearingType,jdbcType=INTEGER},
+      </if>
+      <if test="settlementStatus != null" >
+        settlement_status = #{settlementStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateIntellectWatermeterClearStatus" parameterType="com.ziroom.zrp.trading.entity.IntellectWatermeterClearEntity" >
+    UPDATE t_intellect_water_meter_clearing
+    SET
+      settlement_status = 2
+    WHERE contract_id = #{contractId,jdbcType=VARCHAR}
+    AND settlement_status = 0
+  </update>
+  <update id="updateClearStatusToYJS" parameterType="String" >
+    UPDATE t_intellect_water_meter_clearing
+    SET
+    settlement_status = 1
+    WHERE contract_id = #{contractId,jdbcType=VARCHAR}
+    AND settlement_status = 0
+  </update>
+</mapper>

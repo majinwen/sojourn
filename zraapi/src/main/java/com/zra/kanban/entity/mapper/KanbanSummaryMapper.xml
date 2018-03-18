@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.kanban.dao.KanbanSummaryMapper" >
+  <resultMap id="BaseResultMap" type="com.zra.kanban.entity.KanbanSummary" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="kanban_summary_bid" property="kanbanSummaryBid" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="start_date" property="startDate" jdbcType="DATE" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+    <result column="cycle_type" property="cycleType" jdbcType="BIT" />
+    <result column="yk_deal_rate" property="ykDealRate" jdbcType="DECIMAL" />
+    <result column="lease_rate" property="leaseRate" jdbcType="DECIMAL" />
+    <result column="occupancy_rate" property="occupancyRate" jdbcType="DECIMAL" />
+    <result column="lease_cycle" property="leaseCycle" jdbcType="DECIMAL" />
+    <result column="voucher_rate" property="voucherRate" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updater_id" property="updaterId" jdbcType="VARCHAR" />
+    <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP" />
+    <result column="deleter_id" property="deleterId" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="BIT" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, kanban_summary_bid, project_id, start_date, end_date, cycle_type, yk_deal_rate, 
+    lease_rate, occupancy_rate, lease_cycle, voucher_rate, create_time, creater_id, update_time, 
+    updater_id, delete_time, deleter_id, is_del
+  </sql>
+  
+  <select id="selectByConditions" resultMap="BaseResultMap" parameterType="com.zra.common.dto.kanban.KanbanQueryDto" >
+    select 
+    <include refid="Base_Column_List" />
+    from kanban_summary
+    where start_date = #{startDate}
+      and cycle_type = #{cycleType}
+      and is_del = 0
+    <if test="projectIds!=null and projectIds.size()>0">
+      and project_id in
+      <foreach item="item" index="index" collection="projectIds" open="(" separator="," close=")">
+       #{item}
+      </foreach>  
+   </if>
+    order by project_id
+  </select>
+  
+  <insert id="insert" parameterType="java.util.List" keyProperty="id">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">  
+        SELECT  
+        LAST_INSERT_ID()  
+        </selectKey>
+        insert into kanban_summary (<include refid="Base_Column_List" />) values 
+        <foreach collection="list" item="item" index="index" separator="," >
+        (#{item.id,jdbcType=INTEGER}, #{item.kanbanSummaryBid,jdbcType=VARCHAR}, #{item.projectId,jdbcType=VARCHAR}, 
+      #{item.startDate,jdbcType=DATE}, #{item.endDate,jdbcType=DATE}, #{item.cycleType,jdbcType=BIT}, 
+      #{item.ykDealRate,jdbcType=DECIMAL}, #{item.leaseRate,jdbcType=DECIMAL}, #{item.occupancyRate,jdbcType=DECIMAL}, 
+      #{item.leaseCycle,jdbcType=DECIMAL}, #{item.voucherRate,jdbcType=DECIMAL}, #{item.createTime,jdbcType=TIMESTAMP}, 
+      #{item.createrId,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updaterId,jdbcType=VARCHAR}, 
+      #{item.deleteTime,jdbcType=TIMESTAMP}, #{item.deleterId,jdbcType=VARCHAR}, #{item.isDel,jdbcType=BIT})
+       </foreach>
+  </insert>
+ 
+  <update id="updateById" parameterType="com.zra.kanban.entity.KanbanSummary" >
+    update kanban_summary
+    set
+      end_date = #{endDate,jdbcType=DATE},
+      cycle_type = #{cycleType,jdbcType=BIT},
+      yk_deal_rate = #{ykDealRate,jdbcType=DECIMAL},
+      lease_rate = #{leaseRate,jdbcType=DECIMAL},
+      occupancy_rate = #{occupancyRate,jdbcType=DECIMAL},
+      lease_cycle = #{leaseCycle,jdbcType=DECIMAL},
+      voucher_rate = #{voucherRate,jdbcType=DECIMAL},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByConditions">
+		UPDATE kanban_summary sry
+		SET sry.is_del = 1,
+		    sry.deleter_id = '1'
+		WHERE
+			sry.start_date = #{startDate}
+		AND sry.cycle_type = ${type}
+  </update>
+  
+  <!-- 计算出租周期用的sql 出租周期分子（时间段内空置天数累加）-->
+  <select id="getSumEmptyNum" parameterType="String" resultType="com.zra.kanban.entity.dto.KanBanCountDto">
+	    SELECT
+			empty.project_id AS projectId,
+			SUM(empty.empty_num) AS count
+		FROM
+			report_empty empty,
+			rent_rentedetail detail,
+			trentcontract rent
+		WHERE
+			detail.contract_id = rent.contractid
+			AND rent.con_start_date <![CDATA[>=]]> #{startDate}
+			AND rent.con_start_date <![CDATA[<=]]> #{endDate}
+			AND rent.fisdel = 0
+			AND detail.is_deleted = 0
+			AND (
+					rent.con_status_code IN ('yqy', 'yxy')
+					OR (
+						rent.con_status_code = 'ytz'
+						AND (
+							rent.contractid IN (
+								SELECT
+									sur.contract_id
+								FROM
+									tsurrender sur
+								WHERE
+									sur.fsurtype != '3'
+								AND sur.fisdel = 0
+								AND sur.fsubmitstatus = '1'
+								AND sur.fvalid = 1
+							)
+						)
+					)
+				)
+		   AND DATE_FORMAT(empty.record_date,'%Y-%m-%d') = date_sub(rent.con_start_date,INTERVAL 1 DAY)
+		   AND empty.room_id = detail.room_id
+		   AND empty.is_empty = 0
+		   AND empty.is_del = 0
+		   GROUP BY
+			   empty.project_id
+  </select>
+  
+  <!-- 出租周期分母计算，时间段内符合条件的合同字表累加 -->
+  <select id="getSumRentDetailNum" parameterType="String" resultType="com.zra.kanban.entity.dto.KanBanCountDto">
+		SELECT
+		 rent.project_id AS projectId,
+		 count(detail.room_id) AS count
+		FROM
+			rent_rentedetail detail,
+			trentcontract rent
+		WHERE
+			detail.contract_id = rent.contractid
+		AND rent.con_start_date <![CDATA[>=]]> #{startDate}
+		AND rent.con_start_date <![CDATA[<=]]> #{endDate}
+		AND rent.fisdel = 0
+		AND detail.is_deleted = 0
+		AND (
+			rent.con_status_code IN ('yqy', 'yxy')
+			OR (
+				rent.con_status_code = 'ytz'
+				AND (
+					rent.contractid IN (
+						SELECT
+							sur.contract_id
+						FROM
+							tsurrender sur
+						WHERE
+							sur.fsurtype != '3'
+						AND sur.fisdel = 0
+						AND sur.fsubmitstatus = '1'
+						AND sur.fvalid = 1
+					)
+				)
+			)
+		)
+		GROUP BY rent.project_id
+  </select>
+</mapper>

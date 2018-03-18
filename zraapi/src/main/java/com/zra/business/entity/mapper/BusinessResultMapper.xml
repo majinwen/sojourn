@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.business.dao.BusinessResultMapper">
+	<resultMap id="BaseResultMap" type="com.zra.business.entity.BusinessResultEntity">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="result_bid" property="resultBid" jdbcType="VARCHAR" />
+		<result column="business_id" property="businessId" jdbcType="VARCHAR" />
+		<result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="is_del" property="isDel" jdbcType="TINYINT" />
+		<result column="city_id" property="cityId" jdbcType="VARCHAR" />
+		<result column="step" property="step" jdbcType="TINYINT" />
+		<result column="hand_state" property="handState" jdbcType="TINYINT" />
+		<result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+		<result column="hand_time" property="handTime" jdbcType="TIMESTAMP" />
+		<result column="hand_result" property="handResult" jdbcType="TINYINT" />
+		<result column="hand_result_time" property="handResultTime" jdbcType="TIMESTAMP" />
+		<result column="hand_result_content" property="handResultContent" jdbcType="VARCHAR" />
+		<result column="record" property="record" jdbcType="VARCHAR" />
+		<result column="handle_zo_bid" property="handleZoBid" jdbcType="VARCHAR" />
+		<result column="is_sms" property="isSms" jdbcType="TINYINT" />
+		<result column="is_evaluate_sms" property="isEvaluateSms" jdbcType="TINYINT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, result_bid, business_id, creater_id, create_time, is_del, city_id,
+		step, hand_state,
+		end_time, hand_time, hand_result, hand_result_time, hand_result_content,
+		record,
+		handle_zo_bid, is_sms,is_evaluate_sms
+	</sql>
+	<insert id="insert" parameterType="com.zra.common.dto.business.BusinessResultDto">
+		insert into bo_business_result
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="resultBid != null">
+				result_bid,
+			</if>
+			<if test="businessId != null">
+				business_id,
+			</if>
+			<if test="createrId != null">
+				creater_id,
+			</if>
+				create_time, <!-- 创建时间 -->
+			<if test="cityId != null">
+				city_id,
+			</if>
+			<if test="step != null">
+				step,
+			</if>
+			<if test="handState != null">
+				hand_state,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+				hand_time,<!-- 处理时间 -->
+			<if test="handResult != null">
+				hand_result,
+			</if>
+			<if test="handResultTime != null">
+				hand_result_time,
+			</if>
+			<if test="handResultContent != null">
+				hand_result_content,
+			</if>
+			<if test="record != null">
+				record,
+			</if>
+			<if test="handleZoBid != null">
+				handle_zo_bid,
+			</if>
+			<if test="isSms != null">
+				is_sms,
+			</if>
+			<if test="isEvaluateSms != null">
+				is_evaluate_sms,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="resultBid != null">
+				#{resultBid,jdbcType=VARCHAR},
+			</if>
+			<if test="businessId != null">
+				#{businessId,jdbcType=VARCHAR},
+			</if>
+			<if test="createrId != null">
+				#{createrId,jdbcType=VARCHAR},
+			</if>
+				NOW(),
+			<if test="cityId != null">
+				#{cityId,jdbcType=VARCHAR},
+			</if>
+			<if test="step != null">
+				#{step,jdbcType=TINYINT},
+			</if>
+			<if test="handState != null">
+				#{handState,jdbcType=TINYINT},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=TIMESTAMP},
+			</if>
+				NOW(),
+			<if test="handResult != null">
+				#{handResult,jdbcType=TINYINT},
+			</if>
+			<if test="handResultTime != null">
+				#{handResultTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="handResultContent != null">
+				#{handResultContent,jdbcType=VARCHAR},
+			</if>
+			<if test="record != null">
+				#{record,jdbcType=VARCHAR},
+			</if>
+			<if test="handleZoBid != null">
+				#{handleZoBid,jdbcType=VARCHAR},
+			</if>
+			<if test="isSms != null">
+				#{isSms,jdbcType=TINYINT},
+			</if>
+			<if test="isEvaluateSms != null">
+				#{isEvaluateSms,jdbcType=TINYINT},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateBusinessResultEntity" parameterType="com.zra.business.entity.BusinessResultEntity" >
+	    update bo_business_result
+	    <set >
+	      <if test="businessId != null" >
+	        business_id = #{businessId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="createrId != null" >
+	        creater_id = #{createrId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="createTime != null" >
+	        create_time = #{createTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="isDel != null" >
+	        is_del = #{isDel,jdbcType=TINYINT},
+	      </if>
+	      <if test="cityId != null" >
+	        city_id = #{cityId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="step != null" >
+	        step = #{step,jdbcType=TINYINT},
+	      </if>
+	      <if test="handState != null" >
+	        hand_state = #{handState,jdbcType=TINYINT},
+	      </if>
+	      <if test="endTime != null" >
+	        end_time = #{endTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="handTime != null" >
+	        hand_time = #{handTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="handResult != null" >
+	        hand_result = #{handResult,jdbcType=TINYINT},
+	      </if>
+	      <if test="handResultTime != null" >
+	        hand_result_time = #{handResultTime,jdbcType=TIMESTAMP},
+	      </if>
+	      <if test="handResultContent != null" >
+	        hand_result_content = #{handResultContent,jdbcType=VARCHAR},
+	      </if>
+	      <if test="record != null" >
+	        record = #{record,jdbcType=VARCHAR},
+	      </if>
+	      <if test="handleZoBid != null" >
+	        handle_zo_bid = #{handleZoBid,jdbcType=VARCHAR},
+	      </if>
+	      <if test="isSms != null" >
+	        is_sms = #{isSms,jdbcType=TINYINT},
+	      </if>
+	      <if test="isEvaluateSms != null" >
+	        is_evaluate_sms = #{isEvaluateSms,jdbcType=TINYINT},
+	      </if>
+	    </set>
+	    where result_bid = #{resultBid,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 获取商机的处理结果 wangws21 2016-8-8 -->
+	<select id="getBusinessResultList" resultType="com.zra.common.dto.business.BusinessResultDto">
+		SELECT 
+		    result_bid AS resultBid, business_id AS businessId,
+			step AS step, hand_state AS handState, end_time AS endTime, 
+			hand_time AS handTime, hand_result AS handResult, hand_result_time AS handResultTime,
+			hand_result_content AS handResultContent,
+			record AS record,handle_zo_bid AS handleZoBid
+	    FROM bo_business_result
+	    WHERE business_id = #{businessBid,jdbcType=VARCHAR}
+	    ORDER BY id
+	</select>
+	
+	<resultMap id="ExtResultMap" type="com.zra.business.entity.vo.BusinessResultVo" extends="BaseResultMap">
+		<result column="phone" property="customerMobile" jdbcType="VARCHAR" />
+		<result column="project_id" property="projectId" jdbcType="VARCHAR" />
+		<result column="zo_id" property="businessZoId" jdbcType="VARCHAR" />
+		<result column="hand_result" property="handResult" jdbcType="TINYINT" />
+	</resultMap>
+	
+	<!-- 获取商机的处理结果 wangws21 2016-8-8 -->
+	<select id="getLastBusinessResult" resultMap="BaseResultMap">
+		SELECT 
+	    <include refid="Base_Column_List" />
+	    FROM bo_business_result
+	    WHERE business_id = #{businessBid,jdbcType=VARCHAR}
+	    ORDER BY id DESC <!-- id最大的最新  根据id排速度快 -->
+	    LIMIT 1
+	</select>
+	
+	<!-- 查询约看提醒信息 -->
+	<select id="getYkRemindSmsList" resultMap="ExtResultMap" parameterType ="java.util.Date">
+		SELECT
+			t3.*,t2.project_id,t1.phone,t2.zo_id
+		FROM
+			bo_customer t1,
+			bo_business t2,
+			bo_business_result t3
+		WHERE
+			t1.cus_bid = t2.customer_id
+		AND t2.business_bid = t3.business_id
+		AND t1.is_del = 0
+		AND t2.is_del = 0
+		AND t3.is_del = 0
+		AND t3.is_sms = 1
+		<![CDATA[AND t3.hand_result_time <= #{deadline,jdbcType=TIMESTAMP}]]>
+		AND (
+			(<!-- BusinessEntity#step待带看,BusinessResultEntity#step待约看 -->
+				t2.step = 2
+				AND t3.step = 1
+				AND (
+					t3.hand_result = 13
+					OR t3.hand_result = 25
+				)
+			)
+			OR (<!-- BusinessEntity#step待带看,BusinessResultEntity#step待带看  -->
+				t2.step = 2
+				AND t3.step = 2
+				AND t3.hand_result = 33
+			)
+		)
+	</select>
+	
+	<!-- wangws21 2016-8-23  获取需要推送评价短信的商机 -->
+	<select id="getBusinessEvaluateSmsList" resultType="com.zra.business.entity.dto.BusinessEvaluateSMSDto">
+		SELECT 
+			bb.id AS id,
+			br.business_id AS businessBid,
+			br.result_bid AS businessResultBid,
+			bb.zo_id AS zoId,
+			bb.project_id AS projectId,
+			bc.phone AS cusPhone,
+			bc.cus_uuid AS cusUuid
+		FROM
+			(SELECT MAX(br.id) AS id
+				FROM bo_business_result br
+				WHERE 
+				br.is_evaluate_sms=1
+				AND (br.hand_result=13 OR br.hand_result=25 OR br.hand_result=33)
+				GROUP BY
+				br.business_id) AS brId,
+			bo_business_result br,
+			bo_business bb,
+			bo_customer bc
+		WHERE 
+			br.id=brId.id
+			AND bb.business_bid = br.business_id
+			AND bb.customer_id=bc.cus_bid 
+			AND br.hand_result_time <![CDATA[ < ]]> #{endDate,jdbcType=TIMESTAMP}
+	</select>
+</mapper>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.dictionaryDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.DictionaryEntity" >
+    <id column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="fkey" property="fkey" jdbcType="VARCHAR" />
+    <result column="fvalue" property="fvalue" jdbcType="VARCHAR" />
+    <result column="fenum_name" property="fenumName" jdbcType="VARCHAR" />
+    <result column="fis_del" property="fisDel" jdbcType="INTEGER" />
+    <result column="findex" property="findex" jdbcType="INTEGER" />
+    <result column="fcreate_time" property="fcreateTime" jdbcType="TIMESTAMP" />
+    <result column="fupdate_time" property="fupdateTime" jdbcType="TIMESTAMP" />
+    <result column="fparent_id" property="fparentId" jdbcType="VARCHAR" />
+    <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    fid, fkey, fvalue, fenum_name, fis_del, findex, fcreate_time, fupdate_time, fparent_id, 
+    fisdel, cityid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tdictionary
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  <select id="findDictionaryByEnumName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tdictionary
+    where fenum_name = #{enumName,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tdictionary
+    where fid = #{fid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.zrp.houses.entity.DictionaryEntity" >
+    insert into tdictionary (fid, fkey, fvalue, 
+      fenum_name, fis_del, findex, 
+      fcreate_time, fupdate_time, fparent_id, 
+      fisdel, cityid)
+    values (#{fid,jdbcType=VARCHAR}, #{fkey,jdbcType=VARCHAR}, #{fvalue,jdbcType=VARCHAR}, 
+      #{fenumName,jdbcType=VARCHAR}, #{fisDel,jdbcType=INTEGER}, #{findex,jdbcType=INTEGER}, 
+      #{fcreateTime,jdbcType=TIMESTAMP}, #{fupdateTime,jdbcType=TIMESTAMP}, #{fparentId,jdbcType=VARCHAR}, 
+      #{fisdel,jdbcType=INTEGER}, #{cityid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.zrp.houses.entity.DictionaryEntity" >
+    insert into tdictionary
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="fkey != null" >
+        fkey,
+      </if>
+      <if test="fvalue != null" >
+        fvalue,
+      </if>
+      <if test="fenumName != null" >
+        fenum_name,
+      </if>
+      <if test="fisDel != null" >
+        fis_del,
+      </if>
+      <if test="findex != null" >
+        findex,
+      </if>
+      <if test="fcreateTime != null" >
+        fcreate_time,
+      </if>
+      <if test="fupdateTime != null" >
+        fupdate_time,
+      </if>
+      <if test="fparentId != null" >
+        fparent_id,
+      </if>
+      <if test="fisdel != null" >
+        fisdel,
+      </if>
+      <if test="cityid != null" >
+        cityid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="fkey != null" >
+        #{fkey,jdbcType=VARCHAR},
+      </if>
+      <if test="fvalue != null" >
+        #{fvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="fenumName != null" >
+        #{fenumName,jdbcType=VARCHAR},
+      </if>
+      <if test="fisDel != null" >
+        #{fisDel,jdbcType=INTEGER},
+      </if>
+      <if test="findex != null" >
+        #{findex,jdbcType=INTEGER},
+      </if>
+      <if test="fcreateTime != null" >
+        #{fcreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fupdateTime != null" >
+        #{fupdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fparentId != null" >
+        #{fparentId,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="cityid != null" >
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.houses.entity.DictionaryEntity" >
+    update tdictionary
+    <set >
+      <if test="fkey != null" >
+        fkey = #{fkey,jdbcType=VARCHAR},
+      </if>
+      <if test="fvalue != null" >
+        fvalue = #{fvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="fenumName != null" >
+        fenum_name = #{fenumName,jdbcType=VARCHAR},
+      </if>
+      <if test="fisDel != null" >
+        fis_del = #{fisDel,jdbcType=INTEGER},
+      </if>
+      <if test="findex != null" >
+        findex = #{findex,jdbcType=INTEGER},
+      </if>
+      <if test="fcreateTime != null" >
+        fcreate_time = #{fcreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fupdateTime != null" >
+        fupdate_time = #{fupdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fparentId != null" >
+        fparent_id = #{fparentId,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        fisdel = #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="cityid != null" >
+        cityid = #{cityid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.zrp.houses.entity.DictionaryEntity" >
+    update tdictionary
+    set fkey = #{fkey,jdbcType=VARCHAR},
+      fvalue = #{fvalue,jdbcType=VARCHAR},
+      fenum_name = #{fenumName,jdbcType=VARCHAR},
+      fis_del = #{fisDel,jdbcType=INTEGER},
+      findex = #{findex,jdbcType=INTEGER},
+      fcreate_time = #{fcreateTime,jdbcType=TIMESTAMP},
+      fupdate_time = #{fupdateTime,jdbcType=TIMESTAMP},
+      fparent_id = #{fparentId,jdbcType=VARCHAR},
+      fisdel = #{fisdel,jdbcType=INTEGER},
+      cityid = #{cityid,jdbcType=VARCHAR}
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+</mapper>

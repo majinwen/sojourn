@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.scheduleDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.ScheduleEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="bid" property="bid" jdbcType="VARCHAR" />
+    <result column="projectId" property="projectid" jdbcType="VARCHAR" />
+    <result column="fweek" property="fweek" jdbcType="VARCHAR" />
+    <result column="createId" property="createid" jdbcType="VARCHAR" />
+    <result column="updateId" property="updateid" jdbcType="VARCHAR" />
+    <result column="fcreateTime" property="fcreatetime" jdbcType="TIMESTAMP" />
+    <result column="fupdateTime" property="fupdatetime" jdbcType="TIMESTAMP" />
+    <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+    <result column="fstatus" property="fstatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, bid, projectId, fweek, createId, updateId, fcreateTime, fupdateTime, fisdel, 
+    fstatus
+  </sql>
+  <select id="findById" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from tschedule
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 通过项目ID查询当天排班管家信息 -->
+  <select id="findSchedulePersonByProjectId" resultType="com.ziroom.zrp.trading.entity.SchedulePersonEntity">
+    SELECT tsp.* 
+    FROM tschedule ts 
+	INNER JOIN tscheduleperson tsp 
+	ON tsp.`scheduleId` = ts.`bid` AND tsp.`fisdel` = 0
+	WHERE ts.`projectId` = #{projectId,jdbcType=VARCHAR} 
+	AND ts.fweek = #{week,jdbcType=VARCHAR} 
+	AND ts.`fisdel` = 0 AND ts.fstatus = 1
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tschedule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.zrp.trading.entity.ScheduleEntity" >
+    insert into tschedule (id, bid, projectId, 
+      fweek, createId, updateId, 
+      fcreateTime, fupdateTime, fisdel, 
+      fstatus)
+    values (#{id,jdbcType=INTEGER}, #{bid,jdbcType=VARCHAR}, #{projectid,jdbcType=VARCHAR}, 
+      #{fweek,jdbcType=VARCHAR}, #{createid,jdbcType=VARCHAR}, #{updateid,jdbcType=VARCHAR}, 
+      #{fcreatetime,jdbcType=TIMESTAMP}, #{fupdatetime,jdbcType=TIMESTAMP}, #{fisdel,jdbcType=INTEGER}, 
+      #{fstatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="saveSchedule" parameterType="com.ziroom.zrp.trading.entity.ScheduleEntity" >
+    insert into tschedule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bid != null" >
+        bid,
+      </if>
+      <if test="projectid != null" >
+        projectId,
+      </if>
+      <if test="fweek != null" >
+        fweek,
+      </if>
+      <if test="createid != null" >
+        createId,
+      </if>
+      <if test="updateid != null" >
+        updateId,
+      </if>
+      <if test="fcreatetime != null" >
+        fcreateTime,
+      </if>
+      <if test="fupdatetime != null" >
+        fupdateTime,
+      </if>
+      <if test="fisdel != null" >
+        fisdel,
+      </if>
+      <if test="fstatus != null" >
+        fstatus,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bid != null" >
+        #{bid,jdbcType=VARCHAR},
+      </if>
+      <if test="projectid != null" >
+        #{projectid,jdbcType=VARCHAR},
+      </if>
+      <if test="fweek != null" >
+        #{fweek,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null" >
+        #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="updateid != null" >
+        #{updateid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatetime != null" >
+        #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fupdatetime != null" >
+        #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fisdel != null" >
+        #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fstatus != null" >
+        #{fstatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.trading.entity.ScheduleEntity" >
+    update tschedule
+    <set >
+      <if test="bid != null" >
+        bid = #{bid,jdbcType=VARCHAR},
+      </if>
+      <if test="projectid != null" >
+        projectId = #{projectid,jdbcType=VARCHAR},
+      </if>
+      <if test="fweek != null" >
+        fweek = #{fweek,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null" >
+        createId = #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="updateid != null" >
+        updateId = #{updateid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatetime != null" >
+        fcreateTime = #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fupdatetime != null" >
+        fupdateTime = #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fisdel != null" >
+        fisdel = #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fstatus != null" >
+        fstatus = #{fstatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.zrp.trading.entity.ScheduleEntity" >
+    update tschedule
+    set bid = #{bid,jdbcType=VARCHAR},
+      projectId = #{projectid,jdbcType=VARCHAR},
+      fweek = #{fweek,jdbcType=VARCHAR},
+      createId = #{createid,jdbcType=VARCHAR},
+      updateId = #{updateid,jdbcType=VARCHAR},
+      fcreateTime = #{fcreatetime,jdbcType=TIMESTAMP},
+      fupdateTime = #{fupdatetime,jdbcType=TIMESTAMP},
+      fisdel = #{fisdel,jdbcType=INTEGER},
+      fstatus = #{fstatus,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

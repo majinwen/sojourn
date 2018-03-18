@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.rentEpsCustomerDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.RentEpsCustomerEntity" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="business_license" property="businessLicense" jdbcType="VARCHAR" />
+    <result column="contacter_num" property="contacterNum" jdbcType="VARCHAR" />
+    <result column="contacter" property="contacter" jdbcType="VARCHAR" />
+    <result column="contacter_tel" property="contacterTel" jdbcType="VARCHAR" />
+    <result column="proxy_picurl" property="proxyPicurl" jdbcType="VARCHAR" />
+    <result column="license_picurl03" property="licensePicurl03" jdbcType="VARCHAR" />
+    <result column="license_picurl02" property="licensePicurl02" jdbcType="VARCHAR" />
+    <result column="license_picurl01" property="licensePicurl01" jdbcType="VARCHAR" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="deleter_id" property="deleterId" jdbcType="VARCHAR" />
+    <result column="deleted_time" property="deletedTime" jdbcType="TIMESTAMP" />
+    <result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="updater_id" property="updaterId" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="customer_uid" property="customerUid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, name, address, email, business_license, contacter_num, contacter, contacter_tel, 
+    proxy_picurl, license_picurl03, license_picurl02, license_picurl01, is_deleted, deleter_id, 
+    deleted_time, creater_id, created_time, updater_id, update_time, customer_uid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from rent_eps_customer
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="findRentEpsCustomer" resultMap="BaseResultMap" parameterType="com.ziroom.zrp.trading.entity.RentEpsCustomerEntity">
+    select 
+    <include refid="Base_Column_List" />
+    from rent_eps_customer
+    <where>
+    	is_deleted = 0
+    <if test="code != null">
+    	and code = #{code,jdbcType=VARCHAR}
+    </if>
+    <if test="contacter != null">
+    	and contacter = #{contacter,jdbcType=VARCHAR}
+    </if>
+    </where>
+  </select>
+
+  <select id="findOneRentEpsCustomerByUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM rent_eps_customer
+    WHERE
+    customer_uid = #{customerUid, jdbcType=VARCHAR}
+    AND
+    is_deleted = 0
+    ORDER BY created_time DESC
+    LIMIT 1
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from rent_eps_customer
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.zrp.trading.entity.RentEpsCustomerEntity" >
+    insert into rent_eps_customer (id, code, name, 
+      address, email, business_license, 
+      contacter_num, contacter, contacter_tel, 
+      proxy_picurl, license_picurl03, license_picurl02, 
+      license_picurl01, is_deleted, deleter_id, 
+      deleted_time, creater_id, created_time, 
+      updater_id, update_time)
+    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{businessLicense,jdbcType=VARCHAR}, 
+      #{contacterNum,jdbcType=VARCHAR}, #{contacter,jdbcType=VARCHAR}, #{contacterTel,jdbcType=VARCHAR}, 
+      #{proxyPicurl,jdbcType=VARCHAR}, #{licensePicurl03,jdbcType=VARCHAR}, #{licensePicurl02,jdbcType=VARCHAR}, 
+      #{licensePicurl01,jdbcType=VARCHAR}, #{isDeleted,jdbcType=INTEGER}, #{deleterId,jdbcType=VARCHAR}, 
+      #{deletedTime,jdbcType=TIMESTAMP}, #{createrId,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{updaterId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="saveRentEpsCustomer" parameterType="com.ziroom.zrp.trading.entity.RentEpsCustomerEntity" >
+    insert into rent_eps_customer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="businessLicense != null" >
+        business_license,
+      </if>
+      <if test="contacterNum != null" >
+        contacter_num,
+      </if>
+      <if test="contacter != null" >
+        contacter,
+      </if>
+      <if test="contacterTel != null" >
+        contacter_tel,
+      </if>
+      <if test="proxyPicurl != null" >
+        proxy_picurl,
+      </if>
+      <if test="licensePicurl03 != null" >
+        license_picurl03,
+      </if>
+      <if test="licensePicurl02 != null" >
+        license_picurl02,
+      </if>
+      <if test="licensePicurl01 != null" >
+        license_picurl01,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="deleterId != null" >
+        deleter_id,
+      </if>
+      <if test="deletedTime != null" >
+        deleted_time,
+      </if>
+      <if test="createrId != null" >
+        creater_id,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="updaterId != null" >
+        updater_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="customerUid != null" >
+        customer_uid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicense != null" >
+        #{businessLicense,jdbcType=VARCHAR},
+      </if>
+      <if test="contacterNum != null" >
+        #{contacterNum,jdbcType=VARCHAR},
+      </if>
+      <if test="contacter != null" >
+        #{contacter,jdbcType=VARCHAR},
+      </if>
+      <if test="contacterTel != null" >
+        #{contacterTel,jdbcType=VARCHAR},
+      </if>
+      <if test="proxyPicurl != null" >
+        #{proxyPicurl,jdbcType=VARCHAR},
+      </if>
+      <if test="licensePicurl03 != null" >
+        #{licensePicurl03,jdbcType=VARCHAR},
+      </if>
+      <if test="licensePicurl02 != null" >
+        #{licensePicurl02,jdbcType=VARCHAR},
+      </if>
+      <if test="licensePicurl01 != null" >
+        #{licensePicurl01,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="deleterId != null" >
+        #{deleterId,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedTime != null" >
+        #{deletedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrId != null" >
+        #{createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null" >
+        #{updaterId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="customerUid != null" >
+        #{customerUid, jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateRentEpsCustomer" parameterType="com.ziroom.zrp.trading.entity.RentEpsCustomerEntity" >
+    update rent_eps_customer
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicense != null" >
+        business_license = #{businessLicense,jdbcType=VARCHAR},
+      </if>
+      <if test="contacterNum != null" >
+        contacter_num = #{contacterNum,jdbcType=VARCHAR},
+      </if>
+      <if test="contacter != null" >
+        contacter = #{contacter,jdbcType=VARCHAR},
+      </if>
+      <if test="contacterTel != null" >
+        contacter_tel = #{contacterTel,jdbcType=VARCHAR},
+      </if>
+      <if test="proxyPicurl != null" >
+        proxy_picurl = #{proxyPicurl,jdbcType=VARCHAR},
+      </if>
+      <if test="licensePicurl03 != null" >
+        license_picurl03 = #{licensePicurl03,jdbcType=VARCHAR},
+      </if>
+      <if test="licensePicurl02 != null" >
+        license_picurl02 = #{licensePicurl02,jdbcType=VARCHAR},
+      </if>
+      <if test="licensePicurl01 != null" >
+        license_picurl01 = #{licensePicurl01,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="deleterId != null" >
+        deleter_id = #{deleterId,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedTime != null" >
+        deleted_time = #{deletedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrId != null" >
+        creater_id = #{createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null" >
+        updater_id = #{updaterId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="customerUid">
+        customer_uid = #{customerUid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.zrp.trading.entity.RentEpsCustomerEntity" >
+    update rent_eps_customer
+    set code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      business_license = #{businessLicense,jdbcType=VARCHAR},
+      contacter_num = #{contacterNum,jdbcType=VARCHAR},
+      contacter = #{contacter,jdbcType=VARCHAR},
+      contacter_tel = #{contacterTel,jdbcType=VARCHAR},
+      proxy_picurl = #{proxyPicurl,jdbcType=VARCHAR},
+      license_picurl03 = #{licensePicurl03,jdbcType=VARCHAR},
+      license_picurl02 = #{licensePicurl02,jdbcType=VARCHAR},
+      license_picurl01 = #{licensePicurl01,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=INTEGER},
+      deleter_id = #{deleterId,jdbcType=VARCHAR},
+      deleted_time = #{deletedTime,jdbcType=TIMESTAMP},
+      creater_id = #{createrId,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      updater_id = #{updaterId,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

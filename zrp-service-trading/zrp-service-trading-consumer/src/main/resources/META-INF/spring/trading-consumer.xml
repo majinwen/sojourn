@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015. ziroom.
+  -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+
+    <!--合同相关接口-->
+    <dubbo:reference id="trading.rentContractService"  interface="com.ziroom.zrp.service.trading.api.RentContractService" check="false"/>
+
+    <!--电子验签接口-->
+    <dubbo:reference id="trading.checkSignService"  interface="com.ziroom.zrp.service.trading.api.CheckSignService" check="false"/>
+    <!--物业交割相关-->
+    <dubbo:reference id="trading.itemDeliveryService"  interface="com.ziroom.zrp.service.trading.api.ItemDeliveryService" check="false"/>
+    <!--金额计算-->
+    <dubbo:reference id="trading.paymentService"  interface="com.ziroom.zrp.service.trading.api.PaymentService" check="false"/>
+
+    <!--调用财务接口-->
+    <dubbo:reference id="trading.callFinanceService"  interface="com.ziroom.zrp.service.trading.api.CallFinanceService" check="false"/>
+
+    <!-- 查询客户库相关接口 -->
+    <dubbo:reference id="trading.ziroomCustomerService"  interface="com.ziroom.zrp.service.trading.api.ZiroomCustomerService" check="false"/>
+
+    <!--定时任务相关接口-->
+    <dubbo:reference id="trading.tradingTaskService"  interface="com.ziroom.zrp.service.trading.api.TradingTaskService" check="false">
+        <dubbo:method name="syncExpireContractToFin" async="true" return="false" />
+    </dubbo:reference>
+
+    <!-- 短链服务 -->
+    <dubbo:reference id="trading.shortUrlService"  interface="com.ziroom.zrp.service.trading.api.ShortUrlService" check="false"/>
+
+    <dubbo:reference id="trading.rentCustomerService" interface="com.ziroom.zrp.service.trading.api.RentCustomerService" check="false" />
+
+    <!--解约服务-->
+    <dubbo:reference id="trading.surrenderService"  interface="com.ziroom.zrp.service.trading.api.SurrenderService" check="false"/>
+
+    <!-- 企业签约服务 -->
+    <dubbo:reference id="trading.enterpriseSigningService" interface="com.ziroom.zrp.service.trading.api.EnterpriseSigningService" check="false" >
+        <dubbo:method name="asyncEntContractAndBillsToFin" async="true" return="false"/>
+        <dubbo:method name="asyncRetrySyncEntSubContractToFin" async="true" return="false"/>
+        <dubbo:method name="asyncSubContractTransferToPdfByParentId" async="true" return="false" />
+    </dubbo:reference>
+
+    <!-- 管家 400电话服务-->
+    <dubbo:reference id="trading.bindPhoneService" interface="com.ziroom.zrp.service.trading.api.BindPhoneService" check="false"/>
+
+    <!-- 收款单服务-->
+    <dubbo:reference id="trading.receiptService" interface="com.ziroom.zrp.service.trading.api.ReceiptService" check="false"/>
+
+    <!--应收账单服务-->
+    <dubbo:reference id="trading.finReceiBillService" interface="com.ziroom.zrp.service.trading.api.FinReceiBillService" check="false" >
+        <dubbo:method name="asyncRetrySyncReceiptBillToFin" async="true" return="false" />
+    </dubbo:reference>
+
+    <!--入住人管理相关服务-->
+    <dubbo:reference id="trading.rentCheckinService" interface="com.ziroom.zrp.service.trading.api.RentCheckinService" check="false" />
+    
+    <!--智能水表相关服务-->
+    <dubbo:reference id="trading.intellectWaterMeterService" interface="com.ziroom.zrp.service.trading.api.IntellectWaterMeterService" check="false" />
+
+    <!--智能电表相关服务-->
+    <dubbo:reference id="trading.intellectWattMeterService" interface="com.ziroom.zrp.service.trading.api.IntellectWattMeterService" check="false" />
+
+    <!--水费清算服务-->
+    <dubbo:reference id="trading.waterClearingService" interface="com.ziroom.zrp.service.trading.api.WaterClearingService" check="false" />
+
+</beans>

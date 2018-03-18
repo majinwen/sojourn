@@ -1,0 +1,28 @@
+<!---->
+<assembly>
+	<id>provider</id>
+	<formats>
+		<format>tar.gz</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${project.build.outputDirectory}</directory>
+			<includes>
+				<include>zrp-trading-provider/bin/*</include>
+				<include>zrp-trading-provider/conf/*</include>
+				<include>zrp-trading-provider/logs/*</include>
+			</includes>
+			<fileMode>0755</fileMode>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+	</fileSets>
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>zrp-trading-provider/lib</outputDirectory>
+			<excludes>
+				<exclude>com.ziroom.zrp:zrp-service-trading-assembly</exclude>
+			</excludes>
+		</dependencySet>
+	</dependencySets>
+</assembly>

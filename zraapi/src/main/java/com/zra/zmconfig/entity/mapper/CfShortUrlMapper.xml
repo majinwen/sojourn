@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.zmconfig.dao.CfShortUrlMapper" >
+  <resultMap id="BaseResultMap" type="com.zra.zmconfig.entity.CfShortUrl" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="suid" property="suid" jdbcType="VARCHAR" />
+    <result column="long_url" property="longUrl" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, suid, long_url, create_time
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from cf_short_url
+    where suid = #{id,jdbcType=VARCHAR} limit 1
+  </select>
+  <insert id="insert" parameterType="com.zra.zmconfig.entity.CfShortUrl" >
+    insert into cf_short_url (id, suid, long_url, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{suid,jdbcType=VARCHAR}, #{longUrl,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  
+</mapper>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.kanban.dao.KanbanGoalMapper" >
+  <resultMap id="BaseResultMap" type="com.zra.kanban.entity.KanbanGoal" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="goal_id" property="goalId" jdbcType="VARCHAR" />
+    <result column="project_Id" property="projectId" jdbcType="VARCHAR" />
+    <result column="goal_start_date" property="goalStartDate" jdbcType="DATE" />
+    <result column="goal_end_date" property="goalEndDate" jdbcType="DATE" />
+    <result column="goal_type" property="goalType" jdbcType="INTEGER" />
+    <result column="rental_rate" property="rentalRate" jdbcType="DECIMAL" />
+    <result column="rental_cycle" property="rentalCycle" jdbcType="INTEGER" />
+    <result column="voucher_rate" property="voucherRate" jdbcType="DECIMAL" />
+    <result column="yuekan_gj_rate" property="yuekanGjRate" jdbcType="DECIMAL" />
+    <result column="is_del" property="isDel" jdbcType="VARCHAR" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+    <result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="updater_id" property="updaterId" jdbcType="VARCHAR" />
+    <result column="updated_time" property="updatedTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, goal_id, project_Id, goal_start_date, goal_end_date, goal_type, rental_rate, 
+    rental_cycle, voucher_rate, yuekan_gj_rate, is_del, cityid, creater_id, created_time, 
+    updater_id, updated_time
+  </sql>
+  
+  <select id="selectAllGoals" resultMap="BaseResultMap">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM kanban_goal
+    WHERE is_del = 0
+    <if test="cityId != null and cityId != ''">
+        and cityid = #{cityId, jdbcType=VARCHAR}
+    </if>
+    <if test="goalStartDate != null">
+        <![CDATA[ AND goal_start_date = #{goalStartDate, jdbcType=VARCHAR}]]>
+    </if>
+    <if test="goalType != null">
+        <![CDATA[ AND goal_type = #{goalType, jdbcType=INTEGER}]]>
+    </if>
+  </select>
+  
+  <insert id="insert" parameterType="com.zra.kanban.entity.KanbanGoal" >
+    insert into kanban_goal (goal_id, project_Id, 
+      goal_start_date, goal_end_date, 
+      goal_type, rental_rate, rental_cycle, 
+      voucher_rate, yuekan_gj_rate, is_del, 
+      cityid, creater_id, created_time, 
+      updater_id, updated_time)
+    values (#{goalId,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, 
+      #{goalStartDate,jdbcType=DATE}, #{goalEndDate,jdbcType=DATE}, 
+      #{goalType,jdbcType=INTEGER}, #{rentalRate,jdbcType=DECIMAL}, #{rentalCycle,jdbcType=INTEGER}, 
+      #{voucherRate,jdbcType=DECIMAL}, #{yuekanGjRate,jdbcType=DECIMAL}, #{isDel,jdbcType=VARCHAR}, 
+      #{cityid,jdbcType=VARCHAR}, #{createrId,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{updaterId,jdbcType=VARCHAR}, #{updatedTime,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="update" parameterType="com.zra.kanban.entity.KanbanGoal" >
+    update kanban_goal
+    set project_Id = #{projectId,jdbcType=VARCHAR},
+      goal_start_date = #{goalStartDate,jdbcType=DATE},
+      goal_end_date = #{goalEndDate,jdbcType=DATE},
+      goal_type = #{goalType,jdbcType=INTEGER},
+      rental_rate = #{rentalRate,jdbcType=DECIMAL},
+      rental_cycle = #{rentalCycle,jdbcType=INTEGER},
+      voucher_rate = #{voucherRate,jdbcType=DECIMAL},
+      yuekan_gj_rate = #{yuekanGjRate,jdbcType=DECIMAL},
+      is_del = #{isDel,jdbcType=VARCHAR},
+      cityid = #{cityid,jdbcType=VARCHAR},
+      creater_id = #{createrId,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      updater_id = #{updaterId,jdbcType=VARCHAR},
+      updated_time = #{updatedTime,jdbcType=VARCHAR}
+    where goal_id = #{goalId,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 管家工作台查看今天待约看 wangxm113-->
+  <select id="listDYK" resultType="com.zra.common.dto.kanban.DBSJResultDto">
+      SELECT
+          bob.business_bid AS busiId,
+          boc.`name` AS customerName,
+          boc.phone AS phone
+      FROM
+          bo_business AS bob
+      LEFT JOIN bo_customer AS boc ON bob.customer_id = boc.cus_bid
+      WHERE
+          bob.project_id = #{projectId}
+      <if test="zoId != null and zoId != ''">
+          AND bob.zo_id = #{zoId}
+      </if>
+      AND bob.step = 1
+      AND (
+          bob.hand_state = 2
+          OR bob.hand_state = 1
+          AND bob.end_time BETWEEN DATE(NOW())
+          AND DATE_ADD(DATE(NOW()), INTERVAL 1 DAY)
+      )
+      AND bob.is_del = 0
+      AND boc.is_del = 0
+      ORDER BY bob.end_time ASC
+  </select>
+
+  <!-- 管家工作台查看今天待带看 wangxm113-->
+  <select id="listDDK" resultType="com.zra.common.dto.kanban.DBSJResultDto">
+      SELECT
+          bob.business_bid AS busiId,
+          boc.`name` AS customerName,
+          DATE_FORMAT(
+          re.hand_result_time,
+          '%Y-%m-%d %H:%i:%S'
+          ) AS dkDate,
+          boc.phone AS phone
+      FROM
+          bo_business AS bob
+          LEFT JOIN bo_customer AS boc ON bob.customer_id = boc.cus_bid
+          LEFT JOIN bo_business_result AS re ON re.business_id = bob.business_bid,
+        (
+          SELECT DISTINCT
+          (bob.business_bid) AS busiId,
+          re.id
+          FROM
+          bo_business AS bob
+          LEFT JOIN bo_business_result AS re ON re.business_id = bob.business_bid
+          WHERE
+          bob.project_id = #{projectId}
+          <if test="zoId != null and zoId != ''">
+              AND bob.zo_id = #{zoId}
+          </if>
+          AND bob.step = 2
+          AND bob.hand_state = 2
+          AND (
+          re.step = 2
+          AND re.hand_result = '33'
+          OR re.step = 1
+          AND re.hand_result IN ('13','25')
+          )
+          AND bob.is_del = 0
+          AND re.is_del = 0
+          ORDER BY
+          re.hand_result_time DESC
+          LIMIT 1
+        ) AS temp
+      WHERE
+            temp.busiId = bob.business_bid
+          AND temp.id = re.id
+          AND bob.project_id = #{projectId}
+          <if test="zoId != null and zoId != ''">
+              AND bob.zo_id = #{zoId}
+          </if>
+          AND bob.step = 2
+          AND bob.hand_state = 2
+          AND (
+              re.step = 2
+              AND re.hand_result = '33'
+              OR re.step = 1
+              AND re.hand_result IN ('13','25')
+          )
+          AND bob.is_del = 0
+          AND re.is_del = 0
+          AND boc.is_del = 0
+      ORDER BY
+          re.hand_result_time ASC
+  </select>
+
+  <!-- 管家工作台查看今天待回访 wangxm113-->
+  <select id="listDHF" resultType="com.zra.common.dto.kanban.DBSJResultDto">
+      SELECT
+          bob.business_bid AS busiId,
+          boc.`name` AS customerName,
+          DATE_FORMAT(
+              re.hand_result_time,
+              '%Y-%m-%d %H:%i:%S'
+          ) AS dkDate,
+          boc.phone AS phone
+      FROM
+          bo_business AS bob
+      LEFT JOIN bo_customer AS boc ON bob.customer_id = boc.cus_bid
+      LEFT JOIN bo_business_result AS re ON re.business_id = bob.business_bid
+      WHERE
+          bob.project_id = #{projectId}
+      <if test="zoId != null and zoId != ''">
+        AND bob.zo_id = #{zoId}
+      </if>
+      AND bob.step = 3
+      AND (
+      bob.hand_state = 2
+      OR bob.hand_state = 1
+      AND bob.end_time BETWEEN DATE(NOW())
+      AND DATE_ADD(DATE(NOW()), INTERVAL 1 DAY)
+      )
+      AND re.step = 2
+      AND re.hand_result IN ('12','32')
+      AND bob.is_del = 0
+      AND re.is_del = 0
+      AND boc.is_del = 0
+      ORDER BY re.hand_result_time ASC
+  </select>
+</mapper>

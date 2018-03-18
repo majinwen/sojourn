@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://itrus.com/itrusUtil" xmlns:soapenc12="http://www.w3.org/2003/05/soap-encoding" xmlns:tns="http://itrus.com/itrusUtil" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc11="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
+  <wsdl:types>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://itrus.com/itrusUtil">
+<xsd:element name="verify">
+<xsd:complexType>
+<xsd:sequence>
+<xsd:element maxOccurs="1" minOccurs="1" name="in0" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+<xsd:element name="verifyResponse">
+<xsd:complexType>
+<xsd:sequence>
+<xsd:element maxOccurs="1" minOccurs="1" name="out" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+<xsd:element name="signature">
+<xsd:complexType>
+<xsd:sequence>
+<xsd:element maxOccurs="1" minOccurs="1" name="in0" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+<xsd:element name="signatureResponse">
+<xsd:complexType>
+<xsd:sequence>
+<xsd:element maxOccurs="1" minOccurs="1" name="out" nillable="true" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="signatureRequest">
+    <wsdl:part name="parameters" element="tns:signature">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="signatureResponse">
+    <wsdl:part name="parameters" element="tns:signatureResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="verifyRequest">
+    <wsdl:part name="parameters" element="tns:verify">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="verifyResponse">
+    <wsdl:part name="parameters" element="tns:verifyResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="itrusUtilPortType">
+    <wsdl:operation name="verify">
+      <wsdl:input name="verifyRequest" message="tns:verifyRequest">
+    </wsdl:input>
+      <wsdl:output name="verifyResponse" message="tns:verifyResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="signature">
+      <wsdl:input name="signatureRequest" message="tns:signatureRequest">
+    </wsdl:input>
+      <wsdl:output name="signatureResponse" message="tns:signatureResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="itrusUtilHttpBinding" type="tns:itrusUtilPortType">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="verify">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="verifyRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="verifyResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="signature">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="signatureRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="signatureResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="itrusUtil">
+    <wsdl:port name="itrusUtilHttpPort" binding="tns:itrusUtilHttpBinding">
+      <wsdlsoap:address location="http://esp.ziroom.com/DigitalSignature_ws/services/itrusUtil"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

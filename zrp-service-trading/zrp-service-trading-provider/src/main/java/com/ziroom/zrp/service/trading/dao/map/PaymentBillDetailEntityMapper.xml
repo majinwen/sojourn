@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.paymentBillDetailDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.PaymentBillDetailEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="cost_code" property="costCode" jdbcType="VARCHAR" />
+    <result column="refund_amount" property="refundAmount" jdbcType="DECIMAL" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="bill_fid" property="billFid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, cost_code, refund_amount, create_date, is_del, is_valid, bill_fid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_payment_bill_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insert" parameterType="com.ziroom.zrp.trading.entity.PaymentBillDetailEntity" >
+    insert into t_payment_bill_detail (id, fid, cost_code, 
+      refund_amount, create_date, is_del, 
+      is_valid, bill_fid)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{costCode,jdbcType=VARCHAR}, 
+      #{refundAmount,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, #{isDel,jdbcType=INTEGER}, 
+      #{isValid,jdbcType=INTEGER}, #{billFid,jdbcType=VARCHAR})
+  </insert>
+
+  <!--插入付款单子表 created by cuigh6-->
+  <insert id="savePaymentBillDetail" parameterType="com.ziroom.zrp.trading.entity.PaymentBillDetailEntity" >
+    insert into t_payment_bill_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="costCode != null" >
+        cost_code,
+      </if>
+      <if test="refundAmount != null" >
+        refund_amount,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="billFid != null" >
+        bill_fid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="costCode != null" >
+        #{costCode,jdbcType=VARCHAR},
+      </if>
+      <if test="refundAmount != null" >
+        #{refundAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="billFid != null" >
+        #{billFid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.trading.entity.PaymentBillDetailEntity" >
+    update t_payment_bill_detail
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="costCode != null" >
+        cost_code = #{costCode,jdbcType=VARCHAR},
+      </if>
+      <if test="refundAmount != null" >
+        refund_amount = #{refundAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="billFid != null" >
+        bill_fid = #{billFid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.zrp.trading.entity.PaymentBillDetailEntity" >
+    update t_payment_bill_detail
+    set fid = #{fid,jdbcType=VARCHAR},
+      cost_code = #{costCode,jdbcType=VARCHAR},
+      refund_amount = #{refundAmount,jdbcType=DECIMAL},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=INTEGER},
+      is_valid = #{isValid,jdbcType=INTEGER},
+      bill_fid = #{billFid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

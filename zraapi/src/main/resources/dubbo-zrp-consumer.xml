@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="zraapi-service-consumer"
+                       owner="zraapi-service-consumer" organization="dubbox" />
+
+<!--    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    &lt;!&ndash; <dubbo:registry address="zookeeper://zookeeper.com:2181"/> &ndash;&gt;
+    <dubbo:protocol name="dubbo" />-->
+    <!--<dubbo:consumer group="minsu" /> -->
+
+    <!--研发环境-->
+    <dubbo:registry address="zookeeper://10.16.4.95:2181"/>
+    <!--测试环境的-->
+    <!--<dubbo:registry address="zookeeper://10.16.34.82:2181"/>-->
+    <!--本地环境-->
+    <!-- <dubbo:registry address="zookeeper://127.0.0.1:2181"/> -->
+    <!--准生产环境-->
+    <!--<dubbo:registry address="zookeeper://10.16.24.123:2181"/>-->
+    <!--线上环境-->
+    <!--<dubbo:registry address="zookeeper://minsu.zk.ziroom.com:2181"/>-->
+    <!--<dubbo:registry address="${zookeeper.address}" />-->
+    <dubbo:protocol name="dubbo" />
+</beans>

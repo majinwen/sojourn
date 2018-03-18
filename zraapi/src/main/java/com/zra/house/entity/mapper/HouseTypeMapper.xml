@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.house.dao.HouseTypeMapper">
+    <resultMap id="BaseResultMap" type="com.zra.house.entity.HouseTypeEntity" >
+        <id column="fid" property="id" jdbcType="VARCHAR" />
+        <result column="fhousetypename" property="houseTypeName" jdbcType="VARCHAR" />
+        <result column="farea" property="area" jdbcType="DOUBLE" />
+        <result column="ftotalroom" property="totalRoom" jdbcType="INTEGER" />
+        <result column="froomtype" property="roomType" jdbcType="VARCHAR" />
+        <result column="fhousetypedesc" property="houseTypeDesc" jdbcType="VARCHAR" />
+        <result column="fhousetypeimg" property="houseTypeImg" jdbcType="VARCHAR" />
+        <result column="fqrcodeimg" property="qrcodeImg" jdbcType="VARCHAR" />
+        <result column="fshoworder" property="showOrder" jdbcType="INTEGER" />
+        <result column="fpanoid" property="panoId" jdbcType="VARCHAR" />
+        <result column="froomintroduction" property="roomIntroduction" jdbcType="VARCHAR" />
+        <result column="projectid" property="projectId" jdbcType="VARCHAR" />
+        <result column="cityid" property="cityId" jdbcType="VARCHAR" />
+        <result column="fvalid" property="valid" jdbcType="INTEGER" />
+        <result column="fcreatetime" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="createrid" property="createrId" jdbcType="VARCHAR" />
+        <result column="fupdatetime" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="updaterid" property="updaterId" jdbcType="VARCHAR" />
+        <result column="fisdel" property="isDel" jdbcType="INTEGER" />
+        <result column="f_panoramic_url" property="panoramicUrl" jdbcType="VARCHAR" />
+        <result column="f_share_url" property="shareUrl" jdbcType="VARCHAR" />
+        <result column="f_head_figure_url" property="headFigureUrl" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        fid, fhousetypename, farea, ftotalroom, froomtype, fhousetypedesc, fhousetypeimg,
+        fqrcodeimg, fshoworder, fpanoid, froomintroduction, projectid, cityid, fvalid, fcreatetime,
+        createrid, fupdatetime, updaterid, fisdel, f_panoramic_url, f_share_url, f_head_figure_url
+    </sql>
+
+    <!--根据id查询房型信息-->
+    <select id="findHouseTypeById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from thousetype
+        where fid = #{houseTypeId,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="findAllHouseType" resultMap="BaseResultMap">
+     select
+        <include refid="Base_Column_List" />
+        from thousetype
+     where fisdel = 0
+    </select>
+
+    <select id="getPhoneByHtId" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT
+            p.fMarketTel
+        FROM
+            tproject AS p,
+            thousetype AS h
+        WHERE
+            h.projectid = p.fId
+        AND h.fid = #{houseTypeId}
+        AND h.fisdel = 0
+        AND p.fIsDel = 0
+    </select>
+
+</mapper>

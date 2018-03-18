@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.kanban.dao.KanbanDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.zra.kanban.entity.KanbanDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="kanban_detail_bid" property="kanbanDetailBid" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="zo_id" property="zoId" jdbcType="VARCHAR" />
+    <result column="zo_name" property="zoName" jdbcType="VARCHAR" />
+    <result column="cycle_type" property="cycleType" jdbcType="BIT" />
+    <result column="start_date" property="startDate" jdbcType="DATE" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+    <result column="bo_new_count" property="boNewCount" jdbcType="INTEGER" />
+    <result column="yk_deal_long" property="ykDealLong" jdbcType="DECIMAL" />
+    <result column="yk_deal_avglong" property="ykDealAvglong" jdbcType="DECIMAL" />
+    <result column="quit_count" property="quitCount" jdbcType="INTEGER" />
+    <result column="renew_count" property="renewCount" jdbcType="INTEGER" />
+    <result column="sign_new_count" property="signNewCount" jdbcType="INTEGER" />
+    <result column="empty_room_range1" property="emptyRoomRange1" jdbcType="INTEGER" />
+    <result column="empty_room_range2" property="emptyRoomRange2" jdbcType="INTEGER" />
+    <result column="empty_room_range3" property="emptyRoomRange3" jdbcType="INTEGER" />
+    <result column="empty_room_range4" property="emptyRoomRange4" jdbcType="INTEGER" />
+    <result column="payment_count" property="paymentCount" jdbcType="INTEGER" />
+    <result column="early_total_days" property="earlyTotalDays" jdbcType="INTEGER" />
+    <result column="early_payment_avgdays" property="earlyPaymentAvgdays" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updater_id" property="updaterId" jdbcType="VARCHAR" />
+    <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP" />
+    <result column="deleter_id" property="deleterId" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="BIT" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, kanban_detail_bid, project_id, zo_id, zo_name, cycle_type,start_date, end_date,bo_new_count,yk_deal_long, yk_deal_avglong, 
+    quit_count, renew_count, sign_new_count, empty_room_range1, empty_room_range2, empty_room_range3, 
+    empty_room_range4,payment_count,early_total_days,early_payment_avgdays, create_time, creater_id, update_time, updater_id, 
+    delete_time, deleter_id, is_del
+  </sql>
+  
+  <select id="selectByConditions" resultMap="BaseResultMap" parameterType="com.zra.common.dto.kanban.KanbanQueryDto" >
+    select 
+    <include refid="Base_Column_List" />
+    from  kanban_detail
+    where start_date = #{startDate}
+      and end_date = #{endDate}
+      and cycle_type = #{cycleType}
+  </select>
+  
+  <insert id="insert" parameterType="java.util.List" keyProperty="id">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">  
+        SELECT  
+        LAST_INSERT_ID()  
+        </selectKey>
+        insert into kanban_detail (<include refid="Base_Column_List" />) values
+        <foreach collection="list" item="item" index="index" separator="," >
+        (#{item.id,jdbcType=INTEGER}, #{item.kanbanDetailBid,jdbcType=VARCHAR}, #{item.projectId,jdbcType=VARCHAR}, 
+      #{item.zoId,jdbcType=VARCHAR}, #{item.zoName,jdbcType=VARCHAR},#{item.cycleType,jdbcType=BIT},#{item.startDate,jdbcType=DATE}, 
+      #{item.endDate,jdbcType=DATE},#{item.boNewCount,jdbcType=INTEGER} ,#{item.ykDealLong,jdbcType=DECIMAL},#{item.ykDealAvglong,jdbcType=DECIMAL}, #{item.quitCount,jdbcType=INTEGER}, 
+      #{item.renewCount,jdbcType=INTEGER}, #{item.signNewCount,jdbcType=INTEGER}, #{item.emptyRoomRange1,jdbcType=INTEGER}, 
+      #{item.emptyRoomRange2,jdbcType=INTEGER}, #{item.emptyRoomRange3,jdbcType=INTEGER}, #{item.emptyRoomRange4,jdbcType=INTEGER},#{item.paymentCount,jdbcType=INTEGER},#{item.earlyTotalDays,jdbcType=INTEGER}, 
+      #{item.earlyPaymentAvgdays,jdbcType=DECIMAL}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.createrId,jdbcType=VARCHAR}, 
+      #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updaterId,jdbcType=VARCHAR}, #{item.deleteTime,jdbcType=TIMESTAMP}, 
+      #{item.deleterId,jdbcType=VARCHAR}, #{item.isDel,jdbcType=BIT})
+      </foreach>
+  </insert>
+  
+  <update id="updateByBid" parameterType="com.zra.kanban.entity.KanbanDetail" >
+    update kanban_detail
+    set 
+      end_date = #{endDate,jdbcType=DATE},
+      bo_new_count = #{item.boNewCount,jdbcType=INTEGER},
+      yk_deal_long = #{item.ykDealLong,jdbcType=DECIMAL},
+      yk_deal_avglong = #{ykDealAvglong,jdbcType=DECIMAL},
+      quit_count = #{quitCount,jdbcType=INTEGER},
+      renew_count = #{renewCount,jdbcType=INTEGER},
+      sign_new_count = #{signNewCount,jdbcType=INTEGER},
+      empty_room_range1 = #{emptyRoomRange1,jdbcType=INTEGER},
+      empty_room_range2 = #{emptyRoomRange2,jdbcType=INTEGER},
+      empty_room_range3 = #{emptyRoomRange3,jdbcType=INTEGER},
+      empty_room_range4 = #{emptyRoomRange4,jdbcType=INTEGER},
+      payment_count = #{item.paymentCount,jdbcType=INTEGER},
+      early_total_days = #{item.earlyTotalDays,jdbcType=INTEGER},
+      early_payment_avgdays = #{earlyPaymentAvgdays,jdbcType=DECIMAL},
+      bo_new_count = #{boNewCount,jdbcType=INTEGER},
+      yk_deal_long = #{ykDealLong,jdbcType=DECIMAL}
+    where kanban_detail_bid = #{kanbanDetailBid,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByConditions">
+		UPDATE kanban_detail detail
+		SET detail.is_del = 1,
+		    detail.deleter_id = '1'
+		WHERE
+			detail.start_date = #{startDate}
+		AND detail.cycle_type = ${type}
+  </update>
+  
+  <!-- 优化约看平均处理时长计算 -->
+  <select id="getAvgHandTime" parameterType="String" resultType="com.zra.kanban.entity.dto.KanBanCountDto">
+			SELECT
+				temp.project_id AS projectId,
+				COUNT(temp.business_bid) AS count,
+				SUM(temp.sumLong) AS sumLong
+				<if test='isGroupByZo=="Y"'>
+			    ,temp.zo_id as zoId,
+			    temp.zo_name as zoName
+			    </if>
+			FROM
+				(
+					SELECT
+						bo.business_bid,
+						bo.project_id,
+						bo.zo_id,
+						bo.zo_name,
+						timestampdiff(
+							MINUTE,
+							bo.create_time,
+			
+						IF (
+							min(result.hand_time) IS NULL,
+							now(),
+							min(result.hand_time)
+						)
+						) AS sumLong
+					FROM
+						bo_business bo
+					INNER JOIN bo_business_result result ON bo.business_bid = result.business_id
+					AND result.is_del = 0
+					AND result.step = 1
+					WHERE
+						bo.is_del = 0
+					AND bo.create_time <![CDATA[>=]]> #{startDate}
+					AND bo.create_time <![CDATA[<=]]> #{endDate}
+					AND bo.step != 1
+					AND bo.zo_id IS NOT NULL
+					AND bo.zo_id !=''
+					GROUP BY
+						bo.business_bid,
+						bo.project_id,
+						bo.zo_id
+					UNION ALL
+						SELECT
+							bo.business_bid,
+							bo.project_id,
+							bo.zo_id,
+							bo.zo_name,
+							timestampdiff(
+								MINUTE,
+								bo.create_time,
+			
+							IF (
+								min(result.hand_time) IS NULL,
+								now(),
+								min(result.hand_time)
+							)
+							) AS sumLong
+						FROM
+							bo_business bo
+						LEFT JOIN bo_business_result result ON bo.business_bid = result.business_id
+						AND result.is_del = 0
+						AND result.step = 1
+						WHERE
+							bo.is_del = 0
+						AND bo.create_time <![CDATA[>=]]> #{startDate}
+						AND bo.create_time <![CDATA[<=]]> #{endDate}
+						AND bo.step = 1
+						GROUP BY
+							bo.business_bid,
+							bo.project_id,
+							bo.zo_id
+				) temp
+			GROUP BY
+				temp.project_id
+				<if test='isGroupByZo=="Y"'>
+			    ,temp.zo_id
+			    </if>
+  </select>
+  
+  <select id="getQuitCount" resultType="com.zra.kanban.entity.dto.KanBanCountDto" parameterType="String">
+				SELECT
+					rent.project_id AS projectId,
+					COUNT(DISTINCT detail.id) AS count
+					<if test='isGroupByZo=="Y"'>
+					,emp.fid AS zoId,
+					emp.fname AS zoName
+					</if>
+				FROM
+					tsurrender temp,
+					trentcontract rent,
+					rent_rentedetail detail,
+					tuseraccount useraccount,
+					temployee emp
+				WHERE
+					temp.fsubmitstatus = '1'
+				AND temp.fvalid = 1
+				AND temp.fisdel = 0
+				AND temp.fapplystatus = 1
+				AND temp.freleasedate <![CDATA[>=]]> #{startDate}
+				AND temp.freleasedate <![CDATA[<=]]> #{endDate}
+				AND temp.contract_id = rent.contractid
+				AND rent.contractid = detail.contract_id
+				AND rent.fisdel = 0
+				AND detail.is_deleted = 0
+				AND (
+					useraccount.linkemployeeid = rent.createrid
+					OR useraccount.fuseraccount = rent.createrid
+				)
+				AND useraccount.linkemployeeid = emp.fid
+				GROUP BY
+					rent.project_id
+					<if test='isGroupByZo=="Y"'>
+					,emp.fid
+					</if>
+  </select>
+  
+  <select id="getNewSignCount" resultType="com.zra.kanban.entity.dto.KanBanCountDto" parameterType="String">
+			SELECT
+				con.project_id AS projectId,
+				COUNT(DISTINCT rent.id) AS count
+				<if test='isGroupByZo=="Y"'>
+				,emp.fid AS zoId,
+				emp.fname AS zoName
+				</if>
+			FROM
+				rent_rentedetail rent,
+				trentcontract con,
+				tuseraccount account,
+				temployee emp
+			WHERE
+				rent.contract_id = con.contractid
+			AND con.con_sign_date <![CDATA[>=]]> #{startDate}
+			AND con.con_sign_date <![CDATA[<=]]> #{endDate}
+			AND con.con_status_code IN ('yqy', 'yxy')
+			AND con.fsigntype = '0'
+			AND con.fisdel = 0
+			AND rent.is_deleted = 0
+			AND (
+				account.linkemployeeid = con.createrid
+				OR account.fuseraccount = con.createrid
+			)
+			AND emp.fid = account.linkemployeeid
+			GROUP BY
+				con.project_id
+				<if test='isGroupByZo=="Y"'>
+				,emp.fid
+				</if>
+  </select>
+  
+  <select id="getRenewCount" resultType="com.zra.kanban.entity.dto.KanBanCountDto" parameterType="String">
+			SELECT
+				contract1.project_id AS projectId,
+				COUNT(DISTINCT detail.id) AS count
+				<if test='isGroupByZo=="Y"'>
+				,emp.fid AS zoId,
+				emp.fname AS zoName
+				</if>
+			FROM
+				rent_rentedetail detail,
+				trentcontract contract1,
+				tuseraccount account,
+				temployee emp,
+				trentcontract contract2
+			WHERE
+				detail.contract_id = contract1.contractid
+			AND contract1.pre_con_rent_code = contract2.con_rent_code
+			AND contract2.con_end_date <![CDATA[>=]]> #{startDate}
+			AND contract2.con_end_date <![CDATA[<=]]> #{endDate}
+			AND contract2.con_status_code IN (
+				'yxy',
+				'yqy',
+				'ytz',
+				'jyz',
+				'xyz'
+			)
+			AND contract2.fisdel = 0
+			AND (
+				(
+					contract2.con_rent_year IN (1, 2, 3, 4, 5, 6)
+					AND contract1.con_rent_year != 12
+					AND contract1.con_rent_year != 0
+				)
+				OR (
+					contract1.con_rent_year = 12
+					AND contract1.con_rent_year = 12
+				)
+			)
+			AND contract1.fsigntype = '1'
+			AND contract1.con_status_code = 'yqy'
+			AND contract1.con_end_date <![CDATA[>=]]> #{endDate}
+			AND contract1.fisdel = 0
+			AND detail.is_deleted = 0
+			AND (
+				account.linkemployeeid = contract1.createrid
+				OR account.fuseraccount = contract1.createrid
+			)
+			AND emp.fid = account.linkemployeeid
+			GROUP BY
+				contract1.project_id
+				<if test='isGroupByZo=="Y"'>
+				,emp.fid
+				</if>
+  </select>
+  
+  <select id="getEmptyCount" resultType="com.zra.kanban.entity.dto.KanBanCountDto">
+		SELECT
+			count(empty.report_empty_id) AS count,
+			empty.project_id AS projectId
+		FROM
+			report_empty empty
+		WHERE
+			empty.record_date = #{recordDate}
+		<if test="empNumMin!=-1">
+		AND empty.empty_num <![CDATA[>=]]> ${empNumMin}
+		</if>
+		<if test="empNumMax!=-1">
+		AND empty.empty_num <![CDATA[<=]]> ${empNumMax}
+		</if>
+		AND empty.is_del = 0
+		GROUP BY
+			empty.project_id
+  </select>
+  
+  <select id="getPaymentAvgDays" resultType="com.zra.kanban.entity.dto.PaymentInfoDto" parameterType="String">
+           SELECT
+				temp.projectId,
+				count(temp.Bid) AS count,
+				sum(temp.subDays) AS subDays
+				<if test='isGroupByZo=="Y"'>
+                ,temp.zoId,
+				temp.zoName
+				</if>
+			FROM
+				(
+					SELECT DISTINCT
+						billdetail.fid AS Bid,
+						rent.project_id AS projectId,
+						emp.fid AS zoId,
+						emp.fname AS zoName,
+						timestampdiff(
+							DAY,
+			
+						IF (
+							billdetail.ought_amount - tv.actualAmount <![CDATA[<=]]> 0
+							AND tv.realityReceipt IS NOT NULL,
+							tv.realityReceipt,
+							now()
+						),
+						bill.plan_gather_date
+						) AS subDays
+					FROM
+						fin_recei_bill_detail billdetail
+					JOIN fin_recei_bill bill ON billdetail.bill_fid = bill.fid
+					AND bill.pay_num > 1
+					AND bill.is_del = 0
+					AND bill.bill_state !=3
+                    AND bill.bill_type = 0
+					AND bill.plan_gather_date <![CDATA[>=]]>#{startDate}
+					AND bill.plan_gather_date <![CDATA[<=]]>#{endDate}
+					AND billdetail.expense_item_id = 1
+					JOIN trentcontract rent ON rent.contractid = bill.contract_id
+					AND rent.fisdel = 0
+					JOIN tuseraccount useraccount ON (
+						useraccount.linkemployeeid = rent.createrid
+						OR useraccount.fuseraccount = rent.createrid
+					)
+					JOIN temployee emp ON emp.fid = useraccount.linkemployeeid
+					LEFT JOIN (
+						SELECT
+							tpv.payment_id,
+							tpvitem.room_id,
+							max(tpv.payment_time) AS realityReceipt,
+			
+						IF (
+							sum(tpvitem.actual_amount) IS NULL,
+							0,
+							sum(tpvitem.actual_amount)
+						) AS actualAmount
+						FROM
+							trentpaymentvoucher tpv,
+							trentvoucheritem tpvitem
+						WHERE
+							tpvitem.voucher_id = tpv.voucher_id
+						AND tpv.state = '2'
+						AND tpvitem.expense_item_id = 1
+						AND tpv.fisdel = 0
+						AND tpvitem.fisdel = 0
+						AND tpvitem.fvalid = 1
+						AND tpv.payment_id IS NOT NULL
+						GROUP BY
+							tpvitem.room_id,
+							tpv.payment_id
+					) tv ON billdetail.payment_id = tv.payment_id
+					AND billdetail.room_id = tv.room_id
+					GROUP BY
+						billdetail.fid
+				) temp
+			GROUP BY
+				temp.projectId
+				<if test='isGroupByZo=="Y"'>
+                ,temp.zoId
+                </if>
+  </select>
+  
+  <!-- 查询 -->
+  <select id="getSecondData" resultType="com.zra.common.dto.kanban.SecondDataShowDto" parameterType="com.zra.common.dto.kanban.KanbanQueryDto">
+		SELECT
+			project.fId AS projectId,
+			project.fName AS projectName,
+			detail.yk_deal_avglong AS ykDealAvglong,
+			detail.quit_count AS quitCount,
+			detail.sign_new_count AS signNewCount,
+			detail.renew_count AS renewCount,
+			detail.empty_room_range1 AS emptyRoomRange1,
+			detail.empty_room_range2 AS emptyRoomRange2,
+			detail.empty_room_range3 AS emptyRoomRange3,
+			detail.empty_room_range4 AS emptyRoomRange4,
+			detail.early_payment_avgdays AS earlyPaymentAvgdays
+		FROM
+			kanban_detail detail,
+			tproject project
+		WHERE
+			detail.project_id = project.fId
+		AND detail.zo_id = 'ALL'
+		AND detail.start_date = #{startDate}
+		AND detail.end_date = #{endDate}
+		AND detail.cycle_type = ${cycleType}
+		AND detail.is_del = 0
+		AND project.fIsDel = 0
+	    <if test="projectIds!=null and projectIds.size()>0">
+        and project_id in
+        <foreach item="item" index="index" collection="projectIds" open="(" separator="," close=")">
+        #{item}
+        </foreach>  
+        </if>
+        ORDER BY detail.project_id
+  </select>
+  
+  
+  <select id="getSecondDataDetail" resultType="com.zra.common.dto.kanban.SecondDataDetailDto" parameterType="com.zra.common.dto.kanban.KanbanQueryDto">
+  	  SELECT
+			project.fId AS projectId,
+		    detail.zo_id AS zoId,
+            detail.zo_name AS zoName,
+			detail.yk_deal_avglong AS ykDealAvglong,
+			detail.quit_count AS quitCount,
+			detail.sign_new_count AS signNewCount,
+			detail.renew_count AS renewCount,
+			detail.empty_room_range1 AS emptyRoomRange1,
+			detail.empty_room_range2 AS emptyRoomRange2,
+			detail.empty_room_range3 AS emptyRoomRange3,
+			detail.empty_room_range4 AS emptyRoomRange4,
+			detail.early_payment_avgdays AS earlyPaymentAvgdays
+		FROM
+			kanban_detail detail,
+			tproject project
+		WHERE
+			detail.project_id = project.fId
+		AND detail.zo_id != 'ALL'
+		AND detail.start_date = #{startDate}
+		AND detail.end_date = #{endDate}
+		AND detail.cycle_type = ${cycleType}
+		AND detail.is_del = 0
+		AND project.fIsDel = 0
+	    <if test="projectIds!=null and projectIds.size()>0">
+        and project_id in
+        <foreach item="item" index="index" collection="projectIds" open="(" separator="," close=")">
+        #{item}
+        </foreach>  
+        </if>
+  </select>
+  
+</mapper>

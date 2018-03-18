@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.system.dao.UserAccountMapper">
+	<resultMap id="BaseResultMap" type="com.zra.system.entity.UserAccountEntity" >
+	    <id column="fid" property="id" jdbcType="VARCHAR" />
+	    <result column="fuseraccount" property="userAccount" jdbcType="VARCHAR" />
+	    <result column="fusername" property="username" jdbcType="VARCHAR" />
+	    <result column="fpassword" property="password" jdbcType="VARCHAR" />
+	    <result column="fisadmin" property="isAdmin" jdbcType="INTEGER" />
+	    <result column="linkemployeeid" property="linkEmployeeId" jdbcType="VARCHAR" />
+	    <result column="fupdpswdate" property="updPswDate" jdbcType="TIMESTAMP" />
+	    <result column="frequireupdatepw" property="requireUpdatePw" jdbcType="INTEGER" />
+	    <result column="flastlogindate" property="lastLoginDate" jdbcType="TIMESTAMP" />
+	    <result column="fdatabelong" property="dataBelong" jdbcType="VARCHAR" />
+	    <result column="flastloginip" property="lastLoginIp" jdbcType="VARCHAR" />
+	    <result column="floginfailtime" property="loginFailTime" jdbcType="INTEGER" />
+	    <result column="facctlocktime" property="acctLockTime" jdbcType="TIMESTAMP" />
+	    <result column="facctstatus" property="acctStatus" jdbcType="INTEGER" />
+	    <result column="fproviderid" property="providerId" jdbcType="VARCHAR" />
+	    <result column="ftempgjid" property="tempGjId" jdbcType="VARCHAR" />
+	    <result column="fvalid" property="valid" jdbcType="INTEGER" />
+	    <result column="fcreatetime" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="createrid" property="createrId" jdbcType="VARCHAR" />
+	    <result column="fupdatetime" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="updaterid" property="updaterId" jdbcType="VARCHAR" />
+	    <result column="fisdel" property="isDel" jdbcType="INTEGER" />
+	    <result column="cityid" property="cityId" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <sql id="Base_Column_List" >
+    	fid, fuseraccount, fusername, fpassword, fisadmin, linkemployeeid, fupdpswdate, frequireupdatepw, 
+    	flastlogindate, fdatabelong, flastloginip, floginfailtime, facctlocktime, facctstatus, 
+    	fproviderid, ftempgjid, fvalid, fcreatetime, createrid, fupdatetime, updaterid, fisdel, 
+    	cityid
+ 	</sql>
+    
+    <!-- 判断用户是否为管理员 -->
+    <select id="isAdmin" resultType="Integer">
+    	SELECT count(1) FROM tuserrole ur WHERE ur.fisdel =0 and ur.roleid=#{roleId} and ur.userid=#{userId}
+    </select>
+    
+    <!-- 根据userid取出useraccount -->
+    <select id="getUserAccountByUserId" resultMap="BaseResultMap">
+    	SELECT 
+    		<include refid="Base_Column_List"/> 
+    	FROM tuseraccount ua 
+    	WHERE ua.fid=#{userId}
+    </select>
+    
+    <!-- 判断用户是否为管家 wangws21 2016-8-8 -->
+    <select id="isZo" resultType="Integer">
+    	SELECT count(1) 
+    	FROM trole tr,tuserrole tur, tuseraccount tua 
+    	WHERE tr.fname =#{roleName} 
+    		AND tr.fid = tur.roleid 
+    		AND tur.userid = tua.fid 
+    		AND tur.userid = #{userId}
+    </select>
+
+	<select id="isZOOther" resultType="Integer">
+		SELECT count(1)
+		FROM trole tr,tuserrole tur, tuseraccount tua
+		WHERE tr.fname =#{roleName}
+		AND tr.fid = tur.roleid
+		AND tur.userid = tua.fid
+		AND tua.linkemployeeid = #{userId}
+	</select>
+
+    <!-- add by tianxf9 判断用户是否项目经理 -->
+    <select id="isManager" resultType="Integer">
+    	SELECT count(1) FROM tuserrole ur WHERE ur.fisdel =0 and ur.roleid=#{roleId} and ur.userid=#{userId}
+    </select>
+    
+    <!--add by tianxf9根据角色判断人员  -->
+    <select id="isRole" resultType="Integer" parameterType="String">
+		SELECT
+			count(1)
+		FROM
+			tuserrole ur,
+			tuseraccount ua
+		WHERE
+			ur.fisdel = 0
+		AND ua.fisdel = 0
+		AND ua.fid = ur.userid
+		AND ur.roleid = #{roleId}
+		AND ua.linkemployeeid = #{userId}
+    </select>
+</mapper>

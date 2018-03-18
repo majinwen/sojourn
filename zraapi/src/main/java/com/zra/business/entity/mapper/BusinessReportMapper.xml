@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.business.dao.BusinessReportMapper">
+	<!-- add by tinaxf9   查询约看量-->
+	<select id="getYueKanCountList" parameterType = "com.zra.common.dto.business.BoReportQueryParamDto" resultType = "com.zra.common.dto.business.BoReportCountDto">
+			SELECT
+			count(bob.business_bid) AS count,
+			bob.project_id AS projectId,
+			<if test="projectZoId==null or projectZoId==''">
+			bob.source AS source
+			</if>
+			<if test="projectZoId!=null and projectZoId!=''">
+			bob.zo_id AS projectZoId,
+			bob.zo_name AS projectZoName
+			</if>
+		FROM
+			bo_business bob
+		WHERE
+			(
+				(
+					bob.create_time  <![CDATA[ >= ]]> #{startDate}
+					AND bob.create_time <![CDATA[ <= ]]> #{endDate}
+				)
+				OR (
+					bob.create_time <![CDATA[ < ]]> #{startDate}
+					AND ((bob.step!=1 
+					      AND bob.business_bid IN 
+							(SELECT
+								bur.business_id
+							 FROM
+								bo_business_result bur
+							 WHERE
+								 bur.hand_time <![CDATA[>]]> #{endDate}
+							 AND bur.step = 1
+							 AND bur.hand_result != 24					
+								)
+						) 
+					     OR bob.step = 1
+					    )
+				)
+			)
+		<if test="projectIdStr!=null and projectIdStr!=''">	
+		AND bob.project_id in (${projectIdStr})
+		</if>	
+		<if test="projectZoId!=null and projectZoId!='all' and projectZoId!=''">
+		AND bob.zo_id = #{projectZoId}
+		</if>
+		AND bob.is_del = 0
+		GROUP BY
+		    bob.project_id,
+		<if test="projectZoId==null or projectZoId==''">
+			bob.source
+		</if>
+		<if test="projectZoId!=null and projectZoId!=''">
+		    bob.zo_id
+		</if>	
+	</select>
+	<!-- and by tianxf9   查询选择时间段内约看商机中商机处理状态曾经或仍为“超时未处理”的商机数量＋遗留未处理约看量-->
+	<select id="getTimeOutAndStayYueKan" parameterType = "com.zra.common.dto.business.BoReportQueryParamDto" resultType = "com.zra.common.dto.business.BoReportCountDto">
+			SELECT
+				count(bob.business_bid) AS count,
+				bob.project_id AS projectId
+				<if test="projectZoId != null and projectZoId != ''">
+				,bob.zo_id AS projectZoId
+				</if>
+			FROM
+				bo_business bob
+			WHERE
+				(
+					(
+						bob.create_time <![CDATA[>=]]>#{startDate}
+						AND bob.create_time <![CDATA[<=]]>#{endDate}
+						AND (
+							(
+								bob.step = 1
+								AND bob.hand_state = 1
+							)
+							OR (
+								bob.step != 1
+								AND bob.business_bid IN (
+									SELECT
+										bor.business_id
+									FROM
+										bo_business_result bor
+									WHERE
+										bor.step = 1
+									AND bor.hand_state = 1
+								)
+							)
+						)
+					)
+					OR (
+						bob.create_time <![CDATA[ < ]]> #{startDate}
+					    AND (
+							    (    
+							          bob.step !=1 
+							      AND bob.business_bid IN 
+								      (
+										SELECT
+											bur.business_id
+										FROM
+											bo_business_result bur
+										WHERE
+											bur.hand_time <![CDATA[>]]> #{endDate}
+										AND bur.step = 1
+										AND bur.hand_result != 24
+									  )
+								  
+							    ) 
+								OR bob.step = 1
+						   )
+					 )
+				)
+			<if test="projectIdStr != null and projectIdStr != ''">
+			AND bob.project_id in (${projectIdStr})
+			</if>
+			<if test="projectZoId != null and projectZoId != 'all' and projectZoId!=''">
+			AND bob.zo_id = #{projectZoId}
+			</if>
+			AND bob.is_del = 0
+			GROUP BY
+			    bob.project_id
+			    <if test="projectZoId != null and projectZoId != ''">
+			    ,bob.zo_id
+			    </if>
+	</select>
+    <!-- and by tianxf9 查询带看量 -->
+    <select id="getDaiKanCountList" parameterType ="com.zra.common.dto.business.BoReportQueryParamDto" resultType = "com.zra.common.dto.business.BoReportCountDto">
+			    SELECT
+				count(bob.business_bid) AS count,
+				bob.project_id AS projectId,
+				<if test="projectZoId==null or projectZoId==''">
+				bob.source AS source
+				</if>
+				<if test="projectZoId!=null and projectZoId!=''">
+				bob.zo_id AS projectZoId
+				</if>
+				
+			FROM
+				bo_business bob,
+				bo_business_result bor
+			WHERE
+				bob.business_bid = bor.business_id
+			AND bor.step = 2
+			AND bor.hand_result != 33 
+			AND (
+				bor.hand_result_content IS NULL
+				OR (bor.hand_result_content != '15'
+				AND bor.hand_result_content != '35')
+			)
+			AND bor.hand_time <![CDATA[>=]]>#{startDate} 
+			AND bor.hand_time <![CDATA[<=]]>#{endDate}
+			<if test="projectIdStr != null and projectIdStr !=''">
+			AND bob.project_id in (${projectIdStr})
+			</if>
+			<if test="projectZoId!=null and projectZoId!='all' and projectZoId!=''">
+			AND bob.zo_id = #{projectZoId}
+			</if>
+			AND bob.is_del = 0
+			AND bor.is_del = 0
+			GROUP BY
+			    bob.project_id,
+			    <if test="projectZoId ==null or projectZoId==''">
+				bob.source
+				</if>
+				<if test="projectZoId!=null and projectZoId!=''">
+				bob.zo_id
+				</if>
+				
+    </select>
+    
+    <!-- and by tianxf9 查询回访量 -->
+    <select id="getVisitCount" parameterType = "com.zra.common.dto.business.BoReportQueryParamDto" resultType = "com.zra.common.dto.business.BoReportCountDto">
+			SELECT
+				count(bor.result_bid) AS count,
+				bob.project_id AS projectId
+				<if test="projectZoId!=null and projectZoId!=''">
+				,bob.zo_id AS projectZoId
+				</if>
+			FROM
+				bo_business_result bor
+			LEFT JOIN bo_business bob ON bob.business_bid = bor.business_id
+			WHERE bor.hand_time <![CDATA[>=]]> #{startDate}
+			AND bor.hand_time <![CDATA[<=]]> #{endDate}
+			AND bor.step = 3
+			<if test="projectIdStr!=null and projectIdStr!=''">
+			AND bob.project_id in (${projectIdStr})
+			</if>
+			<if test="projectZoId!=null and projectZoId!='all' and projectZoId!=''">
+			AND bob.zo_id = #{projectZoId}
+			</if>
+			AND bor.is_del = 0
+			AND bob.is_del = 0
+			GROUP BY
+				bob.project_id
+				<if test="projectZoId!=null and projectZoId!=''">
+				,bob.zo_id
+				</if>
+    </select>
+    
+    <!-- and by tianxf9  商机阶段经历过待回访的商机数目-->
+    <select id="getThroughVisitCount" parameterType ="com.zra.common.dto.business.BoReportQueryParamDto" resultType = "com.zra.common.dto.business.BoReportCountDto">
+    		SELECT
+			count(bob.business_bid) AS count,
+			bob.project_id AS projectId
+			<if test="projectZoId!=null and projectZoId!=''">
+			,bob.zo_id AS projectZoId
+			</if>
+		FROM
+			bo_business bob 
+		WHERE
+			(
+				(
+					bob.business_bid IN (
+						SELECT
+							bor.business_id
+						FROM
+							bo_business_result bor
+						WHERE
+							bor.step = 3
+							AND bor.hand_time <![CDATA[>=]]> #{startDate}
+							AND bor.hand_time <![CDATA[<=]]> #{endDate}
+					)
+					AND bob.step != 3
+				)
+				OR bob.step = 3
+			)
+		<if test="projectIdStr!=null and projectIdStr!=''">
+		AND bob.project_id in (${projectIdStr})
+		</if>
+		<if test="projectZoId!=null and projectZoId!='all' and projectZoId!=''">
+		AND bob.zo_id = #{projectZoId}
+		</if>
+		AND bob.is_del = 0
+		GROUP BY
+			bob.project_id
+			<if test="projectZoId!=null and projectZoId!=''">
+			,bob.zo_id 
+			</if>
+    </select>
+    
+    <!-- add by tianxf9 查询成交量 -->
+    <select id="getDealCount" parameterType = "com.zra.common.dto.business.BoReportQueryParamDto" resultType = "com.zra.common.dto.business.BoReportCountDto">
+		    SELECT
+			count(bob.business_bid) AS count,
+			bob.project_id AS projectId
+			<if test="projectZoId!=null and projectZoId!=''">
+			,bob.zo_id AS projectZoId
+			</if>
+		FROM
+			bo_business bob,bo_business_result bor
+		WHERE
+		bob.business_bid = bor.business_id
+		AND bor.hand_time <![CDATA[>=]]> #{startDate}
+		AND bor.hand_time <![CDATA[<=]]> #{endDate}
+		AND bor.hand_result in(11,31,41)
+		<if test="projectIdStr!=null and projectIdStr!=''">
+		AND bob.project_id in (${projectIdStr})
+		</if>
+		<if test="projectZoId!=null and projectZoId!='all' and projectZoId!=''">
+		AND bob.zo_id = #{projectZoId}
+		</if>
+		AND bob.is_del = 0
+		AND bor.is_del = 0
+		GROUP BY
+			bob.project_id
+			<if test="projectZoId!=null and projectZoId!=''">
+			,bob.zo_id
+			</if>
+    </select>
+    <!--add by tianxf9 首次未成交 -->
+    <select id="getFirstUnDealCount" parameterType ="com.zra.common.dto.business.BoReportQueryParamDto" resultType = "com.zra.common.dto.business.BoReportCountDto">
+		    SELECT
+			count(bob.business_bid) AS count,
+			bob.project_id AS projectId
+			<if test="projectZoId!=null and projectZoId!=''">
+			,bob.zo_id AS projectZoId
+			</if>
+		FROM
+			bo_business bob
+		WHERE
+			bob.business_bid IN (
+				SELECT
+					bor.business_id
+				FROM
+					bo_business_result bor
+				WHERE
+				    bor.hand_time <![CDATA[>=]]> #{startDate}
+				AND bor.hand_time <![CDATA[<=]]> #{endDate}
+				GROUP BY bor.business_id
+				HAVING SUM(bor.step) = COUNT(1)
+			)
+		AND bob.step = 5
+		<if test="projectIdStr!=null and projectIdStr!=''">
+		AND bob.project_id in (${projectIdStr})
+		</if>
+		<if test="projectZoId!=null and projectZoId!='all' and projectZoId!=''">
+		AND bob.zo_id = #{projectZoId}
+		</if>
+		AND bob.is_del = 0
+		GROUP BY
+			bob.project_id
+			<if test="projectZoId!=null and projectZoId!=''">
+			,bob.zo_id
+			</if>
+    </select>
+    
+    <!-- add by tianxf9 查询未成交商机 -->
+    <select id="getUnDealCount" parameterType ="com.zra.common.dto.business.BoReportQueryParamDto" resultType = "com.zra.common.dto.business.BoReportCountDto">
+					SELECT
+						count(*) AS count,
+						bob.project_id AS projectId
+						 <if test="projectZoId!=null and projectZoId!=''">
+						,bob.zo_id AS projectZoId
+						</if>
+					FROM
+						bo_business bob
+					WHERE
+						bob.business_bid IN (
+							SELECT
+								bor.business_id
+							FROM
+								bo_business_result bor
+							WHERE
+								bor.hand_time <![CDATA[>=]]> #{startDate}
+							AND bor.hand_time <![CDATA[<=]]> #{endDate}
+							AND bor.hand_result IN (10,20, 23, 22, 30, 40, 50, 24)
+					        AND bor.is_del = 0
+						)
+					AND bob.step = 5
+					<if test="projectIdStr!=null and projectIdStr!=''">
+					AND bob.project_id in (${projectIdStr})
+					</if>
+					<if test="projectZoId!=null and projectZoId!='all' and projectZoId!=''">
+					AND bob.zo_id = #{projectZoId}
+					</if>
+					AND bob.is_del = 0
+					GROUP BY
+						bob.project_id
+					<if test="projectZoId!=null and projectZoId!=''">
+					    ,bob.zo_id
+					</if>	
+    </select>
+    
+    <!-- add by tianxf9  查询新增约看量 -->
+    <select id="getNewYueKanCount" parameterType ="com.zra.common.dto.business.BoReportQueryParamDto" resultType = "com.zra.common.dto.business.BoReportCountDto" >
+		    SELECT
+			count(bob.business_bid) AS count,
+		  bob.project_id AS projectId
+		FROM
+			bo_business bob
+		WHERE
+			bob.create_time <![CDATA[>=]]> #{startDate}
+		AND bob.create_time <![CDATA[<=]]> #{endDate}
+		<if test="projectIdStr!=null and projectIdStr!=''">
+		AND bob.project_id in (${projectIdStr})
+		</if>
+		AND bob.is_del = 0
+		GROUP BY
+		bob.project_id
+    </select>
+    
+    <!-- add by tianxf9 遗留未处理约看量 -->
+    
+    <select id="getOldYueKanCount" parameterType ="com.zra.common.dto.business.BoReportQueryParamDto" resultType = "com.zra.common.dto.business.BoReportCountDto" >
+			SELECT
+				count(bob.business_bid) AS count,
+				bob.project_id AS projectId
+			FROM
+				bo_business bob
+			WHERE
+				bob.create_time <![CDATA[<]]> #{startDate}
+			<if test="projectIdStr!=null and projectIdStr!=''">
+			AND bob.project_id IN (${projectIdStr})
+			</if>
+			AND (
+				bob.step = 1
+				OR (
+					bob.step != 1
+					AND bob.business_bid IN (
+						SELECT
+							bor.business_id
+						FROM
+							bo_business_result bor
+						WHERE
+							bor.hand_time <![CDATA[>]]> #{endDate}
+						AND bor.step = 1
+						AND bor.hand_result != 24
+					)
+				)
+			)
+			AND bob.is_del = 0
+			GROUP BY
+				bob.project_id
+    </select>
+
+    <!-- add by tianxf9 for目标看板-->
+    <!-- and by tianxf9   查询选择时间段内约看商机中商机处理状态曾经或仍为“超时未处理”的商机数量-->
+	<select id="getTimeOutYueKan" parameterType = "com.zra.common.dto.business.BoReportQueryParamDto" resultType = "com.zra.common.dto.business.BoReportCountDto">
+			SELECT
+				count(bob.business_bid) AS count,
+				bob.project_id AS projectId
+				<if test="projectZoId != null and projectZoId != ''">
+				,bob.zo_id AS projectZoId
+				</if>
+			FROM
+				bo_business bob
+			WHERE
+				bob.create_time <![CDATA[>=]]>#{startDate}
+				AND bob.create_time <![CDATA[<=]]>#{endDate}
+				AND (
+						(
+							bob.step = 1
+							AND bob.hand_state = 1
+						)
+						OR (
+							bob.step != 1
+							AND bob.business_bid IN 
+							      (
+								    SELECT
+										bor.business_id
+									FROM
+										bo_business_result bor
+									WHERE
+										bor.step = 1
+									AND bor.hand_state = 1
+							      )
+							)
+					)
+			<if test="projectIdStr != null and projectIdStr != ''">
+			AND bob.project_id in (${projectIdStr})
+			</if>
+			<if test="projectZoId != null and projectZoId != 'all' and projectZoId!=''">
+			AND bob.zo_id = #{projectZoId}
+			</if>
+			AND bob.is_del = 0
+			GROUP BY
+			    bob.project_id
+			    <if test="projectZoId != null and projectZoId != ''">
+			    ,bob.zo_id
+			    </if>
+	</select>
+
+	<!-- add by wangws21 2017-1-18 查询客源量-->
+    <select id="getKylCount" parameterType = "com.zra.common.dto.business.BoReportQueryParamDto" resultType = "com.zra.common.dto.business.BoReportCountDto">
+           SELECT
+            count(bob.business_bid) AS count,
+            bob.project_id AS projectId,
+            <if test="projectZoId==null or projectZoId==''">
+            bob.source AS source
+            </if>
+            <if test="projectZoId!=null and projectZoId!=''">
+            bob.zo_id AS projectZoId,
+            bob.zo_name AS projectZoName
+            </if>
+        FROM
+            bo_business bob, bo_customer boc
+        WHERE
+            bob.customer_id = boc.cus_bid
+            AND boc.kyl_flag = 1
+            AND bob.create_time  <![CDATA[ >= ]]> #{startDate}
+            AND bob.create_time <![CDATA[ <= ]]> #{endDate}
+        <if test="projectIdStr!=null and projectIdStr!=''">
+        AND bob.project_id in (${projectIdStr})
+        </if>
+        <if test="projectZoId!=null and projectZoId!='all' and projectZoId!=''">
+        AND bob.zo_id = #{projectZoId}
+        </if>
+        AND bob.is_del = 0
+        GROUP BY
+            bob.project_id,
+        <if test="projectZoId==null or projectZoId==''">
+            bob.source
+        </if>
+        <if test="projectZoId!=null and projectZoId!=''">
+            bob.zo_id
+        </if>
+    </select>
+    
+    <!--根据分机号获取400来电量  add by tianxf9 工作时间来电量-工作时间 前一天的19:00:00-22:00:00；当天09:00:00-18:59:59-->
+    <select id="getProjectCallCount" resultType="java.lang.Integer">
+		SELECT
+			count(id)
+		FROM
+			tzrazrcalldetail
+		WHERE
+			fextension_number in
+        <foreach collection="numbers" index="index" item="item" open="(" separator="," close=")">#{item}</foreach>
+        AND DATE_FORMAT(finitiated_date,'%Y-%m-%d %H:%i:%S') <![CDATA[ >= ]]> #{startDate}
+        AND DATE_FORMAT(finitiated_date,'%Y-%m-%d %H:%i:%S') <![CDATA[ <= ]]> #{endDate}
+        AND DATE_FORMAT(finitiated_date, '%H') <![CDATA[ < ]]> '22'
+        AND DATE_FORMAT(finitiated_date, '%H') <![CDATA[ >= ]]> '09'
+		<if test="isSuccess">
+		AND fdial_result = 'success'
+		</if>
+    </select>
+    
+    <!--根据管家手机号获取管家来电量  add by tianxf9  工作时间来电量-工作时间 前一天的19:00:00-22:00:00；当天09:00:00-18:59:59-->
+    <!-- 接听率的分母不等于400来电量，接听率 = 400工作时间来电量接听成功的/400工作时间来电量 -->
+    <select id="getZOCallCount" resultType="com.zra.common.dto.business.BoReportCountDto">
+		SELECT
+			count(id) AS count,
+			fdial_number AS zoPhone
+		FROM
+			tzrazrcalldetail
+		WHERE
+			fdial_number in
+        <foreach collection="numbers" index="index" item="item" open="(" separator="," close=")">#{item}</foreach>
+        AND DATE_FORMAT(finitiated_date,'%Y-%m-%d %H:%i:%S') <![CDATA[ >= ]]> #{startDate}
+        AND DATE_FORMAT(finitiated_date,'%Y-%m-%d %H:%i:%S') <![CDATA[ <= ]]> #{endDate}
+        AND DATE_FORMAT(finitiated_date, '%H') <![CDATA[ < ]]> '22'
+        AND DATE_FORMAT(finitiated_date, '%H') <![CDATA[ >= ]]> '09'
+		<if test="isSuccess">
+		AND fdial_result = 'success'
+		</if>
+		GROUP BY fdial_number
+    </select>
+</mapper>

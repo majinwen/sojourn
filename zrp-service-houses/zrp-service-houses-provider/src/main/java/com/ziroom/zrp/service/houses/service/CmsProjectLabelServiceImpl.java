@@ -1,0 +1,41 @@
+package com.ziroom.zrp.service.houses.service;
+
+import com.ziroom.zrp.houses.entity.CmsProjectLabelEntity;
+import com.ziroom.zrp.service.houses.dao.CmsProjectLabelDao;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+/**
+ * <p>TODO</p>
+ * <p>
+ * <PRE>
+ * <BR>    修改记录
+ * <BR>-----------------------------------------------
+ * <BR>    修改日期         修改人          修改内容
+ * </PRE>
+ *
+ * @author cuiyh9
+ * @version 1.0
+ * @Date Created in 2017年10月16日 15:07
+ * @since 1.0
+ */
+@Service("houses.cmsProjectLabelServiceImpl")
+public class CmsProjectLabelServiceImpl {
+    @Resource(name = "houses.cmsProjectLabelDao")
+    private CmsProjectLabelDao cmsProjectLabelDao;
+
+    /**
+     * 查询项目标签信息
+     * @param projectId 项目标识
+     * @return
+     * @author cuigh6
+     * @Date 2018年3月5日
+     */
+    public List<CmsProjectLabelEntity> getCmsProjectLabels(String projectId) {
+        List<CmsProjectLabelEntity> cmsProjectLabels = cmsProjectLabelDao.getCmsProjectLabels(projectId);
+        return cmsProjectLabels;
+    }
+
+}

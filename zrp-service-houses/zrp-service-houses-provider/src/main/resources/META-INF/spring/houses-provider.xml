@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2011 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	
+	<dubbo:provider filter="catFilter"></dubbo:provider>
+	<dubbo:service interface="com.ziroom.zrp.service.houses.api.ProjectService" ref="houses.projectServiceProxy">
+        <dubbo:method name="findProjectByCode" timeout="3000" retries="3"/>
+        <dubbo:method name="findProjectById" timeout="3000" retries="3"/>
+        <dubbo:method name="assembleGroupHouseRelEntitys" timeout="3000" retries="3"/>
+        <dubbo:method name="findProjectListForPage" timeout="3000" retries="3"/>
+        <dubbo:method name="findBuildingListForPage" timeout="3000" retries="3"/>
+        <dubbo:method name="queryAllPro" timeout="3000" retries="3"/>
+    </dubbo:service>
+    <dubbo:service interface="com.ziroom.zrp.service.houses.api.RoomService" ref="houses.roomServiceProxy">
+        <dubbo:method name="getRoomByFid" timeout="3000" retries="3"/>
+        <dubbo:method name="getRoomListByRoomIds" timeout="3000" retries="3" />
+        <dubbo:method name="updateRoomInfoAndSaveRentInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="saveRoomRentInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="findRoomListForPage" timeout="3000" retries="0"/>
+        <dubbo:method name="updateRoomInfo" timeout="3000" retries="0"/>
+        <dubbo:method name="updateRoomStateFromSigningToRental" timeout="3000" retries="0" />
+        <dubbo:method name="findRoomContractSmartByPage" timeout="10000" retries="3" />
+    </dubbo:service>
+    <dubbo:service interface="com.ziroom.zrp.service.houses.api.HouseTypeService" ref="houses.houseTypeServiceProxy">
+        <dubbo:method name="saveHouseType" timeout="3000" retries="0"/>
+        <dubbo:method name="findHouseTypeById" timeout="3000" retries="3"/>
+        <dubbo:method name="findLayoutListForPage" timeout="3000" retries="3"/>
+        <dubbo:method name="findHouseTypeListByIds" timeout="3000" retries="3"/>
+    </dubbo:service>
+    <dubbo:service interface="com.ziroom.zrp.service.houses.api.EmployeeService" ref="houses.employeeServiceProxy">
+        <dubbo:method name="findEmployeeById" timeout="3000" retries="3"/>
+        <dubbo:method name="findEmployeeByCode" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.houses.api.RentPriceStrategyService" ref="houses.rentPriceStrategyServiceProxy">
+        <dubbo:method name="getRentPriceStrategy" timeout="3000" retries="3"/>
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.houses.api.HouseSignInviteRecordService" ref="houses.houseSignInviteRecordServiceProxy">
+        <dubbo:method name="countByRoomIds" timeout="3000" retries="3" />
+        <dubbo:method name="findListByRoomId" timeout="3000" retries="3" />
+        <dubbo:method name="saveSignInviteRecord" timeout="3000" retries="0" />
+    </dubbo:service>
+	<dubbo:service interface="com.ziroom.zrp.service.houses.api.DictionaryService" ref="houses.dictionaryServiceProxy">
+        <dubbo:method name="findDictionaryByEnumName" timeout="3000" retries="3"/>
+    </dubbo:service>
+    <dubbo:service interface="com.ziroom.zrp.service.houses.api.CityService" ref="houses.cityServiceProxy">
+        <dubbo:method name="findById" timeout="3000" retries="3" />
+        <dubbo:method name="findCityList" timeout="3000" retries="3" />
+    </dubbo:service>
+
+       <dubbo:service interface="com.ziroom.zrp.service.houses.api.ItemsService" ref="houses.itemsServiceProxy">
+        <dubbo:method name="listItems" timeout="3000" retries="3" />
+        <dubbo:method name="listItemsByRoomIdAndHouseType" timeout="3000" retries="3" />
+        <dubbo:method name="getConfigsByRoomId" timeout="3000" retries="3" />
+    </dubbo:service>
+
+
+    <dubbo:service interface="com.ziroom.zrp.service.houses.api.IntellectSmartLockService" ref="houses.intellectSmartLockServiceProxy">
+        <dubbo:method name="saveRoomSmartLock" timeout="3000" retries="0" />
+        <dubbo:method name="pagingSmartLock" timeout="3000" retries="3" />
+        <dubbo:method name="getFailSmartLockRecord" timeout="5000" retries="3" />
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.houses.api.SmartPlatformService" ref="houses.smartPlatformServiceProxy" timeout="10000" retries="3">
+        <dubbo:method name="queryWattRechargeInfo" timeout="3000" retries="3" />
+    </dubbo:service>
+
+    <dubbo:service interface="com.ziroom.zrp.service.houses.api.WaterWattSmartService" ref="houses.waterWattSmartProxy" timeout="10000" retries="3">
+        <dubbo:method name="pagingWaterWatt" timeout="3000" retries="3" />
+    </dubbo:service>
+</beans>

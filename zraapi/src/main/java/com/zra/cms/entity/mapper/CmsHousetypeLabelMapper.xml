@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.cms.dao.CmsHousetypeLabelMapper" >
+  <resultMap id="BaseResultMap" type="com.zra.cms.entity.CmsHousetypeLabel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="houseType_id" property="housetypeId" jdbcType="VARCHAR" />
+    <result column="label_name" property="labelName" jdbcType="VARCHAR" />
+    <result column="label_order" property="labelOrder" jdbcType="INTEGER" />
+    <result column="label_icon" property="labelIcon" jdbcType="VARCHAR" />
+    <result column="label_type" property="labelType" jdbcType="INTEGER" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, houseType_id, label_name, label_order, label_icon, label_type, is_del, is_valid, 
+    create_time, create_id, update_time, update_id
+  </sql>
+  <select id="getLabsByHouseTypeId" resultType="com.zra.house.entity.dto.HouseTypeLabDto">
+    select 
+    label_name as content,
+    label_icon as imgUrl,
+    h_url as hUrl
+    from cms_housetype_label
+    where houseType_id = #{housetypeId}
+      and label_type = ${labelType}
+      and is_del = 0
+      and is_valid = 1
+    order by label_order;
+  </select>
+</mapper>

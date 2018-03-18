@@ -1,0 +1,863 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.rentPaymentVoucherDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.RentPaymentVoucherEntity" >
+    <id column="voucher_id" property="voucherId" jdbcType="INTEGER" />
+    <result column="payment_id" property="paymentId" jdbcType="INTEGER" />
+    <result column="cost_id" property="costId" jdbcType="INTEGER" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="activity_id" property="activityId" jdbcType="INTEGER" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="payment_code" property="paymentCode" jdbcType="VARCHAR" />
+    <result column="first_pay" property="firstPay" jdbcType="VARCHAR" />
+    <result column="collection_channel" property="collectionChannel" jdbcType="VARCHAR" />
+    <result column="rent_contract_code" property="rentContractCode" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="room_name" property="roomName" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="payment_num" property="paymentNum" jdbcType="INTEGER" />
+    <result column="payable_rental" property="payableRental" jdbcType="DECIMAL" />
+    <result column="payment_time" property="paymentTime" jdbcType="DATE" />
+    <result column="reality_receipt" property="realityReceipt" jdbcType="DATE" />
+    <result column="create_date" property="createDate" jdbcType="DATE" />
+    <result column="collection_date" property="collectionDate" jdbcType="DATE" />
+    <result column="collection_way" property="collectionWay" jdbcType="VARCHAR" />
+    <result column="collection_way_detail" property="collectionWayDetail" jdbcType="VARCHAR" />
+    <result column="online_payment_way" property="onlinePaymentWay" jdbcType="INTEGER" />
+    <result column="pos_id" property="posId" jdbcType="VARCHAR" />
+    <result column="pos_code" property="posCode" jdbcType="VARCHAR" />
+    <result column="refnum" property="refnum" jdbcType="VARCHAR" />
+    <result column="paymentor_name" property="paymentorName" jdbcType="VARCHAR" />
+    <result column="collection_card_number" property="collectionCardNumber" jdbcType="VARCHAR" />
+    <result column="serial_no" property="serialNo" jdbcType="VARCHAR" />
+    <result column="need_invoice" property="needInvoice" jdbcType="INTEGER" />
+    <result column="invoice_title" property="invoiceTitle" jdbcType="VARCHAR" />
+    <result column="fact_payment" property="factPayment" jdbcType="DECIMAL" />
+    <result column="collection_person_name" property="collectionPersonName" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="finance_confirm" property="financeConfirm" jdbcType="VARCHAR" />
+    <result column="verycode" property="verycode" jdbcType="CHAR" />
+    <result column="exception_collection_reason" property="exceptionCollectionReason" jdbcType="VARCHAR" />
+    <result column="document_code" property="documentCode" jdbcType="VARCHAR" />
+    <result column="print_num" property="printNum" jdbcType="INTEGER" />
+    <result column="exception_type" property="exceptionType" jdbcType="INTEGER" />
+    <result column="exception_operate" property="exceptionOperate" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="attach" property="attach" jdbcType="VARCHAR" />
+    <result column="check_number" property="checkNumber" jdbcType="VARCHAR" />
+    <result column="check_company" property="checkCompany" jdbcType="VARCHAR" />
+    <result column="remittance_bank" property="remittanceBank" jdbcType="VARCHAR" />
+    <result column="remittance_account" property="remittanceAccount" jdbcType="VARCHAR" />
+    <result column="service_price" property="servicePrice" jdbcType="DECIMAL" />
+    <result column="rent_money" property="rentMoney" jdbcType="DECIMAL" />
+    <result column="yajin" property="yajin" jdbcType="DECIMAL" />
+    <result column="yongjin" property="yongjin" jdbcType="DECIMAL" />
+    <result column="cable_television_price" property="cableTelevisionPrice" jdbcType="DECIMAL" />
+    <result column="clean_price" property="cleanPrice" jdbcType="DECIMAL" />
+    <result column="water_price" property="waterPrice" jdbcType="DECIMAL" />
+    <result column="tel_price" property="telPrice" jdbcType="DECIMAL" />
+    <result column="hot_price" property="hotPrice" jdbcType="DECIMAL" />
+    <result column="electricity_price" property="electricityPrice" jdbcType="DECIMAL" />
+    <result column="other_price" property="otherPrice" jdbcType="DECIMAL" />
+    <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+    <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP" />
+    <result column="createrid" property="createrid" jdbcType="VARCHAR" />
+    <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP" />
+    <result column="updaterid" property="updaterid" jdbcType="VARCHAR" />
+    <result column="collectionpersoncode" property="collectionpersoncode" jdbcType="VARCHAR" />
+    <result column="financeConfirmCode" property="financeconfirmcode" jdbcType="VARCHAR" />
+    <result column="finsettleid" property="finsettleid" jdbcType="VARCHAR" />
+    <result column="surrendercost_id" property="surrendercostId" jdbcType="VARCHAR" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+    <result column="gen_way" property="genWay" jdbcType="INTEGER" />
+    <result column="out_trade_no" property="outTradeNo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    voucher_id, payment_id, cost_id, project_id, activity_id, contract_id, payment_code, 
+    first_pay, collection_channel, rent_contract_code, project_name, room_name, customer_name, 
+    payment_num, payable_rental, payment_time, reality_receipt, create_date, collection_date, 
+    collection_way, collection_way_detail, online_payment_way, pos_id, pos_code, refnum, 
+    paymentor_name, collection_card_number, serial_no, need_invoice, invoice_title, fact_payment, 
+    collection_person_name, state, finance_confirm, verycode, exception_collection_reason, 
+    document_code, print_num, exception_type, exception_operate, city, remark, attach, 
+    check_number, check_company, remittance_bank, remittance_account, service_price, 
+    rent_money, yajin, yongjin, cable_television_price, clean_price, water_price, tel_price, 
+    hot_price, electricity_price, other_price, fisdel, fcreatetime, createrid, fupdatetime, 
+    updaterid, collectionpersoncode, financeConfirmCode, finsettleid, surrendercost_id, 
+    cityid, gen_way, out_trade_no
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from trentpaymentvoucher
+    where voucher_id = #{voucherId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from trentpaymentvoucher
+    where voucher_id = #{voucherId,jdbcType=INTEGER}
+  </delete>
+  <insert id="saveRentPaymentVoucher" parameterType="com.ziroom.zrp.trading.entity.RentPaymentVoucherEntity" >
+    insert into trentpaymentvoucher (voucher_id, payment_id, cost_id, 
+      project_id, activity_id, contract_id, 
+      payment_code, first_pay, collection_channel, 
+      rent_contract_code, project_name, room_name, 
+      customer_name, payment_num, payable_rental, 
+      payment_time, reality_receipt, create_date, 
+      collection_date, collection_way, collection_way_detail, 
+      online_payment_way, pos_id, pos_code, 
+      refnum, paymentor_name, collection_card_number, 
+      serial_no, need_invoice, invoice_title, 
+      fact_payment, collection_person_name, state, 
+      finance_confirm, verycode, exception_collection_reason, 
+      document_code, print_num, exception_type, 
+      exception_operate, city, remark, 
+      attach, check_number, check_company, 
+      remittance_bank, remittance_account, service_price, 
+      rent_money, yajin, yongjin, 
+      cable_television_price, clean_price, water_price, 
+      tel_price, hot_price, electricity_price, 
+      other_price, fisdel, fcreatetime, 
+      createrid, fupdatetime, updaterid, 
+      collectionpersoncode, financeConfirmCode, 
+      finsettleid, surrendercost_id, cityid, 
+      gen_way, out_trade_no)
+    values (#{voucherId,jdbcType=INTEGER}, #{paymentId,jdbcType=INTEGER}, #{costId,jdbcType=INTEGER}, 
+      #{projectId,jdbcType=VARCHAR}, #{activityId,jdbcType=INTEGER}, #{contractId,jdbcType=VARCHAR}, 
+      #{paymentCode,jdbcType=VARCHAR}, #{firstPay,jdbcType=VARCHAR}, #{collectionChannel,jdbcType=VARCHAR}, 
+      #{rentContractCode,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, #{roomName,jdbcType=VARCHAR}, 
+      #{customerName,jdbcType=VARCHAR}, #{paymentNum,jdbcType=INTEGER}, #{payableRental,jdbcType=DECIMAL}, 
+      #{paymentTime,jdbcType=DATE}, #{realityReceipt,jdbcType=DATE}, #{createDate,jdbcType=DATE}, 
+      #{collectionDate,jdbcType=DATE}, #{collectionWay,jdbcType=VARCHAR}, #{collectionWayDetail,jdbcType=VARCHAR}, 
+      #{onlinePaymentWay,jdbcType=INTEGER}, #{posId,jdbcType=VARCHAR}, #{posCode,jdbcType=VARCHAR}, 
+      #{refnum,jdbcType=VARCHAR}, #{paymentorName,jdbcType=VARCHAR}, #{collectionCardNumber,jdbcType=VARCHAR}, 
+      #{serialNo,jdbcType=VARCHAR}, #{needInvoice,jdbcType=INTEGER}, #{invoiceTitle,jdbcType=VARCHAR}, 
+      #{factPayment,jdbcType=DECIMAL}, #{collectionPersonName,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, 
+      #{financeConfirm,jdbcType=VARCHAR}, #{verycode,jdbcType=CHAR}, #{exceptionCollectionReason,jdbcType=VARCHAR}, 
+      #{documentCode,jdbcType=VARCHAR}, #{printNum,jdbcType=INTEGER}, #{exceptionType,jdbcType=INTEGER}, 
+      #{exceptionOperate,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{attach,jdbcType=VARCHAR}, #{checkNumber,jdbcType=VARCHAR}, #{checkCompany,jdbcType=VARCHAR}, 
+      #{remittanceBank,jdbcType=VARCHAR}, #{remittanceAccount,jdbcType=VARCHAR}, #{servicePrice,jdbcType=DECIMAL}, 
+      #{rentMoney,jdbcType=DECIMAL}, #{yajin,jdbcType=DECIMAL}, #{yongjin,jdbcType=DECIMAL}, 
+      #{cableTelevisionPrice,jdbcType=DECIMAL}, #{cleanPrice,jdbcType=DECIMAL}, #{waterPrice,jdbcType=DECIMAL}, 
+      #{telPrice,jdbcType=DECIMAL}, #{hotPrice,jdbcType=DECIMAL}, #{electricityPrice,jdbcType=DECIMAL}, 
+      #{otherPrice,jdbcType=DECIMAL}, #{fisdel,jdbcType=INTEGER}, #{fcreatetime,jdbcType=TIMESTAMP}, 
+      #{createrid,jdbcType=VARCHAR}, #{fupdatetime,jdbcType=TIMESTAMP}, #{updaterid,jdbcType=VARCHAR}, 
+      #{collectionpersoncode,jdbcType=VARCHAR}, #{financeconfirmcode,jdbcType=VARCHAR}, 
+      #{finsettleid,jdbcType=VARCHAR}, #{surrendercostId,jdbcType=VARCHAR}, #{cityid,jdbcType=VARCHAR}, 
+      #{genWay,jdbcType=INTEGER}, #{outTradeNo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.zrp.trading.entity.RentPaymentVoucherEntity" >
+    insert into trentpaymentvoucher
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="voucherId != null" >
+        voucher_id,
+      </if>
+      <if test="paymentId != null" >
+        payment_id,
+      </if>
+      <if test="costId != null" >
+        cost_id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="activityId != null" >
+        activity_id,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="paymentCode != null" >
+        payment_code,
+      </if>
+      <if test="firstPay != null" >
+        first_pay,
+      </if>
+      <if test="collectionChannel != null" >
+        collection_channel,
+      </if>
+      <if test="rentContractCode != null" >
+        rent_contract_code,
+      </if>
+      <if test="projectName != null" >
+        project_name,
+      </if>
+      <if test="roomName != null" >
+        room_name,
+      </if>
+      <if test="customerName != null" >
+        customer_name,
+      </if>
+      <if test="paymentNum != null" >
+        payment_num,
+      </if>
+      <if test="payableRental != null" >
+        payable_rental,
+      </if>
+      <if test="paymentTime != null" >
+        payment_time,
+      </if>
+      <if test="realityReceipt != null" >
+        reality_receipt,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="collectionDate != null" >
+        collection_date,
+      </if>
+      <if test="collectionWay != null" >
+        collection_way,
+      </if>
+      <if test="collectionWayDetail != null" >
+        collection_way_detail,
+      </if>
+      <if test="onlinePaymentWay != null" >
+        online_payment_way,
+      </if>
+      <if test="posId != null" >
+        pos_id,
+      </if>
+      <if test="posCode != null" >
+        pos_code,
+      </if>
+      <if test="refnum != null" >
+        refnum,
+      </if>
+      <if test="paymentorName != null" >
+        paymentor_name,
+      </if>
+      <if test="collectionCardNumber != null" >
+        collection_card_number,
+      </if>
+      <if test="serialNo != null" >
+        serial_no,
+      </if>
+      <if test="needInvoice != null" >
+        need_invoice,
+      </if>
+      <if test="invoiceTitle != null" >
+        invoice_title,
+      </if>
+      <if test="factPayment != null" >
+        fact_payment,
+      </if>
+      <if test="collectionPersonName != null" >
+        collection_person_name,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="financeConfirm != null" >
+        finance_confirm,
+      </if>
+      <if test="verycode != null" >
+        verycode,
+      </if>
+      <if test="exceptionCollectionReason != null" >
+        exception_collection_reason,
+      </if>
+      <if test="documentCode != null" >
+        document_code,
+      </if>
+      <if test="printNum != null" >
+        print_num,
+      </if>
+      <if test="exceptionType != null" >
+        exception_type,
+      </if>
+      <if test="exceptionOperate != null" >
+        exception_operate,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="attach != null" >
+        attach,
+      </if>
+      <if test="checkNumber != null" >
+        check_number,
+      </if>
+      <if test="checkCompany != null" >
+        check_company,
+      </if>
+      <if test="remittanceBank != null" >
+        remittance_bank,
+      </if>
+      <if test="remittanceAccount != null" >
+        remittance_account,
+      </if>
+      <if test="servicePrice != null" >
+        service_price,
+      </if>
+      <if test="rentMoney != null" >
+        rent_money,
+      </if>
+      <if test="yajin != null" >
+        yajin,
+      </if>
+      <if test="yongjin != null" >
+        yongjin,
+      </if>
+      <if test="cableTelevisionPrice != null" >
+        cable_television_price,
+      </if>
+      <if test="cleanPrice != null" >
+        clean_price,
+      </if>
+      <if test="waterPrice != null" >
+        water_price,
+      </if>
+      <if test="telPrice != null" >
+        tel_price,
+      </if>
+      <if test="hotPrice != null" >
+        hot_price,
+      </if>
+      <if test="electricityPrice != null" >
+        electricity_price,
+      </if>
+      <if test="otherPrice != null" >
+        other_price,
+      </if>
+      <if test="fisdel != null" >
+        fisdel,
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime,
+      </if>
+      <if test="createrid != null" >
+        createrid,
+      </if>
+      <if test="fupdatetime != null" >
+        fupdatetime,
+      </if>
+      <if test="updaterid != null" >
+        updaterid,
+      </if>
+      <if test="collectionpersoncode != null" >
+        collectionpersoncode,
+      </if>
+      <if test="financeconfirmcode != null" >
+        financeConfirmCode,
+      </if>
+      <if test="finsettleid != null" >
+        finsettleid,
+      </if>
+      <if test="surrendercostId != null" >
+        surrendercost_id,
+      </if>
+      <if test="cityid != null" >
+        cityid,
+      </if>
+      <if test="genWay != null" >
+        gen_way,
+      </if>
+      <if test="outTradeNo != null" >
+        out_trade_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="voucherId != null" >
+        #{voucherId,jdbcType=INTEGER},
+      </if>
+      <if test="paymentId != null" >
+        #{paymentId,jdbcType=INTEGER},
+      </if>
+      <if test="costId != null" >
+        #{costId,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="activityId != null" >
+        #{activityId,jdbcType=INTEGER},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentCode != null" >
+        #{paymentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="firstPay != null" >
+        #{firstPay,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionChannel != null" >
+        #{collectionChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="rentContractCode != null" >
+        #{rentContractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomName != null" >
+        #{roomName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentNum != null" >
+        #{paymentNum,jdbcType=INTEGER},
+      </if>
+      <if test="payableRental != null" >
+        #{payableRental,jdbcType=DECIMAL},
+      </if>
+      <if test="paymentTime != null" >
+        #{paymentTime,jdbcType=DATE},
+      </if>
+      <if test="realityReceipt != null" >
+        #{realityReceipt,jdbcType=DATE},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=DATE},
+      </if>
+      <if test="collectionDate != null" >
+        #{collectionDate,jdbcType=DATE},
+      </if>
+      <if test="collectionWay != null" >
+        #{collectionWay,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionWayDetail != null" >
+        #{collectionWayDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="onlinePaymentWay != null" >
+        #{onlinePaymentWay,jdbcType=INTEGER},
+      </if>
+      <if test="posId != null" >
+        #{posId,jdbcType=VARCHAR},
+      </if>
+      <if test="posCode != null" >
+        #{posCode,jdbcType=VARCHAR},
+      </if>
+      <if test="refnum != null" >
+        #{refnum,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentorName != null" >
+        #{paymentorName,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionCardNumber != null" >
+        #{collectionCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNo != null" >
+        #{serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="needInvoice != null" >
+        #{needInvoice,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceTitle != null" >
+        #{invoiceTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="factPayment != null" >
+        #{factPayment,jdbcType=DECIMAL},
+      </if>
+      <if test="collectionPersonName != null" >
+        #{collectionPersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="financeConfirm != null" >
+        #{financeConfirm,jdbcType=VARCHAR},
+      </if>
+      <if test="verycode != null" >
+        #{verycode,jdbcType=CHAR},
+      </if>
+      <if test="exceptionCollectionReason != null" >
+        #{exceptionCollectionReason,jdbcType=VARCHAR},
+      </if>
+      <if test="documentCode != null" >
+        #{documentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="printNum != null" >
+        #{printNum,jdbcType=INTEGER},
+      </if>
+      <if test="exceptionType != null" >
+        #{exceptionType,jdbcType=INTEGER},
+      </if>
+      <if test="exceptionOperate != null" >
+        #{exceptionOperate,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="attach != null" >
+        #{attach,jdbcType=VARCHAR},
+      </if>
+      <if test="checkNumber != null" >
+        #{checkNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="checkCompany != null" >
+        #{checkCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="remittanceBank != null" >
+        #{remittanceBank,jdbcType=VARCHAR},
+      </if>
+      <if test="remittanceAccount != null" >
+        #{remittanceAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="servicePrice != null" >
+        #{servicePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="rentMoney != null" >
+        #{rentMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="yajin != null" >
+        #{yajin,jdbcType=DECIMAL},
+      </if>
+      <if test="yongjin != null" >
+        #{yongjin,jdbcType=DECIMAL},
+      </if>
+      <if test="cableTelevisionPrice != null" >
+        #{cableTelevisionPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="cleanPrice != null" >
+        #{cleanPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="waterPrice != null" >
+        #{waterPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="telPrice != null" >
+        #{telPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="hotPrice != null" >
+        #{hotPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="electricityPrice != null" >
+        #{electricityPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="otherPrice != null" >
+        #{otherPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="fisdel != null" >
+        #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fcreatetime != null" >
+        #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrid != null" >
+        #{createrid,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatetime != null" >
+        #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterid != null" >
+        #{updaterid,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionpersoncode != null" >
+        #{collectionpersoncode,jdbcType=VARCHAR},
+      </if>
+      <if test="financeconfirmcode != null" >
+        #{financeconfirmcode,jdbcType=VARCHAR},
+      </if>
+      <if test="finsettleid != null" >
+        #{finsettleid,jdbcType=VARCHAR},
+      </if>
+      <if test="surrendercostId != null" >
+        #{surrendercostId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityid != null" >
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="genWay != null" >
+        #{genWay,jdbcType=INTEGER},
+      </if>
+      <if test="outTradeNo != null" >
+        #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateRentPaymentVoucher" parameterType="com.ziroom.zrp.trading.entity.RentPaymentVoucherEntity" >
+    update trentpaymentvoucher
+    <set >
+      <if test="paymentId != null" >
+        payment_id = #{paymentId,jdbcType=INTEGER},
+      </if>
+      <if test="costId != null" >
+        cost_id = #{costId,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="activityId != null" >
+        activity_id = #{activityId,jdbcType=INTEGER},
+      </if>
+      <if test="contractId != null" >
+        contract_id = #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentCode != null" >
+        payment_code = #{paymentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="firstPay != null" >
+        first_pay = #{firstPay,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionChannel != null" >
+        collection_channel = #{collectionChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="rentContractCode != null" >
+        rent_contract_code = #{rentContractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomName != null" >
+        room_name = #{roomName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        customer_name = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentNum != null" >
+        payment_num = #{paymentNum,jdbcType=INTEGER},
+      </if>
+      <if test="payableRental != null" >
+        payable_rental = #{payableRental,jdbcType=DECIMAL},
+      </if>
+      <if test="paymentTime != null" >
+        payment_time = #{paymentTime,jdbcType=DATE},
+      </if>
+      <if test="realityReceipt != null" >
+        reality_receipt = #{realityReceipt,jdbcType=DATE},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=DATE},
+      </if>
+      <if test="collectionDate != null" >
+        collection_date = #{collectionDate,jdbcType=DATE},
+      </if>
+      <if test="collectionWay != null" >
+        collection_way = #{collectionWay,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionWayDetail != null" >
+        collection_way_detail = #{collectionWayDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="onlinePaymentWay != null" >
+        online_payment_way = #{onlinePaymentWay,jdbcType=INTEGER},
+      </if>
+      <if test="posId != null" >
+        pos_id = #{posId,jdbcType=VARCHAR},
+      </if>
+      <if test="posCode != null" >
+        pos_code = #{posCode,jdbcType=VARCHAR},
+      </if>
+      <if test="refnum != null" >
+        refnum = #{refnum,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentorName != null" >
+        paymentor_name = #{paymentorName,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionCardNumber != null" >
+        collection_card_number = #{collectionCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="serialNo != null" >
+        serial_no = #{serialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="needInvoice != null" >
+        need_invoice = #{needInvoice,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceTitle != null" >
+        invoice_title = #{invoiceTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="factPayment != null" >
+        fact_payment = #{factPayment,jdbcType=DECIMAL},
+      </if>
+      <if test="collectionPersonName != null" >
+        collection_person_name = #{collectionPersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="financeConfirm != null" >
+        finance_confirm = #{financeConfirm,jdbcType=VARCHAR},
+      </if>
+      <if test="verycode != null" >
+        verycode = #{verycode,jdbcType=CHAR},
+      </if>
+      <if test="exceptionCollectionReason != null" >
+        exception_collection_reason = #{exceptionCollectionReason,jdbcType=VARCHAR},
+      </if>
+      <if test="documentCode != null" >
+        document_code = #{documentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="printNum != null" >
+        print_num = #{printNum,jdbcType=INTEGER},
+      </if>
+      <if test="exceptionType != null" >
+        exception_type = #{exceptionType,jdbcType=INTEGER},
+      </if>
+      <if test="exceptionOperate != null" >
+        exception_operate = #{exceptionOperate,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="attach != null" >
+        attach = #{attach,jdbcType=VARCHAR},
+      </if>
+      <if test="checkNumber != null" >
+        check_number = #{checkNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="checkCompany != null" >
+        check_company = #{checkCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="remittanceBank != null" >
+        remittance_bank = #{remittanceBank,jdbcType=VARCHAR},
+      </if>
+      <if test="remittanceAccount != null" >
+        remittance_account = #{remittanceAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="servicePrice != null" >
+        service_price = #{servicePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="rentMoney != null" >
+        rent_money = #{rentMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="yajin != null" >
+        yajin = #{yajin,jdbcType=DECIMAL},
+      </if>
+      <if test="yongjin != null" >
+        yongjin = #{yongjin,jdbcType=DECIMAL},
+      </if>
+      <if test="cableTelevisionPrice != null" >
+        cable_television_price = #{cableTelevisionPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="cleanPrice != null" >
+        clean_price = #{cleanPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="waterPrice != null" >
+        water_price = #{waterPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="telPrice != null" >
+        tel_price = #{telPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="hotPrice != null" >
+        hot_price = #{hotPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="electricityPrice != null" >
+        electricity_price = #{electricityPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="otherPrice != null" >
+        other_price = #{otherPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="fisdel != null" >
+        fisdel = #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime = #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrid != null" >
+        createrid = #{createrid,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatetime != null" >
+        fupdatetime = #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterid != null" >
+        updaterid = #{updaterid,jdbcType=VARCHAR},
+      </if>
+      <if test="collectionpersoncode != null" >
+        collectionpersoncode = #{collectionpersoncode,jdbcType=VARCHAR},
+      </if>
+      <if test="financeconfirmcode != null" >
+        financeConfirmCode = #{financeconfirmcode,jdbcType=VARCHAR},
+      </if>
+      <if test="finsettleid != null" >
+        finsettleid = #{finsettleid,jdbcType=VARCHAR},
+      </if>
+      <if test="surrendercostId != null" >
+        surrendercost_id = #{surrendercostId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityid != null" >
+        cityid = #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="genWay != null" >
+        gen_way = #{genWay,jdbcType=INTEGER},
+      </if>
+      <if test="outTradeNo != null" >
+        out_trade_no = #{outTradeNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where voucher_id = #{voucherId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.zrp.trading.entity.RentPaymentVoucherEntity" >
+    update trentpaymentvoucher
+    set payment_id = #{paymentId,jdbcType=INTEGER},
+      cost_id = #{costId,jdbcType=INTEGER},
+      project_id = #{projectId,jdbcType=VARCHAR},
+      activity_id = #{activityId,jdbcType=INTEGER},
+      contract_id = #{contractId,jdbcType=VARCHAR},
+      payment_code = #{paymentCode,jdbcType=VARCHAR},
+      first_pay = #{firstPay,jdbcType=VARCHAR},
+      collection_channel = #{collectionChannel,jdbcType=VARCHAR},
+      rent_contract_code = #{rentContractCode,jdbcType=VARCHAR},
+      project_name = #{projectName,jdbcType=VARCHAR},
+      room_name = #{roomName,jdbcType=VARCHAR},
+      customer_name = #{customerName,jdbcType=VARCHAR},
+      payment_num = #{paymentNum,jdbcType=INTEGER},
+      payable_rental = #{payableRental,jdbcType=DECIMAL},
+      payment_time = #{paymentTime,jdbcType=DATE},
+      reality_receipt = #{realityReceipt,jdbcType=DATE},
+      create_date = #{createDate,jdbcType=DATE},
+      collection_date = #{collectionDate,jdbcType=DATE},
+      collection_way = #{collectionWay,jdbcType=VARCHAR},
+      collection_way_detail = #{collectionWayDetail,jdbcType=VARCHAR},
+      online_payment_way = #{onlinePaymentWay,jdbcType=INTEGER},
+      pos_id = #{posId,jdbcType=VARCHAR},
+      pos_code = #{posCode,jdbcType=VARCHAR},
+      refnum = #{refnum,jdbcType=VARCHAR},
+      paymentor_name = #{paymentorName,jdbcType=VARCHAR},
+      collection_card_number = #{collectionCardNumber,jdbcType=VARCHAR},
+      serial_no = #{serialNo,jdbcType=VARCHAR},
+      need_invoice = #{needInvoice,jdbcType=INTEGER},
+      invoice_title = #{invoiceTitle,jdbcType=VARCHAR},
+      fact_payment = #{factPayment,jdbcType=DECIMAL},
+      collection_person_name = #{collectionPersonName,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      finance_confirm = #{financeConfirm,jdbcType=VARCHAR},
+      verycode = #{verycode,jdbcType=CHAR},
+      exception_collection_reason = #{exceptionCollectionReason,jdbcType=VARCHAR},
+      document_code = #{documentCode,jdbcType=VARCHAR},
+      print_num = #{printNum,jdbcType=INTEGER},
+      exception_type = #{exceptionType,jdbcType=INTEGER},
+      exception_operate = #{exceptionOperate,jdbcType=INTEGER},
+      city = #{city,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      attach = #{attach,jdbcType=VARCHAR},
+      check_number = #{checkNumber,jdbcType=VARCHAR},
+      check_company = #{checkCompany,jdbcType=VARCHAR},
+      remittance_bank = #{remittanceBank,jdbcType=VARCHAR},
+      remittance_account = #{remittanceAccount,jdbcType=VARCHAR},
+      service_price = #{servicePrice,jdbcType=DECIMAL},
+      rent_money = #{rentMoney,jdbcType=DECIMAL},
+      yajin = #{yajin,jdbcType=DECIMAL},
+      yongjin = #{yongjin,jdbcType=DECIMAL},
+      cable_television_price = #{cableTelevisionPrice,jdbcType=DECIMAL},
+      clean_price = #{cleanPrice,jdbcType=DECIMAL},
+      water_price = #{waterPrice,jdbcType=DECIMAL},
+      tel_price = #{telPrice,jdbcType=DECIMAL},
+      hot_price = #{hotPrice,jdbcType=DECIMAL},
+      electricity_price = #{electricityPrice,jdbcType=DECIMAL},
+      other_price = #{otherPrice,jdbcType=DECIMAL},
+      fisdel = #{fisdel,jdbcType=INTEGER},
+      fcreatetime = #{fcreatetime,jdbcType=TIMESTAMP},
+      createrid = #{createrid,jdbcType=VARCHAR},
+      fupdatetime = #{fupdatetime,jdbcType=TIMESTAMP},
+      updaterid = #{updaterid,jdbcType=VARCHAR},
+      collectionpersoncode = #{collectionpersoncode,jdbcType=VARCHAR},
+      financeConfirmCode = #{financeconfirmcode,jdbcType=VARCHAR},
+      finsettleid = #{finsettleid,jdbcType=VARCHAR},
+      surrendercost_id = #{surrendercostId,jdbcType=VARCHAR},
+      cityid = #{cityid,jdbcType=VARCHAR},
+      gen_way = #{genWay,jdbcType=INTEGER},
+      out_trade_no = #{outTradeNo,jdbcType=VARCHAR}
+    where voucher_id = #{voucherId,jdbcType=INTEGER}
+  </update>
+</mapper>

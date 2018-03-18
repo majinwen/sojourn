@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--suppress ALL -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.report.dao.ReportBoDao">
+    <resultMap id="BaseResultMap" type="com.zra.report.entity.ReportBoEntity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="report_bo_id" property="reportBoId" jdbcType="VARCHAR"/>
+        <result column="project_id" property="projectId" jdbcType="VARCHAR"/>
+        <result column="record_date" property="recordDate" jdbcType="TIMESTAMP"/>
+        <result column="house_type_id" property="houseTypeId" jdbcType="VARCHAR"/>
+        <result column="business_count" property="businessCount" jdbcType="INTEGER"/>
+        <result column="order2see_rate" property="order2seeRate" jdbcType="DECIMAL"/>
+        <result column="see_count" property="seeCount" jdbcType="INTEGER"/>
+        <result column="deal_count" property="dealCount" jdbcType="INTEGER"/>
+        <result column="see2deal_rate" property="see2dealRate" jdbcType="DECIMAL"/>
+        <result column="long_sign_count" property="longSignCount" jdbcType="INTEGER"/>
+        <result column="short_sign_count1" property="shortSignCount1" jdbcType="INTEGER"/>
+        <result column="short_sign_count2" property="shortSignCount2" jdbcType="INTEGER"/>
+        <result column="sign_total" property="signTotal" jdbcType="INTEGER"/>
+        <result column="long_average_price" property="longAveragePrice" jdbcType="DECIMAL"/>
+        <result column="short_average_price1" property="shortAveragePrice1" jdbcType="DECIMAL"/>
+        <result column="short_average_price2" property="shortAveragePrice2" jdbcType="DECIMAL"/>
+        <result column="price_average_total" property="priceAverageTotal" jdbcType="DECIMAL"/>
+        <result column="long_actual_price" property="longActualPrice" jdbcType="DECIMAL"/>
+        <result column="short_actual_price1" property="shortActualPrice1" jdbcType="DECIMAL"/>
+        <result column="short_actual_price2" property="shortActualPrice2" jdbcType="DECIMAL"/>
+        <result column="actual_price_total" property="actualPriceTotal" jdbcType="DECIMAL"/>
+        <result column="is_del" property="isDel" jdbcType="BIT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_id" property="createId" jdbcType="VARCHAR"/>
+        <result column="update_id" property="updateId" jdbcType="VARCHAR"/>
+        <result column="delete_id" property="deleteId" jdbcType="VARCHAR"/>
+        <!-- wangws21 2017-1-18 添加客源量 -->
+        <result column="kyl_count" property="kylCount" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, report_bo_id, project_id, record_date, house_type_id, business_count, order2see_rate, see_count, deal_count, see2deal_rate, long_sign_count, short_sign_count1, short_sign_count2, sign_total, long_average_price, 
+        short_average_price1, short_average_price2, price_average_total, long_actual_price, short_actual_price1, short_actual_price2, actual_price_total, is_del, create_time, delete_time, update_time, create_id, update_id, delete_id,
+        kyl_count
+    </sql>
+    
+    <select id="selectReportBoCount" resultType="java.lang.Integer">
+    	SELECT 
+    		COUNT(*) AS count 
+    	FROM ( 
+    		SELECT 1 
+    		FROM report_bo 
+	    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+	    	AND is_del = 0 
+	    	AND (DATE_FORMAT(record_date, '%Y-%m-%d') BETWEEN #{beginTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR}) 
+	    	GROUP BY DATE_FORMAT(record_date, '%Y-%m-%d') 
+    	) t 
+    </select>
+    
+    <select id="selectReportBoTimeSpanByPage" resultType="java.lang.String">
+   		SELECT DATE_FORMAT(record_date, '%Y-%m-%d') record_date
+   		FROM report_bo
+    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+    	AND is_del = 0 
+    	AND (DATE_FORMAT(record_date, '%Y-%m-%d') BETWEEN #{beginTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR}) 
+    	GROUP BY DATE_FORMAT(record_date, '%Y-%m-%d') 
+    	<choose>
+        	<when test="page != null">
+            	limit #{page.pageStart},#{page.pageSize};
+        	</when>
+        </choose>
+    </select>
+    
+    <select id="selectReportBoList" resultMap="BaseResultMap">
+    	SELECT 
+    	<include refid="Base_Column_List"/> 
+    	FROM report_bo 
+    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+    	AND is_del = 0 
+    	AND DATE_FORMAT(record_date, '%Y-%m-%d') = #{recordDate,jdbcType=VARCHAR} 
+    	ORDER BY house_type_id 
+    </select>
+    
+    <select id="selectReportBoListByTimeSpan" resultMap="BaseResultMap">
+    	SELECT 
+    	<include refid="Base_Column_List"/> 
+    	FROM report_bo 
+    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+    	AND is_del = 0 
+    	AND (DATE_FORMAT(record_date, '%Y-%m-%d') BETWEEN #{beginTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR}) 
+    	ORDER BY record_date, house_type_id 
+    </select>
+    
+    <insert id="insertReportBo" parameterType="com.zra.report.entity.ReportBoEntity" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO report_bo 
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="reportBoId != null">
+                report_bo_id,
+            </if>
+            <if test="projectId != null">
+                project_id,
+            </if>
+            <if test="recordDate != null">
+                record_date,
+            </if>
+            <if test="houseTypeId != null">
+                house_type_id,
+            </if>
+            <if test="businessCount != null">
+                business_count,
+            </if>
+            <if test="order2seeRate != null">
+                order2see_rate,
+            </if>
+            <if test="seeCount != null">
+                see_count,
+            </if>
+            <if test="dealCount != null">
+                deal_count,
+            </if>
+            <if test="see2dealRate != null">
+                see2deal_rate,
+            </if>
+            <if test="longSignCount != null">
+                long_sign_count,
+            </if>
+            <if test="shortSignCount1 != null">
+                short_sign_count1,
+            </if>
+            <if test="shortSignCount2 != null">
+                short_sign_count2,
+            </if>
+            <if test="signTotal != null">
+                sign_total,
+            </if>
+            <if test="longAveragePrice != null">
+                long_average_price,
+            </if>
+            <if test="shortAveragePrice1 != null">
+                short_average_price1,
+            </if>
+            <if test="shortAveragePrice2 != null">
+                short_average_price2,
+            </if>
+            <if test="priceAverageTotal != null">
+                price_average_total,
+            </if>
+            <if test="longActualPrice != null">
+                long_actual_price,
+            </if>
+            <if test="shortActualPrice1 != null">
+                short_actual_price1,
+            </if>
+            <if test="shortActualPrice2 != null">
+                short_actual_price2,
+            </if>
+            <if test="actualPriceTotal != null">
+                actual_price_total,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createId != null">
+                create_id,
+            </if>
+            <if test="updateId != null">
+                update_id,
+            </if>
+            <if test="deleteId != null">
+                delete_id,
+            </if>
+            <!-- wangws21 2017-1-18 添加客源量 -->
+            <if test="kylCount != null">
+                kyl_count,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="reportBoId != null">
+                #{reportBoId,jdbcType=VARCHAR},
+            </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDate != null">
+                #{recordDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="houseTypeId != null">
+                #{houseTypeId,jdbcType=VARCHAR},
+            </if>
+            <if test="businessCount != null">
+                #{businessCount,jdbcType=INTEGER},
+            </if>
+            <if test="order2seeRate != null">
+                #{order2seeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="seeCount != null">
+                #{seeCount,jdbcType=INTEGER},
+            </if>
+            <if test="dealCount != null">
+                #{dealCount,jdbcType=INTEGER},
+            </if>
+            <if test="see2dealRate != null">
+                #{see2dealRate,jdbcType=DECIMAL},
+            </if>
+            <if test="longSignCount != null">
+                #{longSignCount,jdbcType=INTEGER},
+            </if>
+            <if test="shortSignCount1 != null">
+                #{shortSignCount1,jdbcType=INTEGER},
+            </if>
+            <if test="shortSignCount2 != null">
+                #{shortSignCount2,jdbcType=INTEGER},
+            </if>
+            <if test="signTotal != null">
+                #{signTotal,jdbcType=INTEGER},
+            </if>
+            <if test="longAveragePrice != null">
+                #{longAveragePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="shortAveragePrice1 != null">
+                #{shortAveragePrice1,jdbcType=DECIMAL},
+            </if>
+            <if test="shortAveragePrice2 != null">
+                #{shortAveragePrice2,jdbcType=DECIMAL},
+            </if>
+            <if test="priceAverageTotal != null">
+                #{priceAverageTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="longActualPrice != null">
+                #{longActualPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="shortActualPrice1 != null">
+                #{shortActualPrice1,jdbcType=DECIMAL},
+            </if>
+            <if test="shortActualPrice2 != null">
+                #{shortActualPrice2,jdbcType=DECIMAL},
+            </if>
+            <if test="actualPriceTotal != null">
+                #{actualPriceTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=BIT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createId != null">
+                #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateId != null">
+                #{updateId,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteId != null">
+                #{deleteId,jdbcType=VARCHAR},
+            </if>
+            <!-- wangws21 2017-1-18 添加客源量 -->
+            <if test="kylCount != null">
+                #{kylCount,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    
+    <update id="updateReportBo" parameterType="com.zra.report.entity.ReportBoEntity">
+        UPDATE report_bo 
+        <set>
+            <if test="projectId != null">
+                project_id = #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDate != null">
+                record_date = #{recordDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="houseTypeId != null">
+                house_type_id = #{houseTypeId,jdbcType=VARCHAR},
+            </if>
+            <if test="businessCount != null">
+                business_count = #{businessCount,jdbcType=INTEGER},
+            </if>
+            <if test="order2seeRate != null">
+                order2see_rate = #{order2seeRate,jdbcType=DECIMAL},
+            </if>
+            <if test="seeCount != null">
+                see_count = #{seeCount,jdbcType=INTEGER},
+            </if>
+            <if test="dealCount != null">
+                deal_count = #{dealCount,jdbcType=INTEGER},
+            </if>
+            <if test="see2dealRate != null">
+                see2deal_rate = #{see2dealRate,jdbcType=DECIMAL},
+            </if>
+            <if test="longSignCount != null">
+                long_sign_count = #{longSignCount,jdbcType=INTEGER},
+            </if>
+            <if test="shortSignCount1 != null">
+                short_sign_count1 = #{shortSignCount1,jdbcType=INTEGER},
+            </if>
+            <if test="shortSignCount2 != null">
+                short_sign_count2 = #{shortSignCount2,jdbcType=INTEGER},
+            </if>
+            <if test="signTotal != null">
+                sign_total = #{signTotal,jdbcType=INTEGER},
+            </if>
+            <if test="longAveragePrice != null">
+                long_average_price = #{longAveragePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="shortAveragePrice1 != null">
+                short_average_price1 = #{shortAveragePrice1,jdbcType=DECIMAL},
+            </if>
+            <if test="shortAveragePrice2 != null">
+                short_average_price2 = #{shortAveragePrice2,jdbcType=DECIMAL},
+            </if>
+            <if test="priceAverageTotal != null">
+                price_average_total = #{priceAverageTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="longActualPrice != null">
+                long_actual_price = #{longActualPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="shortActualPrice1 != null">
+                short_actual_price1 = #{shortActualPrice1,jdbcType=DECIMAL},
+            </if>
+            <if test="shortActualPrice2 != null">
+                short_actual_price2 = #{shortActualPrice2,jdbcType=DECIMAL},
+            </if>
+            <if test="actualPriceTotal != null">
+                actual_price_total = #{actualPriceTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=BIT},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateId != null">
+                update_id = #{updateId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE report_bo_id = #{reportBoId,jdbcType=VARCHAR},
+    </update>
+    
+    <update id="deleteReportBoByBid" parameterType="com.zra.report.entity.ReportBoEntity">
+        UPDATE report_bo 
+        <set>
+        	is_del = 1, 
+			delete_time = #{deleteTime,jdbcType=TIMESTAMP}, 
+            delete_id = #{deleteId,jdbcType=VARCHAR}
+        </set>
+        WHERE report_bo_id = #{reportBoId,jdbcType=VARCHAR} 
+    </update>
+    
+    <!-- begin and by tianxf9 -->
+    
+    <select id="getNewBusinessCount" resultType="com.zra.report.entity.dto.BaseReportDto">
+		SELECT
+			bo.house_type_id AS houseTypeId,
+		    count(bo.business_bid) AS count
+		FROM
+			bo_business bo
+		WHERE
+			bo.create_time <![CDATA[ >= ]]> #{startDate}
+		AND bo.create_time <![CDATA[ <= ]]> #{endDate}
+		AND bo.project_id = #{projectId}
+		AND bo.is_del = 0
+		GROUP BY
+			bo.house_type_id
+    </select>
+    
+    <!-- wangws21 2017-1-17 获取新增客源量 -->
+    <select id="getBusinessKYLCount" resultType="com.zra.report.entity.dto.BaseReportDto">
+        SELECT
+	        bo.house_type_id AS houseTypeId,
+	        count(bo.business_bid) AS count
+		FROM
+		    bo_business bo,bo_customer boc
+		WHERE
+	        bo.customer_id = boc.cus_bid
+	        AND boc.kyl_flag = 1
+	        AND bo.create_time <![CDATA[ >= ]]> #{startDate}
+	        AND bo.create_time <![CDATA[ <= ]]> #{endDate}
+	        AND bo.project_id = #{projectId}
+	        AND bo.is_del = 0
+        GROUP BY
+	        bo.house_type_id
+    </select>
+    
+    <select id="getDealBusinessCount" resultType="com.zra.report.entity.dto.BaseReportDto">
+	    SELECT
+	      bob.house_type_id AS houseTypeId,
+				count(bob.business_bid) AS count
+			FROM
+				bo_business bob,bo_business_result bor
+			WHERE
+			bob.business_bid = bor.business_id
+			AND bor.hand_time <![CDATA[ >= ]]> #{startDate}
+			AND bor.hand_time <![CDATA[ <= ]]> #{endDate}
+	    AND bob.project_id = #{projectId}
+			AND bor.hand_result in(11,31,41)
+			AND bob.is_del = 0
+			AND bor.is_del = 0
+	    GROUP BY
+				bob.house_type_id
+    </select>
+    <select id="getSeeBusinessCount" resultType="com.zra.report.entity.dto.BaseReportDto">
+		SELECT
+			bob.house_type_id AS houseTypeId,
+		  count(bob.business_bid) AS count
+		FROM
+			bo_business bob,
+			bo_business_result bor
+		WHERE
+			bob.business_bid = bor.business_id
+		AND bor.step = 2
+		AND bor.hand_result != 33
+		AND (
+			bor.hand_result_content IS NULL
+			OR (
+				bor.hand_result_content != '15'
+				AND bor.hand_result_content != '35'
+			)
+		)
+		AND bor.hand_time <![CDATA[ >= ]]> #{startDate}
+		AND bor.hand_time <![CDATA[ <= ]]> #{endDate}
+		<if test="projectId!='ALL'">
+		AND bob.project_id = #{projectId}
+		</if>
+		AND bob.is_del = 0
+		AND bor.is_del = 0
+		GROUP BY
+			bob.house_type_id
+    </select>
+    
+    <select id="getSignCount" resultType="com.zra.report.entity.dto.BaseReportDto">
+		    SELECT
+			con.con_rent_year AS conRentYear,
+			room.housetypeid AS houseTypeId,
+			count(rent.id) AS count
+		FROM
+			rent_rentedetail rent,
+			trentcontract con,
+			troominfo room
+		WHERE
+			rent.contract_id = con.contractid
+		AND con.con_sign_date <![CDATA[ >= ]]> #{startDate}
+		AND con.con_sign_date <![CDATA[ <= ]]> #{endDate}
+		AND con.project_id = #{projectId}
+		AND con.con_status_code in('yqy','yxy')  
+		AND con.fsigntype = '0' 
+		AND rent.room_id = room.fid
+		AND room.fisdel = 0
+		AND con.fisdel = 0
+		AND rent.is_deleted = 0
+		GROUP BY
+			con.con_rent_year,
+			room.housetypeid 
+    </select>
+    
+    <select id="getActualPrice" resultType="com.zra.report.entity.dto.BaseReportDto">
+		    SELECT
+			con.con_rent_year AS conRentYear,
+			room.housetypeid AS houseTypeId,
+			sum(rent.actual_price) AS actualPrice
+		FROM
+			rent_rentedetail rent,
+			trentcontract con,
+			troominfo room
+		WHERE
+			rent.contract_id = con.contractid
+		AND con.con_sign_date <![CDATA[ >= ]]> #{startDate}
+		AND con.con_sign_date <![CDATA[ <= ]]> #{endDate}
+		AND con.project_id = #{projectId}
+		AND con.con_status_code in('yqy','yxy')  
+		AND con.fsigntype = '0' 
+		AND rent.room_id = room.fid
+		AND room.fisdel = 0
+		AND con.fisdel = 0
+		AND rent.is_deleted = 0
+		GROUP BY
+			con.con_rent_year,
+			room.housetypeid 
+    </select>
+    
+    <update id="delByRecordDate">
+        UPDATE report_bo
+        <set>
+        	is_del = 1, 
+			delete_time = #{delTime,jdbcType=TIMESTAMP}, 
+            delete_id = #{delId,jdbcType=VARCHAR}
+        </set>
+        WHERE record_date like #{recordDate} 
+    </update>
+    <!-- end and by tianxf9 -->
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.business.dao.BoCloseSmsMapper" >
+  <resultMap id="BaseResultMap" type="com.zra.common.dto.business.BoCloseSMSContent" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="contentdesc" property="describe" jdbcType="VARCHAR" />
+    <result column="is_send" property="isSend" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, content, contentdesc, is_send,is_del, create_time, delete_time, update_time, create_id, 
+    update_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bo_close_sms
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getSMSList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bo_close_sms
+    where is_del = 0
+  </select>
+
+</mapper>

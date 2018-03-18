@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.employeeDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.EmployeeEntity" >
+    <id column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="fcode" property="fcode" jdbcType="VARCHAR" />
+    <result column="fname" property="fname" jdbcType="VARCHAR" />
+    <result column="fsex" property="fsex" jdbcType="INTEGER" />
+    <result column="fidcardno" property="fidcardno" jdbcType="VARCHAR" />
+    <result column="fbirthday" property="fbirthday" jdbcType="TIMESTAMP" />
+    <result column="femail" property="femail" jdbcType="VARCHAR" />
+    <result column="fmobile" property="fmobile" jdbcType="VARCHAR" />
+    <result column="ftelno" property="ftelno" jdbcType="VARCHAR" />
+    <result column="ffaxno" property="ffaxno" jdbcType="VARCHAR" />
+    <result column="fqqno" property="fqqno" jdbcType="VARCHAR" />
+    <result column="fmsnno" property="fmsnno" jdbcType="VARCHAR" />
+    <result column="faddress" property="faddress" jdbcType="VARCHAR" />
+    <result column="fzipcode" property="fzipcode" jdbcType="VARCHAR" />
+    <result column="fmemo" property="fmemo" jdbcType="VARCHAR" />
+    <result column="fcsrtype" property="fcsrtype" jdbcType="INTEGER" />
+    <result column="fcicuserid" property="fcicuserid" jdbcType="VARCHAR" />
+    <result column="fcicpwd" property="fcicpwd" jdbcType="VARCHAR" />
+    <result column="departmentid" property="departmentid" jdbcType="VARCHAR" />
+    <result column="fvalid" property="fvalid" jdbcType="INTEGER" />
+    <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP" />
+    <result column="createrid" property="createrid" jdbcType="VARCHAR" />
+    <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP" />
+    <result column="updaterid" property="updaterid" jdbcType="VARCHAR" />
+    <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    fid, fcode, fname, fsex, fidcardno, fbirthday, femail, fmobile, ftelno, ffaxno, fqqno, 
+    fmsnno, faddress, fzipcode, fmemo, fcsrtype, fcicuserid, fcicpwd, departmentid, fvalid, 
+    fcreatetime, createrid, fupdatetime, updaterid, fisdel, cityid
+  </sql>
+  <select id="findEmployeeById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from temployee
+    where fid = #{fid,jdbcType=VARCHAR}
+    and fisdel = 0
+  </select>
+  <select id="findEmployeeByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from temployee
+    where fcode = #{fcode,jdbcType=VARCHAR}
+    and fisdel = 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from temployee
+    where fid = #{fid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.zrp.houses.entity.EmployeeEntity" >
+    insert into temployee (fid, fcode, fname, 
+      fsex, fidcardno, fbirthday, 
+      femail, fmobile, ftelno, 
+      ffaxno, fqqno, fmsnno, 
+      faddress, fzipcode, fmemo, 
+      fcsrtype, fcicuserid, fcicpwd, 
+      departmentid, fvalid, fcreatetime, 
+      createrid, fupdatetime, updaterid, 
+      fisdel, cityid)
+    values (#{fid,jdbcType=VARCHAR}, #{fcode,jdbcType=VARCHAR}, #{fname,jdbcType=VARCHAR}, 
+      #{fsex,jdbcType=INTEGER}, #{fidcardno,jdbcType=VARCHAR}, #{fbirthday,jdbcType=TIMESTAMP}, 
+      #{femail,jdbcType=VARCHAR}, #{fmobile,jdbcType=VARCHAR}, #{ftelno,jdbcType=VARCHAR}, 
+      #{ffaxno,jdbcType=VARCHAR}, #{fqqno,jdbcType=VARCHAR}, #{fmsnno,jdbcType=VARCHAR}, 
+      #{faddress,jdbcType=VARCHAR}, #{fzipcode,jdbcType=VARCHAR}, #{fmemo,jdbcType=VARCHAR}, 
+      #{fcsrtype,jdbcType=INTEGER}, #{fcicuserid,jdbcType=VARCHAR}, #{fcicpwd,jdbcType=VARCHAR}, 
+      #{departmentid,jdbcType=VARCHAR}, #{fvalid,jdbcType=INTEGER}, #{fcreatetime,jdbcType=TIMESTAMP}, 
+      #{createrid,jdbcType=VARCHAR}, #{fupdatetime,jdbcType=TIMESTAMP}, #{updaterid,jdbcType=VARCHAR}, 
+      #{fisdel,jdbcType=INTEGER}, #{cityid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.zrp.houses.entity.EmployeeEntity" >
+    insert into temployee
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="fcode != null" >
+        fcode,
+      </if>
+      <if test="fname != null" >
+        fname,
+      </if>
+      <if test="fsex != null" >
+        fsex,
+      </if>
+      <if test="fidcardno != null" >
+        fidcardno,
+      </if>
+      <if test="fbirthday != null" >
+        fbirthday,
+      </if>
+      <if test="femail != null" >
+        femail,
+      </if>
+      <if test="fmobile != null" >
+        fmobile,
+      </if>
+      <if test="ftelno != null" >
+        ftelno,
+      </if>
+      <if test="ffaxno != null" >
+        ffaxno,
+      </if>
+      <if test="fqqno != null" >
+        fqqno,
+      </if>
+      <if test="fmsnno != null" >
+        fmsnno,
+      </if>
+      <if test="faddress != null" >
+        faddress,
+      </if>
+      <if test="fzipcode != null" >
+        fzipcode,
+      </if>
+      <if test="fmemo != null" >
+        fmemo,
+      </if>
+      <if test="fcsrtype != null" >
+        fcsrtype,
+      </if>
+      <if test="fcicuserid != null" >
+        fcicuserid,
+      </if>
+      <if test="fcicpwd != null" >
+        fcicpwd,
+      </if>
+      <if test="departmentid != null" >
+        departmentid,
+      </if>
+      <if test="fvalid != null" >
+        fvalid,
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime,
+      </if>
+      <if test="createrid != null" >
+        createrid,
+      </if>
+      <if test="fupdatetime != null" >
+        fupdatetime,
+      </if>
+      <if test="updaterid != null" >
+        updaterid,
+      </if>
+      <if test="fisdel != null" >
+        fisdel,
+      </if>
+      <if test="cityid != null" >
+        cityid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcode != null" >
+        #{fcode,jdbcType=VARCHAR},
+      </if>
+      <if test="fname != null" >
+        #{fname,jdbcType=VARCHAR},
+      </if>
+      <if test="fsex != null" >
+        #{fsex,jdbcType=INTEGER},
+      </if>
+      <if test="fidcardno != null" >
+        #{fidcardno,jdbcType=VARCHAR},
+      </if>
+      <if test="fbirthday != null" >
+        #{fbirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="femail != null" >
+        #{femail,jdbcType=VARCHAR},
+      </if>
+      <if test="fmobile != null" >
+        #{fmobile,jdbcType=VARCHAR},
+      </if>
+      <if test="ftelno != null" >
+        #{ftelno,jdbcType=VARCHAR},
+      </if>
+      <if test="ffaxno != null" >
+        #{ffaxno,jdbcType=VARCHAR},
+      </if>
+      <if test="fqqno != null" >
+        #{fqqno,jdbcType=VARCHAR},
+      </if>
+      <if test="fmsnno != null" >
+        #{fmsnno,jdbcType=VARCHAR},
+      </if>
+      <if test="faddress != null" >
+        #{faddress,jdbcType=VARCHAR},
+      </if>
+      <if test="fzipcode != null" >
+        #{fzipcode,jdbcType=VARCHAR},
+      </if>
+      <if test="fmemo != null" >
+        #{fmemo,jdbcType=VARCHAR},
+      </if>
+      <if test="fcsrtype != null" >
+        #{fcsrtype,jdbcType=INTEGER},
+      </if>
+      <if test="fcicuserid != null" >
+        #{fcicuserid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcicpwd != null" >
+        #{fcicpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentid != null" >
+        #{departmentid,jdbcType=VARCHAR},
+      </if>
+      <if test="fvalid != null" >
+        #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="fcreatetime != null" >
+        #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrid != null" >
+        #{createrid,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatetime != null" >
+        #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterid != null" >
+        #{updaterid,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="cityid != null" >
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.houses.entity.EmployeeEntity" >
+    update temployee
+    <set >
+      <if test="fcode != null" >
+        fcode = #{fcode,jdbcType=VARCHAR},
+      </if>
+      <if test="fname != null" >
+        fname = #{fname,jdbcType=VARCHAR},
+      </if>
+      <if test="fsex != null" >
+        fsex = #{fsex,jdbcType=INTEGER},
+      </if>
+      <if test="fidcardno != null" >
+        fidcardno = #{fidcardno,jdbcType=VARCHAR},
+      </if>
+      <if test="fbirthday != null" >
+        fbirthday = #{fbirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="femail != null" >
+        femail = #{femail,jdbcType=VARCHAR},
+      </if>
+      <if test="fmobile != null" >
+        fmobile = #{fmobile,jdbcType=VARCHAR},
+      </if>
+      <if test="ftelno != null" >
+        ftelno = #{ftelno,jdbcType=VARCHAR},
+      </if>
+      <if test="ffaxno != null" >
+        ffaxno = #{ffaxno,jdbcType=VARCHAR},
+      </if>
+      <if test="fqqno != null" >
+        fqqno = #{fqqno,jdbcType=VARCHAR},
+      </if>
+      <if test="fmsnno != null" >
+        fmsnno = #{fmsnno,jdbcType=VARCHAR},
+      </if>
+      <if test="faddress != null" >
+        faddress = #{faddress,jdbcType=VARCHAR},
+      </if>
+      <if test="fzipcode != null" >
+        fzipcode = #{fzipcode,jdbcType=VARCHAR},
+      </if>
+      <if test="fmemo != null" >
+        fmemo = #{fmemo,jdbcType=VARCHAR},
+      </if>
+      <if test="fcsrtype != null" >
+        fcsrtype = #{fcsrtype,jdbcType=INTEGER},
+      </if>
+      <if test="fcicuserid != null" >
+        fcicuserid = #{fcicuserid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcicpwd != null" >
+        fcicpwd = #{fcicpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentid != null" >
+        departmentid = #{departmentid,jdbcType=VARCHAR},
+      </if>
+      <if test="fvalid != null" >
+        fvalid = #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime = #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrid != null" >
+        createrid = #{createrid,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatetime != null" >
+        fupdatetime = #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterid != null" >
+        updaterid = #{updaterid,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        fisdel = #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="cityid != null" >
+        cityid = #{cityid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.zrp.houses.entity.EmployeeEntity" >
+    update temployee
+    set fcode = #{fcode,jdbcType=VARCHAR},
+      fname = #{fname,jdbcType=VARCHAR},
+      fsex = #{fsex,jdbcType=INTEGER},
+      fidcardno = #{fidcardno,jdbcType=VARCHAR},
+      fbirthday = #{fbirthday,jdbcType=TIMESTAMP},
+      femail = #{femail,jdbcType=VARCHAR},
+      fmobile = #{fmobile,jdbcType=VARCHAR},
+      ftelno = #{ftelno,jdbcType=VARCHAR},
+      ffaxno = #{ffaxno,jdbcType=VARCHAR},
+      fqqno = #{fqqno,jdbcType=VARCHAR},
+      fmsnno = #{fmsnno,jdbcType=VARCHAR},
+      faddress = #{faddress,jdbcType=VARCHAR},
+      fzipcode = #{fzipcode,jdbcType=VARCHAR},
+      fmemo = #{fmemo,jdbcType=VARCHAR},
+      fcsrtype = #{fcsrtype,jdbcType=INTEGER},
+      fcicuserid = #{fcicuserid,jdbcType=VARCHAR},
+      fcicpwd = #{fcicpwd,jdbcType=VARCHAR},
+      departmentid = #{departmentid,jdbcType=VARCHAR},
+      fvalid = #{fvalid,jdbcType=INTEGER},
+      fcreatetime = #{fcreatetime,jdbcType=TIMESTAMP},
+      createrid = #{createrid,jdbcType=VARCHAR},
+      fupdatetime = #{fupdatetime,jdbcType=TIMESTAMP},
+      updaterid = #{updaterid,jdbcType=VARCHAR},
+      fisdel = #{fisdel,jdbcType=INTEGER},
+      cityid = #{cityid,jdbcType=VARCHAR}
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+</mapper>

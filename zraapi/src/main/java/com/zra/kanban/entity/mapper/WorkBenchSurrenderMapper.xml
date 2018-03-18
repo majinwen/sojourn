@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.kanban.dao.WorkBenchSurrenderMapper">
+    <resultMap id="BaseResultMap" type="com.zra.kanban.entity.WorkBenchSurrender" >
+        <id column="surrender_id" property="surrenderId" jdbcType="VARCHAR" />
+        <id column="contract_id" property="contractId" jdbcType="VARCHAR" />
+        <result column="con_rent_code" property="contractCode" jdbcType="VARCHAR" />
+        <result column="fsurrendercode" property="surrenderCode" jdbcType="VARCHAR" />
+        <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+        <result column="froomnumber" property="roomCode" jdbcType="VARCHAR" />
+        <result column="frentauditdate" property="rentauditdate" jdbcType="DATE" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List" >
+        s.surrender_id,s.contract_id,t.con_rent_code,s.fsurrendercode,s.room_id,r.froomnumber,s.frentauditdate
+    </sql>
+
+    <select id="selectNoAudSurrendertList" resultMap="BaseResultMap" parameterType="com.zra.common.dto.kanban.AudContractQueryDto">
+        select
+        <include refid="Base_Column_List" />
+        from
+        trentcontract t,
+        tsurrender s left join troominfo r on s.room_id = r.fid
+        where
+        t.project_id = #{projectId}
+        and s.frentauditstatus=#{auditState}
+        and s.contract_id=t.contractid
+        and s.surrender_id=t.fsurrenderid
+        and t.fisdel = 0
+        and s.fisdel=0
+        <if test="zoCode != null">
+        	and s.fhandlezo = #{zoCode}
+        </if>
+        union
+        select
+        <include refid="Base_Column_List" />
+        from
+        trentcontract t,
+        tsurrender s left join troominfo r on s.room_id = r.fid, 
+        tsurrendercost sc
+        where
+        t.project_id = #{projectId}
+        and s.surrender_id = sc.surrender_id 
+        and sc.ffinanceauditstatus = #{auditState}
+        and s.contract_id=t.contractid
+        and s.surrender_id=t.fsurrenderid
+        and t.fisdel = 0
+        and s.fisdel=0
+        and sc.fisdel = 0
+        <if test="zoCode != null">
+        	and s.fhandlezo = #{zoCode}
+        </if>
+        order by frentauditdate asc
+    </select>
+</mapper>

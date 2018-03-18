@@ -1,0 +1,206 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop" 
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   	   xmlns:task="http://www.springframework.org/schema/task"
+
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	    http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+	<context:component-scan base-package="com.zra.*.resources"/>
+	<context:component-scan base-package="com.zra.*.logic"/>
+	<context:component-scan base-package="com.zra.*.service"/>
+	<context:component-scan base-package="com.zra.*.dao"/>
+	<context:component-scan base-package="com.zra.task"/>
+	<context:component-scan base-package="com.zra.*.entity"/>
+	<context:component-scan base-package="com.zra.api"/>
+	<context:component-scan base-package="com.zra.common.utils.**"/>
+	<context:component-scan base-package="com.zra.zmconfig"/>
+	<context:component-scan base-package="com.zra.m.*"/>
+	<context:component-scan base-package="com.zrp.*"/>
+	<context:component-scan base-package="com.zra.client.*"/>
+	<context:annotation-config/>
+	<context:property-placeholder/>
+     
+    <import resource="spring-config-aop.xml"/>
+	<import resource="spring-quartz.xml" />
+
+    <task:annotation-driven scheduler="qbScheduler" mode="proxy"/>
+	<task:scheduler id="qbScheduler" pool-size="10"/>
+	<bean id="stat-filter" class="com.ziroom.platform.tesla.druid.filter.CatStatFilter"/>
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<!-- log4j 或者 slf4j, 根据具体项目所用的log依赖选择 -->
+		<property name="filters" value="slf4j"/>
+		<property name="proxyFilters">
+			<list>
+				<ref bean="stat-filter"/>
+			</list>
+		</property>
+
+		<!-- 基本属性 url、user、password -->
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="1"/>
+		<property name="minIdle" value="1"/>
+		<property name="maxActive" value="20"/>
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="60000"/>
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000"/>
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000"/>
+
+		<property name="validationQuery" value="SELECT 'x'"/>
+		<property name="testWhileIdle" value="true"/>
+		<property name="testOnBorrow" value="false"/>
+		<property name="testOnReturn" value="false"/>
+
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<property name="poolPreparedStatements" value="true"/>
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+	</bean>
+
+	<!-- 配置SqlSessionFactoryBean -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="multipleDataSource"/>
+		<!-- MyBatis配置文件 -->
+		<property name="configLocation" value="classpath:mybatis/mybatis-conf.xml"/>
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.zra.*.dao"/>
+	</bean>
+
+	<bean id="sessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"/>
+	</bean>
+
+	<!-- redis 配置 start -->
+
+	<!-- POOL配置 -->
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="${redis.pool.maxTotal}" />
+		<property name="maxIdle" value="${redis.pool.maxIdle}" />
+		<property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}" />
+		<property name="testOnBorrow" value="${redis.pool.testOnBorrow}" />
+	</bean>
+
+	<!-- jedis shard信息配置 -->
+	<bean id="jedisSentinelPool" class="redis.clients.jedis.JedisSentinelPool">
+		<constructor-arg index="0" value="${masterRedis}" />
+		<constructor-arg index="1">
+			<set>
+				<value>${sentinelOne}</value>
+				<value>${sentinelTwo}</value>
+				<value>${sentinelThree}</value>
+			</set>
+		</constructor-arg>
+		<constructor-arg index="2" ref="jedisPoolConfig" />
+	</bean>
+
+	<bean id="redisUtil" class="com.zra.common.utils.RedisUtil">
+		<property name="jedisSentinelPool" ref="jedisSentinelPool" />
+	</bean>
+
+	<!-- 注入jedis end -->
+
+	<!-- redis 配置 end  -->
+
+	<!--图片服务配置 -->
+	<bean id="storageService" class="com.ziroom.tech.storage.client.service.impl.StorageServiceImpl">
+		<property name="server" value="${storage.server}"/>
+	</bean>
+
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="multipleDataSource"/>
+	</bean>
+
+	<!-- 注解方式配置事物 -->
+	<!-- <tx:annotation-driven transaction-manager="transactionManager" /> -->
+
+	<!-- 拦截器方式配置事物 -->
+	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="insert*" propagation="REQUIRED" rollback-for="SQLException,Exception"/>
+			<tx:method name="update*" propagation="REQUIRED" rollback-for="SQLException,Exception"/>
+			<tx:method name="delete*" propagation="REQUIRED" rollback-for="SQLException,Exception"/>
+
+			<tx:method name="get*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="find*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="select*" propagation="SUPPORTS" read-only="true" />
+
+		</tx:attributes>
+	</tx:advice>
+	<!-- Spring aop事务管理 -->
+	<aop:config>
+		<aop:pointcut id="transactionPointcut"
+					  expression="execution(* com.zra.*.service.*.*(..))" />
+		<aop:advisor pointcut-ref="transactionPointcut"
+					 advice-ref="transactionAdvice" />
+	</aop:config>
+
+	<bean id="zraInit" class="com.zra.app.ZraInit"></bean>
+    <!--cc数据源配置  begin  add by tianxf9    -->
+
+ 	<bean id="stat-filter-new-oracle" class="com.ziroom.platform.tesla.druid.filter.CatStatFilter"/>
+ 	<bean id="newccdataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+ 	    <!-- 用户名-->  
+        <property name="user" value="${jdbc.username3}"/>  
+        <!-- 用户密码-->  
+        <property name="password" value="${jdbc.password3}"/>  
+        <property name="driverClass" value="oracle.jdbc.driver.OracleDriver"/>  
+        <property name="jdbcUrl" value="${jdbc.url3}"/>  
+
+        <!-- 连接池初始化时建立的连接数 默认值是3 -->  
+        <property name="initialPoolSize" value="3"/> 
+        <!-- 连接的最大空闲时间  单位秒 默认是0-代表永远不会断开连接  超过设定时间的空闲连接将会断开 -->  
+        <property name="maxIdleTime" value="30"/>  
+        <!-- 连接池中拥有的最大连接数 默认值为15个 -->  
+        <property name="maxPoolSize" value="20"/>
+        <!-- 连接池中保持的最小连接数  默认值为3个-->  
+        <property name="minPoolSize" value="3"/>
+        <!-- 将连接池的连接数保持在minpoolsize 必须小于maxIdleTime设置  默认值为0代表不处理  单位秒 -->  
+        <property name="maxIdleTimeExcessConnections" value="15"/>
+    </bean>
+	
+	<bean id="multipleDataSource" class="com.zra.common.utils.MultipleDataSource">
+        <property name="defaultTargetDataSource" ref="dataSource"/>
+        <property name="targetDataSources">
+            <map>
+                <entry key="dataSource" value-ref="dataSource"/>
+                <entry key="newccdataSource" value-ref="newccdataSource"/>
+            </map>
+        </property>
+    </bean>
+   <!--cc数据源配置  end  add by tianxf9    -->
+
+
+	<!-- dubbo消费者配置 -->
+	<import resource="classpath:/dubbo-zrp-consumer.xml"/>
+	<!--交易合同服务-->
+	<import resource="classpath:META-INF/spring/trading-consumer.xml"/>
+	<!--公寓基础数据服务-->
+	<import resource="classpath:META-INF/spring/houses-consumer.xml"/>
+	<!--民宿基础服务-->
+	<import resource="classpath:META-INF/spring/basedata-inner-consumer.xml"/>
+	<!--民宿cms服务-->
+	<import resource="classpath:META-INF/spring/cms-inner-consumer.xml"/>
+</beans>

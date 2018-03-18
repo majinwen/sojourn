@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zra.report.dao.ReportOverviewDao">
+  <resultMap id="BaseResultMap" type="com.zra.report.entity.ReportOverviewEntity">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="record_date" jdbcType="TIMESTAMP" property="recordDate" />
+    <result column="project_id" jdbcType="VARCHAR" property="projectId" />
+    <result column="short_sign_count" jdbcType="INTEGER" property="shortSignCount" />
+    <result column="long_sign_count" jdbcType="INTEGER" property="longSignCount" />
+    <result column="sign_count" jdbcType="INTEGER" property="signCount" />
+    <result column="surrender_count" jdbcType="INTEGER" property="surrenderCount" />
+    <result column="voucher_total_amount" jdbcType="DECIMAL" property="voucherTotalAmount" />
+    <result column="pay_total_amount" jdbcType="DECIMAL" property="payTotalAmount" />
+    <result column="create_id" jdbcType="VARCHAR" property="createId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_id" jdbcType="VARCHAR" property="updateId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="is_del" jdbcType="TINYINT" property="isDel" />
+    <result column="is_valid" jdbcType="TINYINT" property="isValid" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, record_date, project_id, short_sign_count, long_sign_count, sign_count, surrender_count, 
+    voucher_total_amount, pay_total_amount, create_id, create_time, update_id, update_time, 
+    is_del, is_valid
+  </sql>
+  
+  <!-- 查询签约数 -->
+  <select id="getSignCount" resultType="com.zra.report.entity.dto.ReportOverviewDto" parameterType="map">
+    SELECT 
+        tct.project_id AS projectId, tct.fcontype conType,COUNT(1) AS signCount 
+    FROM 
+        trentcontract AS tct
+	WHERE 
+	    tct.fisdel = 0
+	    AND tct.fvalid = 1
+		AND tct.con_status_code IN ('yqy',"yxy","jyz","xyz")
+		AND tct.fcreatetime <![CDATA[ >= ]]> #{startDate}
+		AND tct.fcreatetime <![CDATA[ <= ]]> #{endDate}
+	GROUP BY 
+	    tct.project_id, tct.fcontype
+  </select>
+  
+  <!-- 查询解约数 -->
+  <select id="getSurrenderCount" resultType="com.zra.report.entity.dto.ReportOverviewDto" parameterType="map">
+    SELECT
+	    tct.project_id AS projectId, COUNT(1) AS surrenderCount
+	FROM
+	    tsurrender AS tsd, trentcontract AS tct
+	WHERE
+	    tsd.contract_id = tct.contractid
+	AND tsd.fisdel = 0
+	AND tct.fisdel = 0
+	AND tsd.fvalid = 1
+	AND tct.fvalid = 1
+	AND tsd.fcreatetime <![CDATA[ >= ]]> #{startDate}
+	AND tsd.fcreatetime <![CDATA[ <= ]]> #{endDate}
+	GROUP BY
+	    tct.project_id;
+  </select>
+  
+  <!-- 查询收款总额 -->
+  <select id="getTotalPayment" resultType="com.zra.report.entity.dto.ReportOverviewDto" parameterType="map">
+    SELECT
+        tpv.project_id AS projectId, IFNULL(sum(tpv.fact_payment), 0) AS amount
+    FROM
+        trentpaymentvoucher tpv
+    WHERE
+        tpv.fisdel = 0
+    AND tpv.state != 4
+    AND tpv.fcreatetime <![CDATA[ >= ]]> #{startDate}
+    AND tpv.fcreatetime <![CDATA[ <= ]]> #{endDate}
+    GROUP BY tpv.project_id
+  </select>
+  
+  <!-- 查询付款总额 -->
+  <select id="getTotalPay" resultType="com.zra.report.entity.dto.ReportOverviewDto" parameterType="map">
+    SELECT
+	    tct.project_id AS projectId, IFNULL(sum(fpb.amount), 0) AS amount
+	FROM
+	    fin_pay_bill fpb, trentcontract AS tct
+	WHERE
+	    fpb.contract_id = tct.contractid
+	AND fpb.is_del = 0
+	AND fpb.is_valid = 1
+	AND tct.fisdel = 0
+	AND tct.fvalid = 1
+	AND fpb.create_time <![CDATA[ >= ]]> #{startDate}
+	AND fpb.create_time <![CDATA[ <= ]]> #{endDate}
+	GROUP BY tct.project_id;
+  </select>
+  
+  <!-- 根据时间查询 总览数据 -->
+  <select id="getReportOverviewListByDateStr" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM report_overview ro
+    WHERE record_date = #{recordDate,jdbcType=VARCHAR}
+    AND ro.is_del = 0
+  </select>
+  
+  <!-- 保存/添加 总览数据 -->
+  <insert id="insert" parameterType="com.zra.report.entity.ReportOverviewEntity">
+    INSERT INTO report_overview
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="recordDate != null">
+        record_date,
+      </if>
+      <if test="shortSignCount != null">
+        short_sign_count,
+      </if>
+      <if test="longSignCount != null">
+        long_sign_count,
+      </if>
+      <if test="signCount != null">
+        sign_count,
+      </if>
+      <if test="surrenderCount != null">
+        surrender_count,
+      </if>
+      <if test="voucherTotalAmount != null">
+        voucher_total_amount,
+      </if>
+      <if test="payTotalAmount != null">
+        pay_total_amount,
+      </if>
+      <if test="createId != null">
+        create_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateId != null">
+        update_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isDel != null">
+        is_del,
+      </if>
+      <if test="isValid != null">
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+      <if test="projectId != null">
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="recordDate != null">
+        #{recordDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shortSignCount != null">
+        #{shortSignCount,jdbcType=INTEGER},
+      </if>
+      <if test="longSignCount != null">
+        #{longSignCount,jdbcType=INTEGER},
+      </if>
+      <if test="signCount != null">
+        #{signCount,jdbcType=INTEGER},
+      </if>
+      <if test="surrenderCount != null">
+        #{surrenderCount,jdbcType=INTEGER},
+      </if>
+      <if test="voucherTotalAmount != null">
+        #{voucherTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payTotalAmount != null">
+        #{payTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="createId != null">
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateId != null">
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="isValid != null">
+        #{isValid,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>

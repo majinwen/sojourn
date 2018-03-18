@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--suppress ALL -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.report.dao.ReportStockDao">
+    <resultMap id="BaseResultMap" type="com.zra.report.entity.ReportStockEntity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="report_stock_id" property="reportStockId" jdbcType="VARCHAR"/>
+        <result column="project_id" property="projectId" jdbcType="VARCHAR"/>
+        <result column="house_type_id" property="houseTypeId" jdbcType="VARCHAR"/>
+        <result column="record_date" property="recordDate" jdbcType="TIMESTAMP"/>
+        <result column="stock_count" property="stockCount" jdbcType="INTEGER"/>
+        <result column="rentable_count" property="rentableCount" jdbcType="INTEGER"/>
+        <result column="leased_count" property="leasedCount" jdbcType="INTEGER"/>
+        <result column="occupancy_rate" property="occupancyRate" jdbcType="DECIMAL"/>
+        <result column="short_leased_count" property="shortLeasedCount" jdbcType="INTEGER"/>
+        <result column="short_leased_rate" property="shortLeasedRate" jdbcType="DECIMAL"/>
+        <result column="leave_stock_config" property="leaveStockConfig" jdbcType="INTEGER"/>
+        <result column="leave_stock_wait" property="leaveStockWait" jdbcType="INTEGER"/>
+        <result column="leave_stock_other" property="leaveStockOther" jdbcType="INTEGER"/>
+        <result column="leave_stock_total" property="leaveStockTotal" jdbcType="INTEGER"/>
+        <result column="quit_normal" property="quitNormal" jdbcType="INTEGER"/>
+        <result column="quit_unnormal" property="quitUnnormal" jdbcType="INTEGER"/>
+        <result column="quit_customer" property="quitCustomer" jdbcType="INTEGER"/>
+        <result column="quit_unsatisfied" property="quitUnsatisfied" jdbcType="INTEGER"/>
+        <result column="quit_change" property="quitChange" jdbcType="INTEGER"/>
+        <result column="quit_exchange" property="quitExchange" jdbcType="INTEGER"/>
+        <result column="quit_total" property="quitTotal" jdbcType="INTEGER"/>
+        <result column="is_del" property="isDel" jdbcType="BIT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_id" property="createId" jdbcType="VARCHAR"/>
+        <result column="update_id" property="updateId" jdbcType="VARCHAR"/>
+        <result column="delete_id" property="deleteId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, report_stock_id, project_id, house_type_id, record_date, stock_count ,rentable_count, leased_count, occupancy_rate, short_leased_count, short_leased_rate, leave_stock_config, leave_stock_wait, leave_stock_other, leave_stock_total, quit_normal, 
+        quit_unnormal, quit_customer, quit_unsatisfied, quit_change, quit_exchange, quit_total, is_del, create_time, delete_time, update_time, create_id, update_id, delete_id
+    </sql>
+    
+    <select id="selectReportStockCount" resultType="java.lang.Integer">
+    	SELECT
+    		COUNT(*) AS count
+    	FROM (
+    		SELECT 1
+    		FROM report_stock
+	    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+	    	AND is_del = 0 
+	    	AND (DATE_FORMAT(record_date, '%Y-%m-%d') BETWEEN #{beginTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR})
+	    	GROUP BY DATE_FORMAT(record_date, '%Y-%m-%d')
+    	) t
+    </select>
+    
+    <select id="selectReportStockTimeSpanByPage" resultType="java.lang.String">
+   		SELECT DATE_FORMAT(record_date, '%Y-%m-%d') record_date
+   		FROM report_stock
+    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+    	AND is_del = 0 
+    	AND (DATE_FORMAT(record_date, '%Y-%m-%d') BETWEEN #{beginTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR})
+    	GROUP BY DATE_FORMAT(record_date, '%Y-%m-%d')
+    	<choose>
+        	<when test="page != null">
+            	limit #{page.pageStart},#{page.pageSize};
+        	</when>
+        </choose>
+    </select>
+    
+    <select id="selectReportStockList" resultMap="BaseResultMap">
+    	SELECT 
+    	<include refid="Base_Column_List"/>
+    	FROM report_stock 
+    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+    	AND is_del = 0 
+    	AND DATE_FORMAT(record_date, '%Y-%m-%d') = #{recordDate,jdbcType=VARCHAR}
+    	ORDER BY house_type_id
+    </select>
+    
+    <select id="selectReportStockListByTimeSpan" resultMap="BaseResultMap">
+    	SELECT 
+    	<include refid="Base_Column_List"/>
+    	FROM report_stock 
+    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+    	AND is_del = 0 
+    	AND (DATE_FORMAT(record_date, '%Y-%m-%d') BETWEEN #{beginTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR})
+    	ORDER BY record_date, house_type_id
+    </select>
+    
+    <insert id="insertReportStock" parameterType="com.zra.report.entity.ReportStockEntity" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO report_stock
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="reportStockId != null">
+                report_stock_id,
+            </if>
+            <if test="projectId != null">
+                project_id,
+            </if>
+            <if test="houseTypeId != null">
+                house_type_id,
+            </if>
+            <if test="recordDate != null">
+                record_date,
+            </if>
+            <if test="stockCount != null">
+                stock_count,
+            </if>
+            <if test="rentableCount!=null">
+                rentable_count,
+            </if>
+            <if test="leasedCount != null">
+                leased_count,
+            </if>
+            <if test="occupancyRate != null">
+                occupancy_rate,
+            </if>
+            <if test="shortLeasedCount != null">
+                short_leased_count,
+            </if>
+            <if test="shortLeasedRate != null">
+                short_leased_rate,
+            </if>
+            <if test="leaveStockConfig != null">
+                leave_stock_config,
+            </if>
+            <if test="leaveStockWait != null">
+                leave_stock_wait,
+            </if>
+            <if test="leaveStockOther != null">
+                leave_stock_other,
+            </if>
+            <if test="leaveStockTotal != null">
+                leave_stock_total,
+            </if>
+            <if test="quitNormal != null">
+                quit_normal,
+            </if>
+            <if test="quitUnnormal != null">
+                quit_unnormal,
+            </if>
+            <if test="quitCustomer != null">
+                quit_customer,
+            </if>
+            <if test="quitUnsatisfied != null">
+                quit_unsatisfied,
+            </if>
+            <if test="quitChange != null">
+                quit_change,
+            </if>
+            <if test="quitExchange != null">
+                quit_exchange,
+            </if>
+            <if test="quitTotal != null">
+                quit_total, 
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createId != null">
+                create_id,
+            </if>
+            <if test="updateId != null">
+                update_id,
+            </if>
+            <if test="deleteId != null">
+                delete_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="reportStockId != null">
+                #{reportStockId,jdbcType=VARCHAR},
+            </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="houseTypeId != null">
+                #{houseTypeId,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDate != null">
+                #{recordDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="stockCount != null">
+                #{stockCount,jdbcType=INTEGER},
+            </if>
+            <if test="rentableCount != null">
+                #{rentableCount,jdbcType=INTEGER},
+            </if>
+            <if test="leasedCount != null">
+                #{leasedCount,jdbcType=INTEGER},
+            </if>
+            <if test="occupancyRate != null">
+                #{occupancyRate,jdbcType=DECIMAL},
+            </if>
+            <if test="shortLeasedCount != null">
+                #{shortLeasedCount,jdbcType=INTEGER},
+            </if>
+            <if test="shortLeasedRate != null">
+                #{shortLeasedRate,jdbcType=DECIMAL},
+            </if>
+            <if test="leaveStockConfig != null">
+                #{leaveStockConfig,jdbcType=INTEGER},
+            </if>
+            <if test="leaveStockWait != null">
+                #{leaveStockWait,jdbcType=INTEGER},
+            </if>
+            <if test="leaveStockOther != null">
+                #{leaveStockOther,jdbcType=INTEGER},
+            </if>
+            <if test="leaveStockTotal != null">
+                #{leaveStockTotal,jdbcType=INTEGER},
+            </if>
+            <if test="quitNormal != null">
+                #{quitNormal,jdbcType=INTEGER},
+            </if>
+            <if test="quitUnnormal != null">
+                #{quitUnnormal,jdbcType=INTEGER},
+            </if>
+            <if test="quitCustomer != null">
+                #{quitCustomer,jdbcType=INTEGER},
+            </if>
+            <if test="quitUnsatisfied != null">
+                #{quitUnsatisfied,jdbcType=INTEGER},
+            </if>
+            <if test="quitChange != null">
+                #{quitChange,jdbcType=INTEGER},
+            </if>
+            <if test="quitExchange != null">
+                #{quitExchange,jdbcType=INTEGER},
+            </if>
+            <if test="quitTotal != null">
+                #{quitTotal,jdbcType=INTEGER},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=BIT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createId != null">
+                #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateId != null">
+                #{updateId,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteId != null">
+                #{deleteId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    
+    <update id="updateReportStock" parameterType="com.zra.report.entity.ReportStockEntity">
+        UPDATE report_stock
+        <set>
+            <if test="projectId != null">
+                project_id = #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="houseTypeId != null">
+                house_type_id = #{houseTypeId,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDate != null">
+                record_date = #{recordDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="stockCount != null">
+                stock_count = #{stockCount,jdbcType=INTEGER},
+            </if>
+            <if test="rentableCount != null">
+                rentable_count = #{rentableCount,jdbcType=INTEGER},
+            </if>
+            <if test="leasedCount != null">
+                leased_count = #{leasedCount,jdbcType=INTEGER},
+            </if>
+            <if test="occupancyRate != null">
+                occupancy_rate = #{occupancyRate,jdbcType=DECIMAL},
+            </if>
+            <if test="shortLeasedCount != null">
+                short_leased_count = #{shortLeasedCount,jdbcType=INTEGER},
+            </if>
+            <if test="shortLeasedRate != null">
+                short_leased_rate = #{shortLeasedRate,jdbcType=DECIMAL},
+            </if>
+            <if test="leaveStockConfig != null">
+                leave_stock_config = #{leaveStockConfig,jdbcType=INTEGER},
+            </if>
+            <if test="leaveStockWait != null">
+                leave_stock_wait = #{leaveStockWait,jdbcType=INTEGER},
+            </if>
+            <if test="leaveStockOther != null">
+                leave_stock_other = #{leaveStockOther,jdbcType=INTEGER},
+            </if>
+            <if test="leaveStockTotal != null">
+                leave_stock_total = #{leaveStockTotal,jdbcType=INTEGER},
+            </if>
+            <if test="quitNormal != null">
+                quit_normal = #{quitNormal,jdbcType=INTEGER},
+            </if>
+            <if test="quitUnnormal != null">
+                quit_unnormal = #{quitUnnormal,jdbcType=INTEGER},
+            </if>
+            <if test="quitCustomer != null">
+                quit_customer = #{quitCustomer,jdbcType=INTEGER},
+            </if>
+            <if test="quitUnsatisfied != null">
+                quit_unsatisfied = #{quitUnsatisfied,jdbcType=INTEGER},
+            </if>
+            <if test="quitChange != null">
+                quit_change = #{quitChange,jdbcType=INTEGER},
+            </if>
+            <if test="quitExchange != null">
+                quit_exchange = #{quitExchange,jdbcType=INTEGER},
+            </if>
+            <if test="quitTotal != null">
+                quit_total = #{quitTotal,jdbcType=INTEGER},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=BIT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createId != null">
+                create_id = #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateId != null">
+                update_id = #{updateId,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteId != null">
+                delete_id = #{deleteId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE report_stock_id = #{reportStockId,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="deleteReportStockByBid" parameterType="com.zra.report.entity.ReportStockEntity">
+        UPDATE report_stock
+        <set>
+        	is_del = 1,
+			delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            delete_id = #{deleteId,jdbcType=VARCHAR},
+        </set>
+        WHERE report_stock_id = #{reportStockId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- begin add by tianxf9 -->
+	<select id="getStockCount" resultType="com.zra.report.entity.dto.BaseReportDto" parameterType="String">
+		SELECT
+		  room.housetypeid AS houseTypeId,
+		  count(room.fid) AS count
+		FROM
+			troominfo room
+		WHERE
+			room.projectid = #{projectId}
+		AND room.fisdel = 0
+		AND (
+			(
+				room.ftype = 0
+				AND room.rent_type = 1
+			)
+			OR 
+			(
+				room.ftype = 1
+				AND room.rent_type = 2
+			)
+		)
+		GROUP BY
+			room.housetypeid
+	</select>
+	
+	
+	<!-- 查询可出租的房源个数    用于计算出租率，出租率=已出租数/可出租房源个数 add by tianxf9 -->
+	<select id="getRentableCount" resultType="com.zra.report.entity.dto.BaseReportDto" parameterType="String">
+	SELECT
+		  room.housetypeid AS houseTypeId,
+		  count(room.fid) AS count
+		FROM
+			troominfo room
+		WHERE
+			room.projectid = #{projectId}
+		AND room.fisdel = 0
+        AND room.fcurrentstate not in('2','4','5')
+		AND (
+			(
+				room.ftype = 0
+				AND room.rent_type = 1
+			)
+			OR 
+			(
+				room.ftype = 1
+				AND room.rent_type = 2
+			)
+		)
+		GROUP BY
+			room.housetypeid
+	</select>
+	
+	<select id="getLeasedCount" resultType="com.zra.report.entity.dto.BaseReportDto">		
+			SELECT
+				room.housetypeid AS houseTypeId,
+				count(room.fid) AS count
+			FROM
+				troominfo room
+			WHERE
+				(room.fid IN (
+					SELECT
+						detail.room_id
+					FROM
+						rent_rentedetail detail
+					INNER JOIN trentcontract rent ON detail.contract_id = rent.contractid
+					AND rent.fisdel = 0
+					AND detail.is_deleted = 0
+					AND rent.project_id = #{projectId}
+					AND (
+						(
+							rent.con_status_code = 'yqy'
+							AND rent.con_start_date <![CDATA[ <= ]]> #{recordDate}
+						)
+						OR (
+							rent.con_status_code = 'ytz'
+							AND rent.con_start_date <![CDATA[ <= ]]> #{recordDate}
+							AND rent.con_end_date <![CDATA[ >= ]]> #{recordDate}
+							AND rent.contractid IN (
+								SELECT
+									sur.contract_id
+								FROM
+									tsurrender sur
+								WHERE
+									sur.fisdel = 0
+								AND sur.fsubmitstatus = '1'
+								AND sur.fsurtype = '0'
+							)
+						)
+						OR (
+							rent.con_status_code = 'yxy'
+							AND rent.con_start_date <![CDATA[ <= ]]> #{recordDate}
+							AND rent.con_end_date <![CDATA[ >= ]]> #{recordDate}
+						)
+					)
+				) 
+				OR(
+		          room.fcurrentstate = 1
+		          AND room.projectid = #{projectId}
+		          )
+		      )
+				AND room.fisdel = 0
+			GROUP BY
+				room.housetypeid
+	</select>
+	
+	<select id="getShortLeasedCount" resultType="com.zra.report.entity.dto.BaseReportDto">
+			
+			SELECT
+				room.housetypeid AS houseTypeId,
+				count(room.fid) AS count
+			FROM
+				troominfo room
+			WHERE
+				room.fid IN (
+					SELECT
+						detail.room_id
+					FROM
+						rent_rentedetail detail
+					INNER JOIN trentcontract rent ON detail.contract_id = rent.contractid
+					AND rent.fisdel = 0
+					AND detail.is_deleted = 0
+					AND rent.project_id = #{projectId}
+			    AND rent.fcontype = '2'
+					AND (
+						(
+							rent.con_status_code = 'yqy'
+							AND rent.con_start_date <![CDATA[ <= ]]> #{recordDate}
+						)
+						OR (
+							rent.con_status_code = 'ytz'
+							AND rent.con_start_date <![CDATA[ <= ]]> #{recordDate}
+							AND rent.con_end_date <![CDATA[ >= ]]> #{recordDate}
+							AND rent.contractid IN (
+								SELECT
+									sur.contract_id
+								FROM
+									tsurrender sur
+								WHERE
+									sur.fisdel = 0
+								AND sur.fsubmitstatus = '1'
+								AND sur.fsurtype = '0'
+							)
+						)
+						OR (
+							rent.con_status_code = 'yxy'
+							AND rent.con_start_date <![CDATA[ <= ]]> #{recordDate}
+							AND rent.con_end_date <![CDATA[ >= ]]> #{recordDate}
+						)
+					)
+				)
+			GROUP BY
+				room.housetypeid
+	</select>
+	
+	<select id="getLeaveStockCount" resultType="com.zra.report.entity.dto.BaseReportDto" parameterType="String">
+		SELECT
+			room.housetypeid AS houseTypeId,
+			room.fcurrentstate AS currentState,
+			count(room.fid) AS count
+		FROM
+			troominfo room
+		WHERE
+			room.projectid = #{projectId}
+		AND (
+			(
+				room.ftype = 0
+				AND room.rent_type = 1
+			)
+			OR room.ftype = 1
+		)
+		AND room.fcurrentstate IN ('2', '0')
+		AND room.fisdel = 0
+		AND room.fid NOT IN (
+			SELECT
+				detail.room_id
+			FROM
+				trentcontract rent,
+				rent_rentedetail detail,
+				tsurrender sur
+			WHERE
+				rent.contractid = detail.contract_id
+			AND rent.con_status_code = 'ytz'
+			AND rent.con_start_date <![CDATA[ <= ]]> #{recordDate}
+			AND rent.con_end_date <![CDATA[ >= ]]> #{recordDate}
+			AND rent.fisdel = 0
+	        AND detail.is_deleted = 0
+	        AND sur.contract_id = rent.contractid
+			AND sur.fisdel = 0
+			AND sur.fsubmitstatus = '1'
+  			AND sur.fsurtype = '0'
+		)
+		GROUP BY
+			room.housetypeid,
+			room.fcurrentstate
+	</select>
+	
+	<select id="getQuitCount" resultType="com.zra.report.entity.dto.BaseReportDto">
+		SELECT
+			room.housetypeid AS houseTypeId,
+		    temp.fsurtype AS surType,
+			count(room.fid) AS count
+		FROM
+			tsurrender temp,
+			trentcontract rent,
+			rent_rentedetail detail,
+			troominfo room
+		WHERE
+			temp.fsubmitstatus = '1'
+		AND temp.fvalid = 1
+		AND temp.fisdel = 0
+		AND temp.fapplystatus = 1
+		AND temp.freleasedate <![CDATA[ >= ]]> #{recordDate}
+		AND temp.freleasedate <![CDATA[ <= ]]> #{recordDate}
+		AND temp.contract_id = rent.contractid
+		AND rent.contractid = detail.contract_id
+		AND room.fid = detail.room_id
+		AND rent.project_id = #{projectId}
+		AND room.fisdel = 0
+		AND rent.fisdel = 0
+		AND detail.is_deleted = 0
+		GROUP BY
+			room.housetypeid,
+		    temp.fsurtype
+	</select>
+	<update id="delEntitysByRecordDate">
+	    UPDATE report_stock 
+        <set>
+        	is_del = 1, 
+			delete_time = #{delTime,jdbcType=TIMESTAMP}, 
+            delete_id = #{delId,jdbcType=VARCHAR}
+        </set>
+        WHERE record_date like #{recordDate} 
+	</update>
+	<!-- end add by tianxf9 -->
+	
+	<!-- add by tianxf9 for 目标看板 -->
+	<!-- 出租率 --> 
+	<select id="getLeasedRate" resultType="com.zra.kanban.entity.dto.KanbanRateDto" parameterType="String">
+			SELECT
+				project_id AS projectId,
+				<![CDATA[ROUND(
+			
+					IF (
+						sum(rentable_count) IS NULL || sum(rentable_count) = 0,
+						0,
+			
+					IF (
+						sum(leased_count) IS NULL,
+						0,
+						sum(leased_count)
+					) / sum(rentable_count) * 100
+					),
+					2
+				) AS rate]]>
+			FROM
+				report_stock
+			WHERE
+				record_date <![CDATA[>=]]> #{startDate}
+			AND record_date <![CDATA[<=]]> #{endDate}
+			AND is_del = 0
+			GROUP BY
+				project_id;
+	</select>
+	<!-- 日均入住率 -->
+    <select id="getOccupancyRateAvge" resultType="com.zra.kanban.entity.dto.KanbanRateDto">
+			SELECT
+				temp.projectId,
+			    sum(temp.leasedRate)/${count} AS rate
+			FROM
+				(
+					SELECT
+						project_id AS projectId,
+			      if(
+			      sum(rentable_count)=0,
+			      0,
+						FORMAT(
+							(
+								sum(leased_count) / sum(rentable_count)
+							) * 100,
+							2
+						)) AS leasedRate
+					FROM
+						report_stock
+					WHERE
+						record_date <![CDATA[>=]]> #{startDate}
+					AND record_date <![CDATA[<=]]> #{endDate}
+					AND is_del = 0
+					GROUP BY
+						project_id,
+						record_date
+				) temp
+			 GROUP BY
+				projectId
+	</select>
+	<!--end by tianxf9  -->
+</mapper>

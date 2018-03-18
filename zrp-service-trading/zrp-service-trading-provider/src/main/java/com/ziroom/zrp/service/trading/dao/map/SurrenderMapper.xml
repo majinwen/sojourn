@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ziroom.zrp.service.trading.dao.SurrenderDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.SurrenderEntity">
+        <id column="surrender_id" property="surrenderId" jdbcType="VARCHAR"/>
+        <result column="contract_id" property="contractId" jdbcType="VARCHAR"/>
+        <result column="surrendercost_id" property="surrendercostId" jdbcType="VARCHAR"/>
+        <result column="freleasedate" property="freleasedate" jdbcType="DATE"/>
+        <result column="createrid" property="createrid" jdbcType="VARCHAR"/>
+        <result column="updaterid" property="updaterid" jdbcType="VARCHAR"/>
+        <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP"/>
+        <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP"/>
+        <result column="fvalid" property="fvalid" jdbcType="INTEGER"/>
+        <result column="fisdel" property="fisdel" jdbcType="INTEGER"/>
+        <result column="fsurtype" property="fsurtype" jdbcType="VARCHAR"/>
+        <result column="fsurreason" property="fsurreason" jdbcType="VARCHAR"/>
+        <result column="fsurreasonother" property="fsurreasonother" jdbcType="VARCHAR"/>
+        <result column="frentalorderspic" property="frentalorderspic" jdbcType="VARCHAR"/>
+        <result column="fapplicationDate" property="fapplicationdate" jdbcType="DATE"/>
+        <result column="factualDate" property="factualdate" jdbcType="DATE"/>
+        <result column="fexpectedDate" property="fexpecteddate" jdbcType="DATE"/>
+        <result column="fsurrendercode" property="fsurrendercode" jdbcType="VARCHAR"/>
+        <result column="sur_parent_code" property="surParentCode" jdbcType="VARCHAR"/>
+        <result column="sur_parent_id" property="surParentId" jdbcType="VARCHAR"/>
+        <result column="room_id" property="roomId" jdbcType="VARCHAR"/>
+        <result column="fnewrentcode" property="fnewrentcode" jdbcType="CHAR"/>
+        <result column="fsubletname" property="fsubletname" jdbcType="VARCHAR"/>
+        <result column="fsubletpersonid" property="fsubletpersonid" jdbcType="VARCHAR"/>
+        <result column="ftenantname" property="ftenantname" jdbcType="VARCHAR"/>
+        <result column="fiscancel" property="fiscancel" jdbcType="CHAR"/>
+        <result column="fsubmitstatus" property="fsubmitstatus" jdbcType="VARCHAR"/>
+        <result column="frentauditstatus" property="frentauditstatus" jdbcType="VARCHAR"/>
+        <result column="fhandlezo" property="fhandlezo" jdbcType="VARCHAR"/>
+        <result column="fauditor" property="fauditor" jdbcType="VARCHAR"/>
+        <result column="frentauditdate" property="frentauditdate" jdbcType="DATE"/>
+        <result column="fdeliverydate" property="fdeliverydate" jdbcType="DATE"/>
+        <result column="frentEndDate" property="frentenddate" jdbcType="DATE"/>
+        <result column="fapplystatus" property="fapplystatus" jdbcType="INTEGER"/>
+        <result column="fhandlezoname" property="fhandlezoname" jdbcType="VARCHAR"/>
+        <result column="fauditorname" property="fauditorname" jdbcType="VARCHAR"/>
+        <result column="cityid" property="cityid" jdbcType="VARCHAR"/>
+        <result column="fsource" property="fsource" jdbcType="VARCHAR"/>
+        <result column="rent_type" property="rentType" jdbcType="INTEGER"/>
+        <result column="zw_first_audit_date" property="zwFirstAuditDate" jdbcType="TIMESTAMP"/>
+        <result column="zw_approve_date" property="zwApproveDate" jdbcType="TIMESTAMP"/>
+        <result column="cw_first_audit_date" property="cwFirstAuditDate" jdbcType="TIMESTAMP"/>
+        <result column="cw_approve_date" property="cwApproveDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    surrender_id, contract_id, surrendercost_id, freleasedate, createrid, updaterid, 
+    fcreatetime, fupdatetime, fvalid, fisdel, fsurtype, fsurreason, fsurreasonother, 
+    frentalorderspic, fapplicationDate, factualDate, fexpectedDate, fsurrendercode, sur_parent_code, 
+    sur_parent_id, room_id, fnewrentcode, fsubletname, fsubletpersonid, ftenantname, 
+    fiscancel, fsubmitstatus, frentauditstatus, fhandlezo, fauditor, frentauditdate, 
+    fdeliverydate, frentEndDate, fapplystatus, fhandlezoname, fauditorname, cityid, fsource, 
+    rent_type, zw_first_audit_date, zw_approve_date, cw_first_audit_date, cw_approve_date
+  </sql>
+    <select id="findSurrenderById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from tsurrender
+        where surrender_id = #{surrenderId,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="saveSurrender" parameterType="com.ziroom.zrp.trading.entity.SurrenderEntity">
+        insert into tsurrender
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="surrenderId != null">
+                surrender_id,
+            </if>
+            <if test="contractId != null">
+                contract_id,
+            </if>
+            <if test="surrendercostId != null">
+                surrendercost_id,
+            </if>
+            <if test="freleasedate != null">
+                freleasedate,
+            </if>
+            <if test="createrid != null">
+                createrid,
+            </if>
+            <if test="updaterid != null">
+                updaterid,
+            </if>
+            <if test="fcreatetime != null">
+                fcreatetime,
+            </if>
+            <if test="fupdatetime != null">
+                fupdatetime,
+            </if>
+            <if test="fvalid != null">
+                fvalid,
+            </if>
+            <if test="fisdel != null">
+                fisdel,
+            </if>
+            <if test="fsurtype != null">
+                fsurtype,
+            </if>
+            <if test="fsurreason != null">
+                fsurreason,
+            </if>
+            <if test="fsurreasonother != null">
+                fsurreasonother,
+            </if>
+            <if test="frentalorderspic != null">
+                frentalorderspic,
+            </if>
+            <if test="fapplicationdate != null">
+                fapplicationDate,
+            </if>
+            <if test="factualdate != null">
+                factualDate,
+            </if>
+            <if test="fexpecteddate != null">
+                fexpectedDate,
+            </if>
+            <if test="fsurrendercode != null">
+                fsurrendercode,
+            </if>
+            <if test="surParentCode != null">
+                sur_parent_code,
+            </if>
+            <if test="surParentId != null">
+                sur_parent_id,
+            </if>
+            <if test="roomId != null">
+                room_id,
+            </if>
+            <if test="fnewrentcode != null">
+                fnewrentcode,
+            </if>
+            <if test="fsubletname != null">
+                fsubletname,
+            </if>
+            <if test="fsubletpersonid != null">
+                fsubletpersonid,
+            </if>
+            <if test="ftenantname != null">
+                ftenantname,
+            </if>
+            <if test="fiscancel != null">
+                fiscancel,
+            </if>
+            <if test="fsubmitstatus != null">
+                fsubmitstatus,
+            </if>
+            <if test="frentauditstatus != null">
+                frentauditstatus,
+            </if>
+            <if test="fhandlezo != null">
+                fhandlezo,
+            </if>
+            <if test="fauditor != null">
+                fauditor,
+            </if>
+            <if test="frentauditdate != null">
+                frentauditdate,
+            </if>
+            <if test="fdeliverydate != null">
+                fdeliverydate,
+            </if>
+            <if test="frentenddate != null">
+                frentEndDate,
+            </if>
+            <if test="fapplystatus != null">
+                fapplystatus,
+            </if>
+            <if test="fhandlezoname != null">
+                fhandlezoname,
+            </if>
+            <if test="fauditorname != null">
+                fauditorname,
+            </if>
+            <if test="cityid != null">
+                cityid,
+            </if>
+            <if test="fsource != null">
+                fsource,
+            </if>
+            <if test="rentType != null">
+                rent_type,
+            </if>
+            <if test="zwFirstAuditDate != null">
+                zw_first_audit_date,
+            </if>
+            <if test="zwApproveDate != null">
+                zw_approve_date,
+            </if>
+            <if test="cwFirstAuditDate != null">
+                cw_first_audit_date,
+            </if>
+            <if test="cwApproveDate != null">
+                cw_approve_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="surrenderId != null">
+                #{surrenderId,jdbcType=VARCHAR},
+            </if>
+            <if test="contractId != null">
+                #{contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="surrendercostId != null">
+                #{surrendercostId,jdbcType=VARCHAR},
+            </if>
+            <if test="freleasedate != null">
+                #{freleasedate,jdbcType=DATE},
+            </if>
+            <if test="createrid != null">
+                #{createrid,jdbcType=VARCHAR},
+            </if>
+            <if test="updaterid != null">
+                #{updaterid,jdbcType=VARCHAR},
+            </if>
+            <if test="fcreatetime != null">
+                #{fcreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fupdatetime != null">
+                #{fupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fvalid != null">
+                #{fvalid,jdbcType=INTEGER},
+            </if>
+            <if test="fisdel != null">
+                #{fisdel,jdbcType=INTEGER},
+            </if>
+            <if test="fsurtype != null">
+                #{fsurtype,jdbcType=VARCHAR},
+            </if>
+            <if test="fsurreason != null">
+                #{fsurreason,jdbcType=VARCHAR},
+            </if>
+            <if test="fsurreasonother != null">
+                #{fsurreasonother,jdbcType=VARCHAR},
+            </if>
+            <if test="frentalorderspic != null">
+                #{frentalorderspic,jdbcType=VARCHAR},
+            </if>
+            <if test="fapplicationdate != null">
+                #{fapplicationdate,jdbcType=DATE},
+            </if>
+            <if test="factualdate != null">
+                #{factualdate,jdbcType=DATE},
+            </if>
+            <if test="fexpecteddate != null">
+                #{fexpecteddate,jdbcType=DATE},
+            </if>
+            <if test="fsurrendercode != null">
+                #{fsurrendercode,jdbcType=VARCHAR},
+            </if>
+            <if test="surParentCode != null">
+                #{surParentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="surParentId != null">
+                #{surParentId,jdbcType=VARCHAR},
+            </if>
+            <if test="roomId != null">
+                #{roomId,jdbcType=VARCHAR},
+            </if>
+            <if test="fnewrentcode != null">
+                #{fnewrentcode,jdbcType=CHAR},
+            </if>
+            <if test="fsubletname != null">
+                #{fsubletname,jdbcType=VARCHAR},
+            </if>
+            <if test="fsubletpersonid != null">
+                #{fsubletpersonid,jdbcType=VARCHAR},
+            </if>
+            <if test="ftenantname != null">
+                #{ftenantname,jdbcType=VARCHAR},
+            </if>
+            <if test="fiscancel != null">
+                #{fiscancel,jdbcType=CHAR},
+            </if>
+            <if test="fsubmitstatus != null">
+                #{fsubmitstatus,jdbcType=VARCHAR},
+            </if>
+            <if test="frentauditstatus != null">
+                #{frentauditstatus,jdbcType=VARCHAR},
+            </if>
+            <if test="fhandlezo != null">
+                #{fhandlezo,jdbcType=VARCHAR},
+            </if>
+            <if test="fauditor != null">
+                #{fauditor,jdbcType=VARCHAR},
+            </if>
+            <if test="frentauditdate != null">
+                #{frentauditdate,jdbcType=DATE},
+            </if>
+            <if test="fdeliverydate != null">
+                #{fdeliverydate,jdbcType=DATE},
+            </if>
+            <if test="frentenddate != null">
+                #{frentenddate,jdbcType=DATE},
+            </if>
+            <if test="fapplystatus != null">
+                #{fapplystatus,jdbcType=INTEGER},
+            </if>
+            <if test="fhandlezoname != null">
+                #{fhandlezoname,jdbcType=VARCHAR},
+            </if>
+            <if test="fauditorname != null">
+                #{fauditorname,jdbcType=VARCHAR},
+            </if>
+            <if test="cityid != null">
+                #{cityid,jdbcType=VARCHAR},
+            </if>
+            <if test="fsource != null">
+                #{fsource,jdbcType=VARCHAR},
+            </if>
+            <if test="rentType != null">
+                #{rentType,jdbcType=INTEGER},
+            </if>
+            <if test="zwFirstAuditDate != null">
+                #{zwFirstAuditDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="zwApproveDate != null">
+                #{zwApproveDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cwFirstAuditDate != null">
+                #{cwFirstAuditDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cwApproveDate != null">
+                #{cwApproveDate,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateSurrender" parameterType="com.ziroom.zrp.trading.entity.SurrenderEntity">
+        update tsurrender
+        <set>
+            <if test="contractId != null">
+                contract_id = #{contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="surrendercostId != null">
+                surrendercost_id = #{surrendercostId,jdbcType=VARCHAR},
+            </if>
+            <if test="freleasedate != null">
+                freleasedate = #{freleasedate,jdbcType=DATE},
+            </if>
+            <if test="createrid != null">
+                createrid = #{createrid,jdbcType=VARCHAR},
+            </if>
+            <if test="updaterid != null">
+                updaterid = #{updaterid,jdbcType=VARCHAR},
+            </if>
+            <if test="fcreatetime != null">
+                fcreatetime = #{fcreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fupdatetime != null">
+                fupdatetime = #{fupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fvalid != null">
+                fvalid = #{fvalid,jdbcType=INTEGER},
+            </if>
+            <if test="fisdel != null">
+                fisdel = #{fisdel,jdbcType=INTEGER},
+            </if>
+            <if test="fsurtype != null">
+                fsurtype = #{fsurtype,jdbcType=VARCHAR},
+            </if>
+            <if test="fsurreason != null">
+                fsurreason = #{fsurreason,jdbcType=VARCHAR},
+            </if>
+            <if test="fsurreasonother != null">
+                fsurreasonother = #{fsurreasonother,jdbcType=VARCHAR},
+            </if>
+            <if test="frentalorderspic != null">
+                frentalorderspic = #{frentalorderspic,jdbcType=VARCHAR},
+            </if>
+            <if test="fapplicationdate != null">
+                fapplicationDate = #{fapplicationdate,jdbcType=DATE},
+            </if>
+            <if test="factualdate != null">
+                factualDate = #{factualdate,jdbcType=DATE},
+            </if>
+            <if test="fexpecteddate != null">
+                fexpectedDate = #{fexpecteddate,jdbcType=DATE},
+            </if>
+            <if test="fsurrendercode != null">
+                fsurrendercode = #{fsurrendercode,jdbcType=VARCHAR},
+            </if>
+            <if test="surParentCode != null">
+                sur_parent_code = #{surParentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="surParentId != null">
+                sur_parent_id = #{surParentId,jdbcType=VARCHAR},
+            </if>
+            <if test="roomId != null">
+                room_id = #{roomId,jdbcType=VARCHAR},
+            </if>
+            <if test="fnewrentcode != null">
+                fnewrentcode = #{fnewrentcode,jdbcType=CHAR},
+            </if>
+            <if test="fsubletname != null">
+                fsubletname = #{fsubletname,jdbcType=VARCHAR},
+            </if>
+            <if test="fsubletpersonid != null">
+                fsubletpersonid = #{fsubletpersonid,jdbcType=VARCHAR},
+            </if>
+            <if test="ftenantname != null">
+                ftenantname = #{ftenantname,jdbcType=VARCHAR},
+            </if>
+            <if test="fiscancel != null">
+                fiscancel = #{fiscancel,jdbcType=CHAR},
+            </if>
+            <if test="fsubmitstatus != null">
+                fsubmitstatus = #{fsubmitstatus,jdbcType=VARCHAR},
+            </if>
+            <if test="frentauditstatus != null">
+                frentauditstatus = #{frentauditstatus,jdbcType=VARCHAR},
+            </if>
+            <if test="fhandlezo != null">
+                fhandlezo = #{fhandlezo,jdbcType=VARCHAR},
+            </if>
+            <if test="fauditor != null">
+                fauditor = #{fauditor,jdbcType=VARCHAR},
+            </if>
+            <if test="frentauditdate != null">
+                frentauditdate = #{frentauditdate,jdbcType=DATE},
+            </if>
+            <if test="fdeliverydate != null">
+                fdeliverydate = #{fdeliverydate,jdbcType=DATE},
+            </if>
+            <if test="frentenddate != null">
+                frentEndDate = #{frentenddate,jdbcType=DATE},
+            </if>
+            <if test="fapplystatus != null">
+                fapplystatus = #{fapplystatus,jdbcType=INTEGER},
+            </if>
+            <if test="fhandlezoname != null">
+                fhandlezoname = #{fhandlezoname,jdbcType=VARCHAR},
+            </if>
+            <if test="fauditorname != null">
+                fauditorname = #{fauditorname,jdbcType=VARCHAR},
+            </if>
+            <if test="cityid != null">
+                cityid = #{cityid,jdbcType=VARCHAR},
+            </if>
+            <if test="fsource != null">
+                fsource = #{fsource,jdbcType=VARCHAR},
+            </if>
+            <if test="rentType != null">
+                rent_type = #{rentType,jdbcType=INTEGER},
+            </if>
+            <if test="zwFirstAuditDate != null">
+                zw_first_audit_date = #{zwFirstAuditDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="zwApproveDate != null">
+                zw_approve_date = #{zwApproveDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cwFirstAuditDate != null">
+                cw_first_audit_date = #{cwFirstAuditDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="cwApproveDate != null">
+                cw_approve_date = #{cwApproveDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where surrender_id = #{surrenderId,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getSurAndSurCostInfo" resultType="com.ziroom.zrp.service.trading.pojo.CalSurrenderPojo"
+            parameterType="java.lang.String">
+        SELECT
+            s.surrender_id AS surrenderId,
+            s.contract_id AS contractId,
+            r.con_rent_code AS conRentCode,
+            s.fsurtype AS surType,
+            s.fapplicationDate AS applicationDate,
+            s.fexpectedDate AS expectedDate,
+            s.freleasedate AS releaseDate,
+            c.surrendercost_id AS surrenderCostId,
+            c.fsurtype AS costSurType,
+            c.fresponsibility AS responsibility,
+            r.customer_type AS customerType,
+            r.con_rent_code AS conRentCode,
+            r.room_id AS roomId,
+            r.house_room_no AS houseRoomNo,
+            IFNULL(su.fsurwaterprice, 0) AS standardSF,
+	        IFNULL(su.fsurelecprice, 0) AS standardDF,
+            COUNT(i.fid) AS itemCount
+        FROM
+            trentcontract AS r,
+            tsurrender AS s
+        LEFT JOIN tsurrendercost AS c ON c.surrender_id = s.surrender_id
+        AND c.fisdel = 0
+        AND c.fvalid = 1
+        LEFT JOIN tsurrendercostitem AS i ON i.surrendercostid = c.surrendercost_id
+        AND i.fisdel = 0
+        AND i.fvalid = 1
+        LEFT JOIN tsurmeterdetail AS su ON su.fsurrenderid = s.surrender_id
+        AND su.room_id = s.room_id
+        AND su.fcontractId = s.contract_id
+        AND su.fisDel = 0
+        WHERE
+            s.sur_parent_id = #{surParentId,jdbcType=VARCHAR}
+        AND r.contractid = s.contract_id
+        AND s.fisdel = 0
+        AND s.fvalid = 1
+        AND r.fisdel = 0
+        AND r.fvalid = 1
+        GROUP BY
+            s.contract_id
+    </select>
+
+    <select id="getSurAndSurCostInfoByConId" resultType="com.ziroom.zrp.service.trading.pojo.CalSurrenderPojo"
+            parameterType="java.lang.String">
+        SELECT
+            s.surrender_id AS surrenderId,
+            s.contract_id AS contractId,
+            r.con_rent_code AS conRentCode,
+            s.fsurtype AS surType,
+            s.fapplicationDate AS applicationDate,
+            s.fexpectedDate AS expectedDate,
+            s.freleasedate AS releaseDate,
+            c.surrendercost_id AS surrenderCostId,
+            c.fsurtype AS costSurType,
+            c.fresponsibility AS responsibility,
+            r.customer_type AS customerType,
+            r.con_rent_code AS conRentCode,
+            r.room_id AS roomId,
+            r.house_room_no AS houseRoomNo,
+            IFNULL(su.fsurwaterprice, 0) AS standardSF,
+	        IFNULL(su.fsurelecprice, 0) AS standardDF,
+            COUNT(i.fid) AS itemCount
+        FROM
+            trentcontract AS r,
+            tsurrender AS s
+        LEFT JOIN tsurrendercost AS c ON c.surrender_id = s.surrender_id
+        AND c.fisdel = 0
+        AND c.fvalid = 1
+        LEFT JOIN tsurrendercostitem AS i ON i.surrendercostid = c.surrendercost_id
+        AND i.fisdel = 0
+        AND i.fvalid = 1
+        LEFT JOIN tsurmeterdetail AS su ON su.fsurrenderid = s.surrender_id
+        AND su.room_id = s.room_id
+        AND su.fcontractId = s.contract_id
+        AND su.fisDel = 0
+        WHERE
+            s.contract_id = #{contractId,jdbcType=VARCHAR}
+        AND r.contractid = s.contract_id
+        AND s.fisdel = 0
+        AND s.fvalid = 1
+        AND r.fisdel = 0
+        AND r.fvalid = 1
+        GROUP BY
+            s.contract_id
+    </select>
+
+    <select id="getTZJGPCF" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        SELECT
+            SUM(IFNULL(d.fpayfee, 0)) AS needPayTZJGPCF
+        FROM
+            trentcontract AS r,
+            tsurrender AS s
+        LEFT JOIN titemdelivery AS d ON d.contractid = s.contract_id
+        AND d.surrenderid = s.surrender_id
+        AND d.fisdel = 0
+        AND d.fvalid = 1
+        AND d.fpayfee != 0
+        AND d.fpayfee IS NOT NULL
+        WHERE
+            s.contract_id = #{contractId,jdbcType=VARCHAR}
+        AND r.contractid = s.contract_id
+        AND s.fisdel = 0
+        AND s.fvalid = 1
+        AND r.fisdel = 0
+        AND r.fvalid = 1
+        GROUP BY
+            s.contract_id
+    </select>
+
+    <select id="getSurListByParentId" parameterType="java.lang.String" resultType="com.ziroom.zrp.trading.entity.SurrenderEntity">
+        SELECT
+            s.surrender_id AS surrenderId,
+            s.contract_id AS contractId,
+            s.room_id AS roomId,
+            s.sur_parent_id AS surParentId,
+            s.sur_parent_code AS surParentCode,
+            c.surrendercost_id AS surrendercostId,
+            r.con_rent_code AS conRentCode,
+	        r.con_status_code AS conStatuCode
+        FROM
+            tsurrender AS s
+        LEFT JOIN tsurrendercost AS c ON s.surrendercost_id = c.surrendercost_id
+        AND c.fisdel = 0
+        AND c.fvalid = 1
+        LEFT JOIN trentcontract AS r ON s.contract_id = r.contractid
+        AND r.fisdel = 0
+        AND r.fvalid = 1
+        WHERE
+            s.sur_parent_id = #{surParentId,jdbcType=VARCHAR}
+        AND s.fisdel = 0
+        AND s.fvalid = 1
+    </select>
+    <!-- 根据父合同号查询解约次数 -->
+    <select id="selectSurrenderTimeByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM
+		(SELECT 
+        	COUNT(*) 
+        FROM tsurrender 
+        WHERE sur_parent_code LIKE CONCAT('%',#{contractCode},'%')
+        GROUP BY sur_parent_code) AS T
+    </select>
+
+    <update id="updateById" parameterType="com.ziroom.zrp.service.trading.dto.surrender.SurrenderCostNextDto">
+        UPDATE tsurrender
+        SET surrendercost_id = #{surrendercostId,jdbcType=VARCHAR},
+         fsurtype = #{fsurtype,jdbcType=VARCHAR},
+         updaterid = #{zoId,jdbcType=VARCHAR},
+         fupdatetime = NOW()
+        WHERE
+            surrender_id = #{surrenderId,jdbcType=VARCHAR}
+        AND fvalid = 1
+        AND fisdel = 0
+    </update>
+
+    <select id="getSurrenderByConId" parameterType="java.lang.String" resultType="com.ziroom.zrp.trading.entity.SurrenderEntity">
+        SELECT
+            s.surrender_id AS surrenderId,
+            s.contract_id AS contractId,
+            s.sur_parent_id AS surParentId,
+            s.sur_parent_code AS surParentCode,
+            c.surrendercost_id AS surrendercostId,
+            r.con_rent_code AS conRentCode,
+	        r.con_status_code AS conStatuCode
+        FROM
+            tsurrender AS s
+        LEFT JOIN tsurrendercost AS c ON s.surrendercost_id = c.surrendercost_id
+        AND c.fisdel = 0
+        AND c.fvalid = 1
+        LEFT JOIN trentcontract AS r ON s.contract_id = r.contractid
+        AND r.fisdel = 0
+        AND r.fvalid = 1
+        WHERE
+            s.contract_id = #{contractId,jdbcType=VARCHAR}
+        AND s.fisdel = 0
+        AND s.fvalid = 1
+    </select>
+
+    <update id="deleteBySurrenderId">
+        UPDATE tsurrender
+        SET fvalid = 0
+        WHERE
+          surrender_id = #{surrenderId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateForDoSurrender">
+        UPDATE tsurrender
+        SET fsubmitstatus = #{submitStatus,jdbcType=INTEGER},
+          updaterid = #{zoId,jdbcType=VARCHAR},
+          fupdatetime = NOW()
+        WHERE
+          surrender_id = #{surrenderId,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getSurRoomList" parameterType="java.lang.String"
+            resultType="com.ziroom.zrp.service.trading.dto.surrender.SurRoomListReturnDto">
+        SELECT
+            s.contract_id AS contractId,
+            c.room_id AS roomId,
+            c.house_room_no AS roomCode,
+            d.delivery_state AS deliveryState
+        FROM
+            tsurrender AS s
+        LEFT JOIN trentcontract AS c ON s.contract_id = c.contractid
+        AND c.fisdel = 0
+        AND c.fvalid = 1
+        LEFT JOIN rent_rentedetail AS d ON d.contract_id = c.contractid
+        AND d.is_deleted = 0
+        AND d.fvalid = 1
+        WHERE
+            s.sur_parent_id = #{surParentId,jdbcType=VARCHAR}
+        AND s.fisdel = 0
+        AND s.fvalid = 1
+    </select>
+
+    <update id="editCommitAudit">
+        UPDATE tsurrender AS s,
+          tsurrendercost AS c
+        SET s.frentauditdate = NULL,
+            s.fauditor = NULL,
+            s.fauditorname = NULL,
+            s.frentauditstatus = 0,
+            s.zw_approve_date = NULL,
+            s.cw_approve_date = NULL,
+            c.financeauditorid = NULL,
+            c.financeauditorname = NULL,
+            c.ffinanceauditdate = NULL,
+            c.ffinanceauditstatus = 0,
+            s.fupdatetime = NOW(),
+            c.fupdatetime = NOW()
+        WHERE
+        <if test="contractId != null and contractId != '' and surParentId == null">
+            s.contract_id = #{contractId,jdbcType=VARCHAR}
+        </if>
+        <if test="surParentId != null and surParentId != ''">
+            s.sur_parent_id = #{surParentId,jdbcType=VARCHAR}
+        </if>
+            AND s.surrender_id = c.surrender_id
+            AND c.fisdel = 0
+            AND c.fvalid = 1
+            AND s.fisdel = 0
+            AND s.fvalid = 1
+    </update>
+    
+    <update id="updateSurrenderApplyTime">
+    UPDATE tsurrender AS s, trentcontract AS c 
+	SET 
+	s.fvalid = 0, 
+	s.fupdatetime = NOW(), 
+	s.fapplicationDate = NULL, 
+	s.fiscancel = 0,  
+    s.updaterid = 'expireCancel', 
+    c.fexpectedDate = NULL, 
+    c.fapplicationDate = NULL 
+    WHERE s.fapplicationDate &lt; DATE_ADD( CURRENT_DATE(), INTERVAL - #{time,jdbcType=INTEGER} DAY) 
+    AND s.fvalid = 1 AND s.fisdel = 0 AND s.fapplystatus = 0 AND s.contract_id = c.contractid
+    AND s.contract_id = #{contractId,jdbcType=VARCHAR}
+    </update>
+    <!-- 根据合同ID删除所有解约协议 -->
+    <update id="deleteSurrenderByContractId">
+    UPDATE tsurrender
+	SET fisdel = 1
+    WHERE contract_id = #{contractId, jdbcType=VARCHAR} 
+    AND fisdel = 0
+    </update>
+</mapper>

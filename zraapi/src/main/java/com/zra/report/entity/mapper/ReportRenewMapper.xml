@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--suppress ALL -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.report.dao.ReportRenewDao">
+    <resultMap id="BaseResultMap" type="com.zra.report.entity.ReportRenewEntity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="report_renew_id" property="reportRenewId" jdbcType="VARCHAR"/>
+        <result column="project_id" property="projectId" jdbcType="VARCHAR"/>
+        <result column="record_date" property="recordDate" jdbcType="TIMESTAMP"/>
+        <result column="house_type_id" property="houseTypeId" jdbcType="VARCHAR"/>
+        <result column="expire_room_total" property="expireRoomTotal" jdbcType="INTEGER"/>
+        <result column="expire_room_long" property="expireRoomLong" jdbcType="INTEGER"/>
+        <result column="expire_room_short1" property="expireRoomShort1" jdbcType="INTEGER"/>
+        <result column="expire_room_short2" property="expireRoomShort2" jdbcType="INTEGER"/>
+        <result column="renew_total" property="renewTotal" jdbcType="INTEGER"/>
+        <result column="renew_long" property="renewLong" jdbcType="INTEGER"/>
+        <result column="renew_short1" property="renewShort1" jdbcType="INTEGER"/>
+        <result column="renew_short2" property="renewShort2" jdbcType="INTEGER"/>
+        <result column="renew_rate_total" property="renewRateTotal" jdbcType="DECIMAL"/>
+        <result column="renew_rate_long" property="renewRateLong" jdbcType="DECIMAL"/>
+        <result column="renew_rate_short1" property="renewRateShort1" jdbcType="DECIMAL"/>
+        <result column="renew_rate_short2" property="renewRateShort2" jdbcType="DECIMAL"/>
+        <result column="is_del" property="isDel" jdbcType="BIT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_id" property="createId" jdbcType="VARCHAR"/>
+        <result column="update_id" property="updateId" jdbcType="VARCHAR"/>
+        <result column="delete_id" property="deleteId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, report_renew_id, project_id, record_date, house_type_id, expire_room_total, expire_room_long, expire_room_short1, expire_room_short2, renew_total, renew_long, renew_short1, renew_short2, renew_rate_total, 
+        renew_rate_long, renew_rate_short1, renew_rate_short2, is_del, create_time, delete_time, update_time, create_id, update_id, delete_id
+    </sql>
+    
+    <select id="selectReportRenewCount" resultType="java.lang.Integer">
+    	SELECT
+    		COUNT(*) AS count
+    	FROM (
+    		SELECT 1
+    		FROM report_renew
+	    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+	    	AND is_del = 0 
+	    	AND (DATE_FORMAT(record_date, '%Y-%m-%d') BETWEEN #{beginTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR})
+	    	GROUP BY DATE_FORMAT(record_date, '%Y-%m-%d')
+    	) t
+    </select>
+    
+    <select id="selectReportRenewTimeSpanByPage" resultType="java.lang.String">
+   		SELECT DATE_FORMAT(record_date, '%Y-%m-%d') record_date
+   		FROM report_renew
+    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+    	AND is_del = 0 
+    	AND (DATE_FORMAT(record_date, '%Y-%m-%d') BETWEEN #{beginTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR})
+    	GROUP BY DATE_FORMAT(record_date, '%Y-%m-%d')
+    	<choose>
+        	<when test="page != null">
+            	limit #{page.pageStart},#{page.pageSize};
+        	</when>
+        </choose>
+    </select>
+    
+    <select id="selectReportRenewList" resultMap="BaseResultMap">
+    	SELECT 
+    	<include refid="Base_Column_List"/>
+    	FROM report_renew 
+    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+    	AND is_del = 0 
+    	AND DATE_FORMAT(record_date, '%Y-%m-%d') = #{recordDate,jdbcType=VARCHAR}
+    	ORDER BY house_type_id
+    </select>
+    
+    <select id="selectReportRenewListByTimeSpan" resultMap="BaseResultMap">
+    	SELECT 
+    	<include refid="Base_Column_List"/>
+    	FROM report_renew 
+    	WHERE project_id = #{projectId,jdbcType=VARCHAR} 
+    	AND is_del = 0 
+    	AND (DATE_FORMAT(record_date, '%Y-%m-%d') BETWEEN #{beginTime,jdbcType=VARCHAR} AND #{endTime,jdbcType=VARCHAR})
+    	ORDER BY record_date, house_type_id
+    </select>
+    
+    <insert id="insertReportRenew" parameterType="com.zra.report.entity.ReportRenewEntity" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO report_renew
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="reportRenewId != null">
+                report_renew_id,
+            </if>
+            <if test="projectId != null">
+                project_id,
+            </if>
+            <if test="recordDate != null">
+                record_date,
+            </if>
+            <if test="houseTypeId != null">
+                house_type_id,
+            </if>
+            <if test="expireRoomTotal != null">
+                expire_room_total,
+            </if>
+            <if test="expireRoomLong != null">
+                expire_room_long,
+            </if>
+            <if test="expireRoomShort1 != null">
+                expire_room_short1,
+            </if>
+            <if test="expireRoomShort2 != null">
+                expire_room_short2,
+            </if>
+            <if test="renewTotal != null">
+                renew_total,
+            </if>
+            <if test="renewLong != null">
+                renew_long,
+            </if>
+            <if test="renewShort1 != null">
+                renew_short1,
+            </if>
+            <if test="renewShort2 != null">
+                renew_short2,
+            </if>
+            <if test="renewRateTotal != null">
+                renew_rate_total,
+            </if>
+            <if test="renewRateLong != null">
+                renew_rate_long,
+            </if>
+            <if test="renewRateShort1 != null">
+                renew_rate_short1,
+            </if>
+            <if test="renewRateShort2 != null">
+                renew_rate_short2,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="createId != null">
+                create_id,
+            </if>
+            <if test="updateId != null">
+                update_id,
+            </if>
+            <if test="deleteId != null">
+                delete_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="reportRenewId != null">
+                #{reportRenewId,jdbcType=VARCHAR},
+            </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDate != null">
+                #{recordDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="houseTypeId != null">
+                #{houseTypeId,jdbcType=VARCHAR},
+            </if>
+            <if test="expireRoomTotal != null">
+                #{expireRoomTotal,jdbcType=INTEGER},
+            </if>
+            <if test="expireRoomLong != null">
+                #{expireRoomLong,jdbcType=INTEGER},
+            </if>
+            <if test="expireRoomShort1 != null">
+                #{expireRoomShort1,jdbcType=INTEGER},
+            </if>
+            <if test="expireRoomShort2 != null">
+                #{expireRoomShort2,jdbcType=INTEGER},
+            </if>
+            <if test="renewTotal != null">
+                #{renewTotal,jdbcType=INTEGER},
+            </if>
+            <if test="renewLong != null">
+                #{renewLong,jdbcType=INTEGER},
+            </if>
+            <if test="renewShort1 != null">
+                #{renewShort1,jdbcType=INTEGER},
+            </if>
+            <if test="renewShort2 != null">
+                #{renewShort2,jdbcType=INTEGER},
+            </if>
+            <if test="renewRateTotal != null">
+                #{renewRateTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="renewRateLong != null">
+                #{renewRateLong,jdbcType=DECIMAL},
+            </if>
+            <if test="renewRateShort1 != null">
+                #{renewRateShort1,jdbcType=DECIMAL},
+            </if>
+            <if test="renewRateShort2 != null">
+                #{renewRateShort2,jdbcType=DECIMAL},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=BIT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createId != null">
+                #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateId != null">
+                #{updateId,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteId != null">
+                #{deleteId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    
+    <update id="updateReportRenew" parameterType="com.zra.report.entity.ReportRenewEntity">
+        UPDATE report_renew
+        <set>
+            <if test="projectId != null">
+                project_id = #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDate != null">
+                record_date = #{recordDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="houseTypeId != null">
+                house_type_id = #{houseTypeId,jdbcType=VARCHAR},
+            </if>
+            <if test="expireRoomTotal != null">
+                expire_room_total = #{expireRoomTotal,jdbcType=INTEGER},
+            </if>
+            <if test="expireRoomLong != null">
+                expire_room_long = #{expireRoomLong,jdbcType=INTEGER},
+            </if>
+            <if test="expireRoomShort1 != null">
+                expire_room_short1 = #{expireRoomShort1,jdbcType=INTEGER},
+            </if>
+            <if test="expireRoomShort2 != null">
+                expire_room_short2 = #{expireRoomShort2,jdbcType=INTEGER},
+            </if>
+            <if test="renewTotal != null">
+                renew_total = #{renewTotal,jdbcType=INTEGER},
+            </if>
+            <if test="renewLong != null">
+                renew_long = #{renewLong,jdbcType=INTEGER},
+            </if>
+            <if test="renewShort1 != null">
+                renew_short1 = #{renewShort1,jdbcType=INTEGER},
+            </if>
+            <if test="renewShort2 != null">
+                renew_short2 = #{renewShort2,jdbcType=INTEGER},
+            </if>
+            <if test="renewRateTotal != null">
+                renew_rate_total = #{renewRateTotal,jdbcType=DECIMAL},
+            </if>
+            <if test="renewRateLong != null">
+                renew_rate_long = #{renewRateLong,jdbcType=DECIMAL},
+            </if>
+            <if test="renewRateShort1 != null">
+                renew_rate_short1 = #{renewRateShort1,jdbcType=DECIMAL},
+            </if>
+            <if test="renewRateShort2 != null">
+                renew_rate_short2 = #{renewRateShort2,jdbcType=DECIMAL},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=BIT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createId != null">
+                create_id = #{createId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateId != null">
+                update_id = #{updateId,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteId != null">
+                delete_id = #{deleteId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE report_renew_id = #{reportRenewId,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="deleteReportRenewByBid" parameterType="com.zra.report.entity.ReportRenewEntity">
+        UPDATE report_renew
+        <set>
+        	is_del = 1,
+			delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            delete_id = #{deleteId,jdbcType=VARCHAR},
+        </set>
+        WHERE report_renew_id = #{reportRenewId,jdbcType=VARCHAR}
+    </update>
+    
+    <!-- begin and by tianxf9 -->
+    <select id="getExpireRoomCount" resultType="com.zra.report.entity.dto.BaseReportDto">
+		SELECT
+			room.housetypeid AS houseTypeId,
+			rent.con_rent_year AS conRentYear,
+			count(detail.id) AS count
+		FROM
+			rent_rentedetail detail,
+			trentcontract rent,
+			troominfo room
+		WHERE
+			detail.contract_id = rent.contractid
+		AND rent.con_end_date <![CDATA[ >= ]]> #{startDate}
+		AND rent.con_end_date <![CDATA[ <= ]]> #{endDate}
+		AND rent.project_id = #{projectId}
+		AND rent.con_status_code IN (
+			'yxy',
+			'yqy',
+			'ytz',
+			'jyz',
+			'xyz'
+		)
+		AND rent.fisdel = 0
+		AND detail.is_deleted = 0
+		AND room.fid = detail.room_id
+		AND room.fisdel = 0
+		GROUP BY
+			room.housetypeid,
+			rent.con_rent_year
+    </select>
+    
+    <select id="getRenewLongCount" resultType="com.zra.report.entity.dto.BaseReportDto">
+	    SELECT
+			room.housetypeid AS houseTypeId,
+			count(detail.id) AS count
+		FROM
+			rent_rentedetail detail,
+			trentcontract contract,
+			troominfo room
+		WHERE
+			detail.contract_id = contract.contractid
+		AND contract.pre_con_rent_code IN (
+			SELECT
+				rent.con_rent_code
+			FROM
+				trentcontract rent
+			WHERE
+				rent.con_end_date <![CDATA[ >= ]]> #{startDate}
+			AND rent.con_end_date <![CDATA[ <= ]]> #{endDate}
+			AND rent.project_id = #{projectId}
+			AND rent.con_status_code IN (
+				'yxy',
+				'yqy',
+				'ytz',
+				'jyz',
+				'xyz'
+			)
+			AND rent.fisdel = 0
+			AND rent.con_rent_year = 12
+		)
+		AND contract.con_rent_year = 12
+		AND contract.fsigntype = '1'
+		AND contract.con_status_code = 'yqy'
+		AND contract.con_end_date <![CDATA[ >= ]]> #{endDate}
+		AND room.fid = detail.room_id
+		AND room.fisdel = 0
+		AND contract.fisdel = 0
+		AND detail.is_deleted = 0
+		GROUP BY
+			room.housetypeid;
+    </select>
+    
+    <select id="getRenewShort1Count" resultType="com.zra.report.entity.dto.BaseReportDto">
+		SELECT
+			room.housetypeid AS houseTypeId,
+			count(detail.id) AS count
+		FROM
+			rent_rentedetail detail,
+			trentcontract contract,
+			troominfo room
+		WHERE
+			detail.contract_id = contract.contractid
+		AND contract.pre_con_rent_code IN (
+			SELECT
+				rent.con_rent_code
+			FROM
+				trentcontract rent
+			WHERE
+				rent.con_end_date <![CDATA[ >= ]]> #{startDate}
+			AND rent.con_end_date <![CDATA[ <= ]]> #{endDate}
+			AND rent.project_id = #{projectId}
+			AND rent.con_status_code IN (
+				'yxy',
+				'yqy',
+				'ytz',
+				'jyz',
+				'xyz'
+			)
+			AND rent.fisdel = 0
+			AND rent.con_rent_year IN (1, 2, 3)
+		)
+		AND contract.con_rent_year != 12
+		AND contract.con_rent_year != 0
+		AND contract.fsigntype = '1'
+		AND contract.con_status_code = 'yqy'
+		AND contract.con_end_date <![CDATA[ >= ]]> #{endDate}
+		AND room.fid = detail.room_id
+		AND room.fisdel = 0
+		AND contract.fisdel = 0
+		AND detail.is_deleted = 0
+		GROUP BY
+			room.housetypeid;
+    </select>
+    
+    <select id="getRenewShort2Count" resultType="com.zra.report.entity.dto.BaseReportDto">
+		SELECT
+			room.housetypeid AS houseTypeId,
+			count(detail.id) AS count
+		FROM
+			rent_rentedetail detail,
+			trentcontract contract,
+			troominfo room
+		WHERE
+			detail.contract_id = contract.contractid
+		AND contract.pre_con_rent_code IN (
+			SELECT
+				rent.con_rent_code
+			FROM
+				trentcontract rent
+			WHERE
+				rent.con_end_date <![CDATA[ >= ]]> #{startDate}
+			AND rent.con_end_date <![CDATA[ <= ]]> #{endDate}
+			AND rent.project_id = #{projectId}
+			AND rent.con_status_code IN (
+				'yxy',
+				'yqy',
+				'ytz',
+				'jyz',
+				'xyz'
+			)
+			AND rent.fisdel = 0
+			AND rent.con_rent_year IN (4, 5, 6)
+		)
+		AND contract.con_rent_year != 12
+		AND contract.con_rent_year != 0
+		AND contract.fsigntype = '1'
+		AND contract.con_status_code = 'yqy'
+		AND contract.con_end_date <![CDATA[ >= ]]> #{endDate}
+		AND room.fid = detail.room_id
+		AND room.fisdel = 0
+		AND contract.fisdel = 0
+		AND detail.is_deleted = 0
+		GROUP BY
+			room.housetypeid;
+    </select>
+    
+    <update id="delRenewEntityByRecordDate">
+        UPDATE report_renew 
+        <set>
+        	is_del = 1, 
+			delete_time = #{delTime,jdbcType=TIMESTAMP}, 
+            delete_id = #{delId,jdbcType=VARCHAR}
+        </set>
+        WHERE record_date like #{recordDate} 
+    </update>
+    <!-- end and by tianxf9 -->
+</mapper>

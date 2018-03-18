@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--suppress ALL -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.vacancyreport.dao.VacancyReportDao">
+    <resultMap id="BaseResultMap" type="com.zra.vacancyreport.entity.VacancyReportEntity">
+        <id column="id"  property="Id" jdbcType="INTEGER"/>
+        <result column="report_empty_id" property="reportEmptyId" jdbcType="VARCHAR"/>
+        <result column="project_id" property="projectId" jdbcType="VARCHAR"/>
+        <result column="room_id" property="roomId" jdbcType="VARCHAR"/>
+        <result column="room_num" property="roomNum" jdbcType="VARCHAR"/>
+        <result column="house_type_id" property="houseTypeId" jdbcType="VARCHAR"/>
+        <result column="rent_type" property="rentType" jdbcType="BIT"/>
+        <result column="room_state" property="roomState" jdbcType="VARCHAR"/>
+        <result column="empty_num" property="emptyNum" jdbcType="INTEGER"/>
+        <result column="see_num" property="seeNum" jdbcType="INTEGER"/>
+        <result column="is_empty" property="isEmpty" jdbcType="BIT"/>
+        <result column="record_date" property="recordDate" jdbcType="TIMESTAMP"/>
+        <result column="creater_id" property="createrId" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="updater_id" property="updaterId" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_id" property="deleteId" jdbcType="VARCHAR"/>
+        <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP"/>
+        <result column="is_del" property="isDel" jdbcType="BIT"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+      id,report_empty_id,project_id,room_id,room_num,house_type_id,rent_type,room_state,empty_num,see_num,is_empty,record_date,creater_id
+      ,create_time,updater_id,update_time,delete_id,delete_time,is_del
+    </sql>
+    
+    <select id="getRoomInfo" parameterType="String" resultType="com.zra.vacancyreport.entity.dto.RoomInfoDto">
+			SELECT
+				room.fid AS roomId,
+				room.froomnumber AS roomNum,
+				room.projectid AS projectId,
+				room.housetypeid AS houseTypeId,
+				room.rent_type AS rentType,
+				room.fcurrentstate AS roomState,
+				emp.room_state AS yRoomState,
+				emp.empty_num AS yemptyNum
+			FROM
+				troominfo room
+			INNER JOIN report_empty emp ON room.fid = emp.room_id
+			AND emp.record_date = #{date}
+			AND emp.is_del = 0
+			AND emp.room_id = #{roomId}
+			WHERE
+				room.fisdel = 0
+		    <if test="projectId!='ALL'">
+			AND room.projectid = #{projectId}
+			</if>
+			AND room.fcurrentstate is not null
+			AND (
+				(
+					room.rent_type = 1
+					AND room.ftype = 0
+				)
+				OR (
+					room.rent_type = 2
+					AND room.ftype = 1
+				)
+			)
+    </select>
+    
+    <select id="getReporEntityByDate" resultMap="BaseResultMap" parameterType="String">
+			SELECT
+				*
+			FROM
+				report_empty empty
+			WHERE
+				empty.record_date = #{recordDate}
+			AND empty.room_id = #{roomId}
+			AND empty.is_del = 0
+    </select>
+
+	<select id="getReportEntityByProjectId" resultMap="BaseResultMap" parameterType="String">
+		  SELECT
+			*
+		  FROM
+		   	report_empty empty
+		  WHERE
+		  		empty.record_date = #{date}
+		  	AND empty.project_id = #{projectId}
+		  	AND empty.is_del = 0
+	</select>
+    
+    <select id="getTotalCount" resultType="int" parameterType="String"> 
+			SELECT
+				count(*)
+			FROM
+				report_empty empty
+			WHERE
+				empty.is_del = 0
+			AND empty.project_id = #{projectId}
+			AND empty.room_id = #{roomId}
+    </select>
+    
+    <update id="delReportEntitysByRecordDate" parameterType="Integer">
+			UPDATE report_empty emp
+			SET emp.is_del = 1
+			WHERE
+				emp.is_del = 0
+			AND DATE_FORMAT(emp.record_date, '%Y-%m-%d') = #{dateStr,jdbcType=VARCHAR} 
+			<if test="projectId!='ALL'">
+			AND emp.project_id = #{projectId}
+			</if>
+    </update>
+    
+    <insert id="saveReportEntitys" parameterType="java.util.List" keyProperty="id">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">  
+        SELECT  
+        LAST_INSERT_ID()  
+        </selectKey>
+        insert into report_empty (<include refid="Base_Column_List" />) values
+        <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.Id,jdbcType=INTEGER},#{item.reportEmptyId,jdbcType=VARCHAR},#{item.projectId,jdbcType=VARCHAR},#{item.roomId,jdbcType=VARCHAR},#{item.roomNum,jdbcType=VARCHAR},#{item.houseTypeId,jdbcType=VARCHAR},#{item.rentType,jdbcType=BIT},#{item.roomState,jdbcType=VARCHAR},#{item.emptyNum,jdbcType=INTEGER},#{item.seeNum,jdbcType=INTEGER},#{item.isEmpty,jdbcType=BIT}
+        ,#{item.recordDate,jdbcType=TIMESTAMP},#{item.createrId,jdbcType=VARCHAR},#{item.createTime,jdbcType=TIMESTAMP},#{item.updaterId,jdbcType=VARCHAR},#{item.updateTime,jdbcType=TIMESTAMP},#{item.deleteId,jdbcType=VARCHAR},#{item.deleteTime,jdbcType=TIMESTAMP},#{item.isDel,jdbcType=BIT})  
+        </foreach> 
+    </insert>
+</mapper>

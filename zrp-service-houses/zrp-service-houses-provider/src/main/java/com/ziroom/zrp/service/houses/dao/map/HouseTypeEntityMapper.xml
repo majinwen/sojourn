@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.houseTypeDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.HouseTypeEntity" >
+    <id column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="fhousetypename" property="fhousetypename" jdbcType="VARCHAR" />
+    <result column="farea" property="farea" jdbcType="DOUBLE" />
+    <result column="ftotalroom" property="ftotalroom" jdbcType="INTEGER" />
+    <result column="froomtype" property="froomtype" jdbcType="VARCHAR" />
+    <result column="fhousetypedesc" property="fhousetypedesc" jdbcType="VARCHAR" />
+    <result column="fhousetypeimg" property="fhousetypeimg" jdbcType="VARCHAR" />
+    <result column="fqrcodeimg" property="fqrcodeimg" jdbcType="VARCHAR" />
+    <result column="fshoworder" property="fshoworder" jdbcType="INTEGER" />
+    <result column="fpanoid" property="fpanoid" jdbcType="VARCHAR" />
+    <result column="froomintroduction" property="froomintroduction" jdbcType="VARCHAR" />
+    <result column="projectid" property="projectid" jdbcType="VARCHAR" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+    <result column="fvalid" property="fvalid" jdbcType="INTEGER" />
+    <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP" />
+    <result column="createrid" property="createrid" jdbcType="VARCHAR" />
+    <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP" />
+    <result column="updaterid" property="updaterid" jdbcType="VARCHAR" />
+    <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+    <result column="f_panoramic_url" property="fPanoramicUrl" jdbcType="VARCHAR" />
+    <result column="f_share_url" property="fShareUrl" jdbcType="VARCHAR" />
+    <result column="f_head_figure_url" property="fHeadFigureUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    fid, fhousetypename, farea, ftotalroom, froomtype, fhousetypedesc, fhousetypeimg, 
+    fqrcodeimg, fshoworder, fpanoid, froomintroduction, projectid, cityid, fvalid, fcreatetime, 
+    createrid, fupdatetime, updaterid, fisdel, f_panoramic_url, f_share_url, f_head_figure_url
+  </sql>
+  <select id="findHouseTypeById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from thousetype
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="findHouseTypeListByIds" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from thousetype
+    where fid IN
+    <foreach collection="houseTypeIds" item="item" index="index" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from thousetype
+    where fid = #{fid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="saveHouseType" parameterType="com.ziroom.zrp.houses.entity.HouseTypeEntity" >
+    insert into thousetype (fid, fhousetypename, farea, 
+      ftotalroom, froomtype, fhousetypedesc, 
+      fhousetypeimg, fqrcodeimg, fshoworder, 
+      fpanoid, froomintroduction, projectid, 
+      cityid, fvalid, fcreatetime, 
+      createrid, fupdatetime, updaterid, 
+      fisdel, f_panoramic_url, f_share_url, 
+      f_head_figure_url)
+    values (#{fid,jdbcType=VARCHAR}, #{fhousetypename,jdbcType=VARCHAR}, #{farea,jdbcType=DOUBLE}, 
+      #{ftotalroom,jdbcType=INTEGER}, #{froomtype,jdbcType=VARCHAR}, #{fhousetypedesc,jdbcType=VARCHAR}, 
+      #{fhousetypeimg,jdbcType=VARCHAR}, #{fqrcodeimg,jdbcType=VARCHAR}, #{fshoworder,jdbcType=INTEGER}, 
+      #{fpanoid,jdbcType=VARCHAR}, #{froomintroduction,jdbcType=VARCHAR}, #{projectid,jdbcType=VARCHAR}, 
+      #{cityid,jdbcType=VARCHAR}, #{fvalid,jdbcType=INTEGER}, #{fcreatetime,jdbcType=TIMESTAMP}, 
+      #{createrid,jdbcType=VARCHAR}, #{fupdatetime,jdbcType=TIMESTAMP}, #{updaterid,jdbcType=VARCHAR}, 
+      #{fisdel,jdbcType=INTEGER}, #{fPanoramicUrl,jdbcType=VARCHAR}, #{fShareUrl,jdbcType=VARCHAR}, 
+      #{fHeadFigureUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.zrp.houses.entity.HouseTypeEntity" >
+    insert into thousetype
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="fhousetypename != null" >
+        fhousetypename,
+      </if>
+      <if test="farea != null" >
+        farea,
+      </if>
+      <if test="ftotalroom != null" >
+        ftotalroom,
+      </if>
+      <if test="froomtype != null" >
+        froomtype,
+      </if>
+      <if test="fhousetypedesc != null" >
+        fhousetypedesc,
+      </if>
+      <if test="fhousetypeimg != null" >
+        fhousetypeimg,
+      </if>
+      <if test="fqrcodeimg != null" >
+        fqrcodeimg,
+      </if>
+      <if test="fshoworder != null" >
+        fshoworder,
+      </if>
+      <if test="fpanoid != null" >
+        fpanoid,
+      </if>
+      <if test="froomintroduction != null" >
+        froomintroduction,
+      </if>
+      <if test="projectid != null" >
+        projectid,
+      </if>
+      <if test="cityid != null" >
+        cityid,
+      </if>
+      <if test="fvalid != null" >
+        fvalid,
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime,
+      </if>
+      <if test="createrid != null" >
+        createrid,
+      </if>
+      <if test="fupdatetime != null" >
+        fupdatetime,
+      </if>
+      <if test="updaterid != null" >
+        updaterid,
+      </if>
+      <if test="fisdel != null" >
+        fisdel,
+      </if>
+      <if test="fPanoramicUrl != null" >
+        f_panoramic_url,
+      </if>
+      <if test="fShareUrl != null" >
+        f_share_url,
+      </if>
+      <if test="fHeadFigureUrl != null" >
+        f_head_figure_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="fhousetypename != null" >
+        #{fhousetypename,jdbcType=VARCHAR},
+      </if>
+      <if test="farea != null" >
+        #{farea,jdbcType=DOUBLE},
+      </if>
+      <if test="ftotalroom != null" >
+        #{ftotalroom,jdbcType=INTEGER},
+      </if>
+      <if test="froomtype != null" >
+        #{froomtype,jdbcType=VARCHAR},
+      </if>
+      <if test="fhousetypedesc != null" >
+        #{fhousetypedesc,jdbcType=VARCHAR},
+      </if>
+      <if test="fhousetypeimg != null" >
+        #{fhousetypeimg,jdbcType=VARCHAR},
+      </if>
+      <if test="fqrcodeimg != null" >
+        #{fqrcodeimg,jdbcType=VARCHAR},
+      </if>
+      <if test="fshoworder != null" >
+        #{fshoworder,jdbcType=INTEGER},
+      </if>
+      <if test="fpanoid != null" >
+        #{fpanoid,jdbcType=VARCHAR},
+      </if>
+      <if test="froomintroduction != null" >
+        #{froomintroduction,jdbcType=VARCHAR},
+      </if>
+      <if test="projectid != null" >
+        #{projectid,jdbcType=VARCHAR},
+      </if>
+      <if test="cityid != null" >
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="fvalid != null" >
+        #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="fcreatetime != null" >
+        #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrid != null" >
+        #{createrid,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatetime != null" >
+        #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterid != null" >
+        #{updaterid,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fPanoramicUrl != null" >
+        #{fPanoramicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fShareUrl != null" >
+        #{fShareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fHeadFigureUrl != null" >
+        #{fHeadFigureUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.houses.entity.HouseTypeEntity" >
+    update thousetype
+    <set >
+      <if test="fhousetypename != null" >
+        fhousetypename = #{fhousetypename,jdbcType=VARCHAR},
+      </if>
+      <if test="farea != null" >
+        farea = #{farea,jdbcType=DOUBLE},
+      </if>
+      <if test="ftotalroom != null" >
+        ftotalroom = #{ftotalroom,jdbcType=INTEGER},
+      </if>
+      <if test="froomtype != null" >
+        froomtype = #{froomtype,jdbcType=VARCHAR},
+      </if>
+      <if test="fhousetypedesc != null" >
+        fhousetypedesc = #{fhousetypedesc,jdbcType=VARCHAR},
+      </if>
+      <if test="fhousetypeimg != null" >
+        fhousetypeimg = #{fhousetypeimg,jdbcType=VARCHAR},
+      </if>
+      <if test="fqrcodeimg != null" >
+        fqrcodeimg = #{fqrcodeimg,jdbcType=VARCHAR},
+      </if>
+      <if test="fshoworder != null" >
+        fshoworder = #{fshoworder,jdbcType=INTEGER},
+      </if>
+      <if test="fpanoid != null" >
+        fpanoid = #{fpanoid,jdbcType=VARCHAR},
+      </if>
+      <if test="froomintroduction != null" >
+        froomintroduction = #{froomintroduction,jdbcType=VARCHAR},
+      </if>
+      <if test="projectid != null" >
+        projectid = #{projectid,jdbcType=VARCHAR},
+      </if>
+      <if test="cityid != null" >
+        cityid = #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="fvalid != null" >
+        fvalid = #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime = #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrid != null" >
+        createrid = #{createrid,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatetime != null" >
+        fupdatetime = #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterid != null" >
+        updaterid = #{updaterid,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        fisdel = #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fPanoramicUrl != null" >
+        f_panoramic_url = #{fPanoramicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fShareUrl != null" >
+        f_share_url = #{fShareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fHeadFigureUrl != null" >
+        f_head_figure_url = #{fHeadFigureUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.zrp.houses.entity.HouseTypeEntity" >
+    update thousetype
+    set fhousetypename = #{fhousetypename,jdbcType=VARCHAR},
+      farea = #{farea,jdbcType=DOUBLE},
+      ftotalroom = #{ftotalroom,jdbcType=INTEGER},
+      froomtype = #{froomtype,jdbcType=VARCHAR},
+      fhousetypedesc = #{fhousetypedesc,jdbcType=VARCHAR},
+      fhousetypeimg = #{fhousetypeimg,jdbcType=VARCHAR},
+      fqrcodeimg = #{fqrcodeimg,jdbcType=VARCHAR},
+      fshoworder = #{fshoworder,jdbcType=INTEGER},
+      fpanoid = #{fpanoid,jdbcType=VARCHAR},
+      froomintroduction = #{froomintroduction,jdbcType=VARCHAR},
+      projectid = #{projectid,jdbcType=VARCHAR},
+      cityid = #{cityid,jdbcType=VARCHAR},
+      fvalid = #{fvalid,jdbcType=INTEGER},
+      fcreatetime = #{fcreatetime,jdbcType=TIMESTAMP},
+      createrid = #{createrid,jdbcType=VARCHAR},
+      fupdatetime = #{fupdatetime,jdbcType=TIMESTAMP},
+      updaterid = #{updaterid,jdbcType=VARCHAR},
+      fisdel = #{fisdel,jdbcType=INTEGER},
+      f_panoramic_url = #{fPanoramicUrl,jdbcType=VARCHAR},
+      f_share_url = #{fShareUrl,jdbcType=VARCHAR},
+      f_head_figure_url = #{fHeadFigureUrl,jdbcType=VARCHAR}
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findLayoutListForPage" resultType="com.ziroom.zrp.service.houses.entity.AddHouseGroupVo" parameterType="com.ziroom.zrp.service.houses.dto.AddHouseGroupDto" >
+    SELECT
+      t1.fid AS housetypeid,
+      t1.fhousetypename AS housetypename,
+      t1.projectid AS projectid,
+      t2.fName AS projectname
+    FROM thousetype t1
+    LEFT JOIN tproject t2
+    ON t1.projectid = t2.fId
+    where t1.fisdel = 0
+    <if test="cityid != null and cityid != ''" >
+      AND t1.cityid = #{cityid,jdbcType=VARCHAR}
+    </if>
+    <if test="projectid != null and projectid != ''" >
+      AND t1.projectid = #{projectid,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <select id="findHouseTypeByProjectIds" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from thousetype
+    where projectid IN
+    <foreach collection="projectIds" item="item" index="index" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </select>
+
+</mapper>

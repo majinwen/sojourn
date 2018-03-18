@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.schedulePersonDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.SchedulePersonEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="bid" property="bid" jdbcType="VARCHAR" />
+    <result column="scheduleId" property="scheduleid" jdbcType="VARCHAR" />
+    <result column="employId" property="employid" jdbcType="VARCHAR" />
+    <result column="fcreateTime" property="fcreatetime" jdbcType="TIMESTAMP" />
+    <result column="fupdateTime" property="fupdatetime" jdbcType="TIMESTAMP" />
+    <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, bid, scheduleId, employId, fcreateTime, fupdateTime, fisdel
+  </sql>
+  <select id="findById" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from tscheduleperson
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tscheduleperson
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.zrp.trading.entity.SchedulePersonEntity" >
+    insert into tscheduleperson (id, bid, scheduleId, 
+      employId, fcreateTime, fupdateTime, 
+      fisdel)
+    values (#{id,jdbcType=INTEGER}, #{bid,jdbcType=VARCHAR}, #{scheduleid,jdbcType=VARCHAR}, 
+      #{employid,jdbcType=VARCHAR}, #{fcreatetime,jdbcType=TIMESTAMP}, #{fupdatetime,jdbcType=TIMESTAMP}, 
+      #{fisdel,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.zrp.trading.entity.SchedulePersonEntity" >
+    insert into tscheduleperson
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bid != null" >
+        bid,
+      </if>
+      <if test="scheduleid != null" >
+        scheduleId,
+      </if>
+      <if test="employid != null" >
+        employId,
+      </if>
+      <if test="fcreatetime != null" >
+        fcreateTime,
+      </if>
+      <if test="fupdatetime != null" >
+        fupdateTime,
+      </if>
+      <if test="fisdel != null" >
+        fisdel,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bid != null" >
+        #{bid,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduleid != null" >
+        #{scheduleid,jdbcType=VARCHAR},
+      </if>
+      <if test="employid != null" >
+        #{employid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatetime != null" >
+        #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fupdatetime != null" >
+        #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fisdel != null" >
+        #{fisdel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.trading.entity.SchedulePersonEntity" >
+    update tscheduleperson
+    <set >
+      <if test="bid != null" >
+        bid = #{bid,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduleid != null" >
+        scheduleId = #{scheduleid,jdbcType=VARCHAR},
+      </if>
+      <if test="employid != null" >
+        employId = #{employid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatetime != null" >
+        fcreateTime = #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fupdatetime != null" >
+        fupdateTime = #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fisdel != null" >
+        fisdel = #{fisdel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.zrp.trading.entity.SchedulePersonEntity" >
+    update tscheduleperson
+    set bid = #{bid,jdbcType=VARCHAR},
+      scheduleId = #{scheduleid,jdbcType=VARCHAR},
+      employId = #{employid,jdbcType=VARCHAR},
+      fcreateTime = #{fcreatetime,jdbcType=TIMESTAMP},
+      fupdateTime = #{fupdatetime,jdbcType=TIMESTAMP},
+      fisdel = #{fisdel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015. ziroom.
+  -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+
+    <dubbo:reference id="job.tradingTaskService" interface="com.ziroom.zrp.service.trading.api.TradingTaskService" check="false">
+        <dubbo:method name="notifyUserDelivery" timeout="180000"  async="true" return="false"/>
+        <dubbo:method name="firstBillPayOvertimeCloseContract" timeout="180000" retries="0"/>
+        <dubbo:method name="sameDayUnsignedCloseContract" timeout="180000" retries="0"/>
+        <dubbo:method name="sameDayUnrenewedCloseContract" timeout="180000" retries="0"/>
+        <dubbo:method name="firstBillPayBeforeOvertimeRemind" timeout="180000" retries="0"/>
+        <dubbo:method name="sameDayBeforeOvertimeUnsignedRemind" timeout="180000" retries="0"/>
+        <dubbo:method name="invalidMeterFinReceiBill" timeout="180000" retries="0"/>
+    </dubbo:reference>
+
+    <dubbo:reference id="job.finReceiBillService" interface="com.ziroom.zrp.service.trading.api.FinReceiBillService" check="false">
+        <dubbo:method name="asyncRetrySyncReceiptBillToFin" async="true" return="false" />
+    </dubbo:reference>
+
+    <!-- 企业签约服务 -->
+    <dubbo:reference id="job.enterpriseSigningService" interface="com.ziroom.zrp.service.trading.api.EnterpriseSigningService" check="false" >
+        <dubbo:method name="asyncEntContractAndBillsToFin" async="true" return="false"/>
+        <dubbo:method name="asyncRetrySyncEntSubContractToFin" async="true" return="false"/>
+        <dubbo:method name="asyncRetrySubContractTransferToPdf" async="true" return="false"/>
+    </dubbo:reference>
+
+    <!-- 智能锁记录服务 -->
+    <dubbo:reference id="job.intellectSmartLockService" interface="com.ziroom.zrp.service.houses.api.IntellectSmartLockService" check="false" />
+
+    <!-- 智能平台接口服务 -->
+    <dubbo:reference id="job.smartPlatformService" interface="com.ziroom.zrp.service.houses.api.SmartPlatformService" check="false" />
+
+    <!-- 智能水表服务 -->
+    <dubbo:reference id="job.waterClearingService" interface="com.ziroom.zrp.service.trading.api.WaterClearingService" check="false">
+        <dubbo:method name="getAllRoomOfValidContractAndExistIntellectWaterMeter" timeout="5000" retries="3"/>
+        <dubbo:method name="readWaterMeterAndsettleMonthly" timeout="5000" retries="0"/>
+    </dubbo:reference>
+
+</beans>

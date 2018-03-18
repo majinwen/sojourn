@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.marketing.dao.MkChannelMapper" >
+  <resultMap id="BaseResultMap" type="com.zra.marketing.entity.MkChannelEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="channel_bid" property="channelBid" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="channel_content" property="channelContent" jdbcType="VARCHAR" />
+    <result column="channel_type" property="channelType" jdbcType="BIT" />
+    <result column="is_del" property="isDel" jdbcType="BIT" />
+    <result column="city_id" property="cityId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="update_id" property="updateId" jdbcType="VARCHAR" />
+    <result column="delete_id" property="deleteId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, channel_bid, channel_name, channel_content, channel_type, is_del,city_id, create_time, 
+    delete_time, update_time, create_id, update_id, delete_id
+  </sql>
+  
+  <select id="selectLineChannelByCityId" resultType="com.zra.common.dto.marketing.MkLineChannelShowDto" parameterType="String" >
+			SELECT
+				ch.channel_bid AS channelBid,
+				ch.channel_name AS channelName,
+				pro.fid AS projectId,
+				pro.fName AS projectName,
+				num.number AS phoneNum
+			FROM
+				mk_channel ch,
+				mk_number num,
+				tproject pro
+			WHERE
+				num.channel_bid = ch.channel_bid
+			AND num.project_id = pro.fId
+			AND ch.city_id = #{cityId}
+			AND ch.is_del = 0
+			AND num.is_del = 0
+			AND ch.channel_type = 2
+			ORDER BY
+				ch.create_time
+  </select>
+  
+  <select id="getOnLineChannelByCityId" parameterType="String" resultType="com.zra.common.dto.marketing.MkChannelDto">
+			SELECT
+				channel_bid AS channelBid,
+				channel_name AS channelName,
+				channel_content AS channelContent,
+				channel_type AS channelType,	
+				city_id AS cityId
+			FROM
+				mk_channel
+			WHERE
+				city_id = #{cityId}
+			AND is_del = 0
+			AND channel_type=1
+  </select>
+  
+  <insert id="insertEntitys" parameterType="java.util.List" keyProperty="id">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">  
+        SELECT  
+        LAST_INSERT_ID()  
+        </selectKey>
+	    insert into mk_channel (<include refid="Base_Column_List" />)  values 
+	     <foreach collection="list" item="item" index="index" separator="," >
+	      (#{item.id,jdbcType=INTEGER}, #{item.channelBid,jdbcType=VARCHAR}, #{item.channelName,jdbcType=VARCHAR}, 
+	      #{item.channelContent,jdbcType=VARCHAR}, #{item.channelType,jdbcType=BIT}, #{item.isDel,jdbcType=BIT},#{item.cityId,jdbcType=VARCHAR}, 
+	      #{item.createTime,jdbcType=TIMESTAMP}, #{item.deleteTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+	      #{item.createId,jdbcType=VARCHAR}, #{item.updateId,jdbcType=VARCHAR}, #{item.deleteId,jdbcType=VARCHAR})
+	     </foreach>
+  </insert>
+  
+  <insert id="insertEntity" parameterType="com.zra.marketing.entity.MkChannelEntity">
+    insert into mk_channel (<include refid="Base_Column_List" />)  values 
+      (#{id,jdbcType=INTEGER}, #{channelBid,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, 
+      #{channelContent,jdbcType=VARCHAR}, #{channelType,jdbcType=BIT}, #{isDel,jdbcType=BIT},#{cityId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{deleteTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createId,jdbcType=VARCHAR}, #{updateId,jdbcType=VARCHAR}, #{deleteId,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateByBid" parameterType="com.zra.marketing.entity.MkChannelEntity" >
+    update mk_channel
+    set 
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      channel_content = #{channelContent,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_id = #{updateId,jdbcType=VARCHAR}
+    where channel_bid = #{channelBid,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="deleteMkChannelByBid" parameterType="String">
+		UPDATE mk_channel
+		SET is_del = 1,
+		 delete_id = #{userId},
+		 update_id = #{userId},
+		 delete_time = now(),
+		 update_time = now()
+		WHERE
+			channel_bid = #{channelBid}
+  </update>
+  
+  <select id="getYueKanCount" resultType="com.zra.marketing.entity.dto.MkChannelCountDto">
+		SELECT
+			mk.channel_bid AS channelBid,
+			mk.channel_name AS channelName,
+			COUNT(bo.business_bid) AS count
+		FROM
+			mk_channel mk
+		LEFT JOIN bo_business bo ON
+		    mk.channel_bid = bo.source_zra
+		AND mk.city_id = bo.city_id
+		AND bo.is_del = 0
+		AND bo.create_time <![CDATA[ >= ]]> #{startDate}
+		AND bo.create_time <![CDATA[ <= ]]> #{endDate}
+		WHERE
+			mk.is_del = 0
+		AND mk.city_id = #{cityId}
+		AND mk.channel_type = ${channelType}
+		GROUP BY
+			mk.channel_bid;
+  </select>
+  
+  <select id="getTouristsCount" resultType="com.zra.marketing.entity.dto.MkChannelCountDto">
+		   SELECT
+				mk.channel_bid AS channelBid,
+				mk.channel_name AS channelName,
+				COUNT(bo.business_bid) AS count
+			FROM
+				mk_channel mk,
+				bo_business bo,
+				bo_customer boc
+			WHERE
+				mk.channel_bid = bo.source_zra
+			AND bo.customer_id = boc.cus_bid
+			AND boc.kyl_flag = 1
+			AND bo.create_time <![CDATA[ >= ]]> #{startDate}
+			AND bo.create_time <![CDATA[ <= ]]> #{endDate}
+			AND bo.is_del = 0
+			AND boc.is_del = 0
+			AND mk.is_del = 0
+			AND mk.city_id = #{cityId}
+			AND mk.channel_type = ${channelType}
+			GROUP BY
+				mk.channel_bid,
+				mk.channel_name;
+  </select>
+  
+  <select id="getDealCount" resultType="com.zra.marketing.entity.dto.MkChannelCountDto">
+			SELECT
+				mk.channel_bid AS channelBid,
+				mk.channel_name AS channelName,
+				COUNT(bo.business_bid) AS count
+			FROM
+				mk_channel mk
+			LEFT JOIN bo_business bo ON
+		        mk.channel_bid = bo.source_zra
+			AND mk.city_id = bo.city_id
+			AND bo.is_del = 0
+			AND bo.create_time <![CDATA[ >= ]]> #{startDate}
+			AND bo.create_time <![CDATA[ <= ]]> #{endDate}
+			AND bo.step = 4
+			WHERE
+				mk.is_del = 0
+			AND mk.city_id = #{cityId}
+			AND mk.channel_type = ${channelType}
+			GROUP BY
+				mk.channel_bid,
+				mk.channel_name;
+  </select>
+  
+  <select id="getSchedulePresonInfo" parameterType="String" resultType="com.zra.common.dto.marketing.SchedulePersonDto">
+			SELECT
+			    ts.projectId AS proId,
+				emp.fcode AS jobNum,
+				emp.fmobile AS mobile
+			FROM
+				tschedule ts,
+				tscheduleperson tsp,
+				temployee emp
+			WHERE
+			    ts.bid = tsp.scheduleId
+			AND ts.fweek = #{fweek}
+			AND tsp.employId = emp.fid
+			AND ts.fisdel = 0
+			AND tsp.fisdel = 0
+			AND emp.fmobile IS NOT NULL
+			AND emp.fisdel = 0
+			AND emp.fcode IS NOT NULL
+			AND ts.projectId in 
+			<foreach collection="projectIds" index="index" item="item" open="(" separator="," close=")">#{item}</foreach>
+			GROUP BY
+			    ts.projectId,
+				emp.fcode,
+				emp.fmobile
+  </select>
+  
+  <select id="getChannelNameByBid" parameterType="String" resultType="String">
+		SELECT
+			mc.channel_name
+		FROM
+			mk_channel mc
+		WHERE
+			mc.channel_bid = #{channelBid}
+		AND mc.is_del = 0
+  </select>
+  
+  <select id="isExistChannelName" resultType="java.lang.Integer">
+		SELECT
+			count(channel_bid)
+		FROM
+			mk_channel
+		WHERE
+			channel_name = #{channelName}
+		AND channel_type = ${channelType}
+	    <if test='channelBid!=null and channelBid!=""'>
+	    AND channel_bid != #{channelBid}
+	    </if>
+		AND is_del = 0
+  </select>
+</mapper>

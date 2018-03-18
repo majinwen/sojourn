@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.cardCoupon.dao.CardCouponMapper" >
+    <!--消费卡券记录-->
+    <insert id="addCardCouponUsage" parameterType="com.zra.cardCoupon.entity.CardCouponUsageEntity">
+      INSERT INTO zra.card_coupon_usage(
+          usage_id,
+          user_id,
+          recei_bill_fid,
+          card_code,
+          coupon_code,
+          usage_status,
+          type,
+          come_source
+      )VALUES (
+          #{usageId},
+          #{uid},
+          #{receiBillFid},
+          #{rentCardCode},
+          #{couponCode},
+          #{usageState},
+          #{type},
+          #{comeSource}
+      )
+    </insert>
+
+    <!-- 更新卡券记录-->
+    <update id="updateCardCouponUsage" parameterType="com.zra.cardCoupon.entity.CardCouponUsageEntity">
+        UPDATE
+          zra.card_coupon_usage
+        <set>
+            <if test="usageState!=null">
+                usage_status=#{usageState},
+            </if>
+            <if test="payAmount!=null">
+                pay_amount=#{payAmount},
+            </if>
+        </set>
+        WHERE
+          is_del=0
+        <if test="rentCardCode != null and rentCardCode!=''">
+            AND card_code=#{rentCardCode}
+        </if>
+        <if test="couponCode != null and couponCode != ''">
+            AND coupon_code=#{couponCode}
+        </if>
+    </update>
+    
+    <select id="getLockedCardCouponEntitys" resultType="com.zra.common.dto.pay.CardCouponDto">
+		SELECT
+			usage_id AS usageId,
+			recei_bill_fid AS receiBillFid,
+			<if test="type==1">
+			card_code AS code
+			</if>
+			<if test="type==2">
+			coupon_code AS code
+			</if>
+		FROM
+			card_coupon_usage
+		WHERE
+			user_id = #{userId}
+		AND type = ${type}
+		AND is_del = 0
+		AND usage_status = 4
+    </select>
+    
+    <update id="updateCardCouponState">
+		UPDATE card_coupon_usage
+		SET usage_status = #{usageState}
+		WHERE
+		<if test="type==1">
+			card_code = #{code}
+		</if>
+		<if test="type==2">
+		    coupon_code = #{code}
+		</if>
+		AND is_del = 0
+    </update>
+</mapper>

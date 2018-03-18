@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.rentcontract.dao.RentContractMapper">
+    <!-- 查询需要生成可预定时间的合同-->
+    <select id="queryNotRenewContract" resultType="com.zra.common.dto.contract.ContractDto">
+        SELECT
+        contractid AS id,
+        fcontype AS contractType,
+        is_renew AS renewState,
+        con_end_date  AS endDate,
+        room_id as roomId,
+        TIMESTAMPDIFF(DAY,NOW(),T.con_end_date) AS days
+        FROM
+        trentcontract T
+        WHERE
+        T.is_renew != 1
+        AND  TIMESTAMPDIFF(DAY,NOW(),T.con_end_date)  &gt; 0
+        AND
+        ((TIMESTAMPDIFF(DAY,NOW(),T.con_end_date)  &lt; 45
+        AND  fcontype= 1)
+        OR
+        (TIMESTAMPDIFF(DAY,NOW(),T.con_end_date)  &lt; 10
+        AND  fcontype= 2))
+    </select>
+
+
+    <update id="updateNotRenewContract">
+        UPDATE trentcontract
+        <set>
+            <if test="canPreDate != null">
+                can_pre_date = #{canPreDate,jdbcType=TIMESTAMP},
+            </if>
+
+            <if test="canRenewDate != null">
+                can_renew_date = #{canRenewDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE contractid = #{contractId,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="queryCanRenewContract" resultType="String">
+        SELECT
+        room_id AS fid
+        FROM
+        trentcontract
+        WHERE
+        can_renew_date = #{canRenewDate,jdbcType=TIMESTAMP}
+    </select>
+    
+    <select id="queryNeedModifyPreStatusContract" resultType="com.zra.common.dto.contract.ContractDto">
+        SELECT
+         contractid AS id,
+        fcontype AS contractType,
+        is_renew AS renewState,
+        con_end_date  AS endDate,
+        room_id as roomId
+        FROM
+        trentcontract
+        WHERE
+        con_status_code = 'yqy'
+        and
+        is_renew != 1
+        and
+        fisdel = 0
+        and 
+        fvalid = 1 
+        and
+        fcontype = #{0,jdbcType=VARCHAR}
+        and
+        con_end_date <![CDATA[<=]]> #{1,jdbcType=DATE}
+        and  can_pre_date is null
+    </select>
+ <!--edit by xiaona deleted method and  queryNeedModifyPreStatusContract condition  (and can_pre_date is null)-->
+ 
+ <!-- begin by tianxf9 -->
+    <select id="getRentContractByRoomId" resultType="int">
+			SELECT
+			   count(rent.contractid)
+			FROM
+				trentcontract rent,
+				rent_rentedetail detail
+			WHERE
+				detail.room_id = #{roomId}
+			AND rent.contractid = detail.contract_id
+			AND rent.fisdel = 0
+			AND detail.is_deleted = 0
+			AND (
+				(
+					rent.con_start_date <![CDATA[<=]]> #{rentDate}
+					AND rent.con_status_code IN ('yqy')
+				)
+				OR (
+					rent.con_status_code = 'yxy'
+					AND rent.con_start_date <![CDATA[<=]]> #{rentDate}
+					AND rent.con_end_date <![CDATA[>=]]> #{rentDate}
+				)
+			)
+    </select>
+    
+    <select id="getSurrenderInfoByRoomId" resultType="com.zra.rentcontract.dto.RentContractDto" parameterType="String">
+			SELECT
+				sur.freleasedate AS releaseDate,
+				rent.con_start_date AS conStartDate,
+				rent.con_end_date AS conEndDate,
+				rent.con_sign_date AS conSignDate,
+				sur.fsurtype AS surType
+			FROM
+				tsurrender sur,
+				trentcontract rent,
+				rent_rentedetail detail
+			WHERE
+				sur.contract_id = detail.contract_id
+			AND rent.contractid = detail.contract_id
+			AND detail.room_id = #{roomId}
+			AND rent.fisdel = 0
+			AND detail.is_deleted = 0
+			<if test='isConThree!=null and isConThree=="N"'>
+			AND sur.fsurtype !='3'
+			</if>
+			AND sur.fisdel = 0
+			AND sur.fsubmitstatus = '1'
+			AND sur.fvalid = 1
+			ORDER BY
+				sur.freleasedate DESC
+			LIMIT 1
+    </select>
+    
+    <select id="getCurrentSurrenderInfoByRoomId" resultType="com.zra.rentcontract.dto.RentContractDto" parameterType="String">
+			SELECT
+				sur.freleasedate AS releaseDate,
+				rent.con_start_date AS conStartDate,
+				rent.con_end_date AS conEndDate,
+				rent.con_sign_date AS conSignDate,
+				sur.fsurtype AS surType
+			FROM
+				trentcontract rent,
+				rent_rentedetail detail,
+				tsurrender sur
+			WHERE
+				rent.contractid = detail.contract_id
+			AND sur.contract_id = rent.contractid
+			AND detail.room_id = #{roomId}
+			AND sur.freleasedate = #{today}
+			AND rent.fisdel = 0
+			AND detail.is_deleted = 0
+			AND sur.fisdel = 0
+			AND sur.fsubmitstatus = '1'
+			AND sur.fvalid = 1
+			AND rent.con_status_code != 'yzf'
+			ORDER BY
+	            sur.fcreatetime DESC
+    </select>
+    
+    <select id="getCurrentRentContract" resultType="com.zra.rentcontract.dto.RentContractDto" parameterType="String">
+			SELECT
+				rent.con_start_date AS conStartDate,
+				rent.con_end_date AS conEndDate,
+				rent.con_sign_date AS conSignDate
+			FROM
+				trentcontract rent,
+				rent_rentedetail detail
+			WHERE
+				rent.contractid = detail.contract_id
+			AND detail.room_id = #{roomId}
+			AND rent.fisdel = 0
+			AND detail.is_deleted = 0
+			AND rent.con_status_code in('yqy')
+			AND rent.con_sign_date = #{today}
+    </select>
+    
+    
+    <select id="getContractInfoByRoomId" resultType="com.zra.rentcontract.dto.RentContractDto" parameterType="String">
+			SELECT
+				min(rent.con_start_date) AS conStartDate
+			FROM
+				trentcontract rent,
+				rent_rentedetail detail
+			WHERE
+				detail.room_id = #{roomId}
+			AND rent.contractid = detail.contract_id
+			AND rent.fisdel = 0
+			AND detail.is_deleted = 0
+			AND (
+				(
+					rent.con_status_code = 'yqy'
+				)
+				OR (
+					rent.con_status_code = 'yxy'
+					AND rent.con_end_date <![CDATA[>=]]>#{rentDate}
+					AND rent.con_start_date <![CDATA[<=]]>#{rentDate}
+				)
+			)
+     </select>
+
+    <select id="getIfEvaluate" resultType="java.lang.Integer" parameterType="String">
+        SELECT
+            count(0)
+        FROM
+            trentcontract t
+        WHERE
+            t.customer_mobile = #{phone}
+        AND t.con_status_code IN ('yqy', 'xyz', 'jyz')
+        AND t.fisdel = 0
+        AND t.fvalid = 1
+    </select>
+    
+<!-- end by tianxf9 -->
+</mapper>

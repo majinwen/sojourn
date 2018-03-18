@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.house.dao.HouseItemsConfigMapper">
+    <resultMap id="BaseResultMap" type="com.zra.house.entity.HouseItemsConfigEntity" >
+        <id column="fid" property="fid" jdbcType="VARCHAR" />
+        <result column="fhousetypeid" property="houseTypeId" jdbcType="VARCHAR" />
+        <result column="fitemid" property="itemId" jdbcType="VARCHAR" />
+        <result column="fitemstype" property="itemsType" jdbcType="VARCHAR" />
+        <result column="fitemsname" property="itemsName" jdbcType="VARCHAR" />
+        <result column="fitemscode" property="itemsCode" jdbcType="CHAR" />
+        <result column="fitemsnum" property="itemsNum" jdbcType="INTEGER" />
+        <result column="finputoptions" property="inputOptions" jdbcType="VARCHAR" />
+        <result column="finventorymanage" property="inventoryManage" jdbcType="VARCHAR" />
+        <result column="fnummodify" property="numModify" jdbcType="VARCHAR" />
+        <result column="projectid" property="projectId" jdbcType="VARCHAR" />
+        <result column="cityid" property="cityId" jdbcType="VARCHAR" />
+        <result column="fvalid" property="valid" jdbcType="INTEGER" />
+        <result column="fcreatetime" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="createrid" property="createrId" jdbcType="VARCHAR" />
+        <result column="fupdatetime" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="updaterid" property="updaterId" jdbcType="VARCHAR" />
+        <result column="fisdel" property="isDel" jdbcType="INTEGER" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        fid, fhousetypeid, fitemid, fitemstype, fitemsname, fitemscode, fitemsnum, finputoptions,
+        finventorymanage, fnummodify, projectid, cityid, fvalid, fcreatetime, createrid,
+        fupdatetime, updaterid, fisdel
+    </sql>
+
+    <select id="findItemsConfigByHouseTypeId" resultType="com.zra.house.entity.dto.HouseConfigDto">
+        <!--
+          查询网站显示户型配置物品
+        -->
+		SELECT DISTINCT
+			il.fId AS itemId,
+			il.fwebname AS itemName,
+			il.fshoworder AS itemOrder,
+		    conlib.ficonfile AS imgUrl
+		FROM
+			thouseitemsconfig hic
+		INNER JOIN titemlist il ON hic.fitemid = il.fid
+		AND il.fwebname IS NOT NULL
+		AND TRIM(il.fwebname) != ''
+		LEFT JOIN ticonlib conlib ON conlib.fid = il.fIcon
+		AND conlib.fisdel = 0
+		AND conlib.fvalid = 1
+		WHERE
+			hic.fvalid = 1
+		AND hic.fisdel = 0
+		<if test="houseTypeId!=null and houseTypeId!=''">
+        AND hic.fhousetypeid = #{houseTypeId}
+        </if>
+		ORDER BY
+			CAST(il.fshoworder AS SIGNED) 
+    </select>
+
+</mapper>

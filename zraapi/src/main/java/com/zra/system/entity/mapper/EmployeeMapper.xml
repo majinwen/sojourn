@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.system.dao.EmployeeMapper">
+		<resultMap id="BaseResultMap" type="com.zra.system.entity.EmployeeEntity" >
+	    <id column="fid" property="id" jdbcType="VARCHAR" />
+	    <result column="fcode" property="code" jdbcType="VARCHAR" />
+	    <result column="fname" property="name" jdbcType="VARCHAR" />
+	    <result column="fsex" property="sex" jdbcType="INTEGER" />
+	    <result column="fidcardno" property="idCardNo" jdbcType="VARCHAR" />
+	    <result column="fbirthday" property="birthday" jdbcType="TIMESTAMP" />
+	    <result column="femail" property="email" jdbcType="VARCHAR" />
+	    <result column="fmobile" property="mobile" jdbcType="VARCHAR" />
+	    <result column="ftelno" property="telNo" jdbcType="VARCHAR" />
+	    <result column="ffaxno" property="faxNo" jdbcType="VARCHAR" />
+	    <result column="fqqno" property="qqNo" jdbcType="VARCHAR" />
+	    <result column="fmsnno" property="msnNo" jdbcType="VARCHAR" />
+	    <result column="faddress" property="address" jdbcType="VARCHAR" />
+	    <result column="fzipcode" property="zipCode" jdbcType="VARCHAR" />
+	    <result column="fmemo" property="memo" jdbcType="VARCHAR" />
+	    <result column="fcsrtype" property="csrType" jdbcType="INTEGER" />
+	    <result column="fcicuserid" property="cicUserId" jdbcType="VARCHAR" />
+	    <result column="fcicpwd" property="cicPwd" jdbcType="VARCHAR" />
+	    <result column="departmentid" property="departmentId" jdbcType="VARCHAR" />
+	    <result column="cityid" property="cityId" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    	emp.fid, emp.fcode, emp.fname, emp.fsex, emp.fidcardno, emp.fbirthday, emp.femail, emp.fmobile, emp.ftelno,
+    	emp.ffaxno, emp.fqqno, emp.fmsnno, emp.faddress, emp.fmemo, emp.fcsrtype, emp.fcicuserid,emp.fcicpwd,emp.departmentid,emp.cityid
+ 	</sql>
+ 	
+    <select id="getEmployeeById" resultMap="BaseResultMap">
+    	SELECT 
+    		<include refid="Base_Column_List"/> 
+    	FROM temployee emp 
+    	WHERE emp.fid=#{id}
+    </select>
+
+	<select id="getEmployeeByUserId" parameterType="String" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"/>
+		FROM
+			temployee emp,
+			tuseraccount ua
+		WHERE
+			emp.fid = ua.linkemployeeid
+			AND emp.fisdel = 0
+			AND emp.fvalid = 1
+			AND ua.fisdel = 0
+			AND ua.fid = #{userId}
+	</select>
+    
+    <!-- add by tianxf9 根据电话号码查询员工信息 -->
+    <select id="getEmployeeByMobile" resultMap="BaseResultMap">
+    	SELECT 
+    		<include refid="Base_Column_List"/> 
+    	FROM temployee emp 
+    	WHERE emp.fmobile in(${mobileStr})
+    </select>
+    
+    <!-- add by tianxf9 根据useraccount查询系统管理员 -->
+    <select id="getSystemManager" resultMap="BaseResultMap" parameterType="String">
+	    SELECT
+		emp.*
+		FROM
+			temployee emp,
+			tuseraccount ua
+		WHERE
+			emp.fid = ua.linkemployeeid
+		AND emp.fisdel = 0
+		AND emp.fvalid = 1
+		AND ua.fisdel = 0
+		AND ua.fuserAccount = #{userAccount}
+    </select>
+    <!--add by tianxf9 根据employeeCode查询employeeEntity  -->
+    <select id="getEmployeeByCode" resultMap="BaseResultMap" parameterType="String">
+	    SELECT
+		te.*
+	    FROM
+		temployee te
+	WHERE
+	te.fisdel = 0
+	AND te.fcode = #{code};
+    </select>
+</mapper>

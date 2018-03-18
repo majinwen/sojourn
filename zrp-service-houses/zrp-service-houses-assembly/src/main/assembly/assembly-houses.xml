@@ -1,0 +1,28 @@
+<!---->
+<assembly>
+	<id>provider</id>
+	<formats>
+		<format>tar.gz</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${project.build.outputDirectory}</directory>
+			<includes>
+				<include>zrp-houses-provider/bin/*</include>
+				<include>zrp-houses-provider/conf/*</include>
+				<include>zrp-houses-provider/logs/*</include>
+			</includes>
+			<fileMode>0755</fileMode>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+	</fileSets>
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>zrp-houses-provider/lib</outputDirectory>
+			<excludes>
+				<exclude>com.ziroom.zrp:zrp-service-houses-assembly</exclude>
+			</excludes>
+		</dependencySet>
+	</dependencySets>
+</assembly>

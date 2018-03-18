@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.item.dao.ItemMapper">
+	<resultMap id="BaseResultMap" type="com.zra.common.dto.bedInfo.ItemDto">
+		<id column="fId" property="id" jdbcType="VARCHAR" />
+	    <result column="fType" property="type" jdbcType="VARCHAR" />
+	     <result column="fName" property="name" jdbcType="VARCHAR" />
+	    <result column="fCode" property="code" jdbcType="VARCHAR" />
+	    <result column="fIsAccessory" property="isAccessory" jdbcType="VARCHAR" />
+	    <result column="fIsDamage" property="isDamage" jdbcType="VARCHAR" />
+	    <result column="fPrice" property="price" jdbcType="NUMERIC" />
+	    <result column="fIsBackup" property="isBackup" jdbcType="VARCHAR" />
+	    <result column="fWebName" property="webName" jdbcType="VARCHAR" />
+	    <result column="fShowOrder" property="showOrder" jdbcType="VARCHAR" />
+	    <result column="fIcon" property="iconJoinId" jdbcType="VARCHAR" />
+	    <result column="fcompensateprice" property="compensatePrice" jdbcType="NUMERIC" />
+	    <result column="fHalfPercent" property="halfPercent" jdbcType="NUMERIC" />
+	    <result column="fOnePercent" property="onePercent" jdbcType="NUMERIC" />
+	    <result column="fTwoPercent" property="twoPercent" jdbcType="NUMERIC" />
+	    <result column="fThreePercent" property="threePercent" jdbcType="NUMERIC" />
+	    <result column="fFourPercent" property="fourPercent" jdbcType="NUMERIC" />
+	    <result column="fFivePercent" property="fivePercent" jdbcType="NUMERIC" />
+	    <result column="fState" property="state" jdbcType="VARCHAR" />
+	    <result column="fvalid" property="valid" jdbcType="INTEGER" />
+	    <result column="fcreatetime" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="createrid" property="createrId" jdbcType="VARCHAR" />
+	    <result column="fupdatetime" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="updaterid" property="updaterId" jdbcType="VARCHAR" />
+	    <result column="fIsDel" property="isDel" jdbcType="INTEGER" />
+	    <result column="fIsRegister" property="isRegister" jdbcType="INTEGER" />
+	    <result column="cityid" property="cityId" jdbcType="VARCHAR" />
+	    <result column="fitemtype" property="itemType" jdbcType="INTEGER" /> 
+	</resultMap>
+	
+	<select id="getAllItemList" resultMap="BaseResultMap" parameterType = "com.zra.common.dto.bedInfo.QueryItemDto">
+		SELECT
+		      *
+		FROM
+			titemlist titem
+		WHERE
+			titem.fIsDel = 0
+		AND titem.fState = 1
+	    <if test='type!=null and type!=""'>
+		AND titem.fType = #{type}
+		</if>
+		<if test='name!=null and name!=""'>
+		AND	titem.fName = #{name}
+		</if>
+		<if test='code!=null and code!=""'>
+		AND titem.cityid = #{code}
+		</if>
+		ORDER BY titem.fCode
+	</select>
+	
+	<select id="getItemListById" parameterType="list" resultMap="BaseResultMap">
+		SELECT
+		      *
+		FROM
+			titemlist titem
+		WHERE
+			titem.fIsDel = 0
+		AND titem.fState = 1
+		AND titem.fId in 
+		<foreach item="itemId" index="index" collection="list" open="(" separator="," close=")">  
+          #{itemId}  
+        </foreach>
+        ORDER BY titem.fCode  
+	</select>
+
+	<select id="getYQWYJId" resultType="java.lang.Integer">
+		SELECT
+		fid
+		FROM
+		texpenseitem
+		WHERE
+		item_code = 'C05'
+		AND fisdel = 0
+		AND fvalid = 1
+		LIMIT 1
+	</select>
+
+	<select id="getYQWYJItemName" resultType="java.lang.String">
+		SELECT
+		item_name
+		FROM
+		texpenseitem
+		WHERE
+		item_code = 'C05'
+		AND fisdel = 0
+		AND fvalid = 1
+		LIMIT 1
+	</select>
+
+	<select id="getItemImgUrl" resultType="com.zra.item.entity.MItemIconEntity" parameterType="java.lang.String">
+		SELECT
+			l.fId AS itemId,
+			i.ficonfile AS iconURL
+		FROM
+			titemlist AS l,
+			ticonlib AS i
+		WHERE
+			l.fIcon = i.fid
+		AND l.fId IN (${itemId})
+		AND l.fIsDel = 0
+		AND l.fvalid = 1
+		AND i.fisdel = 0
+		AND i.fvalid = 1
+	</select>
+</mapper>

@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.intellectSmartLockDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.IntellectSmartLockEntity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="fid" property="fid" jdbcType="VARCHAR"/>
+        <result column="contract_id" property="contractId" jdbcType="VARCHAR"/>
+        <result column="room_id" property="roomId" jdbcType="VARCHAR"/>
+        <result column="user_type" property="userType" jdbcType="INTEGER"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="service_id" property="serviceId" jdbcType="VARCHAR"/>
+        <result column="update_pwd" property="updatePwd" jdbcType="VARCHAR"/>
+        <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
+        <result column="pwd_type" property="pwdType" jdbcType="INTEGER"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="handler_code" property="handlerCode" jdbcType="VARCHAR"/>
+        <result column="handler_name" property="handlerName" jdbcType="VARCHAR"/>
+        <result column="param_str" property="paramStr" jdbcType="VARCHAR"/>
+        <result column="source_type" property="sourceType" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="callback_time" property="callbackTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_del" property="isDel" jdbcType="INTEGER"/>
+        <result column="project_id" property="projectId" jdbcType="VARCHAR"/>
+        <result column="handler_type" property="handlerType" jdbcType="INTEGER"/>
+        <result column="user_code" property="userCode" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, fid, contract_id, room_id, service_id, update_pwd, pwd, phone,
+        handler_code, handler_name, source_type, status, start_time, end_time, callback_time, create_time,
+        update_time, is_del,user_type,user_name,project_id,pwd_type,handler_type,user_code
+    </sql>
+    <select id="getRoomSmartLockByFid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_intellect_smartlock
+        where fid = #{fid,jdbcType=VARCHAR}
+    </select>
+
+
+    <insert id="saveRoomSmartLock" parameterType="com.ziroom.zrp.houses.entity.IntellectSmartLockEntity">
+        insert into t_intellect_smartlock
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="contractId != null">
+                contract_id,
+            </if>
+            <if test="roomId != null">
+                room_id,
+            </if>
+            <if test="serviceId != null">
+                service_id,
+            </if>
+            <if test="updatePwd != null">
+                update_pwd,
+            </if>
+            <if test="pwd != null">
+                pwd,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="handlerCode != null">
+                handler_code,
+            </if>
+            <if test="handlerName != null">
+                handler_name,
+            </if>
+            <if test="paramStr != null">
+                param_str,
+            </if>
+            <if test="sourceType != null">
+                source_type,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="callbackTime != null">
+                callback_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="isDel != null">
+                is_del,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="userType != null">
+                user_type,
+            </if>
+            <if test="projectId != null">
+                project_id,
+            </if>
+            <if test="pwdType != null">
+                pwd_type,
+            </if>
+
+            <if test="handlerType != null">
+                handler_type,
+            </if>
+            <if test="userCode != null">
+                user_code
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="fid != null">
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="contractId != null">
+                #{contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="roomId != null">
+                #{roomId,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceId != null">
+                #{serviceId,jdbcType=VARCHAR},
+            </if>
+            <if test="updatePwd != null">
+                #{updatePwd,jdbcType=VARCHAR},
+            </if>
+            <if test="pwd != null">
+                #{pwd,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="handlerCode != null">
+                #{handlerCode,jdbcType=VARCHAR},
+            </if>
+            <if test="handlerName != null">
+                #{handlerName,jdbcType=VARCHAR},
+            </if>
+            <if test="paramStr != null">
+                #{paramStr,jdbcType=VARCHAR},
+            </if>
+            <if test="sourceType != null">
+                #{sourceType,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="callbackTime != null">
+                #{callbackTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                #{isDel,jdbcType=INTEGER},
+            </if>
+
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userType != null">
+                #{userType,jdbcType=INTEGER},
+            </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="pwdType != null">
+                #{pwdType,jdbcType=INTEGER},
+            </if>
+            <if test="handlerType != null">
+                #{handlerType,jdbcType=INTEGER},
+            </if>
+            <if test="userCode != null">
+                #{userCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.houses.entity.IntellectSmartLockEntity">
+        update t_intellect_smartlock
+        <set>
+            <if test="contractId != null">
+                contract_id = #{contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="roomId != null">
+                room_id = #{roomId,jdbcType=VARCHAR},
+            </if>
+            <if test="serviceId != null">
+                service_id = #{serviceId,jdbcType=VARCHAR},
+            </if>
+            <if test="updatePwd != null">
+                update_pwd = #{updatePwd,jdbcType=VARCHAR},
+            </if>
+            <if test="pwd != null">
+                pwd = #{pwd,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="handlerCode != null">
+                handler_code = #{handlerCode,jdbcType=VARCHAR},
+            </if>
+            <if test="handlerName != null">
+                handler_name = #{handlerName,jdbcType=VARCHAR},
+            </if>
+            <if test="paramStr != null">
+                param_str = #{paramStr,jdbcType=VARCHAR},
+            </if>
+            <if test="sourceType != null">
+                source_type = #{sourceType,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="callbackTime != null">
+                callback_time = #{callbackTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDel != null">
+                is_del = #{isDel,jdbcType=INTEGER},
+            </if>
+            <if test="userType != null">
+                user_type = #{userType,jdbcType=INTEGER},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="handlerType != null">
+                handler_type = #{handlerType,jdbcType=INTEGER},
+            </if>
+            <if test="userCode != null">
+                user_code = #{userCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where fid = #{fid,jdbcType=VARCHAR}
+    </update>
+
+    <select id="findByPaging" resultType="com.ziroom.zrp.service.houses.entity.IntellectSmartLockVo"
+            parameterType="java.util.Map">
+        SELECT
+        t.id, t.fid, t.project_id, t.contract_id AS contractId, t.room_id AS roomId,
+        t.service_id AS serviceId, t.update_pwd AS updatePwd,t.pwd_type AS pwdType,
+        t.pwd, t.phone, t.handler_code AS handlerCode, t.handler_name AS handlerName, t.status, t.start_time AS
+        startTime,
+        t.end_time AS endTime,t.callback_time AS callbackTime, t.create_time AS createTime, t.update_time AS updateTime,
+        t.is_del AS isDel,t.user_type AS userType,t.user_name AS userName, r.froomnumber AS roomNumber,
+        r.ffloornumber AS floorNumber, b.fbuildingname AS buildingName
+        FROM t_intellect_smartlock t
+        LEFT JOIN troominfo r ON t.room_id = r.fid
+        LEFT JOIN tbuildinginfo b ON b.fid = r.buildingid
+        WHERE 1=1
+        <if test="fid != null and fid != ''">
+            AND t.fid = #{fid,jdbcType=VARCHAR}
+        </if>
+        <if test="contractId != null and contractId != ''">
+            AND t.contract_id = #{contractId,jdbcType=VARCHAR}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            AND t.project_id = #{projectId,jdbcType=VARCHAR}
+        </if>
+        <if test="roomId != null and roomId != ''">
+            AND t.room_id = #{roomId,jdbcType=VARCHAR}
+        </if>
+        <if test="serviceId != null and serviceId != ''">
+            AND t.service_id = #{serviceId,jdbcType=VARCHAR}
+        </if>
+        <if test="updatePwd != null and updatePwd != ''">
+            AND t.update_pwd = #{updatePwd,jdbcType=VARCHAR}
+        </if>
+        <if test="pwd != null and pwd != ''">
+            AND t.pwd = #{pwd,jdbcType=VARCHAR}
+        </if>
+        <if test="phone != null and phone != ''">
+            AND t.phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="handlerCode != null and handlerCode != ''">
+            AND t.handler_code = #{handlerCode,jdbcType=VARCHAR}
+        </if>
+        <if test="handlerName != null and handlerName != ''">
+            AND t.handler_name LIKE concat(#{handlerName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="sourceType != null">
+            AND t.source_type = #{sourceType,jdbcType=INTEGER}
+        </if>
+        <if test="status != null">
+            AND t.status = #{status,jdbcType=INTEGER}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            AND t.start_time = #{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND t.end_time = #{endTime,jdbcType=TIMESTAMP}
+        </if>
+        <!-- 失效时间开始 -->
+        <if test="invalidStartTime != null and invalidStartTime != ''">
+            AND t.end_time <![CDATA[ >= ]]> #{invalidStartTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="invalidEndTime != null and invalidEndTime != ''">
+            AND t.end_time <![CDATA[ <= ]]> #{invalidEndTime,jdbcType=TIMESTAMP}
+        </if>
+        <!-- 失效时间结束 -->
+
+        <if test="callbackTime != null and callbackTime != ''">
+            AND t.callback_time = #{callbackTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            AND t.create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+
+        <!-- 创建时间开始 -->
+        <if test="createStartTime != null and createStartTime != ''">
+            AND t.create_time <![CDATA[ >= ]]> #{createStartTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createEndTime != null and createEndTime != ''">
+            AND t.create_time <![CDATA[ <= ]]> #{createEndTime,jdbcType=TIMESTAMP}
+        </if>
+        <!-- 创建时间结束 -->
+        <if test="updateTime != null and updateTime != ''">
+            AND t.update_time = #{updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="isDel != null">
+            AND t.is_del = #{isDel,jdbcType=INTEGER}
+        </if>
+        <if test="userType != null">
+            AND t.user_type = #{userType,jdbcType=INTEGER}
+        </if>
+        <if test="userName != null and userName != ''">
+            AND t.user_name = #{userName,jdbcType=VARCHAR}
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 条件删除智能锁密码 -->
+    <update id="delRoomSmartLock" parameterType="com.ziroom.zrp.houses.entity.IntellectSmartLockEntity">
+        UPDATE `t_intellect_smartlock` SET is_del=1 WHERE room_id=#{roomId,jdbcType=VARCHAR}
+        <if test="contractId!=null and contractId!=''">
+            AND contract_id=#{contractId,jdbcType=VARCHAR}
+        </if>
+        <if test="serviceId!=null and serviceId!=''">
+            AND service_id=#{serviceId,jdbcType=VARCHAR}
+        </if>
+    </update>
+
+    <!-- 查询要删除出的智能锁密码 -->
+    <select id="getDelRoomSmartLockByCondition" resultMap="BaseResultMap"
+            parameterType="com.ziroom.zrp.houses.entity.IntellectSmartLockEntity">
+        select
+        <include refid="Base_Column_List"/>
+        from t_intellect_smartlock
+        WHERE room_id=#{roomId,jdbcType=VARCHAR}
+        <if test="contractId!=null and contractId!=''">
+            AND contract_id=#{contractId,jdbcType=VARCHAR}
+        </if>
+        <if test="serviceId!=null and serviceId!=''">
+            AND service_id=#{serviceId,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <!--根据业务fid更新密码锁下发状态  -->
+    <select id="upSmartLockStatusByServiceId" parameterType="map">
+        UPDATE `t_intellect_smartlock` SET `status`=#{status,jdbcType=INTEGER}
+        WHERE service_id=#{serviceId,jdbcType=VARCHAR}
+    </select>
+    
+    <!-- 更新最新的一条锁密码为回调状态 -->
+    <select id="upSmartLockStatusByServiceIdLimit" parameterType="map">
+    	UPDATE `t_intellect_smartlock` SET `status`=#{status,jdbcType=INTEGER}
+		WHERE fid=(SELECT temp.fid FROM(
+		SELECT fid FROM `t_intellect_smartlock` WHERE service_id=#{serviceId,jdbcType=VARCHAR}
+		ORDER BY create_time DESC
+		LIMIT 1) temp )
+    </select>
+
+    <!-- 获取需要补偿的失败记录 -->
+    <select id="getFailSmartLockRecord" resultMap="BaseResultMap">
+        select
+        fid, source_type, param_str
+        from t_intellect_smartlock
+        where source_type in
+        <foreach collection="sourceTypes" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and is_del = 0
+        and status = 2
+    </select>
+</mapper>

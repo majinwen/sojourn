@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.system.dao.CityMapper" >
+       <resultMap id="BaseResultMap" type="com.zra.system.entity.CityEntity" >
+              <id column="fid" property="id" jdbcType="VARCHAR" />
+              <result column="citycode" property="cityCode" jdbcType="VARCHAR" />
+              <result column="cityname" property="cityName" jdbcType="VARCHAR" />
+              <result column="fcreatetime" property="createTime" jdbcType="TIMESTAMP" />
+              <result column="fupdatetime" property="updateTime" jdbcType="TIMESTAMP" />
+              <result column="fisdel" property="isDel" jdbcType="BIT" />
+              <result column="flongcode" property="longCode" jdbcType="VARCHAR" />
+              <result column="fshortcode" property="shortCode" jdbcType="VARCHAR" />
+              <result column="fvoucher" property="voucher" jdbcType="VARCHAR" />
+              <result column="fconsum" property="consum" jdbcType="VARCHAR" />
+              <result column="fnextValName" property="nextValName" jdbcType="VARCHAR" />
+              <result column="fafacomcode" property="afaComCode" jdbcType="VARCHAR" />
+              <result column="center_lon" property="centerLon" jdbcType="DOUBLE" />
+              <result column="center_lat" property="centerLat" jdbcType="DOUBLE" />
+       </resultMap>
+
+       <sql id="Base_Column_List" >
+              fid, citycode, cityname, fcreatetime, fupdatetime, fisdel, flongcode, fshortcode,
+              fvoucher, fconsum, fnextValName, fafacomcode, center_lon, center_lat
+       </sql>
+
+       <select id="findAllCity" resultMap="BaseResultMap">
+              select
+              <include refid="Base_Column_List" />
+              from tcity city
+              where city.fid != 86
+       </select>
+       
+       <select id="findAllCity2" resultMap="BaseResultMap">
+              select
+              <include refid="Base_Column_List" />
+              from tcity city
+              where fisdel = 0
+              ORDER BY fshortcode
+       </select>
+</mapper>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.rentPriceStrategyDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.RentPriceStrategyEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="rent_type" property="rentType" jdbcType="INTEGER" />
+    <result column="long_price_rate" property="longPriceRate" jdbcType="DOUBLE" />
+    <result column="short_price_rate" property="shortPriceRate" jdbcType="DOUBLE" />
+    <result column="short_price2_rate" property="shortPrice2Rate" jdbcType="DOUBLE" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="deleter_id" property="deleterId" jdbcType="VARCHAR" />
+    <result column="deleted_time" property="deletedTime" jdbcType="TIMESTAMP" />
+    <result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="updater_id" property="updaterId" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="long_s_price_rate" property="longSPriceRate" jdbcType="DOUBLE" />
+    <result column="short_s_price_rate" property="shortSPriceRate" jdbcType="DOUBLE" />
+    <result column="short_s_price2_rate" property="shortSPrice2Rate" jdbcType="DOUBLE" />
+    <result column="short_s_price3_rate" property="shortSPrice3Rate" jdbcType="DOUBLE" />
+    <result column="short_price3_rate" property="shortPrice3Rate" jdbcType="DOUBLE" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, project_id, rent_type, long_price_rate, short_price_rate, short_price2_rate, 
+    is_deleted, deleter_id, deleted_time, creater_id, created_time, updater_id, update_time, 
+    long_s_price_rate, short_s_price_rate, short_s_price2_rate, short_s_price3_rate, 
+    short_price3_rate, city
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from rent_price_strategy
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from rent_price_strategy
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.zrp.houses.entity.RentPriceStrategyEntity" >
+    insert into rent_price_strategy (id, project_id, rent_type, 
+      long_price_rate, short_price_rate, short_price2_rate, 
+      is_deleted, deleter_id, deleted_time, 
+      creater_id, created_time, updater_id, 
+      update_time, long_s_price_rate, short_s_price_rate, 
+      short_s_price2_rate, short_s_price3_rate, short_price3_rate, 
+      city)
+    values (#{id,jdbcType=INTEGER}, #{projectId,jdbcType=VARCHAR}, #{rentType,jdbcType=INTEGER}, 
+      #{longPriceRate,jdbcType=DOUBLE}, #{shortPriceRate,jdbcType=DOUBLE}, #{shortPrice2Rate,jdbcType=DOUBLE}, 
+      #{isDeleted,jdbcType=INTEGER}, #{deleterId,jdbcType=VARCHAR}, #{deletedTime,jdbcType=TIMESTAMP}, 
+      #{createrId,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, #{updaterId,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{longSPriceRate,jdbcType=DOUBLE}, #{shortSPriceRate,jdbcType=DOUBLE}, 
+      #{shortSPrice2Rate,jdbcType=DOUBLE}, #{shortSPrice3Rate,jdbcType=DOUBLE}, #{shortPrice3Rate,jdbcType=DOUBLE}, 
+      #{city,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.zrp.houses.entity.RentPriceStrategyEntity" >
+    insert into rent_price_strategy
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="rentType != null" >
+        rent_type,
+      </if>
+      <if test="longPriceRate != null" >
+        long_price_rate,
+      </if>
+      <if test="shortPriceRate != null" >
+        short_price_rate,
+      </if>
+      <if test="shortPrice2Rate != null" >
+        short_price2_rate,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="deleterId != null" >
+        deleter_id,
+      </if>
+      <if test="deletedTime != null" >
+        deleted_time,
+      </if>
+      <if test="createrId != null" >
+        creater_id,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="updaterId != null" >
+        updater_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="longSPriceRate != null" >
+        long_s_price_rate,
+      </if>
+      <if test="shortSPriceRate != null" >
+        short_s_price_rate,
+      </if>
+      <if test="shortSPrice2Rate != null" >
+        short_s_price2_rate,
+      </if>
+      <if test="shortSPrice3Rate != null" >
+        short_s_price3_rate,
+      </if>
+      <if test="shortPrice3Rate != null" >
+        short_price3_rate,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="rentType != null" >
+        #{rentType,jdbcType=INTEGER},
+      </if>
+      <if test="longPriceRate != null" >
+        #{longPriceRate,jdbcType=DOUBLE},
+      </if>
+      <if test="shortPriceRate != null" >
+        #{shortPriceRate,jdbcType=DOUBLE},
+      </if>
+      <if test="shortPrice2Rate != null" >
+        #{shortPrice2Rate,jdbcType=DOUBLE},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="deleterId != null" >
+        #{deleterId,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedTime != null" >
+        #{deletedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrId != null" >
+        #{createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null" >
+        #{updaterId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="longSPriceRate != null" >
+        #{longSPriceRate,jdbcType=DOUBLE},
+      </if>
+      <if test="shortSPriceRate != null" >
+        #{shortSPriceRate,jdbcType=DOUBLE},
+      </if>
+      <if test="shortSPrice2Rate != null" >
+        #{shortSPrice2Rate,jdbcType=DOUBLE},
+      </if>
+      <if test="shortSPrice3Rate != null" >
+        #{shortSPrice3Rate,jdbcType=DOUBLE},
+      </if>
+      <if test="shortPrice3Rate != null" >
+        #{shortPrice3Rate,jdbcType=DOUBLE},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.houses.entity.RentPriceStrategyEntity" >
+    update rent_price_strategy
+    <set >
+      <if test="projectId != null" >
+        project_id = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="rentType != null" >
+        rent_type = #{rentType,jdbcType=INTEGER},
+      </if>
+      <if test="longPriceRate != null" >
+        long_price_rate = #{longPriceRate,jdbcType=DOUBLE},
+      </if>
+      <if test="shortPriceRate != null" >
+        short_price_rate = #{shortPriceRate,jdbcType=DOUBLE},
+      </if>
+      <if test="shortPrice2Rate != null" >
+        short_price2_rate = #{shortPrice2Rate,jdbcType=DOUBLE},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="deleterId != null" >
+        deleter_id = #{deleterId,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedTime != null" >
+        deleted_time = #{deletedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrId != null" >
+        creater_id = #{createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null" >
+        updater_id = #{updaterId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="longSPriceRate != null" >
+        long_s_price_rate = #{longSPriceRate,jdbcType=DOUBLE},
+      </if>
+      <if test="shortSPriceRate != null" >
+        short_s_price_rate = #{shortSPriceRate,jdbcType=DOUBLE},
+      </if>
+      <if test="shortSPrice2Rate != null" >
+        short_s_price2_rate = #{shortSPrice2Rate,jdbcType=DOUBLE},
+      </if>
+      <if test="shortSPrice3Rate != null" >
+        short_s_price3_rate = #{shortSPrice3Rate,jdbcType=DOUBLE},
+      </if>
+      <if test="shortPrice3Rate != null" >
+        short_price3_rate = #{shortPrice3Rate,jdbcType=DOUBLE},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.zrp.houses.entity.RentPriceStrategyEntity" >
+    update rent_price_strategy
+    set project_id = #{projectId,jdbcType=VARCHAR},
+      rent_type = #{rentType,jdbcType=INTEGER},
+      long_price_rate = #{longPriceRate,jdbcType=DOUBLE},
+      short_price_rate = #{shortPriceRate,jdbcType=DOUBLE},
+      short_price2_rate = #{shortPrice2Rate,jdbcType=DOUBLE},
+      is_deleted = #{isDeleted,jdbcType=INTEGER},
+      deleter_id = #{deleterId,jdbcType=VARCHAR},
+      deleted_time = #{deletedTime,jdbcType=TIMESTAMP},
+      creater_id = #{createrId,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      updater_id = #{updaterId,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      long_s_price_rate = #{longSPriceRate,jdbcType=DOUBLE},
+      short_s_price_rate = #{shortSPriceRate,jdbcType=DOUBLE},
+      short_s_price2_rate = #{shortSPrice2Rate,jdbcType=DOUBLE},
+      short_s_price3_rate = #{shortSPrice3Rate,jdbcType=DOUBLE},
+      short_price3_rate = #{shortPrice3Rate,jdbcType=DOUBLE},
+      city = #{city,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!--获取价格调幅 created by cuigh6-->
+  <select id="getRentPriceStrategy" parameterType="com.ziroom.zrp.houses.entity.RentPriceStrategyEntity" resultMap="BaseResultMap">
+    SELECT
+      <include refid="Base_Column_List" />
+    FROM
+      rent_price_strategy
+    WHERE project_id=#{projectId,jdbcType=VARCHAR}
+    AND rent_type= #{rentType,jdbcType=INTEGER}
+    AND is_deleted=0
+  </select>
+
+</mapper>

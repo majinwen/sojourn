@@ -1,0 +1,1434 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.rentContractDao">
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.RentContractEntity" >
+    <id column="contractid" property="contractId" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="fcontype" property="conType" jdbcType="VARCHAR" />
+    <result column="con_rent_code" property="conRentCode" jdbcType="VARCHAR" />
+    <result column="pre_con_rent_code" property="preConRentCode" jdbcType="VARCHAR" />
+    <result column="con_sign_date" property="conSignDate" jdbcType="DATE" />
+    <result column="con_start_date" property="conStartDate" jdbcType="DATE" />
+    <result column="con_end_date" property="conEndDate" jdbcType="DATE" />
+    <result column="con_release_date" property="conReleaseDate" jdbcType="DATE" />
+    <result column="con_deposit" property="conDeposit" jdbcType="DECIMAL" />
+    <result column="con_commission" property="conCommission" jdbcType="DECIMAL" />
+    <result column="con_must_commission" property="conMustCommission" jdbcType="DECIMAL" />
+    <result column="con_status_code" property="conStatusCode" jdbcType="VARCHAR" />
+    <result column="con_audit_state" property="conAuditState" jdbcType="VARCHAR" />
+    <result column="con_auditer" property="conAuditer" jdbcType="VARCHAR" />
+    <result column="con_rent_year" property="conRentYear" jdbcType="INTEGER" />
+    <result column="con_cycle_code" property="conCycleCode" jdbcType="VARCHAR" />
+    <result column="con_remark" property="conRemark" jdbcType="VARCHAR" />
+    <result column="con_no_renewal_reason" property="conNoRenewalReason" jdbcType="VARCHAR" />
+    <result column="pro_name" property="proName" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="room_sales_price" property="roomSalesPrice" jdbcType="DECIMAL" />
+    <result column="house_room_no" property="houseRoomNo" jdbcType="VARCHAR" />
+    <result column="customer_type" property="customerType" jdbcType="INTEGER" />
+    <result column="customer_id" property="customerId" jdbcType="VARCHAR" />
+    <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+    <result column="customer_mobile" property="customerMobile" jdbcType="VARCHAR" />
+    <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP" />
+    <result column="createrid" property="createrid" jdbcType="VARCHAR" />
+    <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP" />
+    <result column="updaterid" property="updaterid" jdbcType="VARCHAR" />
+    <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+    <result column="fvalid" property="fvalid" jdbcType="INTEGER" />
+    <result column="factualprice" property="factualprice" jdbcType="DECIMAL" />
+    <result column="fdiscountserprice" property="fdiscountserprice" jdbcType="DECIMAL" />
+    <result column="fserviceprice" property="fserviceprice" jdbcType="DECIMAL" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+    <result column="customer_uid" property="customerUid" jdbcType="VARCHAR" />
+    <result column="activity_id" property="activityId" jdbcType="INTEGER" />
+    <result column="activityMoney" property="activitymoney" jdbcType="VARCHAR" />
+    <result column="fhandleZO" property="fhandlezo" jdbcType="VARCHAR" />
+    <result column="fhandleZOcode" property="fhandlezocode" jdbcType="VARCHAR" />
+    <result column="fhandletime" property="fhandletime" jdbcType="TIMESTAMP" />
+    <result column="freleasecontractid" property="freleasecontractid" jdbcType="VARCHAR" />
+    <result column="fcontractfile" property="fcontractfile" jdbcType="VARCHAR" />
+    <result column="fcertcardpic" property="fcertcardpic" jdbcType="VARCHAR" />
+    <result column="fsocialcertpic" property="fsocialcertpic" jdbcType="VARCHAR" />
+    <result column="fsigntype" property="fsigntype" jdbcType="VARCHAR" />
+    <result column="fconauditercode" property="fconauditercode" jdbcType="VARCHAR" />
+    <result column="frentmonth" property="frentmonth" jdbcType="VARCHAR" />
+    <result column="fconAuditDate" property="fconauditdate" jdbcType="DATE" />
+    <result column="fiscalculate" property="fiscalculate" jdbcType="INTEGER" />
+    <result column="foriginalstate" property="foriginalstate" jdbcType="VARCHAR" />
+    <result column="fsurrenderid" property="fsurrenderid" jdbcType="VARCHAR" />
+    <result column="fcontractcategory" property="fcontractcategory" jdbcType="VARCHAR" />
+    <result column="fsource" property="fsource" jdbcType="VARCHAR" />
+    <result column="is_renew" property="isRenew" jdbcType="INTEGER" />
+    <result column="can_pre_date" property="canPreDate" jdbcType="TIMESTAMP" />
+    <result column="can_renew_date" property="canRenewDate" jdbcType="TIMESTAMP" />
+    <result column="fapplicationDate" property="fapplicationdate" jdbcType="DATE" />
+    <result column="fexpectedDate" property="fexpecteddate" jdbcType="DATE" />
+    <result column="proxy_picurl" property="proxyPicurl" jdbcType="VARCHAR" />
+    <result column="con_tpl_version" property="conTplVersion" jdbcType="VARCHAR" />
+    <result column="first_pay_time" property="firstPayTime" jdbcType="TIMESTAMP" />
+    <result column="submit_contract_time" property="submitContractTime" jdbcType="TIMESTAMP" />
+    <result column="first_period_money" property="firstPeriodMoney" jdbcType="DECIMAL" />
+    <result column="sur_parent_rent_id" property="surParentRentId" jdbcType="VARCHAR" />
+    <result column="sur_parent_rent_code" property="surParentRentCode" jdbcType="VARCHAR" />
+    <result column="pre_sur_parent_rent_id" property="preSurParentRentId" jdbcType="VARCHAR" />
+    <result column="is_sync_to_fin" property="isSyncToFin" jdbcType="TINYINT" />
+    <result column="close_type" property="closeType" jdbcType="TINYINT" />
+    <result column="is_possible_modify" property="isPossibleModify" jdbcType="TINYINT" />
+    <result column="data_version" property="dataVersion" jdbcType="INTEGER" />
+    <result column="is_transfer_pdf" property="isTransferPdf" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap type="com.ziroom.zrp.trading.entity.RentContractAndDetailEntity" 
+  id="DetailResuleMap" extends="BaseResultMap">
+  	<result column="delivery_state" property="deliveryState" jdbcType="TINYINT" />
+  </resultMap>
+
+  <resultMap id="ExtResultMap" type="com.ziroom.zrp.service.trading.dto.contract.ContractManageDto" extends="BaseResultMap">
+      <result column="delivery_state" property="deliveryState" jdbcType="TINYINT" />
+      <result column="first_audit_date" property="firstAuditDate" jdbcType="TIMESTAMP" />
+      <result column="approve_date" property="approveDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    contractid, project_id, fcontype, con_rent_code, pre_con_rent_code,
+    con_sign_date, con_start_date, con_end_date, con_release_date, con_deposit,
+    con_commission, con_must_commission, con_status_code,
+    con_audit_state, con_auditer, con_rent_year, con_cycle_code, con_remark, con_no_renewal_reason, 
+    pro_name, room_id, room_area, room_sales_price,
+    house_room_no, customer_type, customer_id, customer_name, customer_mobile, fcreatetime, 
+    createrid, fupdatetime, updaterid, fisdel, fvalid, factualprice, fdiscountserprice, fserviceprice, cityid, customer_uid, activity_id, activityMoney, fhandleZO,
+    fhandleZOcode, fhandletime, freleasecontractid, fcontractfile, fcertcardpic,
+    fsocialcertpic, fsigntype, fconauditercode, frentmonth,
+    fconAuditDate, fiscalculate, foriginalstate, fsurrenderid, fcontractcategory, fsource, is_renew, can_pre_date, can_renew_date, fapplicationDate,
+    fexpectedDate, proxy_picurl, con_tpl_version,first_pay_time,submit_contract_time,first_period_money,
+    sur_parent_rent_id, sur_parent_rent_code, is_sync_to_fin, close_type ,is_possible_modify, pre_sur_parent_rent_id,data_version,
+    is_transfer_pdf
+  </sql>
+
+  <select id="findContractByRentCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from trentcontract
+    where con_rent_code = #{code,jdbcType=VARCHAR}
+    AND fisdel = 0
+    AND fvalid = 1
+  </select>
+  <!-- 根据合同号查询续约合同 created by xiangb-->
+  <select id="findRenewContractByPreRentCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from trentcontract
+    where pre_con_rent_code = #{preRentCode,jdbcType=VARCHAR}
+    and con_status_code != 'ygb'
+    and con_status_code != 'yzf'
+    and con_status_code != 'ytz'
+    and fisdel = 0 and fvalid = 1
+    order by fcreatetime desc 
+    limit 1 
+  </select>
+  <!--查询合同id列表-->
+  <select id="listContractBySurParentRentId" parameterType="string" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM trentcontract
+    WHERE sur_parent_rent_id = #{surParentRentId,jdbcType=VARCHAR}
+    AND fisdel = 0 AND fvalid = 1
+  </select>
+
+  <!--获取合同详情 created by xiangb-->
+    <select id="findContractBaseByContractId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+          <include refid="Base_Column_List" />
+        FROM trentcontract 
+        WHERE contractid=#{contractId,jdbcType=VARCHAR}
+    </select>
+  <select id="findContractListByContractIds" resultMap="BaseResultMap">
+    SELECT
+      <include refid="Base_Column_List" />
+    FROM trentcontract
+    WHERE contractid in
+    <foreach collection="contractIds" item="item" separator="," open="(" close=")" index="index">
+      #{item}
+    </foreach>
+
+
+  </select>
+    <!-- 根据uid获得合同列表 -->
+	<select id="listContractByUid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from trentcontract
+	    where customer_uid = #{uid,jdbcType=VARCHAR}
+	    and fisdel = 0 and fvalid = 1
+	    order by fhandletime DESC
+	  </select>
+	  <!-- 根据uid获得合同及物业交割状态 -->
+	<select id="listContractAndDetailByUid" resultMap="DetailResuleMap" parameterType="java.lang.String" >
+	    select 
+	    rc.*,rr.delivery_state
+	    FROM trentcontract rc 
+	    LEFT JOIN rent_rentedetail rr 
+	    ON rc.contractid = rr.contract_id AND rr.is_deleted = 0 AND rr.fvalid = 1 
+	    WHERE rc.customer_uid = #{uid,jdbcType=VARCHAR}
+		AND rc.fisdel = 0 AND rc.fvalid = 1 AND rc.customer_type = 1
+	    order by fcreatetime DESC
+	  </select>
+
+  <!-- 根据合同id查询合同信息以及物业交割状态 -->
+  <select id="findContractAndDetailsByContractId" resultMap="DetailResuleMap" parameterType="java.lang.String" >
+    select
+    rc.*,rr.delivery_state
+    FROM trentcontract rc
+    LEFT JOIN rent_rentedetail rr
+    ON rc.contractid = rr.contract_id AND rr.is_deleted = 0 AND rr.fvalid = 1
+    WHERE rc.contractid = #{contractId,jdbcType=VARCHAR}
+    AND rc.fisdel = 0 AND rc.fvalid = 1
+  </select>
+
+  <insert id="saveRentContract" parameterType="com.ziroom.zrp.trading.entity.RentContractEntity" >
+    insert into trentcontract
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="contractId != null" >
+        contractid,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="conType != null" >
+        fcontype,
+      </if>
+      <if test="conRentCode != null" >
+        con_rent_code,
+      </if>
+      <if test="preConRentCode != null" >
+        pre_con_rent_code,
+      </if>
+      <if test="conSignDate != null" >
+        con_sign_date,
+      </if>
+      <if test="conStartDate != null" >
+        con_start_date,
+      </if>
+      <if test="conEndDate != null" >
+        con_end_date,
+      </if>
+      <if test="conReleaseDate != null" >
+        con_release_date,
+      </if>
+
+      <if test="conDeposit != null" >
+        con_deposit,
+      </if>
+      <if test="conCommission != null" >
+        con_commission,
+      </if>
+      <if test="conMustCommission != null" >
+        con_must_commission,
+      </if>
+      <if test="conStatusCode != null" >
+        con_status_code,
+      </if>
+      <if test="conAuditState != null" >
+        con_audit_state,
+      </if>
+      <if test="conAuditer != null" >
+        con_auditer,
+      </if>
+      <if test="conRentYear != null" >
+        con_rent_year,
+      </if>
+      <if test="conCycleCode != null" >
+        con_cycle_code,
+      </if>
+      <if test="conRemark != null" >
+        con_remark,
+      </if>
+      <if test="conNoRenewalReason != null" >
+        con_no_renewal_reason,
+      </if>
+      <if test="proName != null" >
+        pro_name,
+      </if>
+
+      <if test="roomId != null" >
+        room_id,
+      </if>
+
+      <if test="roomSalesPrice != null" >
+        room_sales_price,
+      </if>
+
+      <if test="houseRoomNo != null" >
+        house_room_no,
+      </if>
+      <if test="customerType != null" >
+        customer_type,
+      </if>
+      <if test="customerId != null" >
+        customer_id,
+      </if>
+      <if test="customerName != null" >
+        customer_name,
+      </if>
+      <if test="customerMobile != null" >
+        customer_mobile,
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime,
+      </if>
+      <if test="createrid != null" >
+        createrid,
+      </if>
+      <if test="fupdatetime != null" >
+        fupdatetime,
+      </if>
+      <if test="updaterid != null" >
+        updaterid,
+      </if>
+      <if test="fisdel != null" >
+        fisdel,
+      </if>
+      <if test="fvalid != null" >
+        fvalid,
+      </if>
+
+      <if test="factualprice != null" >
+        factualprice,
+      </if>
+      <if test="fdiscountserprice != null" >
+        fdiscountserprice,
+      </if>
+      <if test="fserviceprice != null" >
+        fserviceprice,
+      </if>
+      <if test="cityid != null" >
+        cityid,
+      </if>
+      <if test="customerUid != null" >
+        customer_uid,
+      </if>
+      <if test="activityId != null" >
+        activity_id,
+      </if>
+      <if test="activitymoney != null" >
+        activityMoney,
+      </if>
+      <if test="fhandlezo != null" >
+        fhandleZO,
+      </if>
+      <if test="fhandlezocode != null" >
+        fhandleZOcode,
+      </if>
+      <if test="fhandletime != null" >
+        fhandletime,
+      </if>
+
+      <if test="freleasecontractid != null" >
+        freleasecontractid,
+      </if>
+      <if test="fcontractfile != null" >
+        fcontractfile,
+      </if>
+      <if test="fcertcardpic != null" >
+        fcertcardpic,
+      </if>
+      <if test="fsocialcertpic != null" >
+        fsocialcertpic,
+      </if>
+
+      <if test="fsigntype != null" >
+        fsigntype,
+      </if>
+      <if test="fconauditercode != null" >
+        fconauditercode,
+      </if>
+      <if test="frentmonth != null" >
+        frentmonth,
+      </if>
+      <if test="fconauditdate != null" >
+        fconAuditDate,
+      </if>
+      <if test="fiscalculate != null" >
+        fiscalculate,
+      </if>
+      <if test="foriginalstate != null" >
+        foriginalstate,
+      </if>
+
+      <if test="fsurrenderid != null" >
+        fsurrenderid,
+      </if>
+      <if test="fcontractcategory != null" >
+        fcontractcategory,
+      </if>
+      <if test="fsource != null" >
+        fsource,
+      </if>
+      <if test="isRenew != null" >
+        is_renew,
+      </if>
+      <if test="canPreDate != null" >
+        can_pre_date,
+      </if>
+      <if test="canRenewDate != null" >
+        can_renew_date,
+      </if>
+      <if test="fapplicationdate != null" >
+        fapplicationDate,
+      </if>
+      <if test="fexpecteddate != null" >
+        fexpectedDate,
+      </if>
+      <if test="proxyPicurl != null" >
+        proxy_picurl,
+      </if>
+      <if test="conTplVersion != null" >
+        con_tpl_version,
+      </if>
+      <if test="submitContractTime != null" >
+          submit_contract_time,
+      </if>
+      <if test="firstPeriodMoney != null" >
+            first_period_money,
+      </if>
+      <if test="surParentRentId != null" >
+        sur_parent_rent_id,
+      </if>
+      <if test="surParentRentCode != null" >
+        sur_parent_rent_code,
+      </if>
+      <if test="isSyncToFin != null" >
+        is_sync_to_fin,
+      </if>
+      <if test="preSurParentRentId != null" >
+        pre_sur_parent_rent_id,
+      </if>
+      <if test="dataVersion != null" >
+        data_version,
+      </if>
+      <if test="isTransferPdf != null" >
+        is_transfer_pdf,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="conType != null" >
+        #{conType,jdbcType=VARCHAR},
+      </if>
+      <if test="conRentCode != null" >
+        #{conRentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="preConRentCode != null" >
+        #{preConRentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="conSignDate != null" >
+        #{conSignDate,jdbcType=DATE},
+      </if>
+      <if test="conStartDate != null" >
+        #{conStartDate,jdbcType=DATE},
+      </if>
+      <if test="conEndDate != null" >
+        #{conEndDate,jdbcType=DATE},
+      </if>
+      <if test="conReleaseDate != null" >
+        #{conReleaseDate,jdbcType=DATE},
+      </if>
+
+      <if test="conDeposit != null" >
+        #{conDeposit,jdbcType=DECIMAL},
+      </if>
+      <if test="conCommission != null" >
+        #{conCommission,jdbcType=DECIMAL},
+      </if>
+      <if test="conMustCommission != null" >
+        #{conMustCommission,jdbcType=DECIMAL},
+      </if>
+      <if test="conStatusCode != null" >
+        #{conStatusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="conAuditState != null" >
+        #{conAuditState,jdbcType=VARCHAR},
+      </if>
+      <if test="conAuditer != null" >
+        #{conAuditer,jdbcType=VARCHAR},
+      </if>
+      <if test="conRentYear != null" >
+        #{conRentYear,jdbcType=INTEGER},
+      </if>
+      <if test="conCycleCode != null" >
+        #{conCycleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="conRemark != null" >
+        #{conRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="conNoRenewalReason != null" >
+        #{conNoRenewalReason,jdbcType=VARCHAR},
+      </if>
+      <if test="proName != null" >
+        #{proName,jdbcType=VARCHAR},
+      </if>
+
+      <if test="roomId != null" >
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomSalesPrice != null" >
+        #{roomSalesPrice,jdbcType=DECIMAL},
+      </if>
+
+      <if test="houseRoomNo != null" >
+        #{houseRoomNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerType != null" >
+        #{customerType,jdbcType=INTEGER},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null" >
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerMobile != null" >
+        #{customerMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatetime != null" >
+        #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createrid != null" >
+        #{createrid,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatetime != null" >
+        #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterid != null" >
+        #{updaterid,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fvalid != null" >
+        #{fvalid,jdbcType=INTEGER},
+      </if>
+
+      <if test="factualprice != null" >
+        #{factualprice,jdbcType=DECIMAL},
+      </if>
+      <if test="fdiscountserprice != null" >
+        #{fdiscountserprice,jdbcType=DECIMAL},
+      </if>
+      <if test="fserviceprice != null" >
+        #{fserviceprice,jdbcType=DECIMAL},
+      </if>
+
+      <if test="cityid != null" >
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerUid != null" >
+        #{customerUid,jdbcType=VARCHAR},
+      </if>
+      <if test="activityId != null" >
+        #{activityId,jdbcType=INTEGER},
+      </if>
+      <if test="activitymoney != null" >
+        #{activitymoney,jdbcType=VARCHAR},
+      </if>
+      <if test="fhandlezo != null" >
+        #{fhandlezo,jdbcType=VARCHAR},
+      </if>
+      <if test="fhandlezocode != null" >
+        #{fhandlezocode,jdbcType=VARCHAR},
+      </if>
+      <if test="fhandletime != null" >
+        #{fhandletime,jdbcType=TIMESTAMP},
+      </if>
+
+      <if test="freleasecontractid != null" >
+        #{freleasecontractid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcontractfile != null" >
+        #{fcontractfile,jdbcType=VARCHAR},
+      </if>
+      <if test="fcertcardpic != null" >
+        #{fcertcardpic,jdbcType=VARCHAR},
+      </if>
+      <if test="fsocialcertpic != null" >
+        #{fsocialcertpic,jdbcType=VARCHAR},
+      </if>
+
+      <if test="fsigntype != null" >
+        #{fsigntype,jdbcType=VARCHAR},
+      </if>
+      <if test="fconauditercode != null" >
+        #{fconauditercode,jdbcType=VARCHAR},
+      </if>
+      <if test="frentmonth != null" >
+        #{frentmonth,jdbcType=VARCHAR},
+      </if>
+      <if test="fconauditdate != null" >
+        #{fconauditdate,jdbcType=DATE},
+      </if>
+      <if test="fiscalculate != null" >
+        #{fiscalculate,jdbcType=INTEGER},
+      </if>
+      <if test="foriginalstate != null" >
+        #{foriginalstate,jdbcType=VARCHAR},
+      </if>
+
+      <if test="fsurrenderid != null" >
+        #{fsurrenderid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcontractcategory != null" >
+        #{fcontractcategory,jdbcType=VARCHAR},
+      </if>
+
+      <if test="fsource != null" >
+        #{fsource,jdbcType=VARCHAR},
+      </if>
+      <if test="isRenew != null" >
+        #{isRenew,jdbcType=INTEGER},
+      </if>
+      <if test="canPreDate != null" >
+        #{canPreDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="canRenewDate != null" >
+        #{canRenewDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fapplicationdate != null" >
+        #{fapplicationdate,jdbcType=DATE},
+      </if>
+      <if test="fexpecteddate != null" >
+        #{fexpecteddate,jdbcType=DATE},
+      </if>
+      <if test="proxyPicurl != null" >
+        #{proxyPicurl,jdbcType=VARCHAR},
+      </if>
+      <if test="conTplVersion != null" >
+        #{conTplVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="submitContractTime != null" >
+        #{submitContractTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firstPeriodMoney != null" >
+        #{firstPeriodMoney,jdbcType=DECIMAL},
+      </if>
+
+      <if test="surParentRentId != null" >
+        #{surParentRentId,jdbcType=VARCHAR},
+      </if>
+      <if test="surParentRentCode != null" >
+        #{surParentRentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isSyncToFin != null" >
+        #{isSyncToFin,jdbcType=TINYINT},
+      </if>
+      <if test="preSurParentRentId != null" >
+        #{preSurParentRentId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataVersion != null" >
+        #{dataVersion,jdbcType=INTEGER},
+      </if>
+      <if test="isTransferPdf != null" >
+        #{isTransferPdf,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <!-- 查询同步合同到财务的相关信息 -->
+  <select id="findSyncContractVoById" resultType="com.ziroom.zrp.service.trading.entity.SyncContractVo" parameterType="java.lang.String" >
+    SELECT
+      t1.`contractid` AS crmContractId,
+      t1.`project_id` AS houseId,
+      t1.`room_id` AS roomId,
+      t1.`con_rent_code` AS rentContractCode,
+      t1.`pre_con_rent_code` AS originalContract,
+      t1.`con_sign_date` AS lesseeSignDate,
+      t1.con_start_date AS lesseeStartDate,
+      t1.con_end_date AS lesseeEndDate,
+      t1.`factualprice` AS monthRent,
+      t1.`con_deposit` AS deposit,
+      (CASE WHEN t1.`con_cycle_code` = 9 THEN 99 ELSE t1.`con_cycle_code` END ) AS collectCycleCode,
+      t1.`pro_address` AS ratingAddress,
+      t1.`fhandleZOcode` AS creatorId,
+      t1.`fhandleZO` AS creatorName,
+      t1.`fcreatetime` AS creatorDate,
+      -- isDel
+      0 AS isDel,
+      t1.`fserviceprice` AS commission,
+      t1.`con_commission` AS frontCommission,
+      (CASE WHEN t1.`con_rent_year`=0 THEN 's1'
+      WHEN t1.con_rent_year=1 OR t1.con_rent_year=2 THEN 'b1s3'
+      WHEN t1.con_rent_year=3 OR t1.con_rent_year=4 OR t1.con_rent_year=5 THEN 'b3s6'
+      WHEN t1.con_rent_year=6  THEN 'b6s12'
+      WHEN t1.con_rent_year=12 THEN 'p1'
+      ELSE 'p1' END) AS tenancyType,
+      (CASE WHEN t1.`fcontype` = 3 THEN 1 ELSE 0 END) AS isShortRent,
+      (CASE WHEN t1.`customer_type` = 2 THEN 1 ELSE 0 END ) AS isImportantCustomer,
+      (CASE WHEN t1.`fsource` = 3 THEN 1 ELSE 0 END) AS contractStrategy,
+      t1.`con_rent_code` AS ziroomRentContractCode,
+      t1.`con_start_date` AS effectDate,
+      'ZRA' AS source,
+      t1.`customer_name` AS customerName,
+      t1.`customer_uid` AS customerUid,
+      t1.`customer_mobile` AS customerPhone,
+      (CASE WHEN t1.fsigntype = 0 THEN 0 ELSE 2 END ) AS transferType,
+      t1.`fupdatetime` AS lastModifyTime,
+      t1.`customer_type` AS customerType,
+      t1.`customer_id` AS customerId
+    FROM zra.trentcontract t1
+    WHERE t1.`contractid` = #{contractId,jdbcType=VARCHAR}
+  </select>
+
+  <!--更新合同状态为续约中-->
+  <update id="updateXyzByContractIds">
+    UPDATE
+    trentcontract
+    SET
+    con_status_code = 'xyz'
+    WHERE contractid in
+    <foreach collection="contractIds" item="item" index="index" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    and con_status_code in ('yqy', 'ydq')
+  </update>
+
+  <!-- 关闭首笔账单超时未支付合同 限app签约-->
+  <select id="findFirstBillPayOvertimeForPage" resultType="com.ziroom.zrp.service.trading.entity.CloseContractNotifyVo" parameterType="map">
+    SELECT t.`contractid` AS contractId,
+           t.`customer_uid` AS customerUid,
+           t.`pro_name` AS projectName,
+           t.`house_room_no` AS roomName,
+           t.`customer_mobile` AS customerMobile
+    FROM `trentcontract` t
+    WHERE t.`con_status_code` = 'dzf'
+    AND t.`fsource` = '3'
+    AND t.`first_pay_time` IS NULL
+    AND (
+          (#{payOvertimeConditionMoney,jdbcType=INTEGER} > t.`first_period_money` AND CURRENT_TIMESTAMP > DATE_ADD(t.`submit_contract_time`,INTERVAL #{lessMoneyOvertimeHours,jdbcType=INTEGER} HOUR))
+          OR
+          (t.`first_period_money` >= #{payOvertimeConditionMoney,jdbcType=INTEGER} AND CURRENT_TIMESTAMP > DATE_ADD(t.`submit_contract_time`,INTERVAL #{moreMoneyOvertimeHours,jdbcType=INTEGER} HOUR))
+    )
+  </select>
+
+  <!-- 分页查询首笔账单距离超时n小时未支付的合同 限app签约-->
+  <select id="findFirstBillPayBeforeOvertimeForPage" resultType="com.ziroom.zrp.service.trading.entity.CloseContractNotifyVo" parameterType="map">
+    SELECT t.`contractid` AS contractId,
+    t.`customer_uid` AS customerUid,
+    t.`pro_name` AS projectName,
+    t.`house_room_no` AS roomName,
+    t.`customer_mobile` AS customerMobile,
+    CASE
+        WHEN #{payOvertimeConditionMoney,jdbcType=INTEGER} > t.`first_period_money` THEN DATE_FORMAT(DATE_ADD(t.`submit_contract_time`,INTERVAL #{lessMoneyOvertimeHours,jdbcType=INTEGER} HOUR),'%Y-%m-%d %H:%i:%s')
+        WHEN t.`first_period_money` >= #{payOvertimeConditionMoney,jdbcType=INTEGER} THEN  DATE_FORMAT(DATE_ADD(t.`submit_contract_time`,INTERVAL #{moreMoneyOvertimeHours,jdbcType=INTEGER} HOUR),'%Y-%m-%d %H:%i:%s')
+    END
+    AS cutOffTime
+    FROM `trentcontract` t
+    WHERE t.`con_status_code` = 'dzf'
+    AND t.`fsource` = '3'
+    AND t.`first_pay_time` IS NULL
+    AND (
+    (#{payOvertimeConditionMoney,jdbcType=INTEGER} > t.`first_period_money` AND CURRENT_TIMESTAMP > DATE_ADD(t.`submit_contract_time`,INTERVAL (#{lessMoneyOvertimeHours,jdbcType=INTEGER}-#{beforeOverTimeHours,jdbcType=INTEGER}) HOUR))
+    OR
+    (t.`first_period_money` >= #{payOvertimeConditionMoney,jdbcType=INTEGER} AND CURRENT_TIMESTAMP > DATE_ADD(t.`submit_contract_time`,INTERVAL (#{moreMoneyOvertimeHours,jdbcType=INTEGER}-#{beforeOverTimeHours,jdbcType=INTEGER}) HOUR))
+    )
+  </select>
+
+  <!-- 分页查询需要关闭的当天未签约的合同 限app签约-->
+  <select id="findSameUnsignedForPage" resultType="com.ziroom.zrp.service.trading.entity.CloseContractNotifyVo" parameterType="map">
+    SELECT t.`contractid` AS contractId,
+           t.`customer_uid` AS customerUid,
+           t.`pro_name` AS projectName,
+           t.`house_room_no` AS roomName,
+           t.`customer_mobile` AS customerMobile
+    FROM `trentcontract` t
+    WHERE t.`con_status_code` = 'wqy'
+    AND t.`fsource` = '3'
+    AND t.`submit_contract_time` IS NULL
+    AND DATE(CURRENT_DATE) > t.`con_sign_date`
+  </select>
+
+  <!-- 分页查询距离签约有效期小于n小时的未签约合同-->
+  <select id="findSameDayBeforeOvertimeForPage" resultType="com.ziroom.zrp.service.trading.entity.CloseContractNotifyVo" parameterType="map">
+    SELECT t.`contractid` AS contractId,
+           t.`customer_uid` AS customerUid,
+           t.`pro_name` AS projectName,
+           t.`house_room_no` AS roomName,
+           t.`customer_mobile` AS customerMobile
+    FROM `trentcontract` t
+    WHERE t.`con_status_code` = 'wqy'
+    AND t.`fsource` = '3'
+    AND t.`submit_contract_time` IS NULL
+    AND DATE(DATE_ADD(CURRENT_TIME ,INTERVAL #{beforeOverTimeHours,jdbcType=INTEGER} HOUR)) > t.`con_sign_date`
+  </select>
+
+  <!-- 分页查询合同状态是续约中同时合同到期日后一天没有续约的合同 限app签约-->
+  <select id="findSameUnrenewedForPage" resultType="com.ziroom.zrp.service.trading.entity.CloseContractNotifyVo" parameterType="map">
+    SELECT t.`contractid` AS contractId,
+           t.`customer_uid` AS customerUid,
+           t.`pro_name` AS projectName,
+           t.`house_room_no` AS roomName,
+           t.`customer_mobile` AS customerMobile
+    FROM `trentcontract` t
+    WHERE t.`con_status_code` = 'xyz'
+    AND t.`fsource` = '3'
+    AND DATE(CURRENT_DATE) > DATE_ADD(`con_end_date`,INTERVAL 1 DAY)
+  </select>
+
+  <!-- 根据parentid 查询yqy合同 -->
+  <select id="findYqyContractByParentId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    *
+    FROM trentcontract
+    where sur_parent_rent_id = #{parentId, jdbcType=VARCHAR}
+    AND fisdel = 0
+    AND fvalid = 1
+    AND con_status_code = 'yqy'
+  </select>
+
+  <!-- 根据parentid 查询可续约合同 -->
+  <select id="findCanRenewContractByParentId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    *
+    FROM trentcontract
+    where sur_parent_rent_id = #{parentId, jdbcType=VARCHAR}
+    AND fisdel = 0
+    AND fvalid = 1
+    AND con_status_code in('yqy', 'ydq')
+    AND con_audit_state = '2'
+  </select>
+
+  <!-- 根据parentid 查询可解约合同 -->
+  <select id="findCanSurrenderContractByParentId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    *
+    FROM trentcontract
+    where sur_parent_rent_id = #{parentId, jdbcType=VARCHAR}
+    AND fisdel = 0
+    AND fvalid = 1
+    AND con_status_code in('yqy', 'ydq', 'yxy')
+    AND con_audit_state = '2'
+  </select>
+
+
+  <!-- 根据uid 查询yqy合同 -->
+  <select id="findYQYContractListByUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    *
+    FROM trentcontract
+    where customer_uid = #{uid, jdbcType=VARCHAR}
+    AND fisdel = 0
+    AND fvalid = 1
+    AND con_status_code = 'yqy'
+  </select>
+
+  <!-- 根据parentid 查询合同列表 -->
+  <select id="findContractListByParentId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    *
+    FROM trentcontract
+    where sur_parent_rent_id = #{surParentRentId, jdbcType=VARCHAR}
+    AND fisdel = 0
+    AND fvalid = 1
+  </select>
+
+  <!-- 根据parentid 查询合同列表 -->
+  <select id="findOnePreContractInfoByPreSurParentRentId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM trentcontract
+    where sur_parent_rent_id = #{preSurParentRentId, jdbcType=VARCHAR}
+    AND fisdel = 0
+    AND fvalid = 1
+    AND con_status_code IN ('yqy', 'xyz')
+    Limit 1
+  </select>
+
+  <select id="nextval" resultType="java.lang.String" parameterType="java.lang.String">
+    select nextval(#{nextValName, jdbcType=VARCHAR});
+  </select>
+
+  <update id="updateContractByParentId" parameterType="com.ziroom.zrp.trading.entity.RentContractEntity">
+    UPDATE
+    trentcontract
+    <set>
+      <if test="conType != null and  conType != ''">
+        fcontype = #{conType, jdbcType=VARCHAR},
+      </if>
+      <if test="conCycleCode != null and  conType != ''">
+        con_cycle_code = #{conCycleCode, jdbcType=VARCHAR},
+      </if>
+      <if test="conStartDate != null">
+        con_start_date = #{conStartDate, jdbcType=DATE},
+      </if>
+      <if test="conEndDate != null">
+        con_end_date = #{conEndDate, jdbcType=DATE},
+      </if>
+      <if test="conRentYear != null ">
+        con_rent_year = #{conRentYear, jdbcType=INTEGER},
+      </if>
+      <if test="customerId != null and customerId != ''">
+        customer_id = #{customerId, jdbcType=VARCHAR},
+      </if>
+      <if test="customerUid != null and customerUid != ''">
+        customer_uid = #{customerUid, jdbcType=VARCHAR},
+      </if>
+
+      <if test="customerMobile != null and customerMobile != ''">
+        customer_mobile = #{customerMobile, jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null and customerName != ''">
+        customer_name = #{customerName, jdbcType=VARCHAR},
+      </if>
+      <if test="proxyPicurl != null and proxyPicurl != ''">
+        proxy_picurl = #{proxyPicurl, jdbcType=VARCHAR},
+      </if>
+      <if test="updaterid != null and updaterid != ''">
+        updaterid = #{updaterid, jdbcType=VARCHAR},
+      </if>
+      <if test="isPossibleModify != null">
+        is_possible_modify = #{isPossibleModify, jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE
+    sur_parent_rent_id= #{surParentRentId,jdbcType=VARCHAR}
+    AND
+    fvalid = 1
+    AND
+    fisdel = 0
+  </update>
+
+  <update id="updateContractByContractId" parameterType="com.ziroom.zrp.trading.entity.RentContractEntity">
+    UPDATE
+    trentcontract
+    <set>
+      <if test="conType != null and  conType != ''">
+        fcontype = #{conType, jdbcType=VARCHAR},
+      </if>
+      <if test="conCycleCode != null and  conType != ''">
+        con_cycle_code = #{conCycleCode, jdbcType=VARCHAR},
+      </if>
+      <if test="conStartDate != null">
+        con_start_date = #{conStartDate, jdbcType=DATE},
+      </if>
+      <if test="conEndDate != null">
+        con_end_date = #{conEndDate, jdbcType=DATE},
+      </if>
+      <if test="conRentYear != null ">
+        con_rent_year = #{conRentYear, jdbcType=INTEGER},
+      </if>
+      <if test="customerId != null and customerId != ''">
+        customer_id = #{customerId, jdbcType=VARCHAR},
+      </if>
+      <if test="customerUid != null and customerUid != ''">
+        customer_uid = #{customerUid, jdbcType=VARCHAR},
+      </if>
+      <if test="customerMobile != null and customerMobile != ''">
+        customer_mobile = #{customerMobile, jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null and customerName != ''">
+        customer_name = #{customerName, jdbcType=VARCHAR},
+      </if>
+      <if test="proxyPicurl != null and proxyPicurl != ''">
+        proxy_picurl = #{proxyPicurl, jdbcType=VARCHAR},
+      </if>
+      <if test="updaterid != null and updaterid != ''">
+        updaterid = #{updaterid, jdbcType=VARCHAR},
+      </if>
+      <if test="isPossibleModify != null">
+        is_possible_modify = #{isPossibleModify, jdbcType=INTEGER},
+      </if>
+      <if test="surParentRentId != null">
+        sur_parent_rent_id = #{surParentRentId, jdbcType=VARCHAR},
+      </if>
+      <if test="surParentRentCode != null">
+        sur_parent_rent_code = #{surParentRentCode, jdbcType=VARCHAR},
+      </if>
+      <if test="conRentCode != null">
+        con_rent_code = #{conRentCode, jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE
+    contractid = #{contractId, jdbcType=VARCHAR}
+  </update>
+
+    <update id="cancelSurrender">
+        UPDATE trentcontract
+        SET con_status_code = #{foriginalstate,jdbcType=VARCHAR},
+         con_release_date = NULL,
+         fsurrenderid = NULL,
+         updaterid = #{zoId,jdbcType=VARCHAR},
+         fupdatetime = NOW()
+        WHERE
+          contractid = #{contractId,jdbcType=VARCHAR}
+    </update>
+
+
+
+  <!--更新合同基本方法-->
+  <update id="updateBaseContractById" parameterType="com.ziroom.zrp.trading.entity.RentContractEntity">
+    UPDATE
+    trentcontract
+    <set>
+      <if test="conType != null and  conType != ''">
+        fcontype = #{conType, jdbcType=VARCHAR},
+      </if>
+      <if test="conRentCode != null and  conRentCode != ''">
+        con_rent_code = #{conRentCode, jdbcType=VARCHAR},
+      </if>
+      <if test="conSignDate != null">
+        con_sign_date = #{conSignDate, jdbcType=DATE},
+      </if>
+      <if test="conStartDate != null">
+        con_start_date = #{conStartDate, jdbcType=DATE},
+      </if>
+      <if test="conEndDate != null">
+        con_end_date = #{conEndDate, jdbcType=DATE},
+      </if>
+      <if test="conDeposit != null">
+        con_deposit = #{conDeposit, jdbcType=VARCHAR},
+      </if>
+      <if test="conCommission != null">
+        con_commission = #{conCommission, jdbcType=VARCHAR},
+      </if>
+      <if test="conMustCommission != null">
+        con_must_commission = #{conMustCommission, jdbcType=VARCHAR},
+      </if>
+      <if test="conRentYear != null ">
+        con_rent_year = #{conRentYear, jdbcType=INTEGER},
+      </if>
+      <if test="customerMobile != null and customerMobile != ''">
+        customer_mobile = #{customerMobile, jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null and customerName != ''">
+        customer_name = #{customerName, jdbcType=VARCHAR},
+      </if>
+      <if test="conCycleCode != null and  conType != ''">
+        con_cycle_code = #{conCycleCode, jdbcType=VARCHAR},
+      </if>
+      <if test="conStatusCode != null and  conType != ''">
+        con_status_code = #{conStatusCode, jdbcType=VARCHAR},
+      </if>
+      <if test="conAuditState != null and conAuditState !=''" >
+        con_audit_state = #{conAuditState,jdbcType=VARCHAR},
+      </if>
+      <if test="conRemark != null and  conRemark != ''">
+        con_remark = #{conRemark, jdbcType=VARCHAR},
+      </if>
+      <if test="updaterid != null and updaterid != ''">
+        updaterid = #{updaterid, jdbcType=VARCHAR},
+      </if>
+      <if test="factualprice != null">
+        factualprice = #{factualprice, jdbcType=VARCHAR},
+      </if>
+      <if test="fdiscountserprice != null">
+        fdiscountserprice = #{fdiscountserprice, jdbcType=VARCHAR},
+      </if>
+      <if test="fserviceprice != null">
+        fserviceprice = #{fserviceprice, jdbcType=VARCHAR},
+      </if>
+      <if test="submitContractTime != null">
+        submit_contract_time = #{submitContractTime, jdbcType=TIMESTAMP},
+      </if>
+      <if test="firstPeriodMoney != null" >
+        first_period_money = #{firstPeriodMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="closeType != null" >
+        close_type = #{closeType,jdbcType=INTEGER},
+      </if>
+      <if test="isSyncToFin != null" >
+        is_sync_to_fin = #{isSyncToFin,jdbcType=INTEGER},
+      </if>
+      <if test="isPossibleModify != null" >
+        is_possible_modify = #{isPossibleModify,jdbcType=INTEGER},
+      </if>
+      <if test="firstPayTime != null" >
+        first_pay_time = #{firstPayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fapplicationdate != null" >
+        fapplicationDate = #{fapplicationdate, jdbcType=DATE},
+      </if>
+      <if test="fexpecteddate != null" >
+        fexpectedDate = #{fexpecteddate, jdbcType=DATE},
+      </if>
+      <if test="fsurrenderid != null" >
+        fsurrenderid = #{fsurrenderid, jdbcType=VARCHAR},
+      </if>
+      <if test="isRenew != null" >
+        is_renew = #{isRenew, jdbcType=INTEGER},
+      </if>
+      <if test="isTransferPdf != null" >
+        is_transfer_pdf = #{isTransferPdf, jdbcType=INTEGER},
+      </if>
+      <if test="activitymoney != null" >
+        activityMoney = #{activitymoney, jdbcType=VARCHAR},
+      </if>
+      <if test="conReleaseDate != null" >
+        con_release_date = #{conReleaseDate, jdbcType=DATE}
+      </if>
+    </set>
+    WHERE
+    contractid= #{contractId}
+    AND
+    fvalid = 1
+    AND
+    fisdel = 0
+    <if test="preConStatusCode != null">
+      AND con_status_code = #{preConStatusCode, jdbcType=VARCHAR}
+    </if>
+  </update>
+
+  <update id="updateContractStatusDzfByParentId">
+    UPDATE
+    trentcontract
+    SET
+    con_status_code = 'dzf',
+    con_sign_date = CURDATE()
+    WHERE
+    con_status_code = 'wqy'
+    AND
+    fisdel = 0
+    AND
+    fvalid = 1
+    AND
+    sur_parent_rent_id = #{surParentRentId}
+  </update>
+
+  <update id="updateContractStatusYqyByParentId">
+    UPDATE
+    trentcontract
+    SET
+    con_status_code = 'yqy',
+    con_sign_date = CURDATE()
+    WHERE
+    con_status_code = 'wqy'
+    AND
+    fisdel = 0
+    AND
+    fvalid = 1
+    AND
+    sur_parent_rent_id = #{surParentRentId}
+  </update>
+
+  <select id="findWqyContractInviteByRoomIds" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    trentcontract
+    WHERE
+    fisdel = 0
+    AND
+    fvalid = 1
+    AND
+    room_id
+    IN
+    <foreach collection="roomIds" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    AND
+    fsource = '3'
+    AND
+    con_status_code = 'wqy'
+    AND
+    customer_type = 1
+    AND
+    con_sign_date >= #{currentDate, jdbcType=DATE}
+  </select>
+
+  <!--批量获取父合同号-->
+  <select id="getBatchParentContractCode" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+      con_rent_code,
+      sur_parent_rent_code
+    FROM
+    trentcontract
+    WHERE
+    con_rent_code IN
+    <foreach collection="contractCodes" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="findContractNotSyncToFin" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    trentcontract
+    WHERE
+    fisdel = 0
+    AND
+    fvalid = 1
+    AND
+    con_status_code in ('dzf', 'yqy')
+    AND
+    (is_sync_to_fin != 1 or is_sync_to_fin is null)
+    AND
+    fupdatetime >= #{queryDate, jdbcType=TIMESTAMP}
+  </select>
+
+  <select id="findContractNotTransferToPdf" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    trentcontract
+    WHERE
+    customer_type = 3
+    AND
+    fisdel = 0
+    AND
+    fvalid = 1
+    AND
+    con_status_code in ('dzf', 'yqy')
+    AND
+    (is_transfer_pdf != 1 or is_transfer_pdf is null)
+    AND
+    fupdatetime >= #{queryDate, jdbcType=TIMESTAMP}
+  </select>
+
+  <select id="getBatchContractCodeByParentCode" resultType="java.lang.String">
+    SELECT t.`con_rent_code`
+    FROM
+    `trentcontract` t
+    WHERE `sur_parent_rent_code` = #{parentCode, jdbcType=VARCHAR}
+    AND t.fisdel = 0
+    AND t.fvalid = 1
+  </select>
+
+  <select id="getCodesByParentCodeOnCondition" resultType="java.lang.String">
+    SELECT t.`con_rent_code`
+    FROM
+    `trentcontract` t
+    WHERE `sur_parent_rent_code` = #{parentCode, jdbcType=VARCHAR}
+    AND t.`con_status_code` != 'ytz'
+    AND t.`con_status_code` != 'ygb'
+    AND t.fisdel = 0
+    AND t.fvalid = 1
+  </select>
+
+  <select id="listContractByPage" resultMap="ExtResultMap" parameterType="map">
+    SELECT
+    t.*, t1.`delivery_state`,t2.first_audit_date,t2.approve_date
+    FROM
+    trentcontract t
+    LEFT JOIN rent_rentedetail t1
+    ON t.`contractid` = t1.`contract_id`
+    LEFT JOIN rent_contract_sub t2
+    ON t.`contractid` = t2.`contract_id`
+
+    <where>
+      <if test="projectIds != null and projectIds.size > 0">
+        AND t.project_id IN
+        <foreach collection="projectIds" item="item" index="index"  separator="," open="(" close=")">
+          #{item}
+        </foreach>
+      </if>
+      <if test="projectName != null and projectName !=''">
+        AND t.pro_name = #{projectName, jdbcType=VARCHAR}
+      </if>
+      <if test="conRentCode != null and conRentCode !=''">
+        AND t.con_rent_code = #{conRentCode, jdbcType=VARCHAR}
+      </if>
+      <if test="customerMobile != null and customerMobile !=''" >
+        AND t.customer_mobile = #{customerMobile,jdbcType=VARCHAR}
+      </if>
+      <if test="customerName != null and customerName !=''" >
+        AND t.customer_name = #{customerName,jdbcType=VARCHAR}
+      </if>
+      <if test="conType != null and conType !=''" >
+        AND t.fcontype = #{conType,jdbcType=VARCHAR}
+      </if>
+      <if test="conStatusCode != null and conStatusCode !=''" >
+        AND t.con_status_code = #{conStatusCode,jdbcType=VARCHAR}
+      </if>
+      <if test="conStatusCode == null or conStatusCode ==''" >
+        AND t.con_status_code IN ('wqy','dzf','yqy','jyz','ytz','xyz','ydq','yxy')
+      </if>
+      <if test="conAuditState != null and conAuditState !=''" >
+        AND t.con_audit_state = #{conAuditState,jdbcType=VARCHAR}
+      </if>
+      <if test="signStartDate != null and signStartDate!=''" >
+        AND t.con_sign_date >= #{signStartDate,jdbcType=VARCHAR}
+      </if>
+      <if test="signEndDate != null and signEndDate!=''">
+        AND t.con_sign_date <![CDATA[ <= ]]> #{signEndDate,jdbcType=VARCHAR}
+      </if>
+      <if test="customerType != null " >
+        AND t.customer_type = #{customerType,jdbcType=INTEGER}
+      </if>
+      <if test="cityId != null" >
+        AND t.cityid = #{cityId,jdbcType=VARCHAR}
+      </if>
+      <if test="houseRoomNo != null and houseRoomNo !=''">
+        AND t1.room_code = #{houseRoomNo, jdbcType=VARCHAR}
+      </if>
+      <if test="deliveryState != null">
+        AND t1.delivery_state = #{deliveryState,jdbcType=INTEGER}
+      </if>
+      <if test="surParentRentCode != null and surParentRentCode!=''">
+        AND t.sur_parent_rent_code = #{surParentRentCode,jdbcType=VARCHAR}
+      </if>
+      <if test="source != null and source!=''">
+        AND t.fsource = #{source,jdbcType=VARCHAR}
+      </if>
+      AND t.fisdel = 0
+      AND t.fvalid = 1
+      AND t1.is_deleted = 0
+      AND t1.fvalid = 1
+      ORDER BY t.fcreatetime DESC
+    </where>
+
+  </select>
+
+
+  <update id="updateWqyContractRoomSalesPrice" parameterType="com.ziroom.zrp.trading.entity.RentContractEntity">
+    UPDATE
+    trentcontract
+    set room_sales_price = #{roomSalesPrice, jdbcType=DECIMAL}
+
+    WHERE
+    contractid = #{contractId, jdbcType=VARCHAR}
+    AND
+    con_status_code = 'wqy'
+  </update>
+
+  <update id="updateContractStatusYxyByCode" >
+    UPDATE
+    trentcontract
+    set con_status_code = 'yxy',
+	is_renew = 1
+    WHERE
+    con_rent_code = #{conRentCode, jdbcType=VARCHAR}
+    AND
+    con_status_code = 'xyz'
+  </update>
+
+  <update id="updateContractStatusXyzByCode" >
+    UPDATE
+    trentcontract
+    set con_status_code = 'xyz'
+    WHERE
+    con_rent_code = #{conRentCode, jdbcType=VARCHAR}
+    AND
+    con_status_code = 'yxy'
+  </update>
+
+  <select id="listExpireContractPage" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    trentcontract
+    WHERE (
+    con_status_code = 'yqy'
+    OR con_status_code = 'yxy'
+    )
+    AND con_end_date <![CDATA[ < ]]> CURDATE()
+    AND fisdel = 0
+    AND fvalid = 1
+  </select>
+
+    <select id="finOldDataContractId" resultType="java.lang.String">
+        SELECT
+            CASE r.data_version
+        WHEN 0 THEN
+            d.id
+        ELSE
+            r.contractid
+        END
+        FROM
+            trentcontract AS r
+        LEFT JOIN rent_rentedetail AS d ON r.contractid = d.contract_id
+        WHERE
+            r.contractid = #{contractId, jdbcType=VARCHAR}
+        LIMIT 1
+    </select>
+
+  <!--通过房间查询有效的合同列表-->
+  <select id="findValidContractByRoomId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    trentcontract
+    WHERE
+      room_id=#{roomId, jdbcType=VARCHAR}
+    AND (
+      con_status_code = 'yqy'
+      OR con_status_code = 'yxy'
+      OR con_status_code='xyz'
+      OR con_status_code='jyz'
+      )
+    AND fisdel = 0
+    AND fvalid = 1
+  </select>
+
+  <!--根据主合同号查询合同列表-->
+  <select id="findContractListByParentCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    trentcontract
+    WHERE
+    sur_parent_rent_code=#{surParentRentCode, jdbcType=VARCHAR}
+    AND fisdel = 0
+    AND fvalid = 1
+  </select>
+
+    <!--根据合同id回滚app提交合同保存的合同数据 -->
+  <update id="updateContractRollBackForAppSubmit" parameterType="com.ziroom.zrp.trading.entity.RentContractEntity">
+    UPDATE
+    trentcontract
+    SET con_rent_code = NULL,
+    submit_contract_time = NULL,
+    con_commission = NULL ,
+    factualprice = NULL ,
+    activityMoney = NULL ,
+    first_period_money = NULL ,
+    con_deposit = NULL ,
+    fserviceprice = NULL ,
+    fdiscountserprice = NULL ,
+    con_status_code = 'wqy'
+    WHERE contractid = #{contractId, jdbcType=VARCHAR}
+    AND con_status_code = 'dzf'
+  </update>
+
+  <!--根据合同id回滚zrams提交合同保存的合同数据 -->
+  <update id="updateContractRollBackForZramsSubmit" parameterType="com.ziroom.zrp.trading.entity.RentContractEntity">
+    UPDATE
+    trentcontract
+    SET con_rent_code = NULL,
+    submit_contract_time = NULL,
+    con_commission = NULL ,
+    factualprice = NULL ,
+    activityMoney = NULL ,
+    first_period_money = NULL ,
+    con_deposit = NULL ,
+    fserviceprice = NULL ,
+    fdiscountserprice = NULL ,
+    con_status_code = 'wqy',
+    is_possible_modify = 1
+    WHERE contractid = #{contractId, jdbcType=VARCHAR}
+    AND con_status_code = 'dzf'
+  </update>
+
+  <select id="findCurrentContract" resultType="com.ziroom.zrp.service.houses.entity.RoomContractSmartVo" parameterType="com.ziroom.zrp.service.houses.dto.RoomStmartDto" >
+    SELECT t.`contract_id` contractId,t.`room_id` roomId,t.`person_uid` personUid,t.`person_data_status` personDataStatus,t2.name userName, t1.`con_rent_code` conRentCode,
+    t1.`con_start_date` conStartDate,t1.`con_end_date` conEndDate,t1.`con_sign_date` conSignDate,t1.`con_release_date` conReleaseDate,t1.`customer_name` customerName,t1.`con_status_code`  conStatusCode
+    FROM `rent_rentedetail` t
+    LEFT JOIN  trentcontract t1 ON (t1.`contractid` = t.`contract_id` AND t.`fvalid` = 1)
+    LEFT JOIN `rent_checkin_person` t2 ON(t2.`contract_id` = t.`contract_id`)
+    WHERE 1=1
+    <if test="roomId != null and roomId !='' " >
+      AND   t.`room_id` = #{roomId,jdbcType=VARCHAR}
+    </if>
+    <if test="userName != null and userName !='' " >
+      AND t2.name = #{userName,jdbcType=VARCHAR}
+    </if>
+    AND t2.`is_del` = 0
+    AND t.`is_deleted` = 0
+    AND t1.`con_status_code` IN('yqy','xyz','yxy')
+    AND t1.`con_start_date`<![CDATA[<]]>t1.`con_end_date`
+    AND t1.`con_end_date` <![CDATA[>=]]>NOW()
+    ORDER BY t1.`con_start_date` DESC
+  </select>
+
+</mapper>

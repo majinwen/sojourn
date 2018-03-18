@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.pay.dao.PayMapper">
+    <!--获取合同付款待支付列表created by cuigh6-->
+    <select id="getConToPayList" parameterType="java.lang.String" resultType="com.zra.common.dto.pay.ToPayDto">
+        SELECT
+        r.fid as billFid,
+        p.fName as projectName,
+        p.f_head_figure_url as projectImg,
+        r.ought_total_amount as amount,
+        r.pay_num as payNum,
+        r.start_cycle as startDate,
+        r.end_cycle as endDate,
+        r.bill_type as billType,
+        c.house_room_no as roomCode,
+        r.plan_gather_date AS planGatherDate
+        FROM trentcontract as c ,tproject p,fin_recei_bill as r
+        WHERE
+        c.project_id =p.fId
+        AND
+        c.contractid=r.contract_id
+        AND
+        c.customer_uid =#{value}
+        AND
+        r.bill_state in (0,1)
+        AND r.plan_gather_date &gt;= DATE_FORMAT(now(), '%Y-%m-%d')
+        AND r.bill_type=0
+        AND c.con_status_code!='yzf'
+        AND c.con_status_code!='ygb'
+        AND c.customer_type=1
+        AND c.data_version=0
+        AND c.fisdel = 0
+        AND p.fIsDel = 0
+        AND r.is_del = 0
+        AND r.is_valid = 1
+        ORDER BY
+	        r.plan_gather_date
+        LIMIT 1
+    </select>
+
+    <select id="getConToPayListExpire" parameterType="java.lang.String" resultType="com.zra.common.dto.pay.ToPayDto">
+        SELECT
+        r.fid as billFid,
+        p.fName as projectName,
+        p.f_head_figure_url as projectImg,
+        r.ought_total_amount as amount,
+        r.pay_num as payNum,
+        r.start_cycle as startDate,
+        r.end_cycle as endDate,
+        r.bill_type as billType,
+        c.house_room_no as roomCode,
+        r.plan_gather_date AS planGatherDate
+        FROM trentcontract as c ,tproject p,fin_recei_bill as r
+        WHERE
+        c.project_id =p.fId
+        AND
+        c.contractid=r.contract_id
+        AND
+        c.customer_uid =#{value}
+        AND
+        r.bill_state in (0,1)
+        AND r.plan_gather_date &lt; DATE_FORMAT(now(), '%Y-%m-%d')
+        AND r.bill_type=0
+        AND c.con_status_code!='yzf'
+        AND c.con_status_code!='ygb'
+        AND c.customer_type=1
+        AND c.data_version=0
+        AND c.fisdel = 0
+        AND p.fIsDel = 0
+        AND r.is_del = 0
+        AND r.is_valid = 1
+    </select>
+
+    <!--获取其他费用待支付列表 created by cuigh6-->
+    <select id="getOtherToPayList" parameterType="java.lang.String" resultType="com.zra.common.dto.pay.ToPayDto">
+        SELECT
+          r.fid as billFid,
+          p.fName as projectName,
+          p.f_head_figure_url as projectImg,
+          r.ought_total_amount as amount,
+          r.bill_type as billType,
+          c.house_room_no as roomCode,
+          r.plan_gather_date AS planGatherDate
+        FROM
+          trentcontract as c ,tproject as p ,fin_recei_bill as r
+        WHERE
+          c.contractid=r.contract_id
+        AND
+          c.project_id=p.fId
+        AND c.customer_uid =#{value}
+        AND r.bill_state in (0,1)
+        AND r.bill_type=1
+        AND c.con_status_code!='yzf'
+        AND c.con_status_code!='ygb'
+        AND c.customer_type=1
+        AND c.data_version=0
+        AND c.fisdel = 0
+        AND p.fIsDel = 0
+        AND r.is_del = 0
+        AND r.is_valid = 1
+    </select>
+
+    <!--获取费用项字符串 created by cuigh6-->
+    <select id="getCostItemValue" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT
+          count(1) as count ,
+          group_concat(i.item_name SEPARATOR ' ') as name
+        FROM fin_recei_bill_detail as d, texpenseitem as i
+        WHERE i.fid=d.expense_item_id
+        AND d.bill_fid=#{value}
+        AND d.is_del = 0
+        AND d.is_valid = 1
+    </select>
+
+    <!--获取账单详情 created by cuigh6-->
+    <select id="getBillDetail" parameterType="java.lang.String" resultType="com.zra.common.dto.pay.BillDetailDto">
+        SELECT
+          r.fid AS billFid,
+          r.bill_number as billNum,
+          c.con_rent_code as contractCode,
+          r.actual_total_amount as actualAmount,
+          r.plan_gather_date as gatherDate,
+          r.bill_state AS state,
+          r.bill_type AS billType,
+          r.ought_total_amount as oughtTotalAmount
+        FROM fin_recei_bill as r , trentcontract as c
+        WHERE
+        r.fid=#{value}
+        AND r.contract_id=c.contractid
+        AND r.is_del = 0
+        AND r.is_valid = 1
+    </select>
+
+    <!--获取费用项明细 created by cuigh6-->
+    <select id="getCostItems" parameterType="java.lang.String" resultType="com.zra.common.dto.pay.CostDetailDto">
+        SELECT
+        d.ought_amount as amount,
+        e.item_name as `key`
+        FROM fin_recei_bill_detail as d ,texpenseitem as e
+        WHERE d.expense_item_id = e.fid
+        AND d.bill_fid =#{value}
+        AND d.is_del=0
+        AND d.is_valid=1;
+    </select>
+
+    <!--获取合同列表 created by cuigh6-->
+    <select id="getContractList" parameterType="java.lang.String" resultType="com.zra.common.dto.pay.MyContractDto">
+        SELECT
+          c.con_rent_code as contractCode,
+          c.con_status_code as status,
+          p.fName as projectName,
+          r.froomnumber as roomCode,
+          c.con_start_date as startDate,
+          c.con_end_date as endDate,
+          c.con_cycle_code as payType,
+          c.factualprice as roomPrice,
+          c.contractid as contractId,
+          p.f_head_figure_url as projectImg
+        FROM trentcontract as c ,troominfo as r , tproject as p
+        WHERE c.room_id=r.fid
+        AND p.fId=c.project_id
+        AND  c.customer_uid=#{value}
+        AND c.con_status_code!='yzf'
+        AND c.con_status_code!='ygb'
+        AND c.con_status_code!='wqy'
+        AND  c.customer_type=1
+        AND c.data_version=0
+        AND c.fisdel = 0
+        AND r.fisdel = 0
+        AND p.fIsDel = 0
+    </select>
+
+    <!--获取合同详情 created by cuigh6-->
+    <select id="getContractDetail" parameterType="java.lang.String" resultType="com.zra.common.dto.pay.MyContractDetailDto">
+        SELECT
+          c.contractid as contractId,
+          c.pro_address as projectAddress,
+          c.con_rent_code as contractCode,
+          c.con_status_code as status,
+          p.fName as projectName,
+          p.fLon AS lon,
+	      p.fLat AS lat,
+          c.con_cycle_code as payType,
+          h.fhousetypename as houseTypeName,
+          c.factualprice as roomPrice,
+          r.froomnumber as roomNum,
+          p.f_head_figure_url as projectImg,
+          p.fId as projectId,
+          c.customer_name as customerName,
+          p.fCode as projectCode
+        FROM trentcontract as c,troominfo as r,thousetype as h ,tproject p
+        WHERE c.room_id=r.fid
+        AND r.housetypeid = h.fid
+        AND p.fId=c.project_id
+        AND c.contractid=#{value};
+    </select>
+
+    <!--获取账单列表-->
+    <select id="getContractBillList" parameterType="java.lang.String" resultType="com.zra.common.dto.pay.BillDetailDto">
+        SELECT
+          r.actual_total_amount as actualAmount,
+          r.ought_total_amount as oughtTotalAmount,
+          r.plan_gather_date as gatherDate,
+          r.pay_num as payNum,
+          r.bill_number as billNum,
+          r.bill_state as state,
+          r.bill_type AS billType,
+          r.fid as billFid
+        FROM fin_recei_bill as r
+        WHERE
+          r.contract_id=#{value}
+        AND r.bill_state in (0,1,2)
+        AND r.is_del = 0
+        AND r.is_valid = 1
+        ORDER BY r.plan_gather_date ASC
+    </select>
+
+    <!--获取已支付的金额 created by cuigh6 on 2016/12/26-->
+    <select id="getPaidAmount" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        SELECT
+            SUM(i.actual_amount)
+        FROM
+            trentvoucheritem AS i,
+            trentpaymentvoucher AS p
+        WHERE
+            i.bill_fid = #{value}
+        AND i.voucher_id = p.voucher_id
+        AND p.state IN ('0', '2')
+        AND p.fisdel = 0
+        AND i.fisdel = 0
+        AND i.fvalid = 1
+    </select>
+    
+    <select id="getPaidFZAmount" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        SELECT
+            SUM(i.actual_amount)
+        FROM
+            trentvoucheritem AS i,
+            trentpaymentvoucher AS p
+        WHERE
+            i.bill_fid = #{value}
+        AND i.voucher_id = p.voucher_id
+        AND p.state IN ('0', '2')
+        AND i.expense_item_id = 1
+        AND p.fisdel = 0
+        AND i.fisdel = 0
+        AND i.fvalid = 1
+    </select>
+
+    <select id="getPaymentTime" parameterType="java.lang.String" resultType="java.util.Date">
+        SELECT
+            v.payment_time
+        FROM
+            fin_recei_bill AS b,
+            fin_bill_voucher AS f,
+            trentpaymentvoucher AS v
+        WHERE
+            b.fid = #{billFid}
+        AND b.fid = f.bill_fid
+        AND f.voucher_id = v.voucher_id
+        AND b.is_del = 0
+        AND b.is_valid = 1
+        AND f.is_del = 0
+        AND f.is_valid = 1
+        AND v.fisdel = 0
+        ORDER BY
+            v.payment_time DESC
+        LIMIT 1
+    </select>
+
+    <!--添加支付订单号created by cuigh6-->
+    <select id="updatePaymentNum"  parameterType="java.util.Map">
+        UPDATE fin_recei_bill SET paymentNum=#{payOrderNumber} ,update_time=CURRENT_TIMESTAMP WHERE fid=#{billFid}
+    </select>
+
+    <select id="getBillByPaymentNum" parameterType="java.lang.String" resultType="com.zra.pay.entity.FinReceiBillEntity">
+        select
+          fid,
+          actual_total_amount as actualTotalAmount,
+          ought_total_amount as oughtTotalAmount,
+          contract_id as contractId,
+          bill_state as billState,
+          bill_type AS billType,
+          city_id as cityId,
+          plan_gather_date AS gatherDate
+        from zra.fin_recei_bill
+        WHERE paymentNum = #{value};
+    </select>
+
+    <!--查询结算方式-->
+    <select id="getFinsettle" parameterType="java.util.Map" resultType="com.zra.pay.entity.FinsettleEntity">
+        SELECT
+          fid,
+          fsettle_name as settleName
+        FROM
+        zra.tfinsettle
+        WHERE
+          finance_code=#{financeCode}
+        AND
+          company_code=#{companyCode}
+        AND
+          fvalid=1
+        LIMIT 1;
+    </select>
+
+    <!--查询应收大于已收的账单明细-->
+    <select id="getFinReceiBillDetail" parameterType="java.lang.String" resultType="com.zra.pay.entity.FinReceiBillDetailEntity">
+         SELECT
+          d.fid,
+          d.bill_fid as billFid,
+          d.expense_item_id as costItemId,
+          d.ought_amount as oughtAmount,
+          d.actual_amount as actualAmount,
+          d.room_id as roomId,
+          i.item_name as itemName
+        FROM fin_recei_bill_detail as d ,zra.texpenseitem as i
+        WHERE bill_fid=#{value}
+        AND d.expense_item_id=i.fid
+        AND d.is_del = 0
+        AND d.is_valid = 1
+        AND (ought_amount > actual_amount OR actual_amount IS NULL)
+    </select>
+    
+    <!--查询卡券应收（去除违约金）大于已收的账单明细-->
+    <select id="getCardCouponFinReceiBillDetail" parameterType="java.lang.String" resultType="com.zra.pay.entity.FinReceiBillDetailEntity">
+         SELECT
+          d.fid,
+          d.bill_fid as billFid,
+          d.expense_item_id as costItemId,
+          d.ought_amount as oughtAmount,
+          d.actual_amount as actualAmount,
+          d.room_id as roomId,
+          i.item_name as itemName
+        FROM fin_recei_bill_detail as d ,zra.texpenseitem as i
+        WHERE bill_fid=#{value}
+        AND d.expense_item_id=i.fid
+        AND i.item_code != 'C05'
+        AND d.is_del = 0
+        AND d.is_valid = 1
+        AND (ought_amount > actual_amount OR actual_amount IS NULL)
+    </select>
+
+    <!--更改应收账单明细的已收金额 created by cuigh6-->
+    <update id="updateReceiBillDetail" parameterType="com.zra.pay.entity.FinReceiBillDetailEntity">
+        UPDATE fin_recei_bill_detail
+        SET update_time=CURRENT_TIMESTAMP ,
+        actual_amount=#{actualAmount}
+        WHERE fid=#{fid}
+    </update>
+
+    <!--更新应收账单-->
+    <update id="updateReceiBill" parameterType="com.zra.pay.entity.FinReceiBillEntity">
+        UPDATE zra.fin_recei_bill
+        SET update_time=CURRENT_TIMESTAMP ,
+        bill_state=#{billState},
+       actual_total_amount=#{actualTotalAmount}
+        WHERE
+        fid=#{fid}
+    </update>
+
+    <select id="getYQWYJByBillFid" parameterType="java.lang.String" resultType="com.zra.pay.entity.FinReceiBillDetailEntity">
+        SELECT
+            d.fid,
+            d.ought_amount AS oughtAmount,
+            i.fid AS costItemId,
+            i.item_name AS itemName
+        FROM
+            fin_recei_bill_detail AS d,
+            texpenseitem AS i
+        WHERE
+            d.bill_fid = #{billFid}
+        AND d.expense_item_id = i.fid
+        AND i.item_code = 'C05'
+        AND d.is_del = 0
+        AND d.is_valid = 1
+        AND i.fisdel = 0
+        AND i.fvalid = 1
+    </select>
+    
+    <select id="getYSFZByBillFid" parameterType="java.lang.String" resultType="com.zra.pay.entity.FinReceiBillDetailEntity">
+        SELECT
+            d.fid,
+            d.ought_amount AS oughtAmount,
+            i.fid AS costItemId,
+            i.item_name AS itemName
+        FROM
+            fin_recei_bill_detail AS d,
+            texpenseitem AS i
+        WHERE
+            d.bill_fid = #{billFid}
+        AND d.expense_item_id = i.fid
+        AND i.item_code = 'C01'
+        AND d.is_del = 0
+        AND d.is_valid = 1
+        AND i.fisdel = 0
+        AND i.fvalid = 1
+    </select>
+
+    <select id="getOneReceiBillDetail" parameterType="java.lang.String" resultType="com.zra.pay.entity.FinReceiBillDetailEntity">
+        SELECT
+            bill_fid AS billFid,
+            expense_item_id AS costItemId,
+            ought_amount AS oughtAmount,
+            actual_amount AS actualAmount,
+            room_id AS roomId,
+            payment_id AS paymentId,
+            city_id AS cityId
+        FROM
+            fin_recei_bill_detail
+        WHERE
+            bill_fid = #{billFid}
+        AND is_del = 0
+        AND is_valid = 1
+        LIMIT 1
+    </select>
+    <insert id="insertReceiBillDetail" parameterType="com.zra.pay.entity.FinReceiBillDetailEntity">
+        INSERT INTO fin_recei_bill_detail (
+        fid,
+        bill_fid,
+        payment_id,
+        expense_item_id,
+        ought_amount,
+        actual_amount,
+        city_id,
+        room_id,
+        create_time,
+        update_time
+        )
+        VALUES
+        (
+        #{fid},
+        #{billFid},
+        #{paymentId},
+        #{costItemId},
+        #{oughtAmount},
+        0,
+        #{cityId},
+        #{roomId},
+        #{createTime},
+        #{updateTime}
+        )
+    </insert>
+
+    <update id="updateReceiBillDetailForYQWYJ" parameterType="com.zra.pay.entity.FinReceiBillDetailEntity">
+        UPDATE fin_recei_bill_detail
+        SET ought_amount = #{oughtAmount},
+            update_time = NOW()
+        WHERE
+            fid = #{fid}
+    </update>
+
+    <update id="updateReceiBillOughtAmount" parameterType="com.zra.pay.entity.FinReceiBillDetailEntity">
+        UPDATE fin_recei_bill
+        SET ought_total_amount = #{oughtAmount},
+            update_time = NOW()
+        WHERE
+            fid = #{billFid}
+    </update>
+
+    <insert id="insertPaymentParam" parameterType="com.zra.pay.entity.PaymentParam">
+        INSERT INTO payment_param (
+        fid,
+        bill_fid,
+        payment_num
+        )
+        VALUES
+        (
+        #{fid},
+        #{billFid},
+        #{paymentNum}
+        )
+    </insert>
+
+    <select id="getReceiBillByPaymentNum" parameterType="java.lang.String" resultType="com.zra.pay.entity.FinReceiBillEntity">
+        SELECT
+            b.fid,
+            b.actual_total_amount AS actualTotalAmount,
+            b.ought_total_amount AS oughtTotalAmount,
+            b.contract_id AS contractId,
+            b.bill_state AS billState,
+            b.bill_type AS billType,
+            b.city_id AS cityId,
+            b.plan_gather_date AS gatherDate
+        FROM
+            fin_recei_bill AS b,
+            payment_param AS p
+        WHERE
+            p.bill_fid = b.fid
+        AND p.payment_num = #{value}
+        AND p.is_del = 0
+        AND p.is_valid = 1
+        AND b.is_del = 0
+        AND b.is_valid = 1
+        LIMIT 1
+    </select>
+
+    <update id="updatePaymentParam" parameterType="com.zra.pay.entity.PaymentParam">
+        UPDATE payment_param
+        SET biz_code = #{bizCode},
+            current_money = #{currentMoney},
+            out_trade_no = #{outTradeNo},
+            pay_state = #{payState},
+            pay_type = #{payType},
+            update_time = #{updateTime}
+        WHERE
+            payment_num = #{paymentNum}
+    </update>
+    <!--支付平台重复回调 问题  -->
+    <update id="updateUnCallBackPayMsg" parameterType="com.zra.pay.entity.PaymentParam">
+        UPDATE payment_param
+        SET biz_code = #{bizCode},
+            current_money = #{currentMoney},
+            out_trade_no = #{outTradeNo},
+            pay_state = #{payState},
+            pay_type = #{payType},
+            update_time = #{updateTime}
+        WHERE
+            payment_num = #{paymentNum}
+        AND pay_state = 0
+    </update>
+    
+    <!-- 根据支付账单号查询支付信息  add by wangws21 2017-4-18 -->
+    <select id="getPaymentParamByPaymentNum" parameterType="java.lang.String" resultType="com.zra.pay.entity.PaymentParam">
+    	SELECT
+			p.fid AS fid,
+			p.bill_fid AS billFid,
+			p.pay_state AS payState,
+			p.payment_num AS paymentNum,
+			p.biz_code AS bizCode,
+			p.current_money AS currentMoney,
+			p.out_trade_no AS outTradeNo,
+			p.pay_type AS payType,
+			p.is_del AS isDel,
+			p.is_valid AS isValid,
+			p.create_time AS createTime,
+			update_time AS updateTime
+		FROM payment_param p
+		WHERE p.payment_num = #{paymentNum}
+    </select>
+    
+    <select id="getReceBillByFid" parameterType="java.lang.String" resultType="com.zra.pay.entity.FinReceiBillEntity">
+        SELECT
+            b.fid,
+            b.actual_total_amount AS actualTotalAmount,
+            b.ought_total_amount AS oughtTotalAmount,
+            b.contract_id AS contractId,
+            b.bill_state AS billState,
+            b.bill_type AS billType,
+            b.city_id AS cityId,
+            b.plan_gather_date AS gatherDate
+        FROM
+            fin_recei_bill AS b
+        WHERE
+            b.fid = #{billFid}
+        AND b.is_del = 0
+        AND b.is_valid = 1
+    </select>
+</mapper>

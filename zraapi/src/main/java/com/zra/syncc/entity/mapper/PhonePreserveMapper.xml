@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.syncc.dao.PhonePreserveMapper"> 
+
+<insert id="insertPhonePreserve" parameterType="com.zra.syncc.entity.PhonePreserveEntity">
+		    INSERT INTO ZIRU_CC.HOMELINK_PHONEPRESERVE (
+			PHONEPRESERVE,
+			EXTENSIONNUMBER,
+			JOBNUMBER,
+			MOBILE1,
+			JOBNUMBER2,
+			MOBILE2,
+			JOBNUMBER3,
+			MOBILE3,
+			JOBNUMBER4,
+			MOBILE4,
+			JOBNUMBER5,
+			MOBILE5,
+			JOBNUMBER6,
+			MOBILE6,
+			JOBNUMBER7,
+			MOBILE7,
+			JOBNUMBER8,
+			MOBILE8,
+			JOBNUMBER9,
+			MOBILE9,
+			JOBNUMBER10,
+			MOBILE10,
+			MODIFY_TIME,
+			SOURCE,
+			NAME
+		)
+		VALUES
+			(
+				ziroom_sequence.nextval,
+				#{extensionNumber,jdbcType=VARCHAR},
+				#{jobNumber,jdbcType=VARCHAR},
+				#{mobile1,jdbcType=VARCHAR},
+			    #{jobNumber2,jdbcType=VARCHAR},
+				#{mobile2,jdbcType=VARCHAR},
+                #{jobNumber3,jdbcType=VARCHAR},
+				#{mobile3,jdbcType=VARCHAR},
+                #{jobNumber4,jdbcType=VARCHAR},
+				#{mobile4,jdbcType=VARCHAR},
+                #{jobNumber5,jdbcType=VARCHAR},
+				#{mobile5,jdbcType=VARCHAR},
+                #{jobNumber6,jdbcType=VARCHAR},
+				#{mobile6,jdbcType=VARCHAR},
+                #{jobNumber7,jdbcType=VARCHAR},
+				#{mobile7,jdbcType=VARCHAR},
+                #{jobNumber8,jdbcType=VARCHAR},
+				#{mobile8,jdbcType=VARCHAR},
+                #{jobNumber9,jdbcType=VARCHAR},
+				#{mobile9,jdbcType=VARCHAR},
+                #{jobNumber10,jdbcType=VARCHAR},
+				#{mobile10,jdbcType=VARCHAR},
+				#{modifyTime,jdbcType=TIMESTAMP},
+				#{source,jdbcType=VARCHAR},
+				#{name,jdbcType=VARCHAR}
+			)
+    </insert>
+    
+    <delete id="delPhonePreserve" parameterType="java.util.List">
+			DELETE
+			FROM
+				ZIRU_CC.HOMELINK_PHONEPRESERVE
+			WHERE
+			SOURCE = '77'
+			AND	EXTENSIONNUMBER IN 
+				<foreach collection="extNums" index="index" item="item" open="(" separator="," close=")">#{item}</foreach>
+		   <if test="extNums==null or extNums.size == 0">
+			AND 1=0
+		   </if>
+    </delete>
+    
+    <update id="updatePhonePreserve" parameterType="com.zra.syncc.entity.PhonePreserveEntity">
+			UPDATE ZIRU_CC.HOMELINK_PHONEPRESERVE
+			SET 
+			 JOBNUMBER = #{jobNumber,jdbcType=VARCHAR},
+			 MOBILE1 = #{mobile1,jdbcType=VARCHAR},
+			 JOBNUMBER2 = #{jobNumber2,jdbcType=VARCHAR},
+			 MOBILE2 = #{mobile2,jdbcType=VARCHAR},
+			 JOBNUMBER3 = #{jobNumber3,jdbcType=VARCHAR},
+			 MOBILE3 = #{mobile3,jdbcType=VARCHAR},
+			 JOBNUMBER4 = #{jobNumber4,jdbcType=VARCHAR},
+			 MOBILE4 = #{mobile4,jdbcType=VARCHAR},
+			 JOBNUMBER5 = #{jobNumber5,jdbcType=VARCHAR},
+			 MOBILE5 = #{mobile5,jdbcType=VARCHAR},
+			 JOBNUMBER6 = #{jobNumber6,jdbcType=VARCHAR},
+			 MOBILE6 = #{mobile6,jdbcType=VARCHAR},
+			 JOBNUMBER7 = #{jobNumber7,jdbcType=VARCHAR},
+			 MOBILE7 = #{mobile7,jdbcType=VARCHAR},
+			 JOBNUMBER8 = #{jobNumber8,jdbcType=VARCHAR},
+			 MOBILE8 = #{mobile8,jdbcType=VARCHAR},
+			 JOBNUMBER9 = #{jobNumber9,jdbcType=VARCHAR},
+			 MOBILE9 = #{mobile9,jdbcType=VARCHAR},
+			 JOBNUMBER10 = #{jobNumber10,jdbcType=VARCHAR},
+			 MOBILE10 = #{mobile10,jdbcType=VARCHAR},
+			 MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+			 NAME = #{name,jdbcType=VARCHAR}
+			WHERE
+			    SOURCE = '77'
+			AND	EXTENSIONNUMBER = #{extensionNumber}
+    </update>
+</mapper>

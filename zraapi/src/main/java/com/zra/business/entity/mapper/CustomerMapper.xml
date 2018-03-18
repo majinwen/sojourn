@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.business.dao.CustomerMapper">
+		<resultMap id="BaseResultMap" type="com.zra.business.entity.CustomerEntity">
+		<id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="cus_bid" property="cusBid" jdbcType="VARCHAR" />
+	    <result column="cus_uuid" property="cusUuid" jdbcType="VARCHAR" />
+	    <result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="updater_id" property="updaterId" jdbcType="VARCHAR" />
+	    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+	    <result column="city_id" property="cityId" jdbcType="VARCHAR" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="phone" property="phone" jdbcType="VARCHAR" />
+	    <result column="gender" property="gender" jdbcType="TINYINT" />
+	    <result column="age" property="age" jdbcType="INTEGER" />
+	    <result column="company" property="company" jdbcType="VARCHAR" />
+	    <result column="address" property="address" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, cus_bid, cus_uuid, creater_id, create_time, updater_id,
+		update_time, is_del,
+		city_id, name, phone, gender, age, company, address
+	</sql>
+	
+	<!-- 插入商机用户  wangws21 2016-8-4 -->
+	<insert id="insert" parameterType="com.zra.business.entity.CustomerEntity">
+		insert into bo_customer
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="cusBid != null">
+				cus_bid,
+			</if>
+			<if test="cusUuid != null">
+				cus_uuid,
+			</if>
+			<if test="createrId != null">
+				creater_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updaterId != null">
+				updater_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="cityId != null">
+				city_id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="gender != null">
+				gender,
+			</if>
+			<if test="age != null">
+				age,
+			</if>
+			<if test="company != null">
+				company,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="kylFlag != null">
+                kyl_flag,
+            </if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="cusBid != null">
+				#{cusBid,jdbcType=VARCHAR},
+			</if>
+			<if test="cusUuid != null">
+				#{cusUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="createrId != null">
+				#{createrId,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updaterId != null">
+				#{updaterId,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="cityId != null">
+				#{cityId,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				#{gender,jdbcType=TINYINT},
+			</if>
+			<if test="age != null">
+				#{age,jdbcType=INTEGER},
+			</if>
+			<if test="company != null">
+				#{company,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="kylFlag != null">
+				#{kylFlag,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 根据客户bid获取客户 wangws21 2016-8-5 -->
+	<select id="getCustomerByBid" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM bo_customer
+		WHERE cus_bid = #{customerBid,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getCuatomerByBuId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT
+			c.id, c.cus_bid, c.cus_uuid, c.creater_id, c.create_time, c.updater_id,
+			c.update_time, c.is_del, c.city_id, c.name, c.phone, c.gender, c.age, c.company, c.address
+		FROM
+			bo_business AS b,
+			bo_customer AS c
+		WHERE
+			b.customer_id = c.cus_bid
+			AND b.id = #{buId}
+	</select>
+	
+	<!-- 查询根据电话号码查询客户信息 -->
+	<select id="queryCustByPhone" resultMap="BaseResultMap" parameterType = "String">
+		SELECT
+			*
+		FROM
+			bo_customer cust
+		WHERE
+			cust.phone = #{phoneStr}
+		ORDER BY
+			cust.create_time DESC
+	</select>
+	
+	<!-- 更新商机客户信息 wangws21 2016-8-6 -->
+	<update id="update" parameterType="com.zra.business.entity.CustomerEntity">
+		UPDATE bo_customer
+		<set>
+			<if test="cusUuid != null">
+				cus_uuid = #{cusUuid,jdbcType=VARCHAR},
+			</if>
+			<if test="updaterId != null">
+				updater_id = #{updaterId,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isDel != null">
+				is_del = #{isDel,jdbcType=TINYINT},
+			</if>
+			<if test="cityId != null">
+				city_id = #{cityId,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				gender = #{gender,jdbcType=TINYINT},
+			</if>
+			<if test="age != null">
+				age = #{age,jdbcType=INTEGER},
+			</if>
+			<if test="company != null">
+				company = #{company,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE cus_bid = #{cusBid,jdbcType=VARCHAR}
+	</update>
+	   
+    <!--取出30天内同项目同手机号的商机数量-->
+    <select id="getCustNum4KYL" parameterType="map" resultType="Integer">
+        SELECT
+            COUNT(1)
+        FROM
+            bo_business bob,
+            bo_customer boc
+        WHERE
+            bob.customer_id = boc.cus_bid
+        AND boc.phone = #{phone}
+        AND bob.create_time <![CDATA[ >= ]]> #{startDate}
+        AND bob.project_id = #{projectId}
+    </select>
+</mapper>

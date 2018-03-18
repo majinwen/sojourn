@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.itemListDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.ItemListEntity" >
+    <id column="fId" property="fid" jdbcType="VARCHAR" />
+    <result column="fType" property="ftype" jdbcType="VARCHAR" />
+    <result column="fName" property="fname" jdbcType="VARCHAR" />
+    <result column="fCode" property="fcode" jdbcType="VARCHAR" />
+    <result column="fIsAccessory" property="fisaccessory" jdbcType="VARCHAR" />
+    <result column="fIsDamage" property="fisdamage" jdbcType="VARCHAR" />
+    <result column="fPrice" property="fprice" jdbcType="DOUBLE" />
+    <result column="fIsBackup" property="fisbackup" jdbcType="VARCHAR" />
+    <result column="fWebName" property="fwebname" jdbcType="VARCHAR" />
+    <result column="fShowOrder" property="fshoworder" jdbcType="VARCHAR" />
+    <result column="fIcon" property="ficon" jdbcType="VARCHAR" />
+    <result column="fcompensateprice" property="fcompensateprice" jdbcType="DOUBLE" />
+    <result column="fHalfPercent" property="fhalfpercent" jdbcType="DOUBLE" />
+    <result column="fOnePercent" property="fonepercent" jdbcType="DOUBLE" />
+    <result column="fTwoPercent" property="ftwopercent" jdbcType="DOUBLE" />
+    <result column="fThreePercent" property="fthreepercent" jdbcType="DOUBLE" />
+    <result column="fFourPercent" property="ffourpercent" jdbcType="DOUBLE" />
+    <result column="fFivePercent" property="ffivepercent" jdbcType="DOUBLE" />
+    <result column="fState" property="fstate" jdbcType="VARCHAR" />
+    <result column="fCityId" property="fcityid" jdbcType="VARCHAR" />
+    <result column="fvalid" property="fvalid" jdbcType="INTEGER" />
+    <result column="fcreatetime" property="fcreatetime" jdbcType="DATE" />
+    <result column="createrid" property="createrid" jdbcType="VARCHAR" />
+    <result column="fupdatetime" property="fupdatetime" jdbcType="DATE" />
+    <result column="updaterid" property="updaterid" jdbcType="VARCHAR" />
+    <result column="fIsDel" property="fisdel" jdbcType="INTEGER" />
+    <result column="fIsRegister" property="fisregister" jdbcType="INTEGER" />
+    <result column="fitemtype" property="fitemtype" jdbcType="INTEGER" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    fId, fType, fName, fCode, fIsAccessory, fIsDamage, fPrice, fIsBackup, fWebName, fShowOrder, 
+    fIcon, fcompensateprice, fHalfPercent, fOnePercent, fTwoPercent, fThreePercent, fFourPercent, 
+    fFivePercent, fState, fCityId, fvalid, fcreatetime, createrid, fupdatetime, updaterid, 
+    fIsDel, fIsRegister, fitemtype, cityid
+  </sql>
+
+  <!--物品列表-->
+  <select id="findByFid" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from titemlist
+    where fId = #{fid,jdbcType=VARCHAR}
+  </select>
+
+  <!--物品列表-->
+  <select id="listItems" resultMap="BaseResultMap" parameterType="map">
+    select 
+    <include refid="Base_Column_List" />
+    from titemlist
+    where fvalid = 1
+    AND fIsDel = 0
+    <if test="itemType != null and itemType!=''">
+      AND fType = #{itemType,jdbcType=VARCHAR}
+    </if>
+    <if test="itemName != null and itemName!=''">
+      AND fName like CONCAT('%',#{itemName,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+
+  <insert id="insertSelective" parameterType="com.ziroom.zrp.houses.entity.ItemListEntity" >
+    insert into titemlist
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        fId,
+      </if>
+      <if test="ftype != null" >
+        fType,
+      </if>
+      <if test="fname != null" >
+        fName,
+      </if>
+      <if test="fcode != null" >
+        fCode,
+      </if>
+      <if test="fisaccessory != null" >
+        fIsAccessory,
+      </if>
+      <if test="fisdamage != null" >
+        fIsDamage,
+      </if>
+      <if test="fprice != null" >
+        fPrice,
+      </if>
+      <if test="fisbackup != null" >
+        fIsBackup,
+      </if>
+      <if test="fwebname != null" >
+        fWebName,
+      </if>
+      <if test="fshoworder != null" >
+        fShowOrder,
+      </if>
+      <if test="ficon != null" >
+        fIcon,
+      </if>
+      <if test="fcompensateprice != null" >
+        fcompensateprice,
+      </if>
+      <if test="fhalfpercent != null" >
+        fHalfPercent,
+      </if>
+      <if test="fonepercent != null" >
+        fOnePercent,
+      </if>
+      <if test="ftwopercent != null" >
+        fTwoPercent,
+      </if>
+      <if test="fthreepercent != null" >
+        fThreePercent,
+      </if>
+      <if test="ffourpercent != null" >
+        fFourPercent,
+      </if>
+      <if test="ffivepercent != null" >
+        fFivePercent,
+      </if>
+      <if test="fstate != null" >
+        fState,
+      </if>
+      <if test="fcityid != null" >
+        fCityId,
+      </if>
+      <if test="fvalid != null" >
+        fvalid,
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime,
+      </if>
+      <if test="createrid != null" >
+        createrid,
+      </if>
+      <if test="fupdatetime != null" >
+        fupdatetime,
+      </if>
+      <if test="updaterid != null" >
+        updaterid,
+      </if>
+      <if test="fisdel != null" >
+        fIsDel,
+      </if>
+      <if test="fisregister != null" >
+        fIsRegister,
+      </if>
+      <if test="fitemtype != null" >
+        fitemtype,
+      </if>
+      <if test="cityid != null" >
+        cityid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="ftype != null" >
+        #{ftype,jdbcType=VARCHAR},
+      </if>
+      <if test="fname != null" >
+        #{fname,jdbcType=VARCHAR},
+      </if>
+      <if test="fcode != null" >
+        #{fcode,jdbcType=VARCHAR},
+      </if>
+      <if test="fisaccessory != null" >
+        #{fisaccessory,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdamage != null" >
+        #{fisdamage,jdbcType=VARCHAR},
+      </if>
+      <if test="fprice != null" >
+        #{fprice,jdbcType=DOUBLE},
+      </if>
+      <if test="fisbackup != null" >
+        #{fisbackup,jdbcType=VARCHAR},
+      </if>
+      <if test="fwebname != null" >
+        #{fwebname,jdbcType=VARCHAR},
+      </if>
+      <if test="fshoworder != null" >
+        #{fshoworder,jdbcType=VARCHAR},
+      </if>
+      <if test="ficon != null" >
+        #{ficon,jdbcType=VARCHAR},
+      </if>
+      <if test="fcompensateprice != null" >
+        #{fcompensateprice,jdbcType=DOUBLE},
+      </if>
+      <if test="fhalfpercent != null" >
+        #{fhalfpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="fonepercent != null" >
+        #{fonepercent,jdbcType=DOUBLE},
+      </if>
+      <if test="ftwopercent != null" >
+        #{ftwopercent,jdbcType=DOUBLE},
+      </if>
+      <if test="fthreepercent != null" >
+        #{fthreepercent,jdbcType=DOUBLE},
+      </if>
+      <if test="ffourpercent != null" >
+        #{ffourpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="ffivepercent != null" >
+        #{ffivepercent,jdbcType=DOUBLE},
+      </if>
+      <if test="fstate != null" >
+        #{fstate,jdbcType=VARCHAR},
+      </if>
+      <if test="fcityid != null" >
+        #{fcityid,jdbcType=VARCHAR},
+      </if>
+      <if test="fvalid != null" >
+        #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="fcreatetime != null" >
+        #{fcreatetime,jdbcType=DATE},
+      </if>
+      <if test="createrid != null" >
+        #{createrid,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatetime != null" >
+        #{fupdatetime,jdbcType=DATE},
+      </if>
+      <if test="updaterid != null" >
+        #{updaterid,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fisregister != null" >
+        #{fisregister,jdbcType=INTEGER},
+      </if>
+      <if test="fitemtype != null" >
+        #{fitemtype,jdbcType=INTEGER},
+      </if>
+      <if test="cityid != null" >
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.houses.entity.ItemListEntity" >
+    update titemlist
+    <set >
+      <if test="ftype != null" >
+        fType = #{ftype,jdbcType=VARCHAR},
+      </if>
+      <if test="fname != null" >
+        fName = #{fname,jdbcType=VARCHAR},
+      </if>
+      <if test="fcode != null" >
+        fCode = #{fcode,jdbcType=VARCHAR},
+      </if>
+      <if test="fisaccessory != null" >
+        fIsAccessory = #{fisaccessory,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdamage != null" >
+        fIsDamage = #{fisdamage,jdbcType=VARCHAR},
+      </if>
+      <if test="fprice != null" >
+        fPrice = #{fprice,jdbcType=DOUBLE},
+      </if>
+      <if test="fisbackup != null" >
+        fIsBackup = #{fisbackup,jdbcType=VARCHAR},
+      </if>
+      <if test="fwebname != null" >
+        fWebName = #{fwebname,jdbcType=VARCHAR},
+      </if>
+      <if test="fshoworder != null" >
+        fShowOrder = #{fshoworder,jdbcType=VARCHAR},
+      </if>
+      <if test="ficon != null" >
+        fIcon = #{ficon,jdbcType=VARCHAR},
+      </if>
+      <if test="fcompensateprice != null" >
+        fcompensateprice = #{fcompensateprice,jdbcType=DOUBLE},
+      </if>
+      <if test="fhalfpercent != null" >
+        fHalfPercent = #{fhalfpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="fonepercent != null" >
+        fOnePercent = #{fonepercent,jdbcType=DOUBLE},
+      </if>
+      <if test="ftwopercent != null" >
+        fTwoPercent = #{ftwopercent,jdbcType=DOUBLE},
+      </if>
+      <if test="fthreepercent != null" >
+        fThreePercent = #{fthreepercent,jdbcType=DOUBLE},
+      </if>
+      <if test="ffourpercent != null" >
+        fFourPercent = #{ffourpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="ffivepercent != null" >
+        fFivePercent = #{ffivepercent,jdbcType=DOUBLE},
+      </if>
+      <if test="fstate != null" >
+        fState = #{fstate,jdbcType=VARCHAR},
+      </if>
+      <if test="fcityid != null" >
+        fCityId = #{fcityid,jdbcType=VARCHAR},
+      </if>
+      <if test="fvalid != null" >
+        fvalid = #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime = #{fcreatetime,jdbcType=DATE},
+      </if>
+      <if test="createrid != null" >
+        createrid = #{createrid,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatetime != null" >
+        fupdatetime = #{fupdatetime,jdbcType=DATE},
+      </if>
+      <if test="updaterid != null" >
+        updaterid = #{updaterid,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        fIsDel = #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fisregister != null" >
+        fIsRegister = #{fisregister,jdbcType=INTEGER},
+      </if>
+      <if test="fitemtype != null" >
+        fitemtype = #{fitemtype,jdbcType=INTEGER},
+      </if>
+      <if test="cityid != null" >
+        cityid = #{cityid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fId = #{fid,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

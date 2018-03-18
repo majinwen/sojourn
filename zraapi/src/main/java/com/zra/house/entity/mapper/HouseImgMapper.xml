@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.house.dao.HouseImgMapper">
+    <resultMap id="BaseResultMap" type="com.zra.house.entity.HouseImgEntity" >
+        <id column="fid" property="id" jdbcType="VARCHAR" />
+        <result column="housetypeid" property="houseTypeId" jdbcType="VARCHAR" />
+        <result column="fhouseimage" property="houseImage" jdbcType="VARCHAR" />
+        <result column="projectid" property="projectId" jdbcType="VARCHAR" />
+        <result column="cityid" property="cityId" jdbcType="VARCHAR" />
+        <result column="fvalid" property="valid" jdbcType="INTEGER" />
+        <result column="fcreatetime" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="createrid" property="createrId" jdbcType="VARCHAR" />
+        <result column="fupdatetime" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="updaterid" property="updaterId" jdbcType="VARCHAR" />
+        <result column="fisdel" property="isDel" jdbcType="INTEGER" />
+        <result column="f_description" property="description" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.zra.house.entity.HouseImgEntity" extends="BaseResultMap" >
+        <result column="fimgdesc" property="fimgdesc" jdbcType="LONGVARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        fid, housetypeid, fhouseimage, projectid, cityid, fvalid, fcreatetime, createrid,
+        fupdatetime, updaterid, fisdel, f_description
+    </sql>
+    <sql id="Blob_Column_List" >
+        fimgdesc
+    </sql>
+
+    <!--根据房型id查询房型图片信息-->
+    <select id="findImgByHouseTypeId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from thouseimgs
+        where fisdel = 0
+        and fvalid = 1
+        and housetypeid = #{houseTypeId}
+        ORDER BY
+          fcreatetime
+    </select>
+</mapper>

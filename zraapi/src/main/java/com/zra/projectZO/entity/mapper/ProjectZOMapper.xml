@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.projectZO.dao.ProjectZOMapper">
+    <!-- 根据项目获得该项目下的管家 -->
+    <select id="getProjectZOsByProjectId" resultType="com.zra.projectZO.ProjectZODto" parameterType="String">
+			SELECT
+			   z.projectId AS projectId,
+			   emp.fname AS projectZOName,
+			   emp.fid AS projectZOId,
+			   emp.fcode AS projectZOCode,
+			   emp.fmobile AS zrojectZoPhone
+			FROM
+				TROLE tr,
+				tuserrole tur,
+				tuseraccount tua,
+				temployee emp,
+				tprojectzo z
+			WHERE
+				emp.fid = z.userZOId
+			AND z.projectId =#{projectIdStr}
+			AND tr.fname =#{roleName}
+			AND tr.fid = tur.roleid
+			AND tur.userid = tua.fid
+			AND tua.linkemployeeid = emp.fid
+			AND emp.fisdel = '0'
+			AND z.fisdel = '0'
+			GROUP BY
+				emp.fcode
+    </select>
+
+    <!-- 获得所有管家 -->
+    <select id="getProjectZOs" resultType="com.zra.projectZO.ProjectZODto" parameterType="String">
+			SELECT
+			   z.projectId AS projectId,
+			   emp.fname AS projectZOName,
+			   emp.fid AS projectZOId,
+			   emp.fmobile AS zrojectZoPhone
+			FROM
+				TROLE tr,
+				tuserrole tur,
+				tuseraccount tua,
+				temployee emp,
+				tprojectzo z
+			WHERE
+				emp.fid = z.userZOId
+			AND tr.fname =#{roleName}
+			AND tr.fid = tur.roleid
+			AND tur.userid = tua.fid
+			AND tua.linkemployeeid = emp.fid
+			AND emp.fisdel = '0'
+			AND z.fisdel = '0'
+			AND emp.fmobile IS NOT NULL
+			GROUP BY
+				emp.fcode
+	</select>
+
+	<!-- 根据管家fid获取他的系统号 -->
+	<select id="getSysCodeByFid" resultType="java.lang.String" parameterType="String">
+		SELECT
+		fcode
+		FROM
+		`temployee`
+		WHERE
+		fid = #{beEvaluatorId}
+	</select>
+	
+	<!-- 这里添加这样一个方法的原因是，合同的创建人有的地方存的employee的fid有的地方存的是fcode -->
+	<select id="getNameByEmpIdOrCode" resultType="java.lang.String" parameterType="String">
+		SELECT
+			emp.fname
+		FROM
+			temployee emp
+		WHERE
+			emp.fisdel = 0
+		AND (emp.fid = #{empId} OR emp.fcode = #{empId})
+	</select>
+	
+	<select id="getProjectZoSmallImg" resultType="java.lang.String">
+	    SELECT
+			fsmallimg
+		FROM
+			tprojectzo
+		WHERE
+			fisdel = 0
+		AND fisshow = 1
+		AND fsmallimg IS NOT NULL
+		AND fsmallimg != ''
+		AND projectId = #{projectId}
+		AND userZOId = #{empId}
+		LIMIT 1
+	</select>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.bindPhoneDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.BindPhoneEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="fouroo_tel" property="fourooTel" jdbcType="INTEGER" />
+    <result column="creat_time" property="creatTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, fouroo_tel, creat_time, last_modify_time, is_del
+  </sql>
+
+  <select id="selectByEmployeeId" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_bind_phone
+    where fid = #{employeeId,jdbcType=VARCHAR}
+    AND
+    is_del = 0;
+  </select>
+
+</mapper>

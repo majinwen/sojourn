@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zra.system.dao.SysTimedTaskMapper">
+    <resultMap id="BaseResultMap" type="QuartzSetting">
+        <id column="fid" jdbcType="INTEGER" property="id"/>
+        <result column="fname" jdbcType="VARCHAR" property="name"/>
+        <result column="fvalid" jdbcType="INTEGER" property="valid"/>
+        <result column="fcomment" jdbcType="VARCHAR" property="comment"/>
+        <result column="fisdel" jdbcType="INTEGER" property="isDel"/>
+        <result column="fcreatorname" jdbcType="VARCHAR" property="creatorName"/>
+        <result column="fcreatetime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="flastruntime" jdbcType="TIMESTAMP" property="lastRunTime"/>
+        <result column="fisrun" jdbcType="INTEGER" property="isRun"/>
+        <result column="fhours" jdbcType="INTEGER" property="hours"/>
+        <result column="cityid" jdbcType="VARCHAR" property="cityId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+      fid, fname, fvalid, fcomment, fisdel, fcreatorname, fcreatetime, flastruntime, fisrun, fhours, cityid
+    </sql>
+    <!--跟据任务名称查询任务  -->
+    <select id="getTaskEntityByName" parameterType="String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        ttimerjobsetting
+        WHERE
+        fname = #{name,jdbcType=VARCHAR}
+        AND fisdel = 0
+    </select>
+
+    <update id="stopTimedTaskEntity">
+        UPDATE ttimerjobsetting
+        SET fisrun = #{isRun}
+        WHERE
+            fname = #{name,jdbcType=VARCHAR}
+  </update>
+
+    <update id="runTimedTaskEntity" parameterType="String">
+        UPDATE ttimerjobsetting
+        SET fisrun = 1, flastruntime = now()
+        WHERE
+        fname = #{name,jdbcType=VARCHAR}
+        AND fisrun = 0
+  </update>
+
+    <update id="updateLastRunTime" parameterType="String">
+        UPDATE ttimerjobsetting
+        SET flastruntime = now()
+        WHERE
+        fname = #{name,jdbcType=VARCHAR}
+  </update>
+</mapper>

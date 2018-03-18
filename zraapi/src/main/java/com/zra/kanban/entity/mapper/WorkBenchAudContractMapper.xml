@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.kanban.dao.WorkBenchAudContractMapper" >
+    <resultMap id="BaseResultMap" type="com.zra.kanban.entity.WorkBenchAudContract" >
+        <id column="contractid" property="contractId" jdbcType="VARCHAR" />
+        <result column="con_rent_code" property="contractCode" jdbcType="VARCHAR" />
+        <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+        <result column="house_room_no" property="roomCode" jdbcType="VARCHAR" />
+        <result column="fconAuditDate" property="conAuditDate" jdbcType="DATE" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        t.contractid, t.con_rent_code,t.room_id,t.house_room_no,t.fconAuditDate
+    </sql>
+
+
+    <!--查找审核未通过的合同-->
+    <select id="selectNoAudContractList" resultMap="BaseResultMap" parameterType="com.zra.common.dto.kanban.AudContractQueryDto" >
+        select
+        <include refid="Base_Column_List" />
+        from
+        trentcontract t
+        where
+        t.project_id = #{projectId}
+        and t.con_audit_state=#{auditState}
+        and t.fisdel = 0
+        and t.con_status_code != 'yzf' 
+        <if test="zoCode != null">
+        	and t.fhandleZOcode = #{zoCode}
+        </if>
+        order by t.fconAuditDate
+    </select>
+</mapper>

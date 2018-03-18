@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.kanban.dao.WorkBenchRentCallMapper">
+    <resultMap id="BaseResultMap" type="com.zra.kanban.entity.WorkBenchRentCall" >
+        <id column="contract_id" property="contractId" jdbcType="VARCHAR" />
+        <result column="con_rentcode" property="contractCode" jdbcType="VARCHAR" />
+        <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+        <result column="house_room_no" property="roomCode" jdbcType="VARCHAR" />
+        <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+        <result column="ought_payment_date" property="oughtPaymentDate" jdbcType="DATE" />
+        <result column="ought_payment_price" property="oughtTotalAmount" jdbcType="DECIMAL" />
+        <result column="sumAmount" property="actualTotalAmount" jdbcType="DECIMAL" />
+        <result column="remain_days" property="RemaininDays" jdbcType="INTEGER" />
+    </resultMap>
+
+      <select id="selectVoucherRemind" parameterType="com.zra.common.dto.kanban.AudContractQueryDto" resultMap="BaseResultMap">			
+				SELECT
+					t5.contract_id contract_id,
+					t5.con_rentcode con_rentcode,
+					t5.room_id room_id,
+					t5.house_room_no house_room_no,
+					t5.customer_name customer_name,
+					t5.ought_payment_date ought_payment_date,
+					t5.ought_payment_price ought_payment_price,
+					t5.sumAmount sumAmount,
+					t5.remain_days remain_days
+				FROM
+					(
+						SELECT
+							rent.contractid contract_id,
+							rent.con_rent_code con_rentcode,
+							rent.room_id room_id,
+							room.froomnumber house_room_no,
+							rent.customer_name customer_name,
+							t4.ought_payment_date ought_payment_date,
+							t4.ought_payment_price ought_payment_price,
+							t4.sumAmount sumAmount,
+							DATEDIFF(
+								t4.ought_payment_date,
+								NOW()
+							) remain_days
+						FROM
+							trentcontract rent
+						JOIN (
+							SELECT
+								t0.payment_id,
+								t0.contract_id,
+								t0.plan_gather_date ought_payment_date,
+								t0.ought_total_amount ought_payment_price,
+				
+							IF (
+								t3.sumAmount IS NULL,
+								0,
+								t3.sumAmount
+							) AS sumAmount
+							FROM
+								fin_recei_bill t0
+							LEFT JOIN (
+								SELECT
+									t2.bill_fid,
+									SUM(t2.actual_amount) AS sumAmount
+								FROM
+									trentpaymentvoucher t1
+								LEFT JOIN trentvoucheritem t2 ON t1.voucher_id = t2.voucher_id
+								AND t2.fisdel = 0
+								WHERE
+									t1.fisdel = 0
+								AND t1.state IN (0, 1, 2, 6)
+								AND t2.bill_fid IS NOT NULL
+								GROUP BY
+									t2.bill_fid
+							) t3 ON t0.fid = t3.bill_fid
+							WHERE
+								t0.ought_total_amount >
+							IF (
+								ISNULL(t3.sumAmount),
+								0,
+								t3.sumAmount
+							)
+							AND t0.is_del = 0
+							AND t0.payment_id IS NOT NULL
+							AND t0.payment_id != 0
+							ORDER BY
+								t0.payment_id ASC
+						) t4 ON rent.contractid = contract_id
+						LEFT JOIN zra.troominfo room ON rent.room_id = room.fid
+						WHERE
+							t4.ought_payment_date <![CDATA[<=]]> #{notifyDate}
+						AND rent.fisdel = 0
+						AND rent.fvalid = 1
+						AND rent.con_status_code = 'yqy'
+						AND rent.project_id = #{projectId}
+						<if test="zoCode != null">
+						AND rent.fhandleZOcode = #{zoCode}
+					    </if>
+						ORDER BY
+							rent.con_rent_code,
+							t4.ought_payment_date
+					) t5
+				WHERE
+					1 = 1
+				ORDER BY
+					remain_days,
+					con_rentcode
+      </select>
+</mapper>

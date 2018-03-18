@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!-- changes from the defaults for testing -->
+        <setting name="cacheEnabled" value="true" />
+        <setting name="useGeneratedKeys" value="true" />
+        <setting name="defaultExecutorType" value="REUSE" />
+    </settings>
+    
+    <!-- 配置映射类的别名 -->
+    <typeAliases>
+        <!-- 自动任务 -->
+        <typeAlias type="com.zra.system.entity.QuartzSetting" alias = "QuartzSetting"/>
+    </typeAliases>
+    
+    <!-- 配置分页插件/by zhangtb 2016-5-6 9:51:27 -->
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageHelper">
+			<!-- 设置数据库类型 Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库-->        
+        	<property name="dialect" value="mysql" />
+		</plugin>
+	</plugins>
+    
+    <!-- 添加mappers -->
+    <mappers>
+        <mapper resource="com/zra/house/entity/mapper/ProjectMapper.xml"/>
+
+        <!-- 系统用户、员工 -->
+        <mapper resource="com/zra/system/entity/mapper/UserAccountMapper.xml"/>
+        <mapper resource="com/zra/system/entity/mapper/EmployeeMapper.xml"/>
+        <!--add by tianxf9 查询商机  -->
+        <mapper resource="com/zra/projectZO/entity/mapper/ProjectZOMapper.xml"/>
+        <!--end by tianxf9  -->
+        <!-- 商机 -->
+        <mapper resource="com/zra/business/entity/mapper/BusinessMapper.xml"/>
+        <mapper resource="com/zra/business/entity/mapper/CustomerMapper.xml"/>
+        <mapper resource="com/zra/business/entity/mapper/BusinessResultMapper.xml"/>
+        <mapper resource="com/zra/business/entity/mapper/BoCloseSmsMapper.xml"/>
+
+        <!-- 配置  -->
+        <mapper resource="com/zra/zmconfig/entity/mapper/CfZmConfigMapper.xml"/>
+        <mapper resource="com/zra/zmconfig/entity/mapper/CfShortUrlMapper.xml"/>
+
+        <!--城市-->
+        <mapper resource="com/zra/system/entity/mapper/CityMapper.xml"/>
+        <!--房间-->
+        <mapper resource="com/zra/house/entity/mapper/RoomInfoMapper.xml"/>
+        <!--房型图片-->
+        <mapper resource="com/zra/house/entity/mapper/HouseImgMapper.xml"/>
+        <!--房型-->
+        <mapper resource="com/zra/house/entity/mapper/HouseTypeMapper.xml"/>
+        <!--房型配置-->
+        <mapper resource="com/zra/house/entity/mapper/HouseItemsConfigMapper.xml"/>
+        <!--续约-->
+        <mapper resource="com/zra/rentcontract/entity/mapper/RentContractMapper.xml"/>
+        <!--400分配-->
+        <mapper resource="com/zra/projectZO/entity/mapper/FourooTelphoneServiceMapper.xml"/>
+        <!--room-->
+        <!--
+        <mapper resource="com/zra/room/entity/mapper/RoomMapper.xml"/>
+        -->
+        <!--400来电详情 add by tianxf9  -->
+        <mapper resource="com/zra/syncc/entity/mapper/ZraZrCallDetailMapper.xml"/>
+        <!-- 评价 -->
+        <mapper resource="com/zra/evaluate/entity/mapper/EvaluateMapper.xml"/>
+        <!--商机报表 add by tianxf9  -->
+        <mapper resource="com/zra/business/entity/mapper/BusinessReportMapper.xml"/>
+        <!-- 推送 -->
+        <mapper resource="com/zra/push/entity/mapper/PushLogMapper.xml"/>
+
+
+        <!--物业交割-->
+        <mapper resource="com/zra/item/entity/mapper/ItemMapper.xml"/>
+        <mapper resource="com/zra/item/entity/mapper/ItemdeliveryMapper.xml"/>
+        <mapper resource="com/zra/item/entity/mapper/RoomitemsconfigMapper.xml"/>
+        <mapper resource="com/zra/pay/entity/mapper/PayMapper.xml"/>
+
+        <!-- 报表相关 -->
+        <mapper resource="com/zra/report/entity/mapper/ReportBoMapper.xml"/>
+        <mapper resource="com/zra/report/entity/mapper/ReportStockMapper.xml"/>
+        <mapper resource="com/zra/report/entity/mapper/ReportRenewMapper.xml"/>
+        <mapper resource="com/zra/report/entity/mapper/ReportPaymentMapper.xml"/>
+        <mapper resource="com/zra/vacancyreport/entity/mapper/VacancyReportMapper.xml"/>
+        <mapper resource="com/zra/report/entity/mapper/ReportOverviewMapper.xml"/><!-- 自如寓业务总览报表 -->
+
+        <!-- 目标看版相关  -->
+        <mapper resource="com/zra/kanban/entity/mapper/KanbanGoalMapper.xml"/>
+        <mapper resource="com/zra/kanban/entity/mapper/KanbanSummaryMapper.xml"/>
+        <mapper resource="com/zra/kanban/entity/mapper/KanbanDetailMapper.xml"/>
+
+        <!--管家工作台-->
+        <mapper resource="com/zra/kanban/entity/mapper/WorkBenchRentCallMapper.xml"/>
+        <mapper resource="com/zra/kanban/entity/mapper/WorkBenchSurrenderMapper.xml"/>
+        <mapper resource="com/zra/kanban/entity/mapper/WorkBenchAudContractMapper.xml"/>
+        
+        <!-- CMS模块配置 -->
+        <mapper resource="com/zra/cms/entity/mapper/CmsProjectLabelImgMapper.xml"/>
+        <mapper resource="com/zra/cms/entity/mapper/CmsProjectLabelMapper.xml"/>
+        <mapper resource="com/zra/cms/entity/mapper/CmsProjectMapper.xml"/>
+        <mapper resource="com/zra/cms/entity/mapper/CmsProjectTrafficMapper.xml"/>
+        <mapper resource="com/zra/cms/entity/mapper/CmsProjectZspaceImgMapper.xml"/>
+        <mapper resource="com/zra/cms/entity/mapper/CmsHousetypeLabelMapper.xml"/>
+        <mapper resource="com/zra/cms/entity/mapper/CmsHousetypeMapper.xml"/>
+
+        <!--卡券模块-->
+        <mapper resource="com/zra/cardCoupon/entity/mapper/CardCouponMapper.xml"/>
+
+        <!-- 渠道统计 -->
+        <mapper resource="com/zra/marketing/entity/mapper/MkNumberMapper.xml"/>
+        <mapper resource="com/zra/marketing/entity/mapper/MkChannelMapper.xml"/>
+        <mapper resource="com/zra/syncc/entity/mapper/PhonePreserveMapper.xml"/>
+
+        <!--定时任务-->
+        <mapper resource="com/zra/system/entity/mapper/SysTimedTaskMapper.xml"/>
+        <!--app项目查询条件价格范围管理  -->
+        <mapper resource="com/zra/house/entity/mapper/PriceRangeMapper.xml"/>
+
+        <!--自如寓报修-->
+        <mapper resource="com/zra/repair/entity/mapper/ZryRepairOrderLogMapper.xml"/>
+        <mapper resource="com/zra/repair/entity/mapper/ZryRepairOrderMapper.xml"/>
+    </mappers>
+
+</configuration>

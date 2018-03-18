@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.roomRentInfoDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.RoomRentInfoEntity" >
+    <id column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="fprojectid" property="fprojectid" jdbcType="VARCHAR" />
+    <result column="froomid" property="froomid" jdbcType="VARCHAR" />
+    <result column="fcontractid" property="fcontractid" jdbcType="VARCHAR" />
+    <result column="freleaseid" property="freleaseid" jdbcType="VARCHAR" />
+    <result column="fstartdate" property="fstartdate" jdbcType="DATE" />
+    <result column="fenddate" property="fenddate" jdbcType="DATE" />
+    <result column="fleavedate" property="fleavedate" jdbcType="DATE" />
+    <result column="frentprice" property="frentprice" jdbcType="DOUBLE" />
+    <result column="fvalid" property="fvalid" jdbcType="INTEGER" />
+    <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+    <result column="fcreatorid" property="fcreatorid" jdbcType="VARCHAR" />
+    <result column="fcreatorname" property="fcreatorname" jdbcType="VARCHAR" />
+    <result column="fcreatetime" property="fcreatetime" jdbcType="DATE" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    fid, fprojectid, froomid, fcontractid, freleaseid, fstartdate, fenddate, fleavedate, 
+    frentprice, fvalid, fisdel, fcreatorid, fcreatorname, fcreatetime, cityid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from troomrentinfo
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from troomrentinfo
+    where fid = #{fid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="saveRoomRentInfo" parameterType="com.ziroom.zrp.houses.entity.RoomRentInfoEntity" >
+    insert into troomrentinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="fprojectid != null" >
+        fprojectid,
+      </if>
+      <if test="froomid != null" >
+        froomid,
+      </if>
+      <if test="fcontractid != null" >
+        fcontractid,
+      </if>
+      <if test="freleaseid != null" >
+        freleaseid,
+      </if>
+      <if test="fstartdate != null" >
+        fstartdate,
+      </if>
+      <if test="fenddate != null" >
+        fenddate,
+      </if>
+      <if test="fleavedate != null" >
+        fleavedate,
+      </if>
+      <if test="frentprice != null" >
+        frentprice,
+      </if>
+      <if test="fvalid != null" >
+        fvalid,
+      </if>
+      <if test="fisdel != null" >
+        fisdel,
+      </if>
+      <if test="fcreatorid != null" >
+        fcreatorid,
+      </if>
+      <if test="fcreatorname != null" >
+        fcreatorname,
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime,
+      </if>
+      <if test="cityid != null" >
+        cityid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="fprojectid != null" >
+        #{fprojectid,jdbcType=VARCHAR},
+      </if>
+      <if test="froomid != null" >
+        #{froomid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcontractid != null" >
+        #{fcontractid,jdbcType=VARCHAR},
+      </if>
+      <if test="freleaseid != null" >
+        #{freleaseid,jdbcType=VARCHAR},
+      </if>
+      <if test="fstartdate != null" >
+        #{fstartdate,jdbcType=DATE},
+      </if>
+      <if test="fenddate != null" >
+        #{fenddate,jdbcType=DATE},
+      </if>
+      <if test="fleavedate != null" >
+        #{fleavedate,jdbcType=DATE},
+      </if>
+      <if test="frentprice != null" >
+        #{frentprice,jdbcType=DOUBLE},
+      </if>
+      <if test="fvalid != null" >
+        #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="fisdel != null" >
+        #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fcreatorid != null" >
+        #{fcreatorid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatorname != null" >
+        #{fcreatorname,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatetime != null" >
+        #{fcreatetime,jdbcType=DATE},
+      </if>
+      <if test="cityid != null" >
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateRoomRentInfoByFid" parameterType="com.ziroom.zrp.houses.entity.RoomRentInfoEntity" >
+    update troomrentinfo
+    <set >
+      <if test="fprojectid != null" >
+        fprojectid = #{fprojectid,jdbcType=VARCHAR},
+      </if>
+      <if test="froomid != null" >
+        froomid = #{froomid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcontractid != null" >
+        fcontractid = #{fcontractid,jdbcType=VARCHAR},
+      </if>
+      <if test="freleaseid != null" >
+        freleaseid = #{freleaseid,jdbcType=VARCHAR},
+      </if>
+      <if test="fstartdate != null" >
+        fstartdate = #{fstartdate,jdbcType=DATE},
+      </if>
+      <if test="fenddate != null" >
+        fenddate = #{fenddate,jdbcType=DATE},
+      </if>
+      <if test="fleavedate != null" >
+        fleavedate = #{fleavedate,jdbcType=DATE},
+      </if>
+      <if test="frentprice != null" >
+        frentprice = #{frentprice,jdbcType=DOUBLE},
+      </if>
+      <if test="fvalid != null" >
+        fvalid = #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="fisdel != null" >
+        fisdel = #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fcreatorid != null" >
+        fcreatorid = #{fcreatorid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatorname != null" >
+        fcreatorname = #{fcreatorname,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime = #{fcreatetime,jdbcType=DATE},
+      </if>
+      <if test="cityid != null" >
+        cityid = #{cityid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+</mapper>

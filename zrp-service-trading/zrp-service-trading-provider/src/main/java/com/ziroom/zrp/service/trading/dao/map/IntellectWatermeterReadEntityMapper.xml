@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.IntellectWatermeterReadDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.IntellectWatermeterReadEntity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="fid" property="fid" jdbcType="VARCHAR"/>
+        <result column="project_id" property="projectId" jdbcType="VARCHAR"/>
+        <result column="room_id" property="roomId" jdbcType="VARCHAR"/>
+        <result column="read_type" property="readType" jdbcType="INTEGER"/>
+        <result column="contract_id" property="contractId" jdbcType="VARCHAR"/>
+        <result column="read_status" property="readStatus" jdbcType="INTEGER"/>
+        <result column="meter_reading" property="meterReading" jdbcType="DOUBLE"/>
+        <result column="read_time" property="readTime" jdbcType="TIMESTAMP"/>
+        <result column="pre_meter_reading" property="preMeterReading" jdbcType="DOUBLE"/>
+        <result column="pre_read_time" property="preReadTime" jdbcType="TIMESTAMP"/>
+        <result column="handle_id" property="handleId" jdbcType="VARCHAR"/>
+        <result column="handle_name" property="handleName" jdbcType="VARCHAR"/>
+        <result column="handle_time" property="handleTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="IntellectWatermeterReadVoResultMap" type="com.ziroom.zrp.service.trading.entity.IntellectWatermeterReadVo">
+        <result column="reading_fid" property="readingFid" jdbcType="VARCHAR"/>
+        <result column="project_id" property="projectFid" jdbcType="VARCHAR"/>
+        <result column="fName" property="projectName" jdbcType="VARCHAR"/>
+        <result column="fbuildingname" property="buildingName" jdbcType="VARCHAR"/>
+        <result column="ffloornumber" property="floorNumber" jdbcType="INTEGER"/>
+        <result column="froomnumber" property="roomNumber" jdbcType="VARCHAR"/>
+        <result column="room_id" property="roomFid" jdbcType="VARCHAR"/>
+        <result column="deivceType" property="deivceType" jdbcType="INTEGER"/>
+        <result column="meter_reading" property="meterReading" jdbcType="INTEGER"/>
+        <result column="read_time" property="readTime" jdbcType="TIMESTAMP"/>
+        <result column="read_status" property="readStatus" jdbcType="INTEGER"/>
+        <result column="pre_meter_reading" property="preMeterReading" jdbcType="DOUBLE"/>
+        <result column="pre_read_time" property="preReadTime" jdbcType="TIMESTAMP"/>
+        <result column="handle_name" property="handleName" jdbcType="VARCHAR"/>
+        <result column="handle_time" property="handleTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, fid, project_id, room_id, read_type, contract_id, read_status, meter_reading, read_time, pre_meter_reading, pre_read_time,
+        handle_id, handle_name, handle_time, create_time
+    </sql>
+
+    <!-- 分页查询定时抄表记录 -->
+    <select id="getIntellectWatermeterReadByPage" resultMap="IntellectWatermeterReadVoResultMap">
+        SELECT
+        mr.`fid` AS reading_fid,
+        mr.`project_id`,
+        tp.`fName`,
+        tb.`fbuildingname`,
+        tr.`ffloornumber`,
+        tr.`froomnumber`,
+        mr.`room_id`,
+        '0' AS `deivceType`,
+        mr.`meter_reading`,
+        mr.`read_time`,
+        mr.`read_status`,
+        mr.`pre_meter_reading`,
+        mr.`pre_read_time`,
+        mr.`handle_name`,
+        mr.`handle_time`
+        FROM `t_intellect_water_meter_reading` mr
+        LEFT JOIN tproject tp ON mr.`project_id` = tp.fId
+        LEFT JOIN troominfo tr ON mr.`room_id` = tr.`fid`
+        LEFT JOIN tbuildinginfo tb ON tr.`buildingid` = tb.`fid`
+        WHERE read_type = 0
+        <if test="projectId != null">
+            AND mr.project_id = #{projectId,jdbcType=VARCHAR}
+        </if>
+        <if test="projectIds != null and projectIds.size > 0 ">
+            AND mr.project_id IN
+            <foreach collection="projectIds" index="index" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="readStatus != null">
+            AND mr.read_status = #{readStatus,jdbcType=INTEGER}
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 查询最后一次定时抄表记录，根据房间 -->
+    <select id="getLastIntellectWatermeterReadByRoomId" parameterType="com.ziroom.zrp.trading.entity.IntellectWatermeterReadEntity" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM `t_intellect_water_meter_reading`
+        WHERE project_id = #{projectId,jdbcType=VARCHAR}
+        AND room_id = #{roomId,jdbcType=VARCHAR}
+        AND read_status = 0
+        AND read_type = 0
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+    <!-- 查询最新抄表记录 -->
+    <select id="getNewestWatermeterRead" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM `t_intellect_water_meter_reading`
+        WHERE project_id=#{projectId,jdbcType=VARCHAR}
+        AND room_id=#{roomId,jdbcType=VARCHAR}
+        AND read_status=0
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+    <select id="findIntellectWatermeterReadByFid" resultMap="BaseResultMap" parameterType="string">
+        select
+        <include refid="Base_Column_List"/>
+        from t_intellect_water_meter_reading
+        where fid = #{fid,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertIntellectWatermeterRead"
+            parameterType="com.ziroom.zrp.trading.entity.IntellectWatermeterReadEntity">
+        insert into t_intellect_water_meter_reading
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="projectId != null">
+                project_id,
+            </if>
+            <if test="roomId != null">
+                room_id,
+            </if>
+            <if test="readType != null">
+                read_type,
+            </if>
+            <if test="contractId != null">
+                contract_id,
+            </if>
+            <if test="readStatus != null">
+                read_status,
+            </if>
+            <if test="meterReading != null">
+                meter_reading,
+            </if>
+            <if test="readTime != null">
+                read_time,
+            </if>
+            <if test="preMeterReading != null">
+                pre_meter_reading,
+            </if>
+            <if test="preReadTime != null">
+                pre_read_time,
+            </if>
+            <if test="handleId != null">
+                handle_id,
+            </if>
+            <if test="handleName != null">
+                handle_name,
+            </if>
+            <if test="handleTime != null">
+                handle_time,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="fid != null">
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="projectId != null">
+                #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="roomId != null">
+                #{roomId,jdbcType=VARCHAR},
+            </if>
+            <if test="readType != null">
+                #{readType,jdbcType=INTEGER},
+            </if>
+            <if test="contractId != null">
+                #{contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="readStatus != null">
+                #{readStatus,jdbcType=INTEGER},
+            </if>
+            <if test="meterReading != null">
+                #{meterReading,jdbcType=DOUBLE},
+            </if>
+            <if test="readTime != null">
+                #{readTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="preMeterReading != null">
+                #{preMeterReading,jdbcType=DOUBLE},
+            </if>
+            <if test="preReadTime != null">
+                #{preReadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="handleId != null">
+                #{handleId,jdbcType=VARCHAR},
+            </if>
+            <if test="handleName != null">
+                #{handleName,jdbcType=VARCHAR},
+            </if>
+            <if test="handleTime != null">
+                #{handleTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateIntellectWatermeterRead"
+            parameterType="com.ziroom.zrp.trading.entity.IntellectWatermeterReadEntity">
+        update t_intellect_water_meter_reading
+        <set>
+            <if test="fid != null">
+                fid = #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="projectId != null">
+                project_id = #{projectId,jdbcType=VARCHAR},
+            </if>
+            <if test="roomId != null">
+                room_id = #{roomId,jdbcType=VARCHAR},
+            </if>
+            <if test="readType != null">
+                read_type = #{readType,jdbcType=INTEGER},
+            </if>
+            <if test="contractId != null">
+                contract_id = #{contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="readStatus != null">
+                read_status = #{readStatus,jdbcType=INTEGER},
+            </if>
+            <if test="meterReading != null">
+                meter_reading = #{meterReading,jdbcType=DOUBLE},
+            </if>
+            <if test="readTime != null">
+                read_time = #{readTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="preMeterReading != null">
+                pre_meter_reading = #{preMeterReading,jdbcType=DOUBLE},
+            </if>
+            <if test="preReadTime != null">
+                pre_read_time = #{preReadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="handleId != null">
+                handle_id = #{handleId,jdbcType=VARCHAR},
+            </if>
+            <if test="handleName != null">
+                handle_name = #{handleName,jdbcType=VARCHAR},
+            </if>
+            <if test="handleTime != null">
+                handle_time = #{handleTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where fid = #{fid,jdbcType=VARCHAR}
+    </update>
+</mapper>

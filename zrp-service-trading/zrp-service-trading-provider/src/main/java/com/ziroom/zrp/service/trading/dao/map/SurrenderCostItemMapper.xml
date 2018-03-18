@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ziroom.zrp.service.trading.dao.SurrenderCostItemDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.SurrenderCostItemEntity">
+        <id column="fid" property="fid" jdbcType="VARCHAR"/>
+        <result column="expenseitemid" property="expenseitemid" jdbcType="VARCHAR"/>
+        <result column="contractid" property="contractid" jdbcType="VARCHAR"/>
+        <result column="surrendercostid" property="surrendercostid" jdbcType="VARCHAR"/>
+        <result column="foriginalnum" property="foriginalnum" jdbcType="DECIMAL"/>
+        <result column="factualnum" property="factualnum" jdbcType="DECIMAL"/>
+        <result column="frefundnum" property="frefundnum" jdbcType="DECIMAL"/>
+        <result column="fisdel" property="fisdel" jdbcType="INTEGER"/>
+        <result column="fvalid" property="fvalid" jdbcType="INTEGER"/>
+        <result column="fcity" property="fcity" jdbcType="VARCHAR"/>
+        <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP"/>
+        <result column="createrid" property="createrid" jdbcType="VARCHAR"/>
+        <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP"/>
+        <result column="updaterid" property="updaterid" jdbcType="VARCHAR"/>
+        <result column="expense_item_name" property="expenseItemName" jdbcType="VARCHAR"/>
+        <result column="cityid" property="cityid" jdbcType="VARCHAR"/>
+        <result column="room_id" property="roomId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    fid, expenseitemid, contractid, surrendercostid, foriginalnum, factualnum, frefundnum, 
+    fisdel, fvalid, fcity, fcreatetime, createrid, fupdatetime, updaterid, expense_item_name, 
+    cityid, room_id
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from tsurrendercostitem
+        where fid = #{fid,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.ziroom.zrp.trading.entity.SurrenderCostItemEntity">
+        insert into tsurrendercostitem
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="expenseitemid != null">
+                expenseitemid,
+            </if>
+            <if test="contractid != null">
+                contractid,
+            </if>
+            <if test="surrendercostid != null">
+                surrendercostid,
+            </if>
+            <if test="foriginalnum != null">
+                foriginalnum,
+            </if>
+            <if test="factualnum != null">
+                factualnum,
+            </if>
+            <if test="frefundnum != null">
+                frefundnum,
+            </if>
+            <if test="fisdel != null">
+                fisdel,
+            </if>
+            <if test="fvalid != null">
+                fvalid,
+            </if>
+            <if test="fcity != null">
+                fcity,
+            </if>
+            <if test="fcreatetime != null">
+                fcreatetime,
+            </if>
+            <if test="createrid != null">
+                createrid,
+            </if>
+            <if test="fupdatetime != null">
+                fupdatetime,
+            </if>
+            <if test="updaterid != null">
+                updaterid,
+            </if>
+            <if test="expenseItemName != null">
+                expense_item_name,
+            </if>
+            <if test="cityid != null">
+                cityid,
+            </if>
+            <if test="roomId != null">
+                room_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fid != null">
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="expenseitemid != null">
+                #{expenseitemid,jdbcType=VARCHAR},
+            </if>
+            <if test="contractid != null">
+                #{contractid,jdbcType=VARCHAR},
+            </if>
+            <if test="surrendercostid != null">
+                #{surrendercostid,jdbcType=VARCHAR},
+            </if>
+            <if test="foriginalnum != null">
+                #{foriginalnum,jdbcType=DECIMAL},
+            </if>
+            <if test="factualnum != null">
+                #{factualnum,jdbcType=DECIMAL},
+            </if>
+            <if test="frefundnum != null">
+                #{frefundnum,jdbcType=DECIMAL},
+            </if>
+            <if test="fisdel != null">
+                #{fisdel,jdbcType=INTEGER},
+            </if>
+            <if test="fvalid != null">
+                #{fvalid,jdbcType=INTEGER},
+            </if>
+            <if test="fcity != null">
+                #{fcity,jdbcType=VARCHAR},
+            </if>
+            <if test="fcreatetime != null">
+                #{fcreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createrid != null">
+                #{createrid,jdbcType=VARCHAR},
+            </if>
+            <if test="fupdatetime != null">
+                #{fupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updaterid != null">
+                #{updaterid,jdbcType=VARCHAR},
+            </if>
+            <if test="expenseItemName != null">
+                #{expenseItemName,jdbcType=VARCHAR},
+            </if>
+            <if test="cityid != null">
+                #{cityid,jdbcType=VARCHAR},
+            </if>
+            <if test="roomId != null">
+                #{roomId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getCostItemsBySurCostId" resultType="com.ziroom.zrp.service.trading.entity.SurrenderCostSumBodyVo"
+            parameterType="java.lang.String">
+        SELECT
+            s.surrender_id AS surrenderId,
+            i.fid AS surCostItemId,
+            i.surrendercostid AS surCostId,
+            i.contractid AS contractId,
+            c.con_rent_code AS conRentCode,
+            i.room_id AS roomId,
+            i.expenseitemid AS expenseItemId,
+            i.expense_item_name AS expenseItemName,
+            i.foriginalnum AS originalNum,
+            i.factualnum AS actualNum,
+            i.frefundnum AS refundNum,
+            r.froomnumber AS roomNumber
+        FROM
+            tsurrendercostitem AS i
+            LEFT JOIN troominfo AS r ON r.fid = i.room_id
+            LEFT JOIN trentcontract AS c ON c.contractid = i.contractid
+            LEFT JOIN tsurrendercost AS s ON i.surrendercostid = s.surrendercost_id
+                AND s.fisdel = 0
+                AND s.fvalid = 1
+        WHERE
+            i.surrendercostid = #{surrenderCostId,jdbcType=VARCHAR}
+        AND i.fisdel = 0
+        AND i.fvalid = 1
+    </select>
+
+    <update id="updateItemById" parameterType="com.ziroom.zrp.trading.entity.SurrenderCostItemEntity">
+        UPDATE tsurrendercostitem
+        SET frefundnum = #{frefundnum,jdbcType=DOUBLE},
+            factualnum = #{factualnum,jdbcType=DOUBLE},
+            foriginalnum = #{foriginalnum,jdbcType=DOUBLE},
+            updaterid = #{updaterid,jdbcType=VARCHAR},
+            fupdatetime = NOW()
+        WHERE
+            fid = #{fid,jdbcType=VARCHAR}
+        AND fisdel = 0
+        AND fvalid = 1
+    </update>
+</mapper>

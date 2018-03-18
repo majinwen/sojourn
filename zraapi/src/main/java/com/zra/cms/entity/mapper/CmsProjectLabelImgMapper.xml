@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.cms.dao.CmsProjectLabelImgMapper" >
+  <resultMap id="BaseResultMap" type="com.zra.cms.entity.CmsProjectLabelImg" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="project_label_fid" property="projectLabelFid" jdbcType="VARCHAR" />
+    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="img_order" property="imgOrder" jdbcType="INTEGER" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_id" property="updateId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, project_label_fid, img_url, img_order, is_del, is_valid, create_time, create_id, 
+    update_time, update_id
+  </sql>
+  <select id="findByProjectLabelFids" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from cms_project_label_img
+    where project_label_fid in 
+    <foreach collection="array" index="index" item="item" open="(" separator="," close=")">  
+        #{item}   
+    </foreach>
+    AND is_del = 0
+    AND is_valid = 1
+    order by project_label_fid, img_order
+  </select>
+</mapper>

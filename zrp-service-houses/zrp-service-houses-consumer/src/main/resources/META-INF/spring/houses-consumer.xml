@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015. ziroom.
+  -->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+
+    <!--项目接口-->
+    <dubbo:reference id="houses.employeeService"  interface="com.ziroom.zrp.service.houses.api.EmployeeService" check="false"/>
+    <dubbo:reference id="houses.houseTypeService"  interface="com.ziroom.zrp.service.houses.api.HouseTypeService" check="false"/>
+    <dubbo:reference id="houses.projectService"  interface="com.ziroom.zrp.service.houses.api.ProjectService" check="false"/>
+    <dubbo:reference id="houses.roomService"  interface="com.ziroom.zrp.service.houses.api.RoomService" check="false" />
+    <dubbo:reference id="houses.rentPriceStrategyService"  interface="com.ziroom.zrp.service.houses.api.RentPriceStrategyService" check="false"/>
+    <dubbo:reference id="houses.houseSignInviteRecordService"  interface="com.ziroom.zrp.service.houses.api.HouseSignInviteRecordService" check="false"/>
+	<dubbo:reference id="houses.dictionaryService"  interface="com.ziroom.zrp.service.houses.api.DictionaryService" check="false"/>
+    <dubbo:reference id="houses.cityService" interface="com.ziroom.zrp.service.houses.api.CityService" check="false" />
+    <dubbo:reference id="houses.itemsService" interface="com.ziroom.zrp.service.houses.api.ItemsService" check="false" />
+    <dubbo:reference id="houses.intellectSmartLockService" interface="com.ziroom.zrp.service.houses.api.IntellectSmartLockService" check="false" />
+    <dubbo:reference id="houses.smartPlatformService" interface="com.ziroom.zrp.service.houses.api.SmartPlatformService" check="false" />
+    <dubbo:reference id="houses.waterWattSmartService" interface="com.ziroom.zrp.service.houses.api.WaterWattSmartService" check="false" />
+</beans>

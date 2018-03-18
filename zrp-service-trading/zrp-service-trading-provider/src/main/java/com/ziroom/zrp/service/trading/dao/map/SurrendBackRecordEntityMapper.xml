@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.surrendBackRecordDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.SurrendBackRecordEntity" >
+    <id column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="surrenderid" property="surrenderid" jdbcType="VARCHAR" />
+    <result column="fsender" property="fsender" jdbcType="VARCHAR" />
+    <result column="fsendername" property="fsendername" jdbcType="VARCHAR" />
+    <result column="fsenddate" property="fsenddate" jdbcType="DATE" />
+    <result column="fsendreason" property="fsendreason" jdbcType="VARCHAR" />
+    <result column="fbacktype" property="fbacktype" jdbcType="VARCHAR" />
+    <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+    <result column="fvalid" property="fvalid" jdbcType="INTEGER" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    fid, surrenderid, fsender, fsendername, fsenddate, fsendreason, fbacktype, fisdel, 
+    fvalid, cityid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tsurrendbackrecord
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tsurrendbackrecord
+    where fid = #{fid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.zrp.trading.entity.SurrendBackRecordEntity" >
+    insert into tsurrendbackrecord
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="surrenderid != null" >
+        surrenderid,
+      </if>
+      <if test="fsender != null" >
+        fsender,
+      </if>
+      <if test="fsendername != null" >
+        fsendername,
+      </if>
+      <if test="fsenddate != null" >
+        fsenddate,
+      </if>
+      <if test="fsendreason != null" >
+        fsendreason,
+      </if>
+      <if test="fbacktype != null" >
+        fbacktype,
+      </if>
+      <if test="fisdel != null" >
+        fisdel,
+      </if>
+      <if test="fvalid != null" >
+        fvalid,
+      </if>
+      <if test="cityid != null" >
+        cityid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="surrenderid != null" >
+        #{surrenderid,jdbcType=VARCHAR},
+      </if>
+      <if test="fsender != null" >
+        #{fsender,jdbcType=VARCHAR},
+      </if>
+      <if test="fsendername != null" >
+        #{fsendername,jdbcType=VARCHAR},
+      </if>
+      <if test="fsenddate != null" >
+        #{fsenddate,jdbcType=DATE},
+      </if>
+      <if test="fsendreason != null" >
+        #{fsendreason,jdbcType=VARCHAR},
+      </if>
+      <if test="fbacktype != null" >
+        #{fbacktype,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fvalid != null" >
+        #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="cityid != null" >
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.ziroom.zrp.trading.entity.SurrendBackRecordEntity" >
+    update tsurrendbackrecord
+    <set >
+      <if test="surrenderid != null" >
+        surrenderid = #{surrenderid,jdbcType=VARCHAR},
+      </if>
+      <if test="fsender != null" >
+        fsender = #{fsender,jdbcType=VARCHAR},
+      </if>
+      <if test="fsendername != null" >
+        fsendername = #{fsendername,jdbcType=VARCHAR},
+      </if>
+      <if test="fsenddate != null" >
+        fsenddate = #{fsenddate,jdbcType=DATE},
+      </if>
+      <if test="fsendreason != null" >
+        fsendreason = #{fsendreason,jdbcType=VARCHAR},
+      </if>
+      <if test="fbacktype != null" >
+        fbacktype = #{fbacktype,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        fisdel = #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fvalid != null" >
+        fvalid = #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="cityid != null" >
+        cityid = #{cityid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.zrp.trading.entity.SurrendBackRecordEntity" >
+    update tsurrendbackrecord
+    set surrenderid = #{surrenderid,jdbcType=VARCHAR},
+      fsender = #{fsender,jdbcType=VARCHAR},
+      fsendername = #{fsendername,jdbcType=VARCHAR},
+      fsenddate = #{fsenddate,jdbcType=DATE},
+      fsendreason = #{fsendreason,jdbcType=VARCHAR},
+      fbacktype = #{fbacktype,jdbcType=VARCHAR},
+      fisdel = #{fisdel,jdbcType=INTEGER},
+      fvalid = #{fvalid,jdbcType=INTEGER},
+      cityid = #{cityid,jdbcType=VARCHAR}
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+  <select id="findSurrendBackRecordEntityByParam" parameterType="java.lang.String" resultType="com.ziroom.zrp.trading.entity.SurrendBackRecordEntity">
+	  select
+	  <include refid="Base_Column_List" />
+	  from tsurrendbackrecord
+	  where surrenderid = #{surrenderId,jdbcType=VARCHAR}
+	  and fbacktype = #{type,jdbcType=VARCHAR}
+	  and fisdel = 0
+	  and fvalid = 1
+  </select>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.cmsProjectLabelImgDao" >
+  <!--查询项目标签图片地址列表 created by cuigh6-->
+  <select id="getCmsProjectLabelImgs" parameterType="java.lang.String" resultType="com.ziroom.zrp.houses.entity.CmsProjectLabelImgEntity">
+    SELECT
+      fid,
+      project_label_fid as projectLabelFid,
+      img_url as imgUrl,
+      img_order as imgOrder,
+      click_url as clickUrl,
+      is_del as isDel,
+      is_valid as isValid,
+      create_time as createTime,
+      create_id as createId,
+      update_time as updateTime,
+      update_id as updateId
+    FROM cms_project_label_img AS a
+    WHERE project_label_fid=#{projectLabelFid,jdbcType=VARCHAR}
+    AND is_del=0
+    AND is_valid=1
+  </select>
+</mapper>

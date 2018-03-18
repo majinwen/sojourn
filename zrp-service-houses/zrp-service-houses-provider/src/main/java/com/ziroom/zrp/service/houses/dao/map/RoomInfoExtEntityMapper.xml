@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.roomInfoExtDao" >
+
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.RoomInfoExtEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="is_bind_ammeter" property="isBindAmmeter" jdbcType="INTEGER" />
+    <result column="is_bind_watermeter" property="isBindWatermeter" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="BaseResultMap1" type="com.ziroom.zrp.houses.entity.RoomInfoEntity" >
+    <id column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="projectid" property="projectid" jdbcType="VARCHAR" />
+    <result column="buildingid" property="buildingid" jdbcType="VARCHAR" />
+    <result column="ffloornumber" property="ffloornumber" jdbcType="INTEGER" />
+    <result column="froomnumber" property="froomnumber" jdbcType="VARCHAR" />
+    <result column="froomarea" property="froomarea" jdbcType="DOUBLE" />
+    <result column="housetypeid" property="housetypeid" jdbcType="VARCHAR" />
+    <result column="roomliveid" property="roomliveid" jdbcType="VARCHAR" />
+    <result column="fbaseprice" property="fbaseprice" jdbcType="DECIMAL" />
+    <result column="flongprice" property="flongprice" jdbcType="DECIMAL" />
+    <result column="fshortprice" property="fshortprice" jdbcType="DECIMAL" />
+    <result column="fshortprice2" property="fshortprice2" jdbcType="DECIMAL" />
+    <result column="fbedtype" property="fbedtype" jdbcType="VARCHAR" />
+    <result column="fdecorationstyle" property="fdecorationstyle" jdbcType="VARCHAR" />
+    <result column="fdirection" property="fdirection" jdbcType="VARCHAR" />
+    <result column="fshortrent" property="fshortrent" jdbcType="VARCHAR" />
+    <result column="fcurrentstate" property="fcurrentstate" jdbcType="VARCHAR" />
+    <result column="fisnetshow" property="fisnetshow" jdbcType="INTEGER" />
+    <result column="companyid" property="companyid" jdbcType="VARCHAR" />
+    <result column="fvalid" property="fvalid" jdbcType="INTEGER" />
+    <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP" />
+    <result column="createrid" property="createrid" jdbcType="VARCHAR" />
+    <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP" />
+    <result column="updaterid" property="updaterid" jdbcType="VARCHAR" />
+    <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+    <result column="flocktime" property="flocktime" jdbcType="TIMESTAMP" />
+    <result column="fdisabletime" property="fdisabletime" jdbcType="TIMESTAMP" />
+    <result column="configcompletedate" property="configcompletedate" jdbcType="DATE" />
+    <result column="fisused" property="fisused" jdbcType="INTEGER" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+    <result column="flockroomsource" property="flockroomsource" jdbcType="VARCHAR" />
+    <result column="fopenbookdate" property="fopenbookdate" jdbcType="DATE" />
+    <result column="favasigndate" property="favasigndate" jdbcType="TIMESTAMP" />
+    <result column="ftype" property="ftype" jdbcType="INTEGER" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="rent_type" property="rentType" jdbcType="INTEGER" />
+    <result column="bednum" property="bednum" jdbcType="INTEGER" />
+    <result column="shortpricestr" property="shortpricestr" jdbcType="VARCHAR" />
+    <result column="is_bind_lock" property="isBindLock" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, room_fid, is_bind_ammeter, is_bind_watermeter, create_date, last_modify_date
+  </sql>
+  <sql id="Base_Column_List1" >
+    b.fid, projectid, buildingid, ffloornumber, froomnumber, froomarea, housetypeid, roomliveid,
+    fbaseprice, flongprice, fshortprice, fshortprice2, fbedtype, fdecorationstyle, fdirection,
+    fshortrent, fcurrentstate, fisnetshow, companyid, fvalid, fcreatetime, createrid,
+    fupdatetime, updaterid, fisdel, flocktime, fdisabletime, configcompletedate, fisused,
+    cityid, flockroomsource, fopenbookdate, favasigndate, ftype, parent_id, rent_type,
+    bednum, shortpricestr,is_bind_lock
+  </sql>
+
+  <select id="getRoomInfoExtByRoomFid" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from troominfo_ext
+    where room_fid = #{roomFid,jdbcType=VARCHAR}
+  </select>
+
+  <!--查询所有绑定水表的房间 created by cuigh6-->
+  <select id="getAllRoomOfBindingWaterMeter" resultMap="BaseResultMap1">
+    select
+    <include refid="Base_Column_List1" />
+    from troominfo_ext as a ,troominfo as b
+    where is_bind_watermeter = 1
+    AND a.room_fid=b.fid
+  </select>
+
+
+  <insert id="insertRoomInfoExt" parameterType="com.ziroom.zrp.houses.entity.RoomInfoExtEntity" >
+    insert into troominfo_ext
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="isBindAmmeter != null" >
+        is_bind_ammeter,
+      </if>
+      <if test="isBindWatermeter != null" >
+        is_bind_watermeter,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isBindAmmeter != null" >
+        #{isBindAmmeter,jdbcType=INTEGER},
+      </if>
+      <if test="isBindWatermeter != null" >
+        #{isBindWatermeter,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.houses.entity.RoomInfoExtEntity" >
+    update troominfo_ext
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        room_fid = #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="isBindAmmeter != null" >
+        is_bind_ammeter = #{isBindAmmeter,jdbcType=INTEGER},
+      </if>
+      <if test="isBindWatermeter != null" >
+        is_bind_watermeter = #{isBindWatermeter,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

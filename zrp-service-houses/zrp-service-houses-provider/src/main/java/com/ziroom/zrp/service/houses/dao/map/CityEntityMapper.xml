@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.cityDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.CityEntity" >
+    <id column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="citycode" property="citycode" jdbcType="VARCHAR" />
+    <result column="cityname" property="cityname" jdbcType="VARCHAR" />
+    <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP" />
+    <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP" />
+    <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+    <result column="flongcode" property="flongcode" jdbcType="VARCHAR" />
+    <result column="fshortcode" property="fshortcode" jdbcType="VARCHAR" />
+    <result column="fvoucher" property="fvoucher" jdbcType="VARCHAR" />
+    <result column="fconsum" property="fconsum" jdbcType="VARCHAR" />
+    <result column="fnextValName" property="fnextvalname" jdbcType="VARCHAR" />
+    <result column="fafacomcode" property="fafacomcode" jdbcType="VARCHAR" />
+    <result column="center_lon" property="centerLon" jdbcType="DOUBLE" />
+    <result column="center_lat" property="centerLat" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    fid, citycode, cityname, fcreatetime, fupdatetime, fisdel, flongcode, fshortcode, 
+    fvoucher, fconsum, fnextValName, fafacomcode, center_lon, center_lat
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tcity
+    where fid = #{fid,jdbcType=VARCHAR}
+    and fisdel = 0
+  </select>
+
+  <select id="findCityList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tcity
+    where fisdel = 0
+  </select>
+
+</mapper>

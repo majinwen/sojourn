@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.projectDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.ProjectEntity" >
+    <id column="fId" property="fid" jdbcType="VARCHAR" />
+    <result column="fCode" property="fcode" jdbcType="VARCHAR" />
+    <result column="fCompanyId" property="fcompanyid" jdbcType="VARCHAR" />
+    <result column="fName" property="fname" jdbcType="VARCHAR" />
+    <result column="fTitle" property="ftitle" jdbcType="VARCHAR" />
+    <result column="fDescribe" property="fdescribe" jdbcType="VARCHAR" />
+    <result column="fAddress" property="faddress" jdbcType="VARCHAR" />
+    <result column="fLon" property="flon" jdbcType="DOUBLE" />
+    <result column="fLat" property="flat" jdbcType="DOUBLE" />
+    <result column="fBusinessDistrict" property="fbusinessdistrict" jdbcType="INTEGER" />
+    <result column="fRegion" property="fregion" jdbcType="VARCHAR" />
+    <result column="fArea" property="farea" jdbcType="DOUBLE" />
+    <result column="fBuildingNum" property="fbuildingnum" jdbcType="INTEGER" />
+    <result column="fCarPortNum" property="fcarportnum" jdbcType="INTEGER" />
+    <result column="fBuildingStructure" property="fbuildingstructure" jdbcType="VARCHAR" />
+    <result column="fRoomNum" property="froomnum" jdbcType="INTEGER" />
+    <result column="fHouseTypeNum" property="fhousetypenum" jdbcType="INTEGER" />
+    <result column="fPublicArea" property="fpublicarea" jdbcType="INTEGER" />
+    <result column="fElectricityType" property="felectricitytype" jdbcType="VARCHAR" />
+    <result column="fWaterType" property="fwatertype" jdbcType="VARCHAR" />
+    <result column="fCooperationModel" property="fcooperationmodel" jdbcType="VARCHAR" />
+    <result column="fOwnerType" property="fownertype" jdbcType="VARCHAR" />
+    <result column="fOwnerName" property="fownername" jdbcType="VARCHAR" />
+    <result column="fPropertyType" property="fpropertytype" jdbcType="VARCHAR" />
+    <result column="fFinishYear" property="ffinishyear" jdbcType="INTEGER" />
+    <result column="fContractBegin" property="fcontractbegin" jdbcType="DATE" />
+    <result column="fContractCycle" property="fcontractcycle" jdbcType="INTEGER" />
+    <result column="fContractEnd" property="fcontractend" jdbcType="DATE" />
+    <result column="fOpeningTime" property="fopeningtime" jdbcType="DATE" />
+    <result column="fVacancyDay" property="fvacancyday" jdbcType="INTEGER" />
+    <result column="fProjectManager" property="fprojectmanager" jdbcType="VARCHAR" />
+    <result column="fMarketTel" property="fmarkettel" jdbcType="VARCHAR" />
+    <result column="fLockType" property="flocktype" jdbcType="VARCHAR" />
+    <result column="fIsDel" property="fisdel" jdbcType="INTEGER" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+    <result column="fAfaProNum" property="fafapronum" jdbcType="VARCHAR" />
+    <result column="fProjectShowImage" property="fprojectshowimage" jdbcType="VARCHAR" />
+    <result column="f_panoramic_url" property="fPanoramicUrl" jdbcType="VARCHAR" />
+    <result column="f_peripheral_url" property="fPeripheralUrl" jdbcType="VARCHAR" />
+    <result column="f_share_url" property="fShareUrl" jdbcType="VARCHAR" />
+    <result column="f_head_figure_url" property="fHeadFigureUrl" jdbcType="VARCHAR" />
+    <result column="f_peripheral_name" property="fPeripheralName" jdbcType="VARCHAR" />
+    <result column="f_contract_number" property="fContractNumber" jdbcType="VARCHAR" />
+    <result column="f_address_desc" property="fAddressDesc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    fId, fCode, fCompanyId, fName, fTitle, fDescribe, fAddress, fLon, fLat, fBusinessDistrict, 
+    fRegion, fArea, fBuildingNum, fCarPortNum, fBuildingStructure, fRoomNum, fHouseTypeNum, 
+    fPublicArea, fElectricityType, fWaterType, fCooperationModel, fOwnerType, fOwnerName, 
+    fPropertyType, fFinishYear, fContractBegin, fContractCycle, fContractEnd, fOpeningTime, 
+    fVacancyDay, fProjectManager, fMarketTel, fLockType, fIsDel, cityid, fAfaProNum, 
+    fProjectShowImage, f_panoramic_url, f_peripheral_url, f_share_url, f_head_figure_url, 
+    f_peripheral_name, f_contract_number, f_address_desc
+  </sql>
+  <select id="findProjectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tproject
+    where fCode = #{code,jdbcType=VARCHAR}
+  </select>
+  <select id="findProjectById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tproject
+    where fId = #{projectId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tproject
+    where fId = #{fid,jdbcType=VARCHAR}
+  </delete>
+
+
+  <insert id="saveProject" parameterType="com.ziroom.zrp.houses.entity.ProjectEntity" >
+    insert into tproject
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        fId,
+      </if>
+      <if test="fcode != null" >
+        fCode,
+      </if>
+      <if test="fcompanyid != null" >
+        fCompanyId,
+      </if>
+      <if test="fname != null" >
+        fName,
+      </if>
+      <if test="ftitle != null" >
+        fTitle,
+      </if>
+      <if test="fdescribe != null" >
+        fDescribe,
+      </if>
+      <if test="faddress != null" >
+        fAddress,
+      </if>
+      <if test="flon != null" >
+        fLon,
+      </if>
+      <if test="flat != null" >
+        fLat,
+      </if>
+      <if test="fbusinessdistrict != null" >
+        fBusinessDistrict,
+      </if>
+      <if test="fregion != null" >
+        fRegion,
+      </if>
+      <if test="farea != null" >
+        fArea,
+      </if>
+      <if test="fbuildingnum != null" >
+        fBuildingNum,
+      </if>
+      <if test="fcarportnum != null" >
+        fCarPortNum,
+      </if>
+      <if test="fbuildingstructure != null" >
+        fBuildingStructure,
+      </if>
+      <if test="froomnum != null" >
+        fRoomNum,
+      </if>
+      <if test="fhousetypenum != null" >
+        fHouseTypeNum,
+      </if>
+      <if test="fpublicarea != null" >
+        fPublicArea,
+      </if>
+      <if test="felectricitytype != null" >
+        fElectricityType,
+      </if>
+      <if test="fwatertype != null" >
+        fWaterType,
+      </if>
+      <if test="fcooperationmodel != null" >
+        fCooperationModel,
+      </if>
+      <if test="fownertype != null" >
+        fOwnerType,
+      </if>
+      <if test="fownername != null" >
+        fOwnerName,
+      </if>
+      <if test="fpropertytype != null" >
+        fPropertyType,
+      </if>
+      <if test="ffinishyear != null" >
+        fFinishYear,
+      </if>
+      <if test="fcontractbegin != null" >
+        fContractBegin,
+      </if>
+      <if test="fcontractcycle != null" >
+        fContractCycle,
+      </if>
+      <if test="fcontractend != null" >
+        fContractEnd,
+      </if>
+      <if test="fopeningtime != null" >
+        fOpeningTime,
+      </if>
+      <if test="fvacancyday != null" >
+        fVacancyDay,
+      </if>
+      <if test="fprojectmanager != null" >
+        fProjectManager,
+      </if>
+      <if test="fmarkettel != null" >
+        fMarketTel,
+      </if>
+      <if test="flocktype != null" >
+        fLockType,
+      </if>
+      <if test="fisdel != null" >
+        fIsDel,
+      </if>
+      <if test="cityid != null" >
+        cityid,
+      </if>
+      <if test="fafapronum != null" >
+        fAfaProNum,
+      </if>
+      <if test="fprojectshowimage != null" >
+        fProjectShowImage,
+      </if>
+      <if test="fPanoramicUrl != null" >
+        f_panoramic_url,
+      </if>
+      <if test="fPeripheralUrl != null" >
+        f_peripheral_url,
+      </if>
+      <if test="fShareUrl != null" >
+        f_share_url,
+      </if>
+      <if test="fHeadFigureUrl != null" >
+        f_head_figure_url,
+      </if>
+      <if test="fPeripheralName != null" >
+        f_peripheral_name,
+      </if>
+      <if test="fContractNumber != null" >
+        f_contract_number,
+      </if>
+      <if test="fAddressDesc != null" >
+        f_address_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcode != null" >
+        #{fcode,jdbcType=VARCHAR},
+      </if>
+      <if test="fcompanyid != null" >
+        #{fcompanyid,jdbcType=VARCHAR},
+      </if>
+      <if test="fname != null" >
+        #{fname,jdbcType=VARCHAR},
+      </if>
+      <if test="ftitle != null" >
+        #{ftitle,jdbcType=VARCHAR},
+      </if>
+      <if test="fdescribe != null" >
+        #{fdescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="faddress != null" >
+        #{faddress,jdbcType=VARCHAR},
+      </if>
+      <if test="flon != null" >
+        #{flon,jdbcType=DOUBLE},
+      </if>
+      <if test="flat != null" >
+        #{flat,jdbcType=DOUBLE},
+      </if>
+      <if test="fbusinessdistrict != null" >
+        #{fbusinessdistrict,jdbcType=INTEGER},
+      </if>
+      <if test="fregion != null" >
+        #{fregion,jdbcType=VARCHAR},
+      </if>
+      <if test="farea != null" >
+        #{farea,jdbcType=DOUBLE},
+      </if>
+      <if test="fbuildingnum != null" >
+        #{fbuildingnum,jdbcType=INTEGER},
+      </if>
+      <if test="fcarportnum != null" >
+        #{fcarportnum,jdbcType=INTEGER},
+      </if>
+      <if test="fbuildingstructure != null" >
+        #{fbuildingstructure,jdbcType=VARCHAR},
+      </if>
+      <if test="froomnum != null" >
+        #{froomnum,jdbcType=INTEGER},
+      </if>
+      <if test="fhousetypenum != null" >
+        #{fhousetypenum,jdbcType=INTEGER},
+      </if>
+      <if test="fpublicarea != null" >
+        #{fpublicarea,jdbcType=INTEGER},
+      </if>
+      <if test="felectricitytype != null" >
+        #{felectricitytype,jdbcType=VARCHAR},
+      </if>
+      <if test="fwatertype != null" >
+        #{fwatertype,jdbcType=VARCHAR},
+      </if>
+      <if test="fcooperationmodel != null" >
+        #{fcooperationmodel,jdbcType=VARCHAR},
+      </if>
+      <if test="fownertype != null" >
+        #{fownertype,jdbcType=VARCHAR},
+      </if>
+      <if test="fownername != null" >
+        #{fownername,jdbcType=VARCHAR},
+      </if>
+      <if test="fpropertytype != null" >
+        #{fpropertytype,jdbcType=VARCHAR},
+      </if>
+      <if test="ffinishyear != null" >
+        #{ffinishyear,jdbcType=INTEGER},
+      </if>
+      <if test="fcontractbegin != null" >
+        #{fcontractbegin,jdbcType=DATE},
+      </if>
+      <if test="fcontractcycle != null" >
+        #{fcontractcycle,jdbcType=INTEGER},
+      </if>
+      <if test="fcontractend != null" >
+        #{fcontractend,jdbcType=DATE},
+      </if>
+      <if test="fopeningtime != null" >
+        #{fopeningtime,jdbcType=DATE},
+      </if>
+      <if test="fvacancyday != null" >
+        #{fvacancyday,jdbcType=INTEGER},
+      </if>
+      <if test="fprojectmanager != null" >
+        #{fprojectmanager,jdbcType=VARCHAR},
+      </if>
+      <if test="fmarkettel != null" >
+        #{fmarkettel,jdbcType=VARCHAR},
+      </if>
+      <if test="flocktype != null" >
+        #{flocktype,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="cityid != null" >
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="fafapronum != null" >
+        #{fafapronum,jdbcType=VARCHAR},
+      </if>
+      <if test="fprojectshowimage != null" >
+        #{fprojectshowimage,jdbcType=VARCHAR},
+      </if>
+      <if test="fPanoramicUrl != null" >
+        #{fPanoramicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fPeripheralUrl != null" >
+        #{fPeripheralUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fShareUrl != null" >
+        #{fShareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fHeadFigureUrl != null" >
+        #{fHeadFigureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fPeripheralName != null" >
+        #{fPeripheralName,jdbcType=VARCHAR},
+      </if>
+      <if test="fContractNumber != null" >
+        #{fContractNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="fAddressDesc != null" >
+        #{fAddressDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateProjectByFid" parameterType="com.ziroom.zrp.houses.entity.ProjectEntity" >
+    update tproject
+    <set >
+      <if test="fcode != null" >
+        fCode = #{fcode,jdbcType=VARCHAR},
+      </if>
+      <if test="fcompanyid != null" >
+        fCompanyId = #{fcompanyid,jdbcType=VARCHAR},
+      </if>
+      <if test="fname != null" >
+        fName = #{fname,jdbcType=VARCHAR},
+      </if>
+      <if test="ftitle != null" >
+        fTitle = #{ftitle,jdbcType=VARCHAR},
+      </if>
+      <if test="fdescribe != null" >
+        fDescribe = #{fdescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="faddress != null" >
+        fAddress = #{faddress,jdbcType=VARCHAR},
+      </if>
+      <if test="flon != null" >
+        fLon = #{flon,jdbcType=DOUBLE},
+      </if>
+      <if test="flat != null" >
+        fLat = #{flat,jdbcType=DOUBLE},
+      </if>
+      <if test="fbusinessdistrict != null" >
+        fBusinessDistrict = #{fbusinessdistrict,jdbcType=INTEGER},
+      </if>
+      <if test="fregion != null" >
+        fRegion = #{fregion,jdbcType=VARCHAR},
+      </if>
+      <if test="farea != null" >
+        fArea = #{farea,jdbcType=DOUBLE},
+      </if>
+      <if test="fbuildingnum != null" >
+        fBuildingNum = #{fbuildingnum,jdbcType=INTEGER},
+      </if>
+      <if test="fcarportnum != null" >
+        fCarPortNum = #{fcarportnum,jdbcType=INTEGER},
+      </if>
+      <if test="fbuildingstructure != null" >
+        fBuildingStructure = #{fbuildingstructure,jdbcType=VARCHAR},
+      </if>
+      <if test="froomnum != null" >
+        fRoomNum = #{froomnum,jdbcType=INTEGER},
+      </if>
+      <if test="fhousetypenum != null" >
+        fHouseTypeNum = #{fhousetypenum,jdbcType=INTEGER},
+      </if>
+      <if test="fpublicarea != null" >
+        fPublicArea = #{fpublicarea,jdbcType=INTEGER},
+      </if>
+      <if test="felectricitytype != null" >
+        fElectricityType = #{felectricitytype,jdbcType=VARCHAR},
+      </if>
+      <if test="fwatertype != null" >
+        fWaterType = #{fwatertype,jdbcType=VARCHAR},
+      </if>
+      <if test="fcooperationmodel != null" >
+        fCooperationModel = #{fcooperationmodel,jdbcType=VARCHAR},
+      </if>
+      <if test="fownertype != null" >
+        fOwnerType = #{fownertype,jdbcType=VARCHAR},
+      </if>
+      <if test="fownername != null" >
+        fOwnerName = #{fownername,jdbcType=VARCHAR},
+      </if>
+      <if test="fpropertytype != null" >
+        fPropertyType = #{fpropertytype,jdbcType=VARCHAR},
+      </if>
+      <if test="ffinishyear != null" >
+        fFinishYear = #{ffinishyear,jdbcType=INTEGER},
+      </if>
+      <if test="fcontractbegin != null" >
+        fContractBegin = #{fcontractbegin,jdbcType=DATE},
+      </if>
+      <if test="fcontractcycle != null" >
+        fContractCycle = #{fcontractcycle,jdbcType=INTEGER},
+      </if>
+      <if test="fcontractend != null" >
+        fContractEnd = #{fcontractend,jdbcType=DATE},
+      </if>
+      <if test="fopeningtime != null" >
+        fOpeningTime = #{fopeningtime,jdbcType=DATE},
+      </if>
+      <if test="fvacancyday != null" >
+        fVacancyDay = #{fvacancyday,jdbcType=INTEGER},
+      </if>
+      <if test="fprojectmanager != null" >
+        fProjectManager = #{fprojectmanager,jdbcType=VARCHAR},
+      </if>
+      <if test="fmarkettel != null" >
+        fMarketTel = #{fmarkettel,jdbcType=VARCHAR},
+      </if>
+      <if test="flocktype != null" >
+        fLockType = #{flocktype,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        fIsDel = #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="cityid != null" >
+        cityid = #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="fafapronum != null" >
+        fAfaProNum = #{fafapronum,jdbcType=VARCHAR},
+      </if>
+      <if test="fprojectshowimage != null" >
+        fProjectShowImage = #{fprojectshowimage,jdbcType=VARCHAR},
+      </if>
+      <if test="fPanoramicUrl != null" >
+        f_panoramic_url = #{fPanoramicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fPeripheralUrl != null" >
+        f_peripheral_url = #{fPeripheralUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fShareUrl != null" >
+        f_share_url = #{fShareUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fHeadFigureUrl != null" >
+        f_head_figure_url = #{fHeadFigureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fPeripheralName != null" >
+        f_peripheral_name = #{fPeripheralName,jdbcType=VARCHAR},
+      </if>
+      <if test="fContractNumber != null" >
+        f_contract_number = #{fContractNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="fAddressDesc != null" >
+        f_address_desc = #{fAddressDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fId = #{fid,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findProjectListForPage" resultMap="BaseResultMap" parameterType="com.ziroom.zrp.service.houses.dto.AddHouseGroupDto" >
+    select
+    <include refid="Base_Column_List" />
+    from tproject
+    where fIsDel = 0
+    <if test="cityid != null and cityid != ''" >
+      AND cityid = #{cityid,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+
+  <select id="queryAllPro" resultMap="BaseResultMap" parameterType="com.ziroom.zrp.service.houses.dto.AddHouseGroupDto" >
+    select
+    <include refid="Base_Column_List" />
+    from tproject
+    where fIsDel = 0
+    <if test="cityid != null and cityid != ''" >
+      AND cityid = #{cityid,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <!-- 查询用户项目权限列表 -->
+  <select id="userProjectList"  resultType="string"  parameterType="string">
+  	SELECT projectId FROM `tprojectzo` WHERE emp_code=#{empCode,jdbcType=VARCHAR} AND fIsDel = 0
+  </select>
+</mapper>

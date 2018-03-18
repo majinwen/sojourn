@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.expenseItemDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.ExpenseItemEntity">
+        <id column="fid" property="fid" jdbcType="BIGINT" />
+        <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+        <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+        <result column="type_bill" property="typeBill" jdbcType="TINYINT" />
+        <result column="type_payment" property="typePayment" jdbcType="TINYINT" />
+        <result column="type_consumption" property="typeConsumption" jdbcType="TINYINT" />
+        <result column="batch" property="batch" jdbcType="TINYINT" />
+        <result column="system" property="system" jdbcType="TINYINT" />
+        <result column="afa" property="afa" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+        <result column="effective_date" property="effectiveDate" jdbcType="DATE" />
+        <result column="expire_date" property="expireDate" jdbcType="DATE" />
+        <result column="fvalid" property="fvalid" jdbcType="INTEGER" />
+        <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP" />
+        <result column="createrid" property="createrid" jdbcType="VARCHAR" />
+        <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP" />
+        <result column="updaterid" property="updaterid" jdbcType="VARCHAR" />
+        <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+        <result column="surr_order" property="surrOrder" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        fid, item_code, item_name, type_bill, type_payment, type_consumption, batch,
+        system, afa, remark, cityid, effective_date, expire_date, fvalid, fcreatetime,
+        createrid, fupdatetime, updaterid, fisdel, surr_order
+    </sql>
+
+    <select id="selectExpenseItemsByIdFids" resultMap="BaseResultMap">
+        SELECT
+         <include refid="Base_Column_List" />
+        FROM
+        texpenseitem
+        WHERE
+        fid in
+        <foreach collection="expeseItemFids" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+
+    </select>
+
+    <select id="listExpenseByItemCodes" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        texpenseitem
+        WHERE
+        item_code in
+        <foreach collection="expeseItemCodes" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+      AND fvalid = 1
+      AND fisdel = 0
+    </select>
+</mapper>

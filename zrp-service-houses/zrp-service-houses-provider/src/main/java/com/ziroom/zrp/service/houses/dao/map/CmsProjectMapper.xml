@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.cmsProjectDao" >
+  <!--查询项目信息 created by cuigh6-->
+  <select id="getCmsProject" parameterType="java.lang.String" resultType="com.ziroom.zrp.houses.entity.CmsProjectEntity">
+    SELECT
+      fid,
+      project_id as projectId,
+      show_img as showImg,
+      panoramic_url as panoramicUrl,
+      peripheral_url as peripheralUrl,
+      share_url as shareUrl,
+      head_img as headImg,
+      zspace_desc as zspaceDesc,
+      zo_desc as zoDesc,
+      zo_img_url as zoImgUrl,
+      zo_service_desc as zoServiceDesc,
+      is_del as isDel,
+      is_valid as isValid,
+      create_time as createTime,
+      create_id as createId,
+      update_time as updateTime,
+      update_id as updateId
+    FROM cms_project AS a
+    WHERE project_id=#{projectId,jdbcType=VARCHAR}
+    AND is_del=0
+    AND is_valid=1
+  </select>
+</mapper>

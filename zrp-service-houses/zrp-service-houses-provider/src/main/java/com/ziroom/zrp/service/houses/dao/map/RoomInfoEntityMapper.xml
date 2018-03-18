@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.roomInfoDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.RoomInfoEntity">
+        <id column="fid" property="fid" jdbcType="VARCHAR"/>
+        <result column="projectid" property="projectid" jdbcType="VARCHAR"/>
+        <result column="buildingid" property="buildingid" jdbcType="VARCHAR"/>
+        <result column="ffloornumber" property="ffloornumber" jdbcType="INTEGER"/>
+        <result column="froomnumber" property="froomnumber" jdbcType="VARCHAR"/>
+        <result column="froomarea" property="froomarea" jdbcType="DOUBLE"/>
+        <result column="housetypeid" property="housetypeid" jdbcType="VARCHAR"/>
+        <result column="roomliveid" property="roomliveid" jdbcType="VARCHAR"/>
+        <result column="fbaseprice" property="fbaseprice" jdbcType="DECIMAL"/>
+        <result column="flongprice" property="flongprice" jdbcType="DECIMAL"/>
+        <result column="fshortprice" property="fshortprice" jdbcType="DECIMAL"/>
+        <result column="fshortprice2" property="fshortprice2" jdbcType="DECIMAL"/>
+        <result column="fbedtype" property="fbedtype" jdbcType="VARCHAR"/>
+        <result column="fdecorationstyle" property="fdecorationstyle" jdbcType="VARCHAR"/>
+        <result column="fdirection" property="fdirection" jdbcType="VARCHAR"/>
+        <result column="fshortrent" property="fshortrent" jdbcType="VARCHAR"/>
+        <result column="fcurrentstate" property="fcurrentstate" jdbcType="VARCHAR"/>
+        <result column="fisnetshow" property="fisnetshow" jdbcType="INTEGER"/>
+        <result column="companyid" property="companyid" jdbcType="VARCHAR"/>
+        <result column="fvalid" property="fvalid" jdbcType="INTEGER"/>
+        <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP"/>
+        <result column="createrid" property="createrid" jdbcType="VARCHAR"/>
+        <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP"/>
+        <result column="updaterid" property="updaterid" jdbcType="VARCHAR"/>
+        <result column="fisdel" property="fisdel" jdbcType="INTEGER"/>
+        <result column="flocktime" property="flocktime" jdbcType="TIMESTAMP"/>
+        <result column="fdisabletime" property="fdisabletime" jdbcType="TIMESTAMP"/>
+        <result column="configcompletedate" property="configcompletedate" jdbcType="DATE"/>
+        <result column="fisused" property="fisused" jdbcType="INTEGER"/>
+        <result column="cityid" property="cityid" jdbcType="VARCHAR"/>
+        <result column="flockroomsource" property="flockroomsource" jdbcType="VARCHAR"/>
+        <result column="fopenbookdate" property="fopenbookdate" jdbcType="DATE"/>
+        <result column="favasigndate" property="favasigndate" jdbcType="TIMESTAMP"/>
+        <result column="ftype" property="ftype" jdbcType="INTEGER"/>
+        <result column="parent_id" property="parentId" jdbcType="VARCHAR"/>
+        <result column="rent_type" property="rentType" jdbcType="INTEGER"/>
+        <result column="bednum" property="bednum" jdbcType="INTEGER"/>
+        <result column="shortpricestr" property="shortpricestr" jdbcType="VARCHAR"/>
+        <result column="is_bind_lock" property="isBindLock" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.ziroom.zrp.houses.entity.RoomInfoEntity" extends="BaseResultMap">
+        <result column="froomdesc" property="froomdesc" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        fid, projectid, buildingid, ffloornumber, froomnumber, froomarea, housetypeid, roomliveid,
+        fbaseprice, flongprice, fshortprice, fshortprice2, fbedtype, fdecorationstyle, fdirection,
+        fshortrent, fcurrentstate, fisnetshow, companyid, fvalid, fcreatetime, createrid,
+        fupdatetime, updaterid, fisdel, flocktime, fdisabletime, configcompletedate, fisused,
+        cityid, flockroomsource, fopenbookdate, favasigndate, ftype, parent_id, rent_type,
+        bednum, shortpricestr,is_bind_lock
+    </sql>
+    <sql id="Blob_Column_List">
+        froomdesc
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from troominfo
+        where fid = #{fid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getRoomListByRoomIds" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from troominfo
+        where fid in
+        <foreach collection="roomIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--基本项目房间和户型信息-->
+    <select id="findRentRoomInfoByRoomId" resultType="com.ziroom.zrp.service.houses.dto.RentRoomInfoDto"
+            parameterType="java.lang.String">
+        SELECT
+        room.ffloornumber floorNumber,room.froomnumber roomNumber,room.froomarea roomArea,room.fdirection
+        roomDirection,room.fshortrent shortRent,
+        room.ftype type,
+        house.fhousetypename houseTypeName,house.fid houseTypeId, project.fId AS projectId,
+        project.fName proName,project.fAddress proAddress,project.f_head_figure_url
+        proHeadFigureUrl,project.fElectricityType electricityType
+        ,project.fWaterType waterType FROM troominfo room
+        LEFT JOIN thousetype house ON room.`housetypeid` = house.`fid`
+        LEFT JOIN tproject project ON room.`projectid` = project.`fId`
+        WHERE room.`fid` = #{roomId,jdbcType=VARCHAR} AND room.fisdel = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from troominfo
+        where fid = #{fid,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insertSelective" parameterType="com.ziroom.zrp.houses.entity.RoomInfoEntity">
+        insert into troominfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fid != null">
+                fid,
+            </if>
+            <if test="projectid != null">
+                projectid,
+            </if>
+            <if test="buildingid != null">
+                buildingid,
+            </if>
+            <if test="ffloornumber != null">
+                ffloornumber,
+            </if>
+            <if test="froomnumber != null">
+                froomnumber,
+            </if>
+            <if test="froomarea != null">
+                froomarea,
+            </if>
+            <if test="housetypeid != null">
+                housetypeid,
+            </if>
+            <if test="roomliveid != null">
+                roomliveid,
+            </if>
+            <if test="fbaseprice != null">
+                fbaseprice,
+            </if>
+            <if test="flongprice != null">
+                flongprice,
+            </if>
+            <if test="fshortprice != null">
+                fshortprice,
+            </if>
+            <if test="fshortprice2 != null">
+                fshortprice2,
+            </if>
+            <if test="fbedtype != null">
+                fbedtype,
+            </if>
+            <if test="fdecorationstyle != null">
+                fdecorationstyle,
+            </if>
+            <if test="fdirection != null">
+                fdirection,
+            </if>
+            <if test="fshortrent != null">
+                fshortrent,
+            </if>
+            <if test="fcurrentstate != null">
+                fcurrentstate,
+            </if>
+            <if test="fisnetshow != null">
+                fisnetshow,
+            </if>
+            <if test="companyid != null">
+                companyid,
+            </if>
+            <if test="fvalid != null">
+                fvalid,
+            </if>
+            <if test="fcreatetime != null">
+                fcreatetime,
+            </if>
+            <if test="createrid != null">
+                createrid,
+            </if>
+            <if test="fupdatetime != null">
+                fupdatetime,
+            </if>
+            <if test="updaterid != null">
+                updaterid,
+            </if>
+            <if test="fisdel != null">
+                fisdel,
+            </if>
+            <if test="flocktime != null">
+                flocktime,
+            </if>
+            <if test="fdisabletime != null">
+                fdisabletime,
+            </if>
+            <if test="configcompletedate != null">
+                configcompletedate,
+            </if>
+            <if test="fisused != null">
+                fisused,
+            </if>
+            <if test="cityid != null">
+                cityid,
+            </if>
+            <if test="flockroomsource != null">
+                flockroomsource,
+            </if>
+            <if test="fopenbookdate != null">
+                fopenbookdate,
+            </if>
+            <if test="favasigndate != null">
+                favasigndate,
+            </if>
+            <if test="ftype != null">
+                ftype,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="rentType != null">
+                rent_type,
+            </if>
+            <if test="bednum != null">
+                bednum,
+            </if>
+            <if test="shortpricestr != null">
+                shortpricestr,
+            </if>
+            <if test="froomdesc != null">
+                froomdesc,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fid != null">
+                #{fid,jdbcType=VARCHAR},
+            </if>
+            <if test="projectid != null">
+                #{projectid,jdbcType=VARCHAR},
+            </if>
+            <if test="buildingid != null">
+                #{buildingid,jdbcType=VARCHAR},
+            </if>
+            <if test="ffloornumber != null">
+                #{ffloornumber,jdbcType=INTEGER},
+            </if>
+            <if test="froomnumber != null">
+                #{froomnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="froomarea != null">
+                #{froomarea,jdbcType=DOUBLE},
+            </if>
+            <if test="housetypeid != null">
+                #{housetypeid,jdbcType=VARCHAR},
+            </if>
+            <if test="roomliveid != null">
+                #{roomliveid,jdbcType=VARCHAR},
+            </if>
+            <if test="fbaseprice != null">
+                #{fbaseprice,jdbcType=DECIMAL},
+            </if>
+            <if test="flongprice != null">
+                #{flongprice,jdbcType=DECIMAL},
+            </if>
+            <if test="fshortprice != null">
+                #{fshortprice,jdbcType=DECIMAL},
+            </if>
+            <if test="fshortprice2 != null">
+                #{fshortprice2,jdbcType=DECIMAL},
+            </if>
+            <if test="fbedtype != null">
+                #{fbedtype,jdbcType=VARCHAR},
+            </if>
+            <if test="fdecorationstyle != null">
+                #{fdecorationstyle,jdbcType=VARCHAR},
+            </if>
+            <if test="fdirection != null">
+                #{fdirection,jdbcType=VARCHAR},
+            </if>
+            <if test="fshortrent != null">
+                #{fshortrent,jdbcType=VARCHAR},
+            </if>
+            <if test="fcurrentstate != null">
+                #{fcurrentstate,jdbcType=VARCHAR},
+            </if>
+            <if test="fisnetshow != null">
+                #{fisnetshow,jdbcType=INTEGER},
+            </if>
+            <if test="companyid != null">
+                #{companyid,jdbcType=VARCHAR},
+            </if>
+            <if test="fvalid != null">
+                #{fvalid,jdbcType=INTEGER},
+            </if>
+            <if test="fcreatetime != null">
+                #{fcreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createrid != null">
+                #{createrid,jdbcType=VARCHAR},
+            </if>
+            <if test="fupdatetime != null">
+                #{fupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updaterid != null">
+                #{updaterid,jdbcType=VARCHAR},
+            </if>
+            <if test="fisdel != null">
+                #{fisdel,jdbcType=INTEGER},
+            </if>
+            <if test="flocktime != null">
+                #{flocktime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fdisabletime != null">
+                #{fdisabletime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="configcompletedate != null">
+                #{configcompletedate,jdbcType=DATE},
+            </if>
+            <if test="fisused != null">
+                #{fisused,jdbcType=INTEGER},
+            </if>
+            <if test="cityid != null">
+                #{cityid,jdbcType=VARCHAR},
+            </if>
+            <if test="flockroomsource != null">
+                #{flockroomsource,jdbcType=VARCHAR},
+            </if>
+            <if test="fopenbookdate != null">
+                #{fopenbookdate,jdbcType=DATE},
+            </if>
+            <if test="favasigndate != null">
+                #{favasigndate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ftype != null">
+                #{ftype,jdbcType=INTEGER},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=VARCHAR},
+            </if>
+            <if test="rentType != null">
+                #{rentType,jdbcType=INTEGER},
+            </if>
+            <if test="bednum != null">
+                #{bednum,jdbcType=INTEGER},
+            </if>
+            <if test="shortpricestr != null">
+                #{shortpricestr,jdbcType=VARCHAR},
+            </if>
+            <if test="froomdesc != null">
+                #{froomdesc,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateRoomInfoByFid" parameterType="com.ziroom.zrp.houses.entity.RoomInfoEntity">
+        update troominfo
+        <set>
+            <if test="projectid != null">
+                projectid = #{projectid,jdbcType=VARCHAR},
+            </if>
+            <if test="buildingid != null">
+                buildingid = #{buildingid,jdbcType=VARCHAR},
+            </if>
+            <if test="ffloornumber != null">
+                ffloornumber = #{ffloornumber,jdbcType=INTEGER},
+            </if>
+            <if test="froomnumber != null">
+                froomnumber = #{froomnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="froomarea != null">
+                froomarea = #{froomarea,jdbcType=DOUBLE},
+            </if>
+            <if test="housetypeid != null">
+                housetypeid = #{housetypeid,jdbcType=VARCHAR},
+            </if>
+            <if test="roomliveid != null">
+                roomliveid = #{roomliveid,jdbcType=VARCHAR},
+            </if>
+            <if test="fbaseprice != null">
+                fbaseprice = #{fbaseprice,jdbcType=DECIMAL},
+            </if>
+            <if test="flongprice != null">
+                flongprice = #{flongprice,jdbcType=DECIMAL},
+            </if>
+            <if test="fshortprice != null">
+                fshortprice = #{fshortprice,jdbcType=DECIMAL},
+            </if>
+            <if test="fshortprice2 != null">
+                fshortprice2 = #{fshortprice2,jdbcType=DECIMAL},
+            </if>
+            <if test="fbedtype != null">
+                fbedtype = #{fbedtype,jdbcType=VARCHAR},
+            </if>
+            <if test="fdecorationstyle != null">
+                fdecorationstyle = #{fdecorationstyle,jdbcType=VARCHAR},
+            </if>
+            <if test="fdirection != null">
+                fdirection = #{fdirection,jdbcType=VARCHAR},
+            </if>
+            <if test="fshortrent != null">
+                fshortrent = #{fshortrent,jdbcType=VARCHAR},
+            </if>
+            <if test="fcurrentstate != null">
+                fcurrentstate = #{fcurrentstate,jdbcType=VARCHAR},
+            </if>
+            <if test="fisnetshow != null">
+                fisnetshow = #{fisnetshow,jdbcType=INTEGER},
+            </if>
+            <if test="companyid != null">
+                companyid = #{companyid,jdbcType=VARCHAR},
+            </if>
+            <if test="fvalid != null">
+                fvalid = #{fvalid,jdbcType=INTEGER},
+            </if>
+            <if test="fcreatetime != null">
+                fcreatetime = #{fcreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createrid != null">
+                createrid = #{createrid,jdbcType=VARCHAR},
+            </if>
+            <if test="fupdatetime != null">
+                fupdatetime = #{fupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updaterid != null">
+                updaterid = #{updaterid,jdbcType=VARCHAR},
+            </if>
+            <if test="fisdel != null">
+                fisdel = #{fisdel,jdbcType=INTEGER},
+            </if>
+            <if test="flocktime != null">
+                flocktime = #{flocktime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fdisabletime != null">
+                fdisabletime = #{fdisabletime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="configcompletedate != null">
+                configcompletedate = #{configcompletedate,jdbcType=DATE},
+            </if>
+            <if test="fisused != null">
+                fisused = #{fisused,jdbcType=INTEGER},
+            </if>
+            <if test="cityid != null">
+                cityid = #{cityid,jdbcType=VARCHAR},
+            </if>
+            <if test="flockroomsource != null">
+                flockroomsource = #{flockroomsource,jdbcType=VARCHAR},
+            </if>
+            <if test="fopenbookdate != null">
+                fopenbookdate = #{fopenbookdate,jdbcType=DATE},
+            </if>
+            <if test="favasigndate != null">
+                favasigndate = #{favasigndate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ftype != null">
+                ftype = #{ftype,jdbcType=INTEGER},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=VARCHAR},
+            </if>
+            <if test="rentType != null">
+                rent_type = #{rentType,jdbcType=INTEGER},
+            </if>
+            <if test="bednum != null">
+                bednum = #{bednum,jdbcType=INTEGER},
+            </if>
+            <if test="shortpricestr != null">
+                shortpricestr = #{shortpricestr,jdbcType=VARCHAR},
+            </if>
+            <if test="froomdesc != null">
+                froomdesc = #{froomdesc,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where fid = #{fid,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateRoomInfoByFidAndPreState" parameterType="com.ziroom.zrp.houses.entity.RoomInfoEntity">
+        update troominfo
+        SET
+        fcurrentstate = #{fcurrentstate,jdbcType=VARCHAR},
+        flocktime = #{flocktime,jdbcType=TIMESTAMP},
+        flockroomsource = #{flockroomsource,jdbcType=VARCHAR},
+        fopenbookdate = #{fopenbookdate,jdbcType=DATE},
+        favasigndate = #{favasigndate,jdbcType=TIMESTAMP}
+        where fid = #{fid,jdbcType=VARCHAR}
+        and fcurrentstate = #{preRoomState,jdbcType=VARCHAR}
+    </update>
+
+    <select id="findRoomListForPage" resultType="com.ziroom.zrp.service.houses.entity.AddHouseGroupVo"
+            parameterType="com.ziroom.zrp.service.houses.dto.AddHouseGroupDto">
+        SELECT
+        t1.fid AS roomid,
+        t1.froomnumber AS roomnumber,
+        t1.projectid AS projectid,
+        t1.housetypeid AS housetypeid,
+        t2.fhousetypename AS housetypename,
+        t3.fName AS projectname
+        FROM troominfo t1
+        LEFT JOIN thousetype t2
+        ON t1.housetypeid = t2.fid
+        LEFT JOIN tproject t3
+        ON t1.projectid = t3.fId
+        WHERE t1.fisdel = 0
+        <if test="cityid != null and cityid != ''">
+            AND t1.cityid = #{cityid,jdbcType=VARCHAR}
+        </if>
+        <if test="projectid != null and projectid != ''">
+            AND t1.projectid = #{projectid,jdbcType=VARCHAR}
+        </if>
+        <if test="housetypeid != null and housetypeid != ''">
+            AND t1.housetypeid = #{housetypeid,jdbcType=VARCHAR}
+        </if>
+        <if test="buildingid != null and buildingid != ''">
+            AND t1.buildingid = #{buildingid,jdbcType=VARCHAR}
+        </if>
+        <if test="ffloornumber != null ">
+            AND t1.ffloornumber = #{ffloornumber,jdbcType=INTEGER}
+        </if>
+        <if test="froomnumber != null and froomnumber != ''">
+            AND t1.froomnumber = #{froomnumber,jdbcType=VARCHAR}
+        </if>
+        <if test="fcurrentstate != null and fcurrentstate != ''">
+            AND t1.fcurrentstate = #{fcurrentstate,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <update id="updateRoomInfoForRelease">
+        UPDATE troominfo SET fcurrentstate = 0 WHERE fid = #{roomId,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateRoomStateRental">
+        UPDATE troominfo SET fcurrentstate = 1 WHERE fid = #{roomId,jdbcType=VARCHAR}
+    </update>
+
+
+    <update id="updateRoomStateFromSigningToRental">
+        UPDATE
+        troominfo
+        SET fcurrentstate = 1
+        WHERE
+        fcurrentstate = 7
+        AND
+        fid IN
+        <foreach collection="roomIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+
+    <select id="findRoomContractSmartByPage" resultType="com.ziroom.zrp.service.houses.entity.RoomContractSmartVo"
+            parameterType="com.ziroom.zrp.service.houses.dto.RoomStmartDto">
+        SELECT t1.fid roomId,t1.`ffloornumber` floorNumber,t4.`fbuildingname` buildiNgname,t1.`fcurrentstate`
+        currentState,t1.froomnumber roomNumber,
+        t1.projectid projectId,t1.housetypeid houseTypeId,
+        t2.fhousetypename houseTypeName, t3.fName projectName
+        FROM troominfo t1
+        LEFT JOIN thousetype t2 ON t1.housetypeid = t2.fid
+        LEFT JOIN tproject t3 ON t1.projectid = t3.fId
+        LEFT JOIN `tbuildinginfo` t4 ON t4.`fid` = t1.`buildingid`
+        WHERE t1.fisdel = 0
+        AND t1.is_bind_lock = 1
+        <if test="cityId != null and cityId != ''">
+            AND t1.cityid = #{cityid,jdbcType=VARCHAR}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            AND t1.projectid = #{projectId,jdbcType=VARCHAR}
+        </if>
+        <if test="houseTypeId != null and houseTypeId != ''">
+            AND t1.housetypeid = #{houseTypeId,jdbcType=VARCHAR}
+        </if>
+        <if test="roomId != null and roomId !='' ">
+            AND t1.fid = #{roomId,jdbcType=VARCHAR}
+        </if>
+        <if test="roomNumber != null and roomNumber !='' ">
+            AND t1.froomnumber = #{roomNumber,jdbcType=VARCHAR}
+        </if>
+        <if test="currentState != null">
+            AND t1.fcurrentstate = #{currentState,jdbcType=INTEGER}
+        </if>
+        <if test="listRoomIds!=null and listRoomIds.size>0 ">
+            AND t1.fid IN
+            <foreach collection="listRoomIds" item="roomFid" index="index" open="(" separator="," close=")">
+                #{roomFid,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+
+    </select>
+
+    <!--查询房间信息 通过父房间标识-->
+    <select id="getRoomInfoByParentId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        troominfo AS a
+        WHERE
+        a.parent_id=#{roomId,jdbcType=VARCHAR};
+    </select>
+
+    <!--项目下所有房间-->
+    <select id="findAllRoom" resultMap="BaseResultMap">
+        SELECT *
+        FROM troominfo
+        WHERE fisdel = 0
+        AND projectid = #{projectid,jdbcType=VARCHAR}
+        AND ftype = 0
+        AND (parent_id IS NULL OR parent_id = '')
+    </select>
+
+    <select id="findRoomWaterPaging" resultType="com.ziroom.zrp.service.houses.entity.WaterWattPaymentRoomVo"
+            parameterType="com.ziroom.zrp.service.houses.dto.WaterWattPagingDto">
+        SELECT
+        rm.fid AS roomId,
+        rm.`ffloornumber` AS floorNumber,
+        bid.fid AS buildingId,
+        bid.`fbuildingname` AS buildingName,
+        rm.`fcurrentstate` AS roomStatus,
+        rm.froomnumber AS roomNumber,
+        rm.projectid AS projectId,
+        pro.fName AS projectName,
+        pro.fWaterType AS payType,
+        0 AS deviceType
+        FROM
+        troominfo rm
+        INNER JOIN troominfo_ext re ON re.room_fid = rm.fid
+        LEFT JOIN tproject pro ON rm.projectid = pro.fId
+        LEFT JOIN `tbuildinginfo` bid ON bid.`fid` = rm.`buildingid`
+        WHERE
+        rm.fisdel = 0
+        AND is_bind_watermeter = 1
+        <if test="projectId != null and projectId != ''">
+            AND rm.projectid = #{projectId,jdbcType=VARCHAR}
+        </if>
+        <if test="roomId != null and roomId !='' ">
+            AND rm.fid = #{roomId,jdbcType=VARCHAR}
+        </if>
+        <if test="roomNumber != null and roomNumber !='' ">
+            AND rm.froomnumber = #{roomNumber,jdbcType=VARCHAR}
+        </if>
+        <if test="roomStatus != null">
+            AND rm.fcurrentstate = #{roomStatus,jdbcType=INTEGER}
+        </if>
+        <if test="projectIds != null and projectIds.size() > 0 ">
+            AND rm.projectid IN
+            <foreach collection="projectIds" item="proId" open="(" separator="," close=")">
+                #{proId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="findRoomWattPaging" resultType="com.ziroom.zrp.service.houses.entity.WaterWattPaymentRoomVo"
+            parameterType="com.ziroom.zrp.service.houses.dto.WaterWattPagingDto">
+        SELECT
+        rm.fid AS roomId,
+        rm.`ffloornumber` AS floorNumber,
+        bid.fid AS buildingId,
+        bid.`fbuildingname` AS buildingName,
+        rm.`fcurrentstate` AS roomStatus,
+        rm.froomnumber AS roomNumber,
+        rm.projectid AS projectId,
+        pro.fName AS projectName,
+        pro.fElectricityType AS payType,
+        1 AS deviceType
+        FROM
+        troominfo rm
+        INNER JOIN troominfo_ext re ON re.room_fid = rm.fid
+        LEFT JOIN tproject pro ON rm.projectid = pro.fId
+        LEFT JOIN `tbuildinginfo` bid ON bid.`fid` = rm.`buildingid`
+        WHERE
+        rm.fisdel = 0
+        AND is_bind_ammeter = 1
+        <if test="projectId != null and projectId != ''">
+            AND rm.projectid = #{projectId,jdbcType=VARCHAR}
+        </if>
+        <if test="roomId != null and roomId !='' ">
+            AND rm.fid = #{roomId,jdbcType=VARCHAR}
+        </if>
+        <if test="roomNumber != null and roomNumber !='' ">
+            AND rm.froomnumber = #{roomNumber,jdbcType=VARCHAR}
+        </if>
+        <if test="roomStatus != null">
+            AND rm.fcurrentstate = #{roomStatus,jdbcType=INTEGER}
+        </if>
+        <if test="projectIds != null and projectIds.size() > 0 ">
+            AND rm.projectid IN
+            <foreach collection="projectIds" item="proId" open="(" separator="," close=")">
+                #{proId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

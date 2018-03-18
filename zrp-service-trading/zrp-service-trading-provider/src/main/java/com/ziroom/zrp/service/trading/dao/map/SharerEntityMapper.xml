@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.sharerDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.SharerEntity" >
+    <id column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="fcontractid" property="fcontractid" jdbcType="VARCHAR" />
+    <result column="fname" property="fname" jdbcType="VARCHAR" />
+    <result column="fdegree" property="fdegree" jdbcType="INTEGER" />
+    <result column="fgender" property="fgender" jdbcType="VARCHAR" />
+    <result column="fmarriage" property="fmarriage" jdbcType="INTEGER" />
+    <result column="fmobile" property="fmobile" jdbcType="VARCHAR" />
+    <result column="fcerttype" property="fcerttype" jdbcType="VARCHAR" />
+    <result column="fcertnum" property="fcertnum" jdbcType="VARCHAR" />
+    <result column="fcertpic" property="fcertpic" jdbcType="VARCHAR" />
+    <result column="faddress" property="faddress" jdbcType="VARCHAR" />
+    <result column="fpostcode" property="fpostcode" jdbcType="VARCHAR" />
+    <result column="femail" property="femail" jdbcType="VARCHAR" />
+    <result column="fisdel" property="fisdel" jdbcType="INTEGER" />
+    <result column="fvalid" property="fvalid" jdbcType="INTEGER" />
+    <result column="fcityid" property="fcityid" jdbcType="VARCHAR" />
+    <result column="fcreatorid" property="fcreatorid" jdbcType="VARCHAR" />
+    <result column="fcreatorname" property="fcreatorname" jdbcType="VARCHAR" />
+    <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP" />
+    <result column="fupdaterid" property="fupdaterid" jdbcType="VARCHAR" />
+    <result column="fupdatername" property="fupdatername" jdbcType="VARCHAR" />
+    <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+    <result column="fnationality" property="fnationality" jdbcType="VARCHAR" />
+    <result column="fhometown" property="fhometown" jdbcType="VARCHAR" />
+    <result column="fage" property="fage" jdbcType="INTEGER" />
+    <result column="femergencycontact" property="femergencycontact" jdbcType="VARCHAR" />
+    <result column="femcycntphone" property="femcycntphone" jdbcType="VARCHAR" />
+    <result column="frelationship" property="frelationship" jdbcType="VARCHAR" />
+    <result column="fjob" property="fjob" jdbcType="VARCHAR" />
+    <result column="fsocialproof" property="fsocialproof" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="fcertpic1" property="fcertpic1" jdbcType="VARCHAR" />
+    <result column="fsocialproofpic" property="fsocialproofpic" jdbcType="VARCHAR" />
+    <result column="forganization" property="forganization" jdbcType="VARCHAR" />
+    <result column="flogtime" property="flogtime" jdbcType="TIMESTAMP" />
+    <result column="froomid" property="froomid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    fid, fcontractid, fname, fdegree, fgender, fmarriage, fmobile, fcerttype, fcertnum, 
+    fcertpic, faddress, fpostcode, femail, fisdel, fvalid, fcityid, fcreatorid, fcreatorname, 
+    fcreatetime, fupdaterid, fupdatername, fupdatetime, cityid, fnationality, fhometown, 
+    fage, femergencycontact, femcycntphone, frelationship, fjob, fsocialproof, uid, fcertpic1, 
+    fsocialproofpic, forganization, flogtime, froomid
+  </sql>
+  <select id="findByFid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tsharer
+    where fid = #{fid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="listSharerByContractId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tsharer
+    where fcontractid = #{contractId,jdbcType=VARCHAR}
+    AND fisdel = 0
+    and fvalid = 1
+  </select>
+
+  <select id="listSharerByRentId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tsharer
+    where rent_id = #{rentId,jdbcType=INTEGER}
+    AND fisdel = 0
+    and fvalid = 1
+  </select>
+
+  <update id="deleteByFid" parameterType="java.lang.String">
+    UPDATE tsharer SET fisdel = 1,fvalid = 0 WHERE fid = #{fid,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 根据合同号 删除合住人 -->
+  <update id="deleteByContractId" parameterType="java.util.Map">
+    UPDATE tsharer SET fisdel = 1,fvalid = 0 WHERE fcontractid = #{contractId,jdbcType=VARCHAR}
+  </update>
+
+    <!-- 根据入住人 删除合住人 并记录操作人-->
+    <update id="deleteByContractIdAndRecord" parameterType="com.ziroom.zrp.trading.entity.SharerEntity">
+        UPDATE tsharer
+        SET
+        fupdaterid = #{fupdaterid,jdbcType=VARCHAR},
+        fupdatername = #{fupdatername,jdbcType=VARCHAR},
+        fisdel = 1,
+        fvalid = 0
+        WHERE fisdel = 0
+        and fvalid = 1
+        and rent_id = #{rentId,jdbcType=INTEGER}
+    </update>
+
+
+  <insert id="saveSharer" parameterType="com.ziroom.zrp.trading.entity.SharerEntity" >
+    insert into tsharer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="fcontractid != null" >
+        fcontractid,
+      </if>
+      <if test="fname != null" >
+        fname,
+      </if>
+      <if test="fdegree != null" >
+        fdegree,
+      </if>
+      <if test="fgender != null" >
+        fgender,
+      </if>
+      <if test="fmarriage != null" >
+        fmarriage,
+      </if>
+      <if test="fmobile != null" >
+        fmobile,
+      </if>
+      <if test="fcerttype != null" >
+        fcerttype,
+      </if>
+      <if test="fcertnum != null" >
+        fcertnum,
+      </if>
+      <if test="fcertpic != null" >
+        fcertpic,
+      </if>
+      <if test="faddress != null" >
+        faddress,
+      </if>
+      <if test="fpostcode != null" >
+        fpostcode,
+      </if>
+      <if test="femail != null" >
+        femail,
+      </if>
+      <if test="fisdel != null" >
+        fisdel,
+      </if>
+      <if test="fvalid != null" >
+        fvalid,
+      </if>
+      <if test="fcityid != null" >
+        fcityid,
+      </if>
+      <if test="fcreatorid != null" >
+        fcreatorid,
+      </if>
+      <if test="fcreatorname != null" >
+        fcreatorname,
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime,
+      </if>
+      <if test="fupdaterid != null" >
+        fupdaterid,
+      </if>
+      <if test="fupdatername != null" >
+        fupdatername,
+      </if>
+      <if test="fupdatetime != null" >
+        fupdatetime,
+      </if>
+      <if test="cityid != null" >
+        cityid,
+      </if>
+      <if test="fnationality != null" >
+        fnationality,
+      </if>
+      <if test="fhometown != null" >
+        fhometown,
+      </if>
+      <if test="fage != null" >
+        fage,
+      </if>
+      <if test="femergencycontact != null" >
+        femergencycontact,
+      </if>
+      <if test="femcycntphone != null" >
+        femcycntphone,
+      </if>
+      <if test="frelationship != null" >
+        frelationship,
+      </if>
+      <if test="fjob != null" >
+        fjob,
+      </if>
+      <if test="fsocialproof != null" >
+        fsocialproof,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="rentId != null" >
+        rent_id,
+      </if>
+      <if test="fcertpic1 != null" >
+        fcertpic1,
+      </if>
+      <if test="fsocialproofpic != null" >
+        fsocialproofpic,
+      </if>
+      <if test="forganization != null" >
+        forganization,
+      </if>
+      <if test="flogtime != null" >
+        flogtime,
+      </if>
+      <if test="froomid != null" >
+        froomid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcontractid != null" >
+        #{fcontractid,jdbcType=VARCHAR},
+      </if>
+      <if test="fname != null" >
+        #{fname,jdbcType=VARCHAR},
+      </if>
+      <if test="fdegree != null" >
+        #{fdegree,jdbcType=INTEGER},
+      </if>
+      <if test="fgender != null" >
+        #{fgender,jdbcType=VARCHAR},
+      </if>
+      <if test="fmarriage != null" >
+        #{fmarriage,jdbcType=INTEGER},
+      </if>
+      <if test="fmobile != null" >
+        #{fmobile,jdbcType=VARCHAR},
+      </if>
+      <if test="fcerttype != null" >
+        #{fcerttype,jdbcType=VARCHAR},
+      </if>
+      <if test="fcertnum != null" >
+        #{fcertnum,jdbcType=VARCHAR},
+      </if>
+      <if test="fcertpic != null" >
+        #{fcertpic,jdbcType=VARCHAR},
+      </if>
+      <if test="faddress != null" >
+        #{faddress,jdbcType=VARCHAR},
+      </if>
+      <if test="fpostcode != null" >
+        #{fpostcode,jdbcType=VARCHAR},
+      </if>
+      <if test="femail != null" >
+        #{femail,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fvalid != null" >
+        #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="fcityid != null" >
+        #{fcityid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatorid != null" >
+        #{fcreatorid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatorname != null" >
+        #{fcreatorname,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatetime != null" >
+        #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fupdaterid != null" >
+        #{fupdaterid,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatername != null" >
+        #{fupdatername,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatetime != null" >
+        #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cityid != null" >
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="fnationality != null" >
+        #{fnationality,jdbcType=VARCHAR},
+      </if>
+      <if test="fhometown != null" >
+        #{fhometown,jdbcType=VARCHAR},
+      </if>
+      <if test="fage != null" >
+        #{fage,jdbcType=INTEGER},
+      </if>
+      <if test="femergencycontact != null" >
+        #{femergencycontact,jdbcType=VARCHAR},
+      </if>
+      <if test="femcycntphone != null" >
+        #{femcycntphone,jdbcType=VARCHAR},
+      </if>
+      <if test="frelationship != null" >
+        #{frelationship,jdbcType=VARCHAR},
+      </if>
+      <if test="fjob != null" >
+        #{fjob,jdbcType=VARCHAR},
+      </if>
+      <if test="fsocialproof != null" >
+        #{fsocialproof,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentId != null" >
+        #{rentId,jdbcType=INTEGER},
+      </if>
+      <if test="fcertpic1 != null" >
+        #{fcertpic1,jdbcType=VARCHAR},
+      </if>
+      <if test="fsocialproofpic != null" >
+        #{fsocialproofpic,jdbcType=VARCHAR},
+      </if>
+      <if test="forganization != null" >
+        #{forganization,jdbcType=VARCHAR},
+      </if>
+      <if test="flogtime != null" >
+        #{flogtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="froomid != null" >
+        #{froomid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByFid" parameterType="com.ziroom.zrp.trading.entity.SharerEntity" >
+    update tsharer
+    <set >
+      <if test="fcontractid != null" >
+        fcontractid = #{fcontractid,jdbcType=VARCHAR},
+      </if>
+      <if test="fname != null" >
+        fname = #{fname,jdbcType=VARCHAR},
+      </if>
+      <if test="fdegree != null" >
+        fdegree = #{fdegree,jdbcType=INTEGER},
+      </if>
+      <if test="fgender != null" >
+        fgender = #{fgender,jdbcType=VARCHAR},
+      </if>
+      <if test="fmarriage != null" >
+        fmarriage = #{fmarriage,jdbcType=INTEGER},
+      </if>
+      <if test="fmobile != null" >
+        fmobile = #{fmobile,jdbcType=VARCHAR},
+      </if>
+      <if test="fcerttype != null" >
+        fcerttype = #{fcerttype,jdbcType=VARCHAR},
+      </if>
+      <if test="fcertnum != null" >
+        fcertnum = #{fcertnum,jdbcType=VARCHAR},
+      </if>
+      <if test="fcertpic != null" >
+        fcertpic = #{fcertpic,jdbcType=VARCHAR},
+      </if>
+      <if test="faddress != null" >
+        faddress = #{faddress,jdbcType=VARCHAR},
+      </if>
+      <if test="fpostcode != null" >
+        fpostcode = #{fpostcode,jdbcType=VARCHAR},
+      </if>
+      <if test="femail != null" >
+        femail = #{femail,jdbcType=VARCHAR},
+      </if>
+      <if test="fisdel != null" >
+        fisdel = #{fisdel,jdbcType=INTEGER},
+      </if>
+      <if test="fvalid != null" >
+        fvalid = #{fvalid,jdbcType=INTEGER},
+      </if>
+      <if test="fcityid != null" >
+        fcityid = #{fcityid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatorid != null" >
+        fcreatorid = #{fcreatorid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatorname != null" >
+        fcreatorname = #{fcreatorname,jdbcType=VARCHAR},
+      </if>
+      <if test="fcreatetime != null" >
+        fcreatetime = #{fcreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fupdaterid != null" >
+        fupdaterid = #{fupdaterid,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatername != null" >
+        fupdatername = #{fupdatername,jdbcType=VARCHAR},
+      </if>
+      <if test="fupdatetime != null" >
+        fupdatetime = #{fupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cityid != null" >
+        cityid = #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="fnationality != null" >
+        fnationality = #{fnationality,jdbcType=VARCHAR},
+      </if>
+      <if test="fhometown != null" >
+        fhometown = #{fhometown,jdbcType=VARCHAR},
+      </if>
+      <if test="fage != null" >
+        fage = #{fage,jdbcType=INTEGER},
+      </if>
+      <if test="femergencycontact != null" >
+        femergencycontact = #{femergencycontact,jdbcType=VARCHAR},
+      </if>
+      <if test="femcycntphone != null" >
+        femcycntphone = #{femcycntphone,jdbcType=VARCHAR},
+      </if>
+      <if test="frelationship != null" >
+        frelationship = #{frelationship,jdbcType=VARCHAR},
+      </if>
+      <if test="fjob != null" >
+        fjob = #{fjob,jdbcType=VARCHAR},
+      </if>
+      <if test="fsocialproof != null" >
+        fsocialproof = #{fsocialproof,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="fcertpic1 != null" >
+        fcertpic1 = #{fcertpic1,jdbcType=VARCHAR},
+      </if>
+      <if test="fsocialproofpic != null" >
+        fsocialproofpic = #{fsocialproofpic,jdbcType=VARCHAR},
+      </if>
+      <if test="forganization != null" >
+        forganization = #{forganization,jdbcType=VARCHAR},
+      </if>
+      <if test="flogtime != null" >
+        flogtime = #{flogtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="froomid != null" >
+        froomid = #{froomid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.marketing.dao.MkNumberMapper" >
+  <resultMap id="BaseResultMap" type="com.zra.marketing.entity.MkNumberEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="number_bid" property="numberBid" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="channel_bid" property="channelBid" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_id" property="createId" jdbcType="VARCHAR" />
+    <result column="update_id" property="updateId" jdbcType="VARCHAR" />
+    <result column="delete_id" property="deleteId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, number_bid, number, project_id, channel_bid, is_del, create_time, delete_time, 
+    update_time, create_id, update_id, delete_id
+  </sql>
+  <select id="selectByChannelBid" resultType="com.zra.common.dto.marketing.MkNumberDto" parameterType="String" >
+			SELECT
+				mk.channel_bid AS channelBid,
+				mk.project_id AS projectId,
+				p.fname AS projectName,
+				mk.number_bid AS numberBid,
+				mk.number AS phoneNum
+			FROM
+				mk_number mk,
+				tproject p
+			WHERE
+				mk.project_id = p.fId
+			AND mk.channel_bid = #{channelBid}
+			AND mk.is_del = 0
+			AND p.fIsDel = 0
+  </select>
+
+  <insert id="insert" parameterType="java.util.List" keyProperty="id">
+    <selectKey resultType="long" keyProperty="id" order="AFTER">  
+        SELECT  
+        LAST_INSERT_ID()  
+    </selectKey>
+    insert into mk_number (<include refid="Base_Column_List" />)values 
+     <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.id,jdbcType=INTEGER}, #{item.numberBid,jdbcType=VARCHAR}, #{item.number,jdbcType=VARCHAR}, 
+      #{item.projectId,jdbcType=VARCHAR}, #{item.channelBid,jdbcType=VARCHAR}, #{item.isDel,jdbcType=BIT}, 
+      #{item.createTime,jdbcType=TIMESTAMP}, #{item.deleteTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+      #{item.createId,jdbcType=VARCHAR}, #{item.updateId,jdbcType=VARCHAR}, #{item.deleteId,jdbcType=VARCHAR}
+      )
+      </foreach>
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.zra.marketing.entity.MkNumberEntity" >
+    insert into mk_number
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="numberBid != null" >
+        number_bid,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="channelBid != null" >
+        channel_bid,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="deleteTime != null" >
+        delete_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="createId != null" >
+        create_id,
+      </if>
+      <if test="updateId != null" >
+        update_id,
+      </if>
+      <if test="deleteId != null" >
+        delete_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="numberBid != null" >
+        #{numberBid,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="channelBid != null" >
+        #{channelBid,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteTime != null" >
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createId != null" >
+        #{createId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateId != null" >
+        #{updateId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteId != null" >
+        #{deleteId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="delByChannelBid" parameterType="String">
+    update mk_number
+    set is_del = 1,
+        delete_time = now(),
+        update_time = now(),
+        update_id = #{userId,jdbcType=VARCHAR},
+        delete_id = #{userId,jdbcType=VARCHAR}
+    where channel_bid = #{channelBid,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="getNumberByChannelBid" parameterType="String" resultType="String">
+	    SELECT
+			number.number
+		FROM
+			mk_number number
+		WHERE
+			number.channel_bid = #{channelBid}
+		AND number.is_del = 0
+  </select>
+  
+  <select id="getAllNumber" resultType="com.zra.house.entity.dto.ProjectTelDto">
+		SELECT
+			mk.number AS marketTel,
+			mk.project_id AS projectId,
+			pro.cityid AS cityId,
+            mk.channel_bid AS channelBid
+		FROM
+			mk_number mk,
+			tproject pro
+		WHERE
+			mk.project_id = pro.fId
+		AND mk.is_del = 0
+		AND pro.fIsDel = 0
+  </select>
+  
+  <select id="getNumbersByProId" parameterType="String" resultType="String">
+		SELECT
+			num.number
+		FROM
+			mk_number num
+		WHERE
+			num.project_id = #{projectId}
+		AND num.is_del = 0;
+  </select>
+  
+  <select id="isExistNumber" resultType="String">
+			SELECT
+				num.number
+			FROM
+				mk_number num
+			WHERE
+				num.number IN 
+			<foreach collection="numbers" index="index" item="item" open="(" separator="," close=")">#{item}</foreach>
+		    <if test='channelBid!=null and channelBid!=""'>
+			AND num.channel_bid != #{channelBid}
+			</if>
+			AND num.is_del = 0
+  </select>
+  
+</mapper>

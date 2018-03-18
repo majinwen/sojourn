@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="houses.houseSignInviteRecordDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.houses.entity.HouseSignInviteRecordEntity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="sign_invite_id" property="signInviteId" jdbcType="VARCHAR" />
+    <result column="group_id" property="groupId" jdbcType="VARCHAR" />
+    <result column="customer_uid" property="customerUid" jdbcType="VARCHAR" />
+    <result column="customer_phone" property="customerPhone" jdbcType="VARCHAR" />
+    <result column="sign_type" property="signType" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="con_start_date" property="conStartDate" jdbcType="DATE" />
+    <result column="invite_date" property="inviteDate" jdbcType="DATE" />
+    <result column="con_type" property="conType" jdbcType="VARCHAR" />
+    <result column="rent_period" property="rentPeriod" jdbcType="INTEGER" />
+    <result column="contract_id" property="contractId" jdbcType="VARCHAR" />
+    <result column="zo_id" property="zoId" jdbcType="VARCHAR" />
+    <result column="zo_name" property="zoName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="last_modify_time" property="lastModifyTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="pre_contract_id" property="preContractId" jdbcType="VARCHAR" />
+    <result column="is_deal" property="isDeal" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, sign_invite_id, group_id, customer_uid, customer_phone, sign_type, project_id, 
+    room_id, con_start_date, invite_date, con_type, rent_period, contract_id, zo_id, zo_name,
+    create_time, last_modify_time, is_del, pre_contract_id, is_deal
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from house_sign_invite_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+  <select id="countByRoomIds" resultType="map">
+
+    SELECT
+    room_id AS roomId,
+    COUNT(1) as num
+    FROM house_sign_invite_record
+    WHERE room_id in
+    <foreach collection="roomIds" item="item" index="index" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    GROUP BY room_id
+    ORDER BY create_time desc
+
+
+  </select>
+  
+  <select id="findListByRoomId" resultMap="BaseResultMap">
+      select 
+    <include refid="Base_Column_List" />
+    from house_sign_invite_record
+    where room_id = #{roomId,jdbcType=VARCHAR}
+    AND is_del = 0
+    ORDER BY invite_date DESC
+
+  </select>
+
+  <insert id="insert" parameterType="com.ziroom.zrp.houses.entity.HouseSignInviteRecordEntity" >
+    insert into house_sign_invite_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="signInviteId != null" >
+        sign_invite_id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="customerUid != null" >
+        customer_uid,
+      </if>
+      <if test="customerPhone != null" >
+        customer_phone,
+      </if>
+      <if test="signType != null" >
+        sign_type,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="conStartDate != null" >
+        con_start_date,
+      </if>
+      <if test="inviteDate != null" >
+        invite_date,
+      </if>
+      <if test="conType != null" >
+        con_type,
+      </if>
+      <if test="rentPeriod != null" >
+        rent_period,
+      </if>
+      <if test="contractId != null" >
+        contract_id,
+      </if>
+      <if test="zoId != null" >
+        zo_id,
+      </if>
+      <if test="zoName != null" >
+        zo_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="lastModifyTime != null" >
+        last_modify_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="preContractId != null" >
+        pre_contract_id,
+      </if>
+      <if test="isDeal != null" >
+        is_deal,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="signInviteId != null" >
+        #{signInviteId,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerUid != null" >
+        #{customerUid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerPhone != null" >
+        #{customerPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="signType != null" >
+        #{signType,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="conStartDate != null" >
+        #{conStartDate,jdbcType=DATE},
+      </if>
+      <if test="inviteDate != null" >
+        #{inviteDate,jdbcType=DATE},
+      </if>
+      <if test="conType != null" >
+        #{conType,jdbcType=VARCHAR},
+      </if>
+      <if test="rentPeriod != null" >
+        #{rentPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="contractId != null" >
+        #{contractId,jdbcType=VARCHAR},
+      </if>
+      <if test="zoId != null" >
+        #{zoId,jdbcType=VARCHAR},
+      </if>
+      <if test="zoName != null" >
+        #{zoName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyTime != null" >
+        #{lastModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="preContractId != null" >
+        #{preContractId,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeal != null" >
+        #{isDeal,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateIsDealByContractId" parameterType="map">
+  	update house_sign_invite_record
+  	set is_deal = 1
+  	where contract_id = #{contractId,jdbcType=VARCHAR}
+  </update>
+  <!-- 不要删除，这个地方以后可能会用到，批量保存
+  <insert id="saveBatchSignInviteRecord" parameterType="java.util.List">
+
+    INSERT INTO house_sign_invite_record
+    ( `sign_invite_id`, `group_id`, `customer_uid`,
+      `customer_phone`, `sign_type`, `project_id`,
+      `room_id`, `con_start_date`, `invite_date`,
+      `con_type`, `rent_period`, `contract_id`,
+      `zo_id`, `create_time`, `last_modify_time`,
+      `is_del`, `pre_contract_id`, `is_deal`)
+
+    VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.signInviteId},#{item.groupId},#{item.customerUid},
+      #{item.customerPhone},#{item.signType},#{item.projectId},
+      #{item.roomId},#{item.conStartDate},#{item.inviteDate},
+      #{item.conType},#{item.rentPeriod},#{item.contractId},
+      #{item.zoId},#{item.createTime},#{item.lastModifyTime},
+      #{item.isDel},#{item.preContractId},#{item.isDeal})
+    </foreach>
+
+  </insert>
+  -->
+</mapper>

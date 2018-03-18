@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="trading.paymentBillDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.PaymentBillEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="out_contract" property="outContract" jdbcType="VARCHAR" />
+    <result column="pay_serial_num" property="paySerialNum" jdbcType="VARCHAR" />
+    <result column="source_code" property="sourceCode" jdbcType="VARCHAR" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="customer_bank_name" property="customerBankName" jdbcType="VARCHAR" />
+    <result column="customerAccountName" property="customerAccountName" jdbcType="VARCHAR" />
+    <result column="customer_bank_account" property="customerBankAccount" jdbcType="VARCHAR" />
+    <result column="recieved_account" property="recievedAccount" jdbcType="VARCHAR" />
+    <result column="account_flag" property="accountFlag" jdbcType="INTEGER" />
+    <result column="panyment_type_code" property="panymentTypeCode" jdbcType="VARCHAR" />
+    <result column="mark_collect_code" property="markCollectCode" jdbcType="VARCHAR" />
+    <result column="bus_id" property="busId" jdbcType="VARCHAR" />
+    <result column="data_sources" property="dataSources" jdbcType="VARCHAR" />
+    <result column="bill_type" property="billType" jdbcType="VARCHAR" />
+    <result column="uid" property="uid" jdbcType="VARCHAR" />
+    <result column="audit_flag" property="auditFlag" jdbcType="INTEGER" />
+    <result column="pay_flag" property="payFlag" jdbcType="INTEGER" />
+    <result column="gen_way" property="genWay" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="is_valid" property="isValid" jdbcType="INTEGER" />
+    <result column="surrender_id" property="surrenderId" jdbcType="VARCHAR" />
+    <result column="syn_finance" property="synFinance" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, out_contract, pay_serial_num, source_code, pay_time, customer_bank_name, 
+    customerAccountName, customer_bank_account, recieved_account, account_flag, panyment_type_code,
+    mark_collect_code, bus_id, data_sources, bill_type, uid, audit_flag, pay_flag, gen_way, 
+    create_date, is_del, is_valid, surrender_id, syn_finance
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_payment_bill_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_payment_bill_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.zrp.trading.entity.PaymentBillEntity" >
+    insert into t_payment_bill_log (id, fid, out_contract, 
+      pay_serial_num, source_code, pay_time, 
+      customer_bank_name, customerAccountName,
+      customer_bank_account, recieved_account, account_flag, 
+      panyment_type_code, mark_collect_code, bus_id, 
+      data_sources, bill_type, uid, 
+      audit_flag, pay_flag, gen_way, 
+      create_date, is_del, is_valid, 
+      surrender_id, syn_finance)
+    values (#{id,jdbcType=INTEGER}, #{fid,jdbcType=VARCHAR}, #{outContract,jdbcType=VARCHAR},
+      #{paySerialNum,jdbcType=VARCHAR}, #{sourceCode,jdbcType=VARCHAR}, #{payTime,jdbcType=TIMESTAMP}, 
+      #{customerBankName,jdbcType=VARCHAR}, #{customerAccountName,jdbcType=VARCHAR},
+      #{customerBankAccount,jdbcType=VARCHAR}, #{recievedAccount,jdbcType=VARCHAR}, #{accountFlag,jdbcType=INTEGER}, 
+      #{panymentTypeCode,jdbcType=VARCHAR}, #{markCollectCode,jdbcType=VARCHAR}, #{busId,jdbcType=VARCHAR}, 
+      #{dataSources,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, #{uid,jdbcType=VARCHAR}, 
+      #{auditFlag,jdbcType=INTEGER}, #{payFlag,jdbcType=INTEGER}, #{genWay,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{isDel,jdbcType=INTEGER}, #{isValid,jdbcType=INTEGER}, 
+      #{surrenderId,jdbcType=VARCHAR}, #{synFinance,jdbcType=INTEGER})
+  </insert>
+  <!--保存付款单 created by cuigh6 2017年10月18日-->
+  <insert id="savePaymentBill" parameterType="com.ziroom.zrp.trading.entity.PaymentBillEntity" >
+    insert into t_payment_bill
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="outContract != null" >
+        out_contract,
+      </if>
+      <if test="paySerialNum != null" >
+        pay_serial_num,
+      </if>
+      <if test="sourceCode != null" >
+        source_code,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="customerBankName != null" >
+        customer_bank_name,
+      </if>
+      <if test="customerAccountName != null" >
+          customerAccountName,
+      </if>
+      <if test="customerBankAccount != null" >
+        customer_bank_account,
+      </if>
+      <if test="recievedAccount != null" >
+        recieved_account,
+      </if>
+      <if test="accountFlag != null" >
+        account_flag,
+      </if>
+      <if test="panymentTypeCode != null" >
+        panyment_type_code,
+      </if>
+      <if test="markCollectCode != null" >
+        mark_collect_code,
+      </if>
+      <if test="busId != null" >
+        bus_id,
+      </if>
+      <if test="dataSources != null" >
+        data_sources,
+      </if>
+      <if test="billType != null" >
+        bill_type,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="auditFlag != null" >
+        audit_flag,
+      </if>
+      <if test="payFlag != null" >
+        pay_flag,
+      </if>
+      <if test="genWay != null" >
+        gen_way,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+      <if test="surrenderId != null" >
+        surrender_id,
+      </if>
+      <if test="synFinance != null" >
+        syn_finance,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="outContract != null" >
+        #{outContract,jdbcType=VARCHAR},
+      </if>
+      <if test="paySerialNum != null" >
+        #{paySerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceCode != null" >
+        #{sourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="customerBankName != null" >
+        #{customerBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerAccountName != null" >
+        #{customerAccountName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerBankAccount != null" >
+        #{customerBankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="recievedAccount != null" >
+        #{recievedAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="accountFlag != null" >
+        #{accountFlag,jdbcType=INTEGER},
+      </if>
+      <if test="panymentTypeCode != null" >
+        #{panymentTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="markCollectCode != null" >
+        #{markCollectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="busId != null" >
+        #{busId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSources != null" >
+        #{dataSources,jdbcType=VARCHAR},
+      </if>
+      <if test="billType != null" >
+        #{billType,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="auditFlag != null" >
+        #{auditFlag,jdbcType=INTEGER},
+      </if>
+      <if test="payFlag != null" >
+        #{payFlag,jdbcType=INTEGER},
+      </if>
+      <if test="genWay != null" >
+        #{genWay,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="surrenderId != null" >
+        #{surrenderId,jdbcType=VARCHAR},
+      </if>
+      <if test="synFinance != null" >
+        #{synFinance,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <!-- 更改同步状态 created on cuigh6 -->
+  <update id="updatePaymentSyncStatus" parameterType="com.ziroom.zrp.trading.entity.PaymentBillEntity">
+    UPDATE t_payment_bill SET syn_finance = #{synFinance,jdbcType=VARCHAR} WHERE fid = #{fid,jdbcType=VARCHAR} AND syn_finance=1 AND  is_del=0 AND is_valid=1;
+  </update>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.zrp.trading.entity.PaymentBillEntity" >
+    update t_payment_bill_log
+    <set >
+      <if test="fid != null" >
+        fid = #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="outContract != null" >
+        out_contract = #{outContract,jdbcType=VARCHAR},
+      </if>
+      <if test="paySerialNum != null" >
+        pay_serial_num = #{paySerialNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceCode != null" >
+        source_code = #{sourceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="customerBankName != null" >
+        customer_bank_name = #{customerBankName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerAccountName != null" >
+          customerAccountName = #{customerAccountName,jdbcType=VARCHAR},
+      </if>
+      <if test="customerBankAccount != null" >
+        customer_bank_account = #{customerBankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="recievedAccount != null" >
+        recieved_account = #{recievedAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="accountFlag != null" >
+        account_flag = #{accountFlag,jdbcType=INTEGER},
+      </if>
+      <if test="panymentTypeCode != null" >
+        panyment_type_code = #{panymentTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="markCollectCode != null" >
+        mark_collect_code = #{markCollectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="busId != null" >
+        bus_id = #{busId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSources != null" >
+        data_sources = #{dataSources,jdbcType=VARCHAR},
+      </if>
+      <if test="billType != null" >
+        bill_type = #{billType,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="auditFlag != null" >
+        audit_flag = #{auditFlag,jdbcType=INTEGER},
+      </if>
+      <if test="payFlag != null" >
+        pay_flag = #{payFlag,jdbcType=INTEGER},
+      </if>
+      <if test="genWay != null" >
+        gen_way = #{genWay,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=INTEGER},
+      </if>
+      <if test="surrenderId != null" >
+        surrender_id = #{surrenderId,jdbcType=VARCHAR},
+      </if>
+      <if test="synFinance != null" >
+        syn_finance = #{synFinance,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.zrp.trading.entity.PaymentBillEntity" >
+    update t_payment_bill_log
+    set fid = #{fid,jdbcType=VARCHAR},
+      out_contract = #{outContract,jdbcType=VARCHAR},
+      pay_serial_num = #{paySerialNum,jdbcType=VARCHAR},
+      source_code = #{sourceCode,jdbcType=VARCHAR},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      customer_bank_name = #{customerBankName,jdbcType=VARCHAR},
+      customerAccountName = #{customerAccountName,jdbcType=VARCHAR},
+      customer_bank_account = #{customerBankAccount,jdbcType=VARCHAR},
+      recieved_account = #{recievedAccount,jdbcType=VARCHAR},
+      account_flag = #{accountFlag,jdbcType=INTEGER},
+      panyment_type_code = #{panymentTypeCode,jdbcType=VARCHAR},
+      mark_collect_code = #{markCollectCode,jdbcType=VARCHAR},
+      bus_id = #{busId,jdbcType=VARCHAR},
+      data_sources = #{dataSources,jdbcType=VARCHAR},
+      bill_type = #{billType,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=VARCHAR},
+      audit_flag = #{auditFlag,jdbcType=INTEGER},
+      pay_flag = #{payFlag,jdbcType=INTEGER},
+      gen_way = #{genWay,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=INTEGER},
+      is_valid = #{isValid,jdbcType=INTEGER},
+      surrender_id = #{surrenderId,jdbcType=VARCHAR},
+      syn_finance = #{synFinance,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <update id="deleteBySurrenderId" parameterType="java.lang.String">
+        UPDATE t_payment_bill AS b
+        SET b.is_del = 1,
+         b.is_valid = 0
+        WHERE
+          b.surrender_id = #{surrenderId,jdbcType=VARCHAR}
+    </update>
+</mapper>

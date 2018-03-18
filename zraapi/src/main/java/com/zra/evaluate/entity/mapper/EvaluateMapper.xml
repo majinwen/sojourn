@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zra.evaluate.dao.EvaluateMapper">
+	<resultMap id="BaseResultMap" type="com.zra.evaluate.entity.EvaluateEntity">
+		<id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="creater_id" property="createrId" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="updater_id" property="updaterId" jdbcType="VARCHAR" />
+	    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+	    <result column="requester_id" property="requesterId" jdbcType="VARCHAR" />
+	    <result column="business_id" property="businessId" jdbcType="INTEGER" />
+	    <result column="token_id" property="tokenId" jdbcType="VARCHAR" />
+	    <result column="question_type" property="questionType" jdbcType="VARCHAR" />
+	    <result column="be_evaluate_id" property="beEvaluateId" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="insert" parameterType="com.zra.evaluate.entity.EvaluateEntity">
+		INSERT INTO bo_evaluate
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="createrId != null">
+				creater_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="updaterId != null">
+				updater_id,
+			</if>
+			<if test="updateTime != null">
+				update_time,
+			</if>
+			<if test="isDel != null">
+				is_del,
+			</if>
+			<if test="requesterId != null">
+				requester_id,
+			</if>
+			<if test="businessId != null">
+				business_id,
+			</if>
+			<if test="tokenId != null">
+				token_id,
+			</if>
+			<if test="questionType != null">
+				question_type,
+			</if>
+			<if test="beEvaluateId != null">
+				be_evaluate_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="createrId != null">
+				#{createrId},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="updaterId != null">
+				#{updaterId},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+			<if test="isDel != null">
+				#{isDel},
+			</if>
+			<if test="requesterId != null">
+				#{requesterId},
+			</if>
+			<if test="businessId != null">
+				#{businessId},
+			</if>
+			<if test="tokenId != null">
+				#{tokenId},
+			</if>
+			<if test="questionType != null">
+				#{questionType},
+			</if>
+			<if test="beEvaluateId != null">
+				#{beEvaluateId},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="ifEvaluate" resultType="com.zra.evaluate.entity.dto.EvaluateDto">
+		SELECT
+			business_id AS businessBid,
+			token_id AS tokenId
+		FROM
+			bo_evaluate
+		WHERE
+			is_del = 0
+		AND question_type = 'ZADKPJ'
+		AND business_id IN (${businessIds})
+	</select>
+
+	<insert id="saveEvaluate" parameterType="com.zra.evaluate.entity.ZoEvaluationEntity">
+		INSERT INTO tzoevaluation
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				fid,
+			</if>
+			<if test="projectZoId != null">
+				fprojectzoid,
+			</if>
+			<if test="projectId != null">
+				fprojectid,
+			</if>
+			<if test="evaContent != null">
+				fevaContent,
+			</if>
+			<if test="cusName != null">
+				fcusname,
+			</if>
+			<if test="cusPhone != null">
+				fcusphone,
+			</if>
+			<if test="createrId != null">
+				fcreaterid,
+			</if>
+			<if test="createTime != null">
+				fcreatetime,
+			</if>
+			<if test="updaterId != null">
+				fupdaterid,
+			</if>
+			<if test="updateTime != null">
+				fupdatetime,
+			</if>
+			<if test="valid != null">
+				fvalid,
+			</if>
+			<if test="isdel != null">
+				fisdel,
+			</if>
+			<if test="cityId != null">
+				cityid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="projectZoId != null">
+				#{projectZoId},
+			</if>
+			<if test="projectId != null">
+				#{projectId},
+			</if>
+			<if test="evaContent != null">
+				#{evaContent},
+			</if>
+			<if test="cusName != null">
+				#{cusName},
+			</if>
+			<if test="cusPhone != null">
+				#{cusPhone},
+			</if>
+			<if test="createrId != null">
+				#{createrId},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="updaterId != null">
+				#{updaterId},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+			<if test="valid != null">
+				#{valid},
+			</if>
+			<if test="isdel != null">
+				#{isdel},
+			</if>
+			<if test="cityId != null">
+				#{cityId},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="saveEvaluateItem" parameterType="java.util.List">
+		INSERT INTO tzoevaluationitem (
+				fid,
+				fzoevaid,
+				flabelid,
+				fcreaterid,
+				fcreatetime,
+				fupdaterid,
+				fupdatetime,
+				fvalid,
+				fisdel,
+				cityid) VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			   (#{item.id},
+				#{item.zoEvaId},
+				#{item.labelId},
+				#{item.createrId},
+				#{item.createTime},
+				#{item.updaterId},
+				#{item.updateTime},
+				#{item.valid},
+				#{item.isDel},
+				#{item.cityId})
+		</foreach>
+	</insert>
+</mapper>

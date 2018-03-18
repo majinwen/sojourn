@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ziroom.zrp.service.trading.dao.SurrenderCostDao">
+    <resultMap id="BaseResultMap" type="com.ziroom.zrp.trading.entity.SurrenderCostEntity">
+        <result column="surrendercost_id" property="surrendercostId" jdbcType="VARCHAR"/>
+        <result column="contract_id" property="contractId" jdbcType="VARCHAR"/>
+        <result column="surrender_id" property="surrenderId" jdbcType="VARCHAR"/>
+        <result column="fsurtype" property="fsurtype" jdbcType="VARCHAR"/>
+        <result column="fresponsibility" property="fresponsibility" jdbcType="VARCHAR"/>
+        <result column="fcostremark" property="fcostremark" jdbcType="VARCHAR"/>
+        <result column="fpayer" property="fpayer" jdbcType="VARCHAR"/>
+        <result column="fsettlementamount" property="fsettlementamount" jdbcType="DECIMAL"/>
+        <result column="faccountname" property="faccountname" jdbcType="VARCHAR"/>
+        <result column="fbankname" property="fbankname" jdbcType="VARCHAR"/>
+        <result column="fbankaccount" property="fbankaccount" jdbcType="VARCHAR"/>
+        <result column="fhandleZO" property="fhandlezo" jdbcType="VARCHAR"/>
+        <result column="fpaymentstatus" property="fpaymentstatus" jdbcType="INTEGER"/>
+        <result column="fgatheringstatus" property="fgatheringstatus" jdbcType="INTEGER"/>
+        <result column="fisdel" property="fisdel" jdbcType="INTEGER"/>
+        <result column="fvalid" property="fvalid" jdbcType="INTEGER"/>
+        <result column="fcity" property="fcity" jdbcType="VARCHAR"/>
+        <result column="fcreatetime" property="fcreatetime" jdbcType="TIMESTAMP"/>
+        <result column="createrid" property="createrid" jdbcType="VARCHAR"/>
+        <result column="fupdatetime" property="fupdatetime" jdbcType="TIMESTAMP"/>
+        <result column="updaterid" property="updaterid" jdbcType="VARCHAR"/>
+        <result column="fchequeno" property="fchequeno" jdbcType="VARCHAR"/>
+        <result column="ffinanceauditstatus" property="ffinanceauditstatus" jdbcType="INTEGER"/>
+        <result column="financeauditorid" property="financeauditorid" jdbcType="VARCHAR"/>
+        <result column="financeauditorname" property="financeauditorname" jdbcType="VARCHAR"/>
+        <result column="confirmpayerid" property="confirmpayerid" jdbcType="VARCHAR"/>
+        <result column="confirmpayername" property="confirmpayername" jdbcType="VARCHAR"/>
+        <result column="ffinanceauditdate" property="ffinanceauditdate" jdbcType="TIMESTAMP"/>
+        <result column="fconpaymentdate" property="fconpaymentdate" jdbcType="TIMESTAMP"/>
+        <result column="factualpaymentdate" property="factualpaymentdate" jdbcType="TIMESTAMP"/>
+        <result column="fremark" property="fremark" jdbcType="VARCHAR"/>
+        <result column="fpaymentmode" property="fpaymentmode" jdbcType="VARCHAR"/>
+        <result column="fcombankname" property="fcombankname" jdbcType="VARCHAR"/>
+        <result column="fcombankaccount" property="fcombankaccount" jdbcType="VARCHAR"/>
+        <result column="frentenddate" property="frentenddate" jdbcType="VARCHAR"/>
+        <result column="cityid" property="cityid" jdbcType="VARCHAR"/>
+    </resultMap>
+	<sql id="Base_Column_List" >
+    surrendercost_id,contract_id,surrender_id,fsurtype,fresponsibility,fcostremark,
+    fpayer,fsettlementamount,faccountname,fbankname,fbankaccount,fhandleZO,fpaymentstatus,
+    fgatheringstatus,fisdel,fvalid,fcity,fcreatetime,createrid,fupdatetime,updaterid,
+    fchequeno,ffinanceauditstatus,financeauditorid,financeauditorname,confirmpayerid,
+    confirmpayername,ffinanceauditdate,fconpaymentdate,factualpaymentdate,fremark,
+    fpaymentmode,fcombankname,fcombankaccount,frentenddate,cityid
+    </sql>
+    <insert id="insertSelective" parameterType="com.ziroom.zrp.trading.entity.SurrenderCostEntity">
+        insert into tsurrendercost
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="surrendercostId != null">
+                surrendercost_id,
+            </if>
+            <if test="contractId != null">
+                contract_id,
+            </if>
+            <if test="surrenderId != null">
+                surrender_id,
+            </if>
+            <if test="fsurtype != null">
+                fsurtype,
+            </if>
+            <if test="fresponsibility != null">
+                fresponsibility,
+            </if>
+            <if test="fcostremark != null">
+                fcostremark,
+            </if>
+            <if test="fpayer != null">
+                fpayer,
+            </if>
+            <if test="fsettlementamount != null">
+                fsettlementamount,
+            </if>
+            <if test="faccountname != null">
+                faccountname,
+            </if>
+            <if test="fbankname != null">
+                fbankname,
+            </if>
+            <if test="fbankaccount != null">
+                fbankaccount,
+            </if>
+            <if test="fhandlezo != null">
+                fhandleZO,
+            </if>
+            <if test="fpaymentstatus != null">
+                fpaymentstatus,
+            </if>
+            <if test="fgatheringstatus != null">
+                fgatheringstatus,
+            </if>
+            <if test="fisdel != null">
+                fisdel,
+            </if>
+            <if test="fvalid != null">
+                fvalid,
+            </if>
+            <if test="fcity != null">
+                fcity,
+            </if>
+            <if test="fcreatetime != null">
+                fcreatetime,
+            </if>
+            <if test="createrid != null">
+                createrid,
+            </if>
+            <if test="fupdatetime != null">
+                fupdatetime,
+            </if>
+            <if test="updaterid != null">
+                updaterid,
+            </if>
+            <if test="fchequeno != null">
+                fchequeno,
+            </if>
+            <if test="ffinanceauditstatus != null">
+                ffinanceauditstatus,
+            </if>
+            <if test="financeauditorid != null">
+                financeauditorid,
+            </if>
+            <if test="financeauditorname != null">
+                financeauditorname,
+            </if>
+            <if test="confirmpayerid != null">
+                confirmpayerid,
+            </if>
+            <if test="confirmpayername != null">
+                confirmpayername,
+            </if>
+            <if test="ffinanceauditdate != null">
+                ffinanceauditdate,
+            </if>
+            <if test="fconpaymentdate != null">
+                fconpaymentdate,
+            </if>
+            <if test="factualpaymentdate != null">
+                factualpaymentdate,
+            </if>
+            <if test="fremark != null">
+                fremark,
+            </if>
+            <if test="fpaymentmode != null">
+                fpaymentmode,
+            </if>
+            <if test="fcombankname != null">
+                fcombankname,
+            </if>
+            <if test="fcombankaccount != null">
+                fcombankaccount,
+            </if>
+            <if test="frentenddate != null">
+                frentenddate,
+            </if>
+            <if test="cityid != null">
+                cityid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="surrendercostId != null">
+                #{surrendercostId,jdbcType=VARCHAR},
+            </if>
+            <if test="contractId != null">
+                #{contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="surrenderId != null">
+                #{surrenderId,jdbcType=VARCHAR},
+            </if>
+            <if test="fsurtype != null">
+                #{fsurtype,jdbcType=VARCHAR},
+            </if>
+            <if test="fresponsibility != null">
+                #{fresponsibility,jdbcType=VARCHAR},
+            </if>
+            <if test="fcostremark != null">
+                #{fcostremark,jdbcType=VARCHAR},
+            </if>
+            <if test="fpayer != null">
+                #{fpayer,jdbcType=VARCHAR},
+            </if>
+            <if test="fsettlementamount != null">
+                #{fsettlementamount,jdbcType=DECIMAL},
+            </if>
+            <if test="faccountname != null">
+                #{faccountname,jdbcType=VARCHAR},
+            </if>
+            <if test="fbankname != null">
+                #{fbankname,jdbcType=VARCHAR},
+            </if>
+            <if test="fbankaccount != null">
+                #{fbankaccount,jdbcType=VARCHAR},
+            </if>
+            <if test="fhandlezo != null">
+                #{fhandlezo,jdbcType=VARCHAR},
+            </if>
+            <if test="fpaymentstatus != null">
+                #{fpaymentstatus,jdbcType=INTEGER},
+            </if>
+            <if test="fgatheringstatus != null">
+                #{fgatheringstatus,jdbcType=INTEGER},
+            </if>
+            <if test="fisdel != null">
+                #{fisdel,jdbcType=INTEGER},
+            </if>
+            <if test="fvalid != null">
+                #{fvalid,jdbcType=INTEGER},
+            </if>
+            <if test="fcity != null">
+                #{fcity,jdbcType=VARCHAR},
+            </if>
+            <if test="fcreatetime != null">
+                #{fcreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createrid != null">
+                #{createrid,jdbcType=VARCHAR},
+            </if>
+            <if test="fupdatetime != null">
+                #{fupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updaterid != null">
+                #{updaterid,jdbcType=VARCHAR},
+            </if>
+            <if test="fchequeno != null">
+                #{fchequeno,jdbcType=VARCHAR},
+            </if>
+            <if test="ffinanceauditstatus != null">
+                #{ffinanceauditstatus,jdbcType=INTEGER},
+            </if>
+            <if test="financeauditorid != null">
+                #{financeauditorid,jdbcType=VARCHAR},
+            </if>
+            <if test="financeauditorname != null">
+                #{financeauditorname,jdbcType=VARCHAR},
+            </if>
+            <if test="confirmpayerid != null">
+                #{confirmpayerid,jdbcType=VARCHAR},
+            </if>
+            <if test="confirmpayername != null">
+                #{confirmpayername,jdbcType=VARCHAR},
+            </if>
+            <if test="ffinanceauditdate != null">
+                #{ffinanceauditdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fconpaymentdate != null">
+                #{fconpaymentdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="factualpaymentdate != null">
+                #{factualpaymentdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fremark != null">
+                #{fremark,jdbcType=VARCHAR},
+            </if>
+            <if test="fpaymentmode != null">
+                #{fpaymentmode,jdbcType=VARCHAR},
+            </if>
+            <if test="fcombankname != null">
+                #{fcombankname,jdbcType=VARCHAR},
+            </if>
+            <if test="fcombankaccount != null">
+                #{fcombankaccount,jdbcType=VARCHAR},
+            </if>
+            <if test="frentenddate != null">
+                #{frentenddate,jdbcType=VARCHAR},
+            </if>
+            <if test="cityid != null">
+                #{cityid,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateBySurId" parameterType="com.ziroom.zrp.trading.entity.SurrenderCostEntity">
+        UPDATE tsurrendercost
+        <set>
+            <if test="contractId != null">
+               contract_id = #{contractId,jdbcType=VARCHAR},
+            </if>
+            <if test="surrenderId != null">
+               surrender_id = #{surrenderId,jdbcType=VARCHAR},
+            </if>
+            <if test="fsurtype != null">
+                fsurtype = #{fsurtype,jdbcType=VARCHAR},
+            </if>
+            <if test="fresponsibility != null">
+                fresponsibility = #{fresponsibility,jdbcType=VARCHAR},
+            </if>
+            <if test="fcostremark != null">
+                fcostremark = #{fcostremark,jdbcType=VARCHAR},
+            </if>
+            <if test="fpayer != null">
+                fpayer = #{fpayer,jdbcType=VARCHAR},
+            </if>
+            <if test="fsettlementamount != null">
+                fsettlementamount = #{fsettlementamount,jdbcType=DECIMAL},
+            </if>
+            <if test="faccountname != null">
+                faccountname = #{faccountname,jdbcType=VARCHAR},
+            </if>
+            <if test="fbankname != null">
+                fbankname = #{fbankname,jdbcType=VARCHAR},
+            </if>
+            <if test="fbankaccount != null">
+                fbankaccount = #{fbankaccount,jdbcType=VARCHAR},
+            </if>
+            <if test="fhandlezo != null">
+                fhandleZO = #{fhandlezo,jdbcType=VARCHAR},
+            </if>
+            <if test="fpaymentstatus != null">
+                fpaymentstatus = #{fpaymentstatus,jdbcType=INTEGER},
+            </if>
+            <if test="fgatheringstatus != null">
+                fgatheringstatus = #{fgatheringstatus,jdbcType=INTEGER},
+            </if>
+            <if test="fisdel != null">
+                fisdel = #{fisdel,jdbcType=INTEGER},
+            </if>
+            <if test="fvalid != null">
+                fvalid = #{fvalid,jdbcType=INTEGER},
+            </if>
+            <if test="fcity != null">
+                fcity = #{fcity,jdbcType=VARCHAR},
+            </if>
+            <if test="fcreatetime != null">
+                fcreatetime = #{fcreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createrid != null">
+                createrid = #{createrid,jdbcType=VARCHAR},
+            </if>
+            <if test="fupdatetime != null">
+                fupdatetime = #{fupdatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updaterid != null">
+                 updaterid = #{updaterid,jdbcType=VARCHAR},
+            </if>
+            <if test="fchequeno != null">
+                fchequeno = #{fchequeno,jdbcType=VARCHAR},
+            </if>
+            <if test="ffinanceauditstatus != null">
+                ffinanceauditstatus = #{ffinanceauditstatus,jdbcType=INTEGER},
+            </if>
+            <if test="financeauditorid != null">
+                financeauditorid = #{financeauditorid,jdbcType=VARCHAR},
+            </if>
+            <if test="financeauditorname != null">
+                financeauditorname = #{financeauditorname,jdbcType=VARCHAR},
+            </if>
+            <if test="confirmpayerid != null">
+                confirmpayerid = #{confirmpayerid,jdbcType=VARCHAR},
+            </if>
+            <if test="confirmpayername != null">
+                confirmpayername = #{confirmpayername,jdbcType=VARCHAR},
+            </if>
+            <if test="ffinanceauditdate != null">
+                ffinanceauditdate =  #{ffinanceauditdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fconpaymentdate != null">
+                fconpaymentdate = #{fconpaymentdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="factualpaymentdate != null">
+                factualpaymentdate = #{factualpaymentdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fremark != null">
+                fremark = #{fremark,jdbcType=VARCHAR},
+            </if>
+            <if test="fpaymentmode != null">
+                fpaymentmode = #{fpaymentmode,jdbcType=VARCHAR},
+            </if>
+            <if test="fcombankname != null">
+                fcombankname = #{fcombankname,jdbcType=VARCHAR},
+            </if>
+            <if test="fcombankaccount != null">
+                fcombankaccount = #{fcombankaccount,jdbcType=VARCHAR},
+            </if>
+            <if test="frentenddate != null">
+                frentenddate = #{frentenddate,jdbcType=VARCHAR},
+            </if>
+            <if test="cityid != null">
+                cityid = #{cityid,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE
+            surrender_id = #{surrenderId,jdbcType=VARCHAR}
+        AND contract_id = #{contractId,jdbcType=VARCHAR}
+        AND fisdel = 0
+        AND fvalid = 1
+    </update>
+
+    <update id="deleteBatch">
+        UPDATE tsurrendercost
+        SET fvalid = 0,
+         fisdel = 1
+        WHERE
+            surrendercost_id IN
+        <foreach item="costId" index="index" collection="costIds" open="(" separator="," close=")">
+            #{costId}
+        </foreach>
+    </update>
+    <select id="selectSurrenderCostByParam" parameterType="java.lang.String" resultType="com.ziroom.zrp.trading.entity.SurrenderCostEntity">
+    	select 
+    	<include refid="Base_Column_List" />
+    	from tsurrendercost
+    	where contract_id=#{contractId,jdbcType=VARCHAR}
+    	and surrender_id=#{surrenderId,jdbcType=VARCHAR}
+    	and fisdel = 0
+    	and fvalid = 1
+    	order by fcreatetime desc
+    </select>
+    <select id="findSurrenderCostByFid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    	select 
+    	<include refid="Base_Column_List" />
+    	from tsurrendercost
+    	where surrendercost_id=#{surrendercostId,jdbcType=VARCHAR}
+    	and fisdel = 0
+    	and fvalid = 1
+    </select>
+</mapper>
