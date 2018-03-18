@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.tenantOrderDao" >
+  
+ <select id="tenantOrder" resultType="com.ziroom.minsu.report.customer.vo.TenantOrderVo" parameterType="map">
+ 
+ SELECT bookTmp.uid AS 'bookUid' ,
+	IFNULL(msgTmp.num,0) AS 'adMsgNum',
+	IFNULL(bookTmp.num,0) AS 'bookOrderNum',
+	IFNULL(refBookTmp.num,0) AS 'refBookOrderNum',
+	IFNULL(bookedTmp.num,0) AS 'paidOrderNum',
+	IFNULL(checkInTmp.num,0) AS 'checkInOrderNum',
+	IFNULL(checkInDaysTmp.num,0) AS 'checkInDaysNum',
+	ROUND(IFNULL(paiedTmp.pay,0)/100) AS 'paidMoney',
+	IFNULL(evaTmp.num,0) AS 'evaluateNum',
+	IFNULL(evaedTmp.num,0) AS 'evaluatedNum',
+	IFNULL(evaScoreTmp.score,0) AS 'evaluateAvgScore',	
+	IFNULL(evaedScoreTmp.score,0) AS 'isEvaluatedAvgScore'	
+	FROM (
+		SELECT od.`user_uid` AS uid ,COUNT(1) AS num 
+		FROM `minsu_order_db`.`t_order` od 
+		WHERE od.`is_del`='0' 
+		  <if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		  </if>
+		  <if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		  </if>
+		GROUP BY od.`user_uid` 
+	) AS bookTmp 
+	<!-- 申请订单量 -->
+	LEFT JOIN (
+		SELECT msgh.`tenant_uid` AS uid,COUNT(1) AS num FROM `minsu_message_db`.`t_msg_house` msgh LEFT JOIN `minsu_message_db`.`t_msg_base` msgb ON msgb.`msg_house_fid`=msgh.`fid` 
+			WHERE msgb.`msg_sender_type`='3' AND msgb.`is_del`='0' 
+			 <if test="beginTime != null and beginTime != ''">
+				AND msgb.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+			  </if>
+			  <if test="endTime != null and endTime != ''">
+				AND msgb.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+			  </if>
+			GROUP BY  msgh.`tenant_uid` 
+		UNION ALL (
+			SELECT msgf.`from_uid` AS uid,COUNT(1) AS num FROM `minsu_message_db`.`t_msg_first_advisory` msgf 
+			WHERE msgf.`status` !=3
+			 <if test="beginTime != null and beginTime != ''">
+				AND msgf.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+			  </if>
+			  <if test="endTime != null and endTime != ''">
+				AND msgf.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+			  </if> 
+			GROUP BY msgf.`from_uid`
+		) 	
+	) AS msgTmp
+	<!-- 咨询量  --> 
+	ON msgTmp.uid = bookTmp.uid 
+	LEFT JOIN (
+		 SELECT od.`user_uid` AS uid,COUNT(1) AS num FROM `minsu_order_db`.`t_order` od 
+		 WHERE od.`is_del`='0' AND od.`order_status`='31'
+		  <if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		  </if>
+		  <if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		  </if> 
+		 GROUP BY od.`user_uid` 	
+	) AS refBookTmp 
+	<!-- 被拒绝订单量 -->
+	ON refBookTmp.uid = bookTmp.uid 
+	LEFT JOIN (
+		 SELECT od.`user_uid` AS uid,COUNT(1) AS num FROM `minsu_order_db`.`t_order` od 
+		 WHERE od.`is_del`='0' AND od.`pay_status`='1' 
+		  <if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		  </if>
+		  <if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		  </if>
+		 GROUP BY od.`user_uid` 	
+	) AS bookedTmp 
+	<!-- 支付订单量 -->
+	ON bookedTmp.uid = bookTmp.uid 
+	LEFT JOIN (
+		 SELECT od.`user_uid` AS uid,COUNT(1) AS num FROM `minsu_order_db`.`t_order` od 
+		 WHERE od.`is_del`='0' AND od.`order_status` >= '40' 
+		  <if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		  </if>
+		  <if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		  </if>
+		 GROUP BY od.`user_uid` 	
+	) AS checkInTmp 
+	<!-- 入住订单量 -->
+	ON checkInTmp.uid = bookTmp.uid 
+	LEFT JOIN (
+		 SELECT od.`user_uid` AS uid,SUM(DATEDIFF(IFNULL(od.`real_end_time`, od.`end_time`),od.`start_time`)) AS num FROM `minsu_order_db`.`t_order` od 
+		 WHERE od.`is_del`='0' AND od.`order_status` >= '40' 
+		  <if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		  </if>
+		  <if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		  </if>
+		 GROUP BY od.`user_uid` 
+	) AS checkInDaysTmp 
+	<!-- 入住间夜量 -->
+	ON checkInDaysTmp.uid = bookTmp.uid
+	LEFT JOIN (
+		SELECT od.`user_uid` AS uid,SUM(odm.`rental_money`) AS pay FROM `minsu_order_db`.`t_order` od LEFT JOIN `minsu_order_db`.`t_order_money` odm ON od.`order_sn`=odm.`order_sn` 
+		WHERE od.`is_del`='0' AND od.`pay_status`='1' AND od.`order_status` >='40' 
+		 <if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		  </if>
+		  <if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		  </if>
+		GROUP BY od.`user_uid`
+	) AS paiedTmp 
+	<!-- 累计房租费用 -->
+	ON paiedTmp.uid = bookTmp.uid
+	LEFT JOIN (
+		SELECT ev.`eva_user_uid` AS uid ,COUNT(1) AS num FROM `minsu_evaluate_db`.`t_evaluate_order` ev 
+		WHERE 1=1 
+		 <if test="beginTime != null and beginTime != ''">
+			AND ev.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		  </if>
+		  <if test="endTime != null and endTime != ''">
+			AND ev.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		  </if>
+		GROUP BY ev.`eva_user_uid`
+	) AS evaTmp 
+	<!-- 给出评价量 -->
+	ON evaTmp.uid = bookTmp.uid
+	LEFT JOIN (
+		SELECT ev.`rated_user_uid` AS uid ,COUNT(1) AS num FROM `minsu_evaluate_db`.`t_evaluate_order` ev 
+		WHERE 1=1 
+		 <if test="beginTime != null and beginTime != ''">
+			AND ev.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		  </if>
+		  <if test="endTime != null and endTime != ''">
+			AND ev.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		  </if>
+		GROUP BY ev.`rated_user_uid`
+	) AS evaedTmp 
+	<!-- 获得评价量 -->
+	ON evaedTmp.uid = bookTmp.uid
+	LEFT JOIN (
+		SELECT tod.eva_user_uid AS uid, ROUND(AVG((tev.`house_clean`+tev.`description_match`+tev.`safety_degree`+tev.`traffic_position`+tev.`cost_performance`)/5),2) AS score FROM `minsu_evaluate_db`.`t_tenant_evaluate` tev LEFT JOIN `minsu_evaluate_db`.`t_evaluate_order` tod ON tev.`eva_order_fid` = tod.`fid` 
+		WHERE 1=1  
+		 <if test="beginTime != null and beginTime != ''">
+			AND tev.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		  </if>
+		  <if test="endTime != null and endTime != ''">
+			AND tev.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		  </if>
+		GROUP BY tod.eva_user_uid
+	) AS evaScoreTmp 
+	<!-- 累计给出评分平均分 -->
+	ON evaScoreTmp.uid = bookTmp.uid 
+	LEFT JOIN (
+		SELECT evaod.`rated_user_uid` AS uid ,ROUND(AVG(ldeva.`landlord_satisfied`),2) AS score FROM `minsu_evaluate_db`.`t_landlord_evaluate` ldeva LEFT JOIN `minsu_evaluate_db`.`t_evaluate_order` evaod ON ldeva.`eva_order_fid`=evaod.`fid` 
+		WHERE 1=1 
+		 <if test="beginTime != null and beginTime != ''">
+			AND ldeva.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		  </if>
+		  <if test="endTime != null and endTime != ''">
+			AND ldeva.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		  </if> 
+		GROUP BY evaod.`rated_user_uid`
+	) AS evaedScoreTmp 
+	<!-- 累计得到评分平均分 -->
+	ON evaedScoreTmp.uid = bookTmp.uid 	  
+ 
+ </select>
+    
+</mapper>

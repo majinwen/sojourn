@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.couponInfoDao">
+
+
+    <select id="getCouponInfo" resultType="com.ziroom.minsu.report.cms.vo.CouponInfoVo" parameterType="map">
+        SELECT activity.act_name actName, activity.act_sn actSn, coupon.coupon_sn couponSn, coupon.coupon_status couponStatus, coupon.act_type actType,
+        coupon.act_cut actCut, activity.create_time actCreateTime, coupon.create_time couponCreateTime,
+        coupon.coupon_start_time couponStartTime, coupon.coupon_end_time couponEndTime, users.uid userUid,
+        IFNULL(customer.customer_mobile, lo.customer_mobile) customerMobile, IFNULL(lo.create_time, users.create_time) gotTime,
+        users.order_sn orderSn, users.used_time usedTime
+        FROM minsu_cms_db.t_act_coupon coupon
+        INNER JOIN minsu_cms_db.t_activity activity ON activity.act_sn=coupon.act_sn AND activity.is_del=0
+        LEFT JOIN minsu_cms_db.t_user_coupon users ON coupon.coupon_sn = users.coupon_sn AND users.is_del = 0
+        LEFT JOIN minsu_customer_db.t_customer_base_msg customer ON customer.uid=users.uid
+        LEFT JOIN minsu_cms_db.t_coupon_mobile_log lo ON coupon.coupon_sn = lo.coupon_sn
+        WHERE coupon.is_del = 0
+        <if test="actSn != null and actSn != ''">
+            AND activity.act_sn = #{actSn,jdbcType=VARCHAR}
+        </if>
+        <if test="couponStatus != null and couponStatus != ''">
+            AND coupon.coupon_status = #{couponStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="actCreateStartTime != null and actCreateStartTime != ''">
+            AND activity.create_time >= #{actCreateStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="actCreateEndTime != null and actCreateEndTime != ''">
+            AND activity.create_time <![CDATA[ <= ]]> #{actCreateEndTime,jdbcType=VARCHAR}
+        </if>
+        <if test="couponCreateStartTime != null and couponCreateStartTime != ''">
+            AND coupon.create_time >= #{couponCreateStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="couponCreateEndTime != null and couponCreateEndTime != ''">
+            AND coupon.create_time <![CDATA[ <= ]]> #{couponCreateEndTime,jdbcType=VARCHAR}
+        </if>
+        <if test="couponStartTimeStart != null and couponStartTimeStart != ''">
+            AND coupon.coupon_start_time >= #{couponStartTimeStart,jdbcType=VARCHAR}
+        </if>
+        <if test="couponStartTimeEnd != null and couponStartTimeEnd != ''">
+            AND coupon.coupon_start_time <![CDATA[ <= ]]> #{couponStartTimeEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="gotTimeStart != null and gotTimeStart != ''">
+            AND IFNULL(lo.create_time, users.create_time) >= #{gotTimeStart,jdbcType=VARCHAR}
+        </if>
+        <if test="gotTimeEnd != null and gotTimeEnd != ''">
+            AND IFNULL(lo.create_time, users.create_time) <![CDATA[ <= ]]> #{gotTimeEnd,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+
+</mapper>

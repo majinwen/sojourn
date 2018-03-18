@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.orderNumDao" >
+
+
+	<!-- # 订单在不同城市的统计情况 -->
+	<select id="getOrderNumByCity" resultType="com.ziroom.minsu.report.order.entity.OrderNumEntity"  parameterType="com.ziroom.minsu.report.order.dto.OrderNumRequest">
+		SELECT
+			tmp.city_code AS cityCode,
+			SUM(tmp.appNum) AS applyNum,
+			SUM(tmp.payNum) AS payNum,
+			SUM(tmp.acceptNum) AS acceptNum
+		FROM
+		(SELECT
+				city_code,
+				1 AS appNum,
+				CASE
+					WHEN pay_status = 1 THEN 1
+					ELSE 0
+					END AS payNum,
+				CASE
+					WHEN order_status = 10 THEN 0
+					WHEN order_status = 31 THEN 0
+					WHEN order_status = 35 THEN 0
+					ELSE 1
+					END AS acceptNum
+			FROM
+				minsu_order_db.t_order t
+			WHERE
+				t.city_code IS NOT NULL
+				AND t.city_code != ''
+				<if test="starTime != null and starTime != '' ">
+					AND t.create_time <![CDATA[ >= ]]> #{starTime,jdbcType=VARCHAR}
+				</if>
+				<if test="endTime != null and endTime != '' ">
+					AND t.create_time <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+				</if>
+				<if test="cityList != null">
+					<if test="cityList.size > 0">
+						AND t.city_code in
+						<foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+							#{cityCode,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+				</if>
+		) tmp
+		GROUP BY tmp.city_code
+	</select>
+
+
+
+
+
+	<!-- #不同城市的预订成功人数 -->
+	<select id="getUserSuccessNumByCity" resultType="com.ziroom.minsu.report.basedata.entity.CityNumEntity" parameterType="com.ziroom.minsu.report.order.dto.OrderNumRequest">
+
+		SELECT
+			tmp.city_code AS cityCode, COUNT(1) AS num
+		FROM
+			(SELECT DISTINCT
+			city_code, `user_uid`
+			FROM
+				minsu_order_db.t_order t
+			WHERE
+				t.city_code IS NOT NULL
+				AND t.city_code != ''
+				AND t.pay_status = 1
+				<if test="starTime != null and starTime != '' ">
+					AND t.create_time <![CDATA[ >= ]]> #{starTime,jdbcType=VARCHAR}
+				</if>
+				<if test="endTime != null and endTime != '' ">
+					AND t.create_time <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+				</if>
+				<if test="cityList != null">
+					<if test="cityList.size > 0">
+						AND t.city_code in
+						<foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+							#{cityCode,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+				</if>
+			) tmp
+		GROUP BY tmp.city_code
+	</select>
+
+
+
+	<!-- #不同城市的预订人数 -->
+	<select id="getUserNumByCity" resultType="com.ziroom.minsu.report.basedata.entity.CityNumEntity" parameterType="com.ziroom.minsu.report.order.dto.OrderNumRequest">
+
+		SELECT
+			tmp.city_code AS cityCode, COUNT(1) AS num
+		FROM
+			(SELECT DISTINCT
+				city_code, `user_uid`
+			FROM
+				minsu_order_db.t_order t
+			WHERE
+				t.city_code IS NOT NULL
+				AND t.city_code != ''
+				<if test="starTime != null and starTime != '' ">
+					AND t.create_time <![CDATA[ >= ]]> #{starTime,jdbcType=VARCHAR}
+				</if>
+				<if test="endTime != null and endTime != '' ">
+					AND t.create_time <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+				</if>
+				<if test="cityList != null">
+					<if test="cityList.size > 0">
+						AND t.city_code in
+						<foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+							#{cityCode,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+				</if>
+			) tmp
+		GROUP BY tmp.city_code
+	</select>
+
+
+
+	<!-- #获取城市的咨询数 -->
+	<select id="getConsultNumByCity" resultType="com.ziroom.minsu.report.basedata.entity.CityNumEntity" parameterType="com.ziroom.minsu.report.order.dto.OrderNumRequest">
+
+		SELECT
+			city_code AS cityCode, SUM(consult_num) AS num
+		FROM
+			minsu_report_db.t_city_daily_msg t
+		WHERE
+			t.city_code IS NOT NULL
+			AND t.city_code != ''
+			<if test="starTime != null and starTime != '' ">
+				AND t.stat_date <![CDATA[ >= ]]> #{starTime,jdbcType=VARCHAR}
+			</if>
+			<if test="endTime != null and endTime != '' ">
+				AND t.stat_date <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+			</if>
+			<if test="cityList != null">
+				<if test="cityList.size > 0">
+					AND t.city_code in
+					<foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+						#{cityCode,jdbcType=VARCHAR}
+					</foreach>
+				</if>
+			</if>
+		GROUP BY city_code
+
+	</select>
+
+
+</mapper>

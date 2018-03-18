@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016. Copyright (c) 2016. ziroom.com.
+  -->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        ">
+
+    <!--
+        启用 aspectj 动态代理
+        proxy-target-class属性若此值为true强制使用CGLIB代理
+        expose-proxy属性若此值为true时，是为了目标对象内部的自我调用也可实施切面
+    -->
+    <aop:aspectj-autoproxy proxy-target-class="true" expose-proxy="true"/>
+
+    <!-- dubbo消费者配置 -->
+    <import resource="spring-mvc.xml"/>
+
+    <!-- dubbo消费者配置 -->
+    <import resource="dubbo-consumer.xml"/>
+    
+    <context:component-scan base-package="com.ziroom.minsu" />
+    <context:component-scan base-package="com.asura"/>
+    <context:property-placeholder location="classpath*:*.properties" ignore-unresolvable="true" />
+    
+       <!-- 基础数据服务-->
+    <import resource="classpath:META-INF/spring/basedata-inner-consumer.xml"/>
+
+    
+    <!-- 哨兵模式redis配置 -->
+    <bean id="sentinelJedisClient" class="com.ziroom.minsu.services.common.utils.SentinelJedisUtil"  init-method="initSentinelJedisPool" destroy-method="destorySentinelJedisPool">
+    	<property name="sentinelOneServer" value="${sentinel.one.server}"/>
+    	<property name="sentinelTwoServer" value="${sentinel.two.server}"/>
+    	<property name="sentinelThreeServer" value="${sentinel.three.server}"/>
+    	<property name="redisMasterServer" value="${redis.master.server}"/>
+    	<property name="poolMinIdle" value="${redis.pool.minIdle}"/>
+    	<property name="poolMaxIdle" value="${redis.pool.maxIdle}"/>
+    	<property name="poolMaxTotal" value="${redis.pool.maxtotal}"/>
+    	<property name="poolMaxWait" value="${redis.pool.maxwait}"/>
+    	<property name="poolTimeOut" value="${redis.timeout}"/>
+    	<property name="redisApp" value="${redis.app}"/>
+    </bean>
+
+    <!-- 查询数据源配置 -->
+    <import resource="classpath:META-INF/spring/spring-applicationContext-all.xml"/>
+    
+    <!-- 报表数据主从配置 -->
+    <import resource="classpath:META-INF/spring/spring-applicationContext-report.xml"/>
+    
+    <!-- 其他民宿数据同步库 -->
+	<import resource="classpath:META-INF/spring/spring-applicationContext-spider.xml"/>
+</beans>

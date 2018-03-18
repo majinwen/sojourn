@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.tenantInfoDao" >
+
+
+
+    <!-- 房客统计信息报表 -->
+    <select id="tenantList" resultType="com.ziroom.minsu.report.customer.vo.UserTenantInfoVo" parameterType="com.ziroom.minsu.report.customer.dto.TenantRequest">
+		
+		SELECT 
+		  t1.user_uid AS tenantUID,
+		  t2.real_name AS tenantName,
+		  t2.customer_mobile AS tenantTel,
+		  (
+		    CASE
+		      t2.customer_sex 
+		      WHEN 1 
+		      THEN '女' 
+		      WHEN 2 
+		      THEN '男' 
+		      ELSE '-' 
+		    END
+		  ) AS tenantSex,
+		  (
+		    CASE
+		      WHEN t2.id_type = 1 
+		      THEN YEAR(NOW()) - SUBSTRING(t2.id_num, 7, 4) 
+		      ELSE NULL 
+		    END
+		  ) AS tenantAge,
+		  t3.`show_name` AS activeCity
+		FROM
+		  (SELECT 
+		    t.user_uid,
+		    SUBSTRING_INDEX(GROUP_CONCAT(t.city_code ORDER BY t.count_city DESC), ',', 1) city_code
+		  FROM
+		    (SELECT 
+		      to1.user_uid,
+		      to1.city_code,
+		      COUNT(*) AS count_city 
+		    FROM
+		      minsu_order_db.`t_order` to1 
+		    WHERE to1.`user_uid` IS NOT NULL 
+		      <if test="beginTime != null and beginTime != ''">
+				AND to1.`create_time` >= #{beginTime,jdbcType=VARCHAR}
+			  </if>
+			  <if test="endTime != null and endTime != ''">
+				AND to1.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+			  </if>
+		    GROUP BY to1.user_uid,
+		      to1.city_code) t 
+		  GROUP BY t.user_uid) t1 
+		  LEFT JOIN 
+		    (SELECT 
+		      tcbm.`uid`,
+		      tcbm.real_name,
+		      tcbm.`customer_mobile`,
+		      tcbm.`customer_sex`,
+		      (
+		        CASE
+		          WHEN tcbm.`id_type` = 1 
+		          THEN tcbm.`id_no` 
+		          ELSE NULL 
+		        END
+		      ) AS id_num,
+		      tcbm.`id_type` 
+		    FROM
+		      minsu_customer_db.`t_customer_base_msg` tcbm 
+		    WHERE tcbm.`is_landlord` = 0 
+		      AND tcbm.`is_del` = 0) t2 
+		    ON t1.user_uid = t2.uid 
+		  LEFT JOIN minsu_base_db.`t_conf_city` t3 
+		    ON t1.city_code = t3.`code` 
+		
+		
+		      
+	</select>
+    
+   
+    
+</mapper>

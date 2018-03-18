@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.houseAddressDao" >
+
+
+	<!-- 整租房源地址 -->
+    <select id="entirehouseAddress" resultType="com.ziroom.minsu.report.house.vo.HouseAddressVo" parameterType="map">
+    SELECT
+	  t.*,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thbm.`first_deploy_date` AS firstDeployDate
+	FROM
+	  (SELECT 
+	    tmp.house_sn AS houseSn,
+	    tmp.house_name AS houseName,
+	    tmp.house_addr AS houseAddr,
+	    tmp.house_status AS houseStatus,
+	    CASE  tmp.house_status 
+		WHEN 10 THEN '待发布'
+		WHEN 11 THEN '已发布'
+		WHEN 20 THEN '管家审核通过'
+		WHEN 21 THEN '管家审核未通过'
+		WHEN 30 THEN '品质审核未通过'
+		WHEN 40 THEN '上架'
+		WHEN 41 THEN '下架'
+		WHEN 50 THEN '强制下架'
+		ELSE '未知'  
+		END AS houseStatusName,
+	    tmp.create_date AS createDate,
+	    tmp.fid ,
+	    tmp.landlord_uid AS landlordUid,
+	    tmp.phy_fid,
+	    tmp.id
+	  FROM
+	    (SELECT 
+	      thbm.`house_sn`,
+	      thbm.`house_name`,
+	      thbm.`house_addr`,
+	      thbm.`lease_price`,
+	      thbm.`house_status`,
+	      thbm.`create_date`,
+	      thbm.`fid`,
+	      thbm.landlord_uid,
+	      thbm.`phy_fid`, 
+	      thbm.`id`
+	    FROM
+	      minsu_house_db.`t_house_base_msg` thbm 
+	    LEFT JOIN  minsu_house_db.`t_house_phy_msg` thp
+	    ON thbm.phy_fid = thp.fid     
+	    WHERE thbm.`rent_way` = 0 
+	    <if test="cityCode != null and cityCode != ''">
+	    AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+	    </if>
+	    <if test="houseStatus != null and houseStatus != ''">
+	    AND thbm.`house_status`=#{houseStatus,jdbcType=VARCHAR}
+	    </if>
+	    ) AS tmp 
+	  GROUP BY tmp.fid 
+	  ORDER BY NULL) AS t 
+	   LEFT JOIN minsu_house_db.`t_house_phy_msg` thp 
+	    ON t.phy_fid = thp.`fid` 
+	  LEFT JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm 
+	    ON t.landlordUid = tcbm.`uid` 
+	  LEFT JOIN `minsu_house_db`.`t_house_biz_msg` thbm
+	  	ON t.fid = thbm.`house_base_fid`
+	WHERE thp.`is_del` = 0 
+	  AND tcbm.`is_del` = 0 
+	  AND tcbm.is_landlord = 1 
+	  <if test="createStartTime != null and createStartTime != ''">
+	  AND  thbm.`first_deploy_date` <![CDATA[ >= ]]> #{createStartTime,jdbcType=VARCHAR}
+	  </if>
+	  <if test="createEndTime != null and createEndTime != ''">
+	  AND  thbm.`first_deploy_date` <![CDATA[ < ]]> #{createEndTime,jdbcType=VARCHAR}
+	  </if>
+    ORDER BY t.id ASC 
+    </select>
+  
+  
+    <!-- 合租房源地址 -->
+    <select id="subHouseAddress" resultType="com.ziroom.minsu.report.house.vo.HouseAddressVo" parameterType="map">
+      SELECT 
+	  t.*,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thbm.`first_deploy_date` AS firstDeployDate
+	FROM
+	  (SELECT 
+	  tmp.`room_sn`AS houseSn,
+      tmp.`room_name` AS houseName,
+      tmp.`house_addr` AS houseAddr,
+      tmp.`room_status` AS houseStatus,
+      CASE  tmp.`room_status`
+		WHEN  10 THEN '待发布'
+		WHEN 11 THEN '已发布'
+		WHEN 20 THEN '管家审核通过'
+		WHEN 21 THEN '管家审核未通过'
+		WHEN 30 THEN '品质审核未通过'
+		WHEN 40 THEN '上架'
+		WHEN 41 THEN '下架'
+		WHEN 50 THEN '强制下架'
+		ELSE '未知'  
+		END AS houseStatusName,
+      tmp.`fid`,
+      tmp.id,
+      tmp.landlord_uid AS landlordUid,
+      tmp.`phy_fid`,
+      tmp.`fid` AS house_fid,
+      tmp.`house_base_fid`
+    FROM 
+    	(select
+    	thrm.`room_sn`,
+      	thrm.`room_name`,
+      	thbm.`house_addr`,
+      	thrm.`room_status`,
+      	thrm.`fid`,
+      	thrm.id,
+      	thbm.landlord_uid,
+      	thbm.`phy_fid`,
+      	thbm.`fid` AS house_fid,
+      	thrm.`house_base_fid`
+    	from
+      minsu_house_db.`t_house_room_msg` thrm
+      LEFT JOIN  minsu_house_db.`t_house_base_msg` thbm 
+      ON thrm.`house_base_fid` = thbm.`fid`
+	  LEFT JOIN minsu_house_db.`t_house_phy_msg` thp 
+	      ON thbm.phy_fid = thp.fid 
+	  WHERE thbm.`rent_way` = 1 
+	    <if test="cityCode != null and cityCode != ''">
+	    AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+	    </if>
+	    <if test="houseStatus != null and houseStatus != ''">
+	    AND thrm.`room_status`=#{houseStatus,jdbcType=VARCHAR}
+	    </if>
+	    )AS tmp
+	  GROUP BY tmp.fid 
+	  ORDER BY NULL 
+	  ) AS t 
+	  LEFT JOIN minsu_house_db.`t_house_phy_msg` thp 
+	    ON t.phy_fid = thp.`fid` 
+	  LEFT JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm 
+	    ON t.landlordUid = tcbm.`uid` 
+	  LEFT JOIN `minsu_house_db`.`t_house_biz_msg` thbm
+	  	ON t.fid = thbm.`room_fid`
+	WHERE thp.`is_del` = 0 
+	  AND tcbm.`is_del` = 0 
+	  AND tcbm.is_landlord = 1 
+	  <if test="createStartTime != null and createStartTime != ''">
+	  AND  thbm.`first_deploy_date` <![CDATA[ >= ]]> #{createStartTime,jdbcType=VARCHAR}
+	  </if>
+	  <if test="createEndTime != null and createEndTime != ''">
+	  AND  thbm.`first_deploy_date` <![CDATA[ < ]]> #{createEndTime,jdbcType=VARCHAR}
+	  </if>
+	  ORDER BY t.id ASC
+    </select>
+
+</mapper>

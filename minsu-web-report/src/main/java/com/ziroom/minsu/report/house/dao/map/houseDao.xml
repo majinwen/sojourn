@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.houseDao" >
+
+
+    <sql id="Base_Column_List" >
+    <!-- -->
+    </sql>
+
+    <!-- 获取数据库的信息 -->
+    <select id="findTest" resultType="java.lang.String"  parameterType="java.lang.String">
+        SELECT
+          fid
+        FROM minsu_house_db.t_house_base_msg 
+        LIMIT 1
+    </select>
+
+    <!-- 计算整租房源操作数量 -->
+    <select id="countEntireRentOperNum" resultType="java.lang.Long"  parameterType="map">
+	SELECT COUNT(DISTINCT(tmp.fid)) FROM
+	(SELECT tm.fid,tp.city_code FROM minsu_house_db.t_house_base_msg tm
+	LEFT JOIN minsu_house_db.t_house_operate_log tl
+	ON tm.fid = tl.house_base_fid
+	LEFT JOIN minsu_house_db.t_house_guard_rel tr
+	ON tm.fid = tr.house_fid
+	LEFT JOIN minsu_house_db.t_house_phy_msg tp
+    ON tm.phy_fid = tp.fid
+	WHERE tm.is_del = 0 
+	AND tm.rent_way = 0
+	<if test="houseStatus != null and houseStatus != ''">
+	AND tm.house_status = #{houseStatus,jdbcType=INTEGER}
+	</if>
+	<if test="toStatus != null and toStatus != '' ">
+	AND tl.to_status = #{toStatus,jdbcType=INTEGER}
+	</if>
+	<if test="landlordUid != null and landlordUid != '' ">
+    AND tm.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+    </if>
+	<if test="empGuardCode != null and empGuardCode != '' ">
+    AND tr.emp_guard_code = #{empGuardCode,jdbcType=VARCHAR}
+    </if>
+    <if test="cityCode != null and cityCode != '' ">
+    AND tp.city_code = #{cityCode,jdbcType=VARCHAR}
+    </if>
+    <if test="beginTime != null and beginTime != '' ">
+    AND tl.create_date <![CDATA[ > ]]> #{beginTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null and endTime != '' ">
+    AND tl.create_date <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+    </if>
+    ) AS tmp
+	</select>
+
+
+    <!-- 计算合租房源操作数量 -->
+    <select id="countSubRentOperNum" resultType="java.lang.Long"  parameterType="map">
+	SELECT COUNT(DISTINCT(trm.fid)) FROM minsu_house_db.t_house_room_msg  trm
+	LEFT JOIN minsu_house_db.t_house_base_msg tbm
+	ON trm.house_base_fid = tbm.fid
+	LEFT JOIN minsu_house_db.t_house_operate_log tol
+	ON trm.fid = tol.room_fid
+	LEFT JOIN minsu_house_db.t_house_guard_rel tgr
+	ON trm.house_base_fid = tgr.house_fid
+	LEFT JOIN minsu_house_db.t_house_phy_msg tp
+	ON tbm.phy_fid = tp.fid
+	WHERE trm.is_del = 0
+	AND tbm.rent_way = 1 
+	<if test="houseStatus != null and houseStatus != ''">
+	AND trm.room_status = #{houseStatus,jdbcType=INTEGER}
+	</if>
+	<if test="toStatus != null and toStatus != ''">
+	AND tol.to_status = #{toStatus,jdbcType=INTEGER}
+	</if>		
+	<if test="landlordUid != null and landlordUid != ''">
+	AND tbm.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+	</if>	
+	<if test="empGuardCode != null and empGuardCode != ''">
+	AND tgr.emp_guard_code = #{empGuardCode,jdbcType=VARCHAR}
+	</if>	
+	<if test="cityCode != null and cityCode != ''">
+	AND tp.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if>
+	<if test="beginTime != null and beginTime != ''">
+	AND tol.create_date <![CDATA[ > ]]> #{beginTime,jdbcType=VARCHAR}
+	</if>
+	<if test="endTime != null and endTime != ''">
+	AND tol.create_date <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	</if>
+    </select>
+
+    <!-- 计算合租房源操作数量 -->
+    <select id="countSubEntireRentOperNum" resultType="java.lang.Long"  parameterType="map">
+	SELECT COUNT(DISTINCT(trm.house_base_fid)) FROM minsu_house_db.t_house_room_msg  trm
+	LEFT JOIN minsu_house_db.t_house_base_msg tbm
+	ON trm.house_base_fid = tbm.fid
+	LEFT JOIN minsu_house_db.t_house_operate_log tol
+	ON trm.fid = tol.room_fid
+	LEFT JOIN minsu_house_db.t_house_guard_rel tgr
+	ON trm.house_base_fid = tgr.house_fid
+	LEFT JOIN minsu_house_db.t_house_phy_msg tp
+	ON tbm.phy_fid = tp.fid
+	WHERE trm.is_del = 0
+	AND tbm.rent_way = 1 
+	<if test="houseStatus != null and houseStatus != ''">
+	AND trm.room_status = #{houseStatus,jdbcType=INTEGER}
+	</if>
+	<if test="toStatus != null and toStatus != ''">
+	AND tol.to_status = #{toStatus,jdbcType=INTEGER}
+	</if>		
+	<if test="landlordUid != null and landlordUid != ''">
+	AND tbm.landlord_uid = #{landlordUid,jdbcType=VARCHAR}
+	</if>	
+	<if test="empGuardCode != null and empGuardCode != ''">
+	AND tgr.emp_guard_code = #{empGuardCode,jdbcType=VARCHAR}
+	</if>	
+	<if test="cityCode != null and cityCode != ''">
+	AND tp.city_code = #{cityCode,jdbcType=VARCHAR}
+	</if>
+	<if test="beginTime != null and beginTime != ''">
+	AND tol.create_date <![CDATA[ > ]]> #{beginTime,jdbcType=VARCHAR}
+	</if>
+	<if test="endTime != null and endTime != ''">
+	AND tol.create_date <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	</if>
+    </select>
+
+
+    <!-- 计算整租 房源 在x段时间内发布或者其它状态，并且 存在其它操作的 房源数量  -->
+    <select id="countLimitEntireRentOperNum" resultType="java.lang.Long"  parameterType="map">
+	SELECT COUNT(DISTINCT(tmp1.fid)) FROM 
+    (SELECT tm.fid FROM minsu_house_db.t_house_base_msg tm
+    LEFT JOIN minsu_house_db.t_house_operate_log tl
+    ON tm.fid = tl.house_base_fid
+    WHERE tl.to_status = #{houseStatus,jdbcType=INTEGER}
+    AND tm.rent_way = 0
+    AND tm.is_del = 0
+    <if test="beginTime != null and beginTime != ''">
+    AND tl.create_date  <![CDATA[ > ]]> #{beginTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null and endTime != ''">
+    AND tl.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+    </if>
+    )AS tmp1
+    INNER JOIN 
+    (SELECT tmt.fid  FROM minsu_house_db.t_house_base_msg tmt
+    LEFT JOIN minsu_house_db.t_house_operate_log tlt
+    ON tmt.fid = tlt.house_base_fid
+    LEFT JOIN minsu_house_db.t_house_phy_msg th
+    ON tmt.phy_fid = th.fid
+    WHERE tlt.to_status = #{toStatus,jdbcType=INTEGER}
+    AND tmt.is_del = 0
+    AND th.city_code = #{cityCode,jdbcType=VARCHAR}
+    <if test="beginTime != null and beginTime != ''">
+    AND tlt.create_date <![CDATA[ > ]]> #{beginTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null and endTime != ''">
+    AND tlt.create_date <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+    </if>
+    ) AS tmp2
+    ON tmp1.fid = tmp2.fid
+	</select>
+    
+    
+    <!-- 计算合租 房源 在x段时间内发布或者其它状态，并且 存在其它操作的 房源数量  -->
+    <select id="countLimitSubRentOperNum" resultType="java.lang.Long"  parameterType="map">
+	SELECT COUNT(DISTINCT(tmp1.fid)) FROM  
+    (SELECT DISTINCT(trm.fid) FROM minsu_house_db.t_house_room_msg trm
+    LEFT JOIN minsu_house_db.t_house_operate_log tl
+    ON trm.fid = tl.room_fid
+    LEFT JOIN minsu_house_db.t_house_base_msg tbm
+    ON trm.house_base_fid = tbm.fid
+    LEFT JOIN minsu_house_db.t_house_phy_msg th
+    ON tbm.phy_fid = th.fid
+    WHERE tl.to_status = #{houseStatus,jdbcType=INTEGER}
+    AND tbm.rent_way=1
+    AND trm.is_del = 0
+    AND th.city_code = #{cityCode,jdbcType=VARCHAR}
+    <if test="beginTime != null and beginTime != ''">
+    AND tl.create_date  <![CDATA[ > ]]> #{beginTime,jdbcType=VARCHAR}
+    </if>
+     <if test="endTime != null and endTime != ''">
+    AND tl.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+    </if>
+    ) AS tmp1
+    INNER JOIN 
+	(SELECT DISTINCT(trm.fid) FROM minsu_house_db.t_house_room_msg trm
+	LEFT JOIN minsu_house_db.t_house_operate_log tl
+	ON trm.fid = tl.room_fid
+	WHERE tl.to_status=#{toStatus,jdbcType=INTEGER}
+	AND trm.is_del = 0
+	<if test="beginTime != null and beginTime != ''">
+	AND tl.create_date  <![CDATA[ > ]]> #{beginTime,jdbcType=VARCHAR}
+	</if>
+	 <if test="endTime != null and endTime != ''">
+    AND tl.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+    </if>
+	) AS tmp2
+	ON tmp1.fid = tmp2.fid
+
+    </select>
+
+    <!-- 计算合租 房源，以整套维度  在x段时间内发布或者其它状态，并且 存在其它操作的 房源数量  -->
+    <select id="countLimitSubEntireRentOperNum" resultType="java.lang.Long"  parameterType="map">
+	SELECT COUNT(DISTINCT(tmp1.house_base_fid)) FROM  
+    (SELECT trm.fid,trm.house_base_fid FROM minsu_house_db.t_house_room_msg trm
+    LEFT JOIN minsu_house_db.t_house_operate_log tl
+    ON trm.fid = tl.room_fid
+    LEFT JOIN minsu_house_db.t_house_base_msg tbm
+    ON trm.house_base_fid = tbm.fid
+    LEFT JOIN minsu_house_db.t_house_phy_msg th
+    ON tbm.phy_fid = th.fid
+    WHERE tl.to_status = #{houseStatus,jdbcType=INTEGER}
+    AND tbm.rent_way=1
+    AND trm.is_del = 0
+    AND th.city_code = #{cityCode,jdbcType=VARCHAR}
+    <if test="beginTime != null and beginTime != ''">
+    AND tl.create_date  <![CDATA[ > ]]> #{beginTime,jdbcType=VARCHAR}
+    </if>
+     <if test="endTime != null and endTime != ''">
+    AND tl.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+    </if>
+    ) AS tmp1
+    INNER JOIN 
+	(SELECT DISTINCT(trm.fid) FROM minsu_house_db.t_house_room_msg trm
+	LEFT JOIN minsu_house_db.t_house_operate_log tl
+	ON trm.fid = tl.room_fid
+	WHERE tl.to_status=#{toStatus,jdbcType=INTEGER}
+	AND trm.is_del = 0
+	<if test="beginTime != null and beginTime != ''">
+	AND tl.create_date  <![CDATA[ > ]]> #{beginTime,jdbcType=VARCHAR}
+	</if>
+	 <if test="endTime != null and endTime != ''">
+    AND tl.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+    </if>
+	) AS tmp2
+	ON tmp1.fid = tmp2.fid
+    </select>
+
+
+
+   <!-- 计算订单的数量 -->
+    <select id="countOrderNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(*)
+        FROM minsu_house_db.t_house_base_msg
+        WHERE  is_del=0
+    </select>
+
+    <!--房源状态日变化 -->
+    <select id="getHouseDayStatus" resultType="com.ziroom.minsu.report.house.entity.HouseStatusDataEntity" parameterType="map">
+	    SELECT
+		  olog.*,
+		  hb.landlord_uid    landlordUid,
+		  hb.rent_way        rentWay,
+		  city.code          cityCode,
+		  city.show_name     cityName
+		FROM (SELECT
+		        ol.house_base_fid    houseFid,
+		        ol.room_fid          roomFid,
+		        ol.from_status       oldStatus,
+		        ol.to_status         newStatus,
+		        ol.create_date       statisticsDate
+		      FROM (SELECT
+		              MAX(create_date)      statisticsDate,
+		              house_base_fid        houseFid,
+		              room_fid              roomFid
+		            FROM minsu_house_db.t_house_operate_log
+		            <where>
+		            <if test="beginTime != null ">
+					AND create_date  <![CDATA[ > ]]> #{beginTime,jdbcType=TIMESTAMP}
+					</if>
+					 <if test="endTime != null ">
+				    AND create_date  <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP}
+				    </if>
+				    </where>
+		            GROUP BY house_base_fid,room_fid) olog,
+		        t_house_operate_log ol
+		      WHERE olog.statisticsDate = ol.create_date
+		          AND ol.house_base_fid = olog.houseFid) olog
+		  LEFT JOIN minsu_house_db.t_house_base_msg hb
+		    ON olog.houseFid = hb.fid
+		  LEFT JOIN minsu_house_db.t_house_phy_msg hp
+		    ON hb.phy_fid = hp.fid
+		  LEFT JOIN minsu_base_db.t_conf_city city
+		    ON city.code = hp.city_code
+		WHERE hb.is_del = 0
+    </select>
+    
+    <!-- 查询房源创建时间 -->
+    <select id="getHouseCreateDate"  parameterType="string" resultType="java.util.Date">
+    	SELECT create_date FROM minsu_house_db.t_house_base_msg
+        WHERE fid=#{houseFid,jdbcType=VARCHAR}
+    </select>
+    
+    <!-- 查询房间创建时间 -->
+    <select id="getRoomCreateDate" parameterType="string" resultType="java.util.Date">
+    	SELECT create_date FROM minsu_house_db.t_house_room_msg
+		WHERE fid=#{roomFid,jdbcType=VARCHAR}
+    </select>
+
+    <!--根据月份和员工号查询已发布或者上架房源数量-->
+    <select id="countHousePushNum" resultType="int">
+        SELECT
+        COUNT(t.id)
+        FROM
+        (SELECT
+        t2.id
+        FROM
+        minsu_house_db.t_house_base_msg t2
+        INNER JOIN minsu_house_db.t_house_guard_rel t3
+        INNER JOIN
+        (SELECT
+        t1.house_base_fid,
+        MIN(create_date) create_date
+        FROM
+        (SELECT
+        house_base_fid,
+        create_date
+        FROM
+        minsu_house_db.t_house_operate_log
+        WHERE to_status = #{houseStatus,jdbcType=INTEGER}
+        AND room_fid IS NULL) t1
+        GROUP BY t1.house_base_fid) t4
+        WHERE t4.house_base_fid = t2.fid
+        AND t2.`fid` = t3.`house_fid`
+        AND t2.rent_way = 0
+        AND t2.house_channel = 3
+        AND t3.`emp_push_code` = #{empCode,jdbcType=VARCHAR}
+        AND t4.create_date &gt; #{startTime,jdbcType=VARCHAR}
+        AND t4.create_date &lt; #{endTime,jdbcType=VARCHAR}
+        UNION ALL
+        SELECT
+        t5.id
+        FROM
+        minsu_house_db.t_house_base_msg t5
+        INNER JOIN minsu_house_db.t_house_room_msg t6
+        INNER JOIN minsu_house_db.t_house_guard_rel t7
+        INNER JOIN
+        (SELECT
+        t8.room_fid,
+        MIN(create_date) create_date
+        FROM
+        (SELECT
+        room_fid,
+        create_date
+        FROM
+        minsu_house_db.t_house_operate_log
+        WHERE to_status = #{houseStatus,jdbcType=INTEGER}) t8
+        GROUP BY t8.room_fid) t9
+        WHERE t5.fid = t6.house_base_fid
+        AND t5.fid = t7.house_fid
+        AND t6.fid = t9.room_fid
+        AND t5.rent_way = 1
+        AND t5.house_channel = 3
+        AND t7.emp_push_code = #{empCode,jdbcType=VARCHAR}
+        AND t9.create_date &gt;= #{startTime,jdbcType=VARCHAR}
+        AND t9.create_date &lt; #{endTime,jdbcType=VARCHAR}) t
+    </select>
+</mapper>

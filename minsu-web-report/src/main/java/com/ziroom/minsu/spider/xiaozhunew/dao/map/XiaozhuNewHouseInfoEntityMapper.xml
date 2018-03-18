@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ziroom.minsu.spider.xiaozhunew.dao.XiaozhuNewHouseInfoEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.spider.xiaozhunew.entity.XiaozhuNewHouseInfoEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+    <result column="house_name" property="houseName" jdbcType="VARCHAR" />
+    <result column="detail_url" property="detailUrl" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="review_score" property="reviewScore" jdbcType="FLOAT" />
+    <result column="house_price" property="housePrice" jdbcType="INTEGER" />
+    <result column="rent_type" property="rentType" jdbcType="INTEGER" />
+    <result column="rent_type_name" property="rentTypeName" jdbcType="VARCHAR" />
+    <result column="house_area" property="houseArea" jdbcType="DOUBLE" />
+    <result column="room_num" property="roomNum" jdbcType="INTEGER" />
+    <result column="hall_num" property="hallNum" jdbcType="INTEGER" />
+    <result column="toilet_num" property="toiletNum" jdbcType="INTEGER" />
+    <result column="toilet_type" property="toiletType" jdbcType="VARCHAR" />
+    <result column="kitchen_num" property="kitchenNum" jdbcType="INTEGER" />
+    <result column="balcony_num" property="balconyNum" jdbcType="INTEGER" />
+    <result column="person_capacity" property="personCapacity" jdbcType="INTEGER" />
+    <result column="bed_count" property="bedCount" jdbcType="INTEGER" />
+    <result column="bed_info" property="bedInfo" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="review_count" property="reviewCount" jdbcType="INTEGER" />
+    <result column="host_other_review_count" property="hostOtherReviewCount" jdbcType="INTEGER" />
+    <result column="min_nights" property="minNights" jdbcType="VARCHAR" />
+    <result column="max_nights" property="maxNights" jdbcType="VARCHAR" />
+    <result column="listing_amenities" property="listingAmenities" jdbcType="VARCHAR" />
+    <result column="allows_foreigner" property="allowsForeigner" jdbcType="VARCHAR" />
+    <result column="sheet_replace" property="sheetReplace" jdbcType="VARCHAR" />
+    <result column="charge_rule" property="chargeRule" jdbcType="VARCHAR" />
+    <result column="host_sn" property="hostSn" jdbcType="VARCHAR" />
+    <result column="host_name" property="hostName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.ziroom.minsu.spider.xiaozhunew.entity.XiaozhuNewHouseInfoEntityWithBLOBs" extends="BaseResultMap" >
+    <result column="personal_desc" property="personalDesc" jdbcType="LONGVARCHAR" />
+    <result column="indoor_desc" property="indoorDesc" jdbcType="LONGVARCHAR" />
+    <result column="traffic_desc" property="trafficDesc" jdbcType="LONGVARCHAR" />
+    <result column="surround_desc" property="surroundDesc" jdbcType="LONGVARCHAR" />
+    <result column="require_rule" property="requireRule" jdbcType="LONGVARCHAR" />
+    <result column="book_rule" property="bookRule" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, house_sn, house_name, detail_url, address, city, review_score, house_price, rent_type, 
+    rent_type_name, house_area, room_num, hall_num, toilet_num, toilet_type, kitchen_num, 
+    balcony_num, person_capacity, bed_count, bed_info, longitude, latitude, review_count, 
+    host_other_review_count, min_nights, max_nights, listing_amenities, allows_foreigner, 
+    sheet_replace, charge_rule, host_sn, host_name, create_date, last_modify_date
+  </sql>
+  <sql id="Blob_Column_List" >
+    personal_desc, indoor_desc, traffic_desc, surround_desc, require_rule, book_rule
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_xiaozhu_new_house_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_xiaozhu_new_house_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.spider.xiaozhunew.entity.XiaozhuNewHouseInfoEntityWithBLOBs" >
+    insert into t_xiaozhu_new_house_info (id, house_sn, house_name, 
+      detail_url, address, city, 
+      review_score, house_price, rent_type, 
+      rent_type_name, house_area, room_num, 
+      hall_num, toilet_num, toilet_type, 
+      kitchen_num, balcony_num, person_capacity, 
+      bed_count, bed_info, longitude, 
+      latitude, review_count, host_other_review_count, 
+      min_nights, max_nights, listing_amenities, 
+      allows_foreigner, sheet_replace, charge_rule, 
+      host_sn, host_name, create_date, 
+      last_modify_date, personal_desc, indoor_desc, 
+      traffic_desc, surround_desc, require_rule, 
+      book_rule)
+    values (#{id,jdbcType=INTEGER}, #{houseSn,jdbcType=VARCHAR}, #{houseName,jdbcType=VARCHAR}, 
+      #{detailUrl,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{reviewScore,jdbcType=FLOAT}, #{housePrice,jdbcType=INTEGER}, #{rentType,jdbcType=INTEGER}, 
+      #{rentTypeName,jdbcType=VARCHAR}, #{houseArea,jdbcType=DOUBLE}, #{roomNum,jdbcType=INTEGER}, 
+      #{hallNum,jdbcType=INTEGER}, #{toiletNum,jdbcType=INTEGER}, #{toiletType,jdbcType=VARCHAR}, 
+      #{kitchenNum,jdbcType=INTEGER}, #{balconyNum,jdbcType=INTEGER}, #{personCapacity,jdbcType=INTEGER}, 
+      #{bedCount,jdbcType=INTEGER}, #{bedInfo,jdbcType=VARCHAR}, #{longitude,jdbcType=DOUBLE}, 
+      #{latitude,jdbcType=DOUBLE}, #{reviewCount,jdbcType=INTEGER}, #{hostOtherReviewCount,jdbcType=INTEGER}, 
+      #{minNights,jdbcType=VARCHAR}, #{maxNights,jdbcType=VARCHAR}, #{listingAmenities,jdbcType=VARCHAR}, 
+      #{allowsForeigner,jdbcType=VARCHAR}, #{sheetReplace,jdbcType=VARCHAR}, #{chargeRule,jdbcType=VARCHAR}, 
+      #{hostSn,jdbcType=VARCHAR}, #{hostName,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{personalDesc,jdbcType=LONGVARCHAR}, #{indoorDesc,jdbcType=LONGVARCHAR}, 
+      #{trafficDesc,jdbcType=LONGVARCHAR}, #{surroundDesc,jdbcType=LONGVARCHAR}, #{requireRule,jdbcType=LONGVARCHAR}, 
+      #{bookRule,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.spider.xiaozhunew.entity.XiaozhuNewHouseInfoEntityWithBLOBs" >
+    insert into t_xiaozhu_new_house_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="houseSn != null" >
+        house_sn,
+      </if>
+      <if test="houseName != null" >
+        house_name,
+      </if>
+      <if test="detailUrl != null" >
+        detail_url,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="reviewScore != null" >
+        review_score,
+      </if>
+      <if test="housePrice != null" >
+        house_price,
+      </if>
+      <if test="rentType != null" >
+        rent_type,
+      </if>
+      <if test="rentTypeName != null" >
+        rent_type_name,
+      </if>
+      <if test="houseArea != null" >
+        house_area,
+      </if>
+      <if test="roomNum != null" >
+        room_num,
+      </if>
+      <if test="hallNum != null" >
+        hall_num,
+      </if>
+      <if test="toiletNum != null" >
+        toilet_num,
+      </if>
+      <if test="toiletType != null" >
+        toilet_type,
+      </if>
+      <if test="kitchenNum != null" >
+        kitchen_num,
+      </if>
+      <if test="balconyNum != null" >
+        balcony_num,
+      </if>
+      <if test="personCapacity != null" >
+        person_capacity,
+      </if>
+      <if test="bedCount != null" >
+        bed_count,
+      </if>
+      <if test="bedInfo != null" >
+        bed_info,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="reviewCount != null" >
+        review_count,
+      </if>
+      <if test="hostOtherReviewCount != null" >
+        host_other_review_count,
+      </if>
+      <if test="minNights != null" >
+        min_nights,
+      </if>
+      <if test="maxNights != null" >
+        max_nights,
+      </if>
+      <if test="listingAmenities != null" >
+        listing_amenities,
+      </if>
+      <if test="allowsForeigner != null" >
+        allows_foreigner,
+      </if>
+      <if test="sheetReplace != null" >
+        sheet_replace,
+      </if>
+      <if test="chargeRule != null" >
+        charge_rule,
+      </if>
+      <if test="hostSn != null" >
+        host_sn,
+      </if>
+      <if test="hostName != null" >
+        host_name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="personalDesc != null" >
+        personal_desc,
+      </if>
+      <if test="indoorDesc != null" >
+        indoor_desc,
+      </if>
+      <if test="trafficDesc != null" >
+        traffic_desc,
+      </if>
+      <if test="surroundDesc != null" >
+        surround_desc,
+      </if>
+      <if test="requireRule != null" >
+        require_rule,
+      </if>
+      <if test="bookRule != null" >
+        book_rule,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="houseSn != null" >
+        #{houseSn,jdbcType=VARCHAR},
+      </if>
+      <if test="houseName != null" >
+        #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="detailUrl != null" >
+        #{detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewScore != null" >
+        #{reviewScore,jdbcType=FLOAT},
+      </if>
+      <if test="housePrice != null" >
+        #{housePrice,jdbcType=INTEGER},
+      </if>
+      <if test="rentType != null" >
+        #{rentType,jdbcType=INTEGER},
+      </if>
+      <if test="rentTypeName != null" >
+        #{rentTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="houseArea != null" >
+        #{houseArea,jdbcType=DOUBLE},
+      </if>
+      <if test="roomNum != null" >
+        #{roomNum,jdbcType=INTEGER},
+      </if>
+      <if test="hallNum != null" >
+        #{hallNum,jdbcType=INTEGER},
+      </if>
+      <if test="toiletNum != null" >
+        #{toiletNum,jdbcType=INTEGER},
+      </if>
+      <if test="toiletType != null" >
+        #{toiletType,jdbcType=VARCHAR},
+      </if>
+      <if test="kitchenNum != null" >
+        #{kitchenNum,jdbcType=INTEGER},
+      </if>
+      <if test="balconyNum != null" >
+        #{balconyNum,jdbcType=INTEGER},
+      </if>
+      <if test="personCapacity != null" >
+        #{personCapacity,jdbcType=INTEGER},
+      </if>
+      <if test="bedCount != null" >
+        #{bedCount,jdbcType=INTEGER},
+      </if>
+      <if test="bedInfo != null" >
+        #{bedInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="reviewCount != null" >
+        #{reviewCount,jdbcType=INTEGER},
+      </if>
+      <if test="hostOtherReviewCount != null" >
+        #{hostOtherReviewCount,jdbcType=INTEGER},
+      </if>
+      <if test="minNights != null" >
+        #{minNights,jdbcType=VARCHAR},
+      </if>
+      <if test="maxNights != null" >
+        #{maxNights,jdbcType=VARCHAR},
+      </if>
+      <if test="listingAmenities != null" >
+        #{listingAmenities,jdbcType=VARCHAR},
+      </if>
+      <if test="allowsForeigner != null" >
+        #{allowsForeigner,jdbcType=VARCHAR},
+      </if>
+      <if test="sheetReplace != null" >
+        #{sheetReplace,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeRule != null" >
+        #{chargeRule,jdbcType=VARCHAR},
+      </if>
+      <if test="hostSn != null" >
+        #{hostSn,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null" >
+        #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="personalDesc != null" >
+        #{personalDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="indoorDesc != null" >
+        #{indoorDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="trafficDesc != null" >
+        #{trafficDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="surroundDesc != null" >
+        #{surroundDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="requireRule != null" >
+        #{requireRule,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="bookRule != null" >
+        #{bookRule,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.spider.xiaozhunew.entity.XiaozhuNewHouseInfoEntityWithBLOBs" >
+    update t_xiaozhu_new_house_info
+    <set >
+      <if test="houseSn != null" >
+        house_sn = #{houseSn,jdbcType=VARCHAR},
+      </if>
+      <if test="houseName != null" >
+        house_name = #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="detailUrl != null" >
+        detail_url = #{detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewScore != null" >
+        review_score = #{reviewScore,jdbcType=FLOAT},
+      </if>
+      <if test="housePrice != null" >
+        house_price = #{housePrice,jdbcType=INTEGER},
+      </if>
+      <if test="rentType != null" >
+        rent_type = #{rentType,jdbcType=INTEGER},
+      </if>
+      <if test="rentTypeName != null" >
+        rent_type_name = #{rentTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="houseArea != null" >
+        house_area = #{houseArea,jdbcType=DOUBLE},
+      </if>
+      <if test="roomNum != null" >
+        room_num = #{roomNum,jdbcType=INTEGER},
+      </if>
+      <if test="hallNum != null" >
+        hall_num = #{hallNum,jdbcType=INTEGER},
+      </if>
+      <if test="toiletNum != null" >
+        toilet_num = #{toiletNum,jdbcType=INTEGER},
+      </if>
+      <if test="toiletType != null" >
+        toilet_type = #{toiletType,jdbcType=VARCHAR},
+      </if>
+      <if test="kitchenNum != null" >
+        kitchen_num = #{kitchenNum,jdbcType=INTEGER},
+      </if>
+      <if test="balconyNum != null" >
+        balcony_num = #{balconyNum,jdbcType=INTEGER},
+      </if>
+      <if test="personCapacity != null" >
+        person_capacity = #{personCapacity,jdbcType=INTEGER},
+      </if>
+      <if test="bedCount != null" >
+        bed_count = #{bedCount,jdbcType=INTEGER},
+      </if>
+      <if test="bedInfo != null" >
+        bed_info = #{bedInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="reviewCount != null" >
+        review_count = #{reviewCount,jdbcType=INTEGER},
+      </if>
+      <if test="hostOtherReviewCount != null" >
+        host_other_review_count = #{hostOtherReviewCount,jdbcType=INTEGER},
+      </if>
+      <if test="minNights != null" >
+        min_nights = #{minNights,jdbcType=VARCHAR},
+      </if>
+      <if test="maxNights != null" >
+        max_nights = #{maxNights,jdbcType=VARCHAR},
+      </if>
+      <if test="listingAmenities != null" >
+        listing_amenities = #{listingAmenities,jdbcType=VARCHAR},
+      </if>
+      <if test="allowsForeigner != null" >
+        allows_foreigner = #{allowsForeigner,jdbcType=VARCHAR},
+      </if>
+      <if test="sheetReplace != null" >
+        sheet_replace = #{sheetReplace,jdbcType=VARCHAR},
+      </if>
+      <if test="chargeRule != null" >
+        charge_rule = #{chargeRule,jdbcType=VARCHAR},
+      </if>
+      <if test="hostSn != null" >
+        host_sn = #{hostSn,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null" >
+        host_name = #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="personalDesc != null" >
+        personal_desc = #{personalDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="indoorDesc != null" >
+        indoor_desc = #{indoorDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="trafficDesc != null" >
+        traffic_desc = #{trafficDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="surroundDesc != null" >
+        surround_desc = #{surroundDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="requireRule != null" >
+        require_rule = #{requireRule,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="bookRule != null" >
+        book_rule = #{bookRule,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.ziroom.minsu.spider.xiaozhunew.entity.XiaozhuNewHouseInfoEntityWithBLOBs" >
+    update t_xiaozhu_new_house_info
+    set house_sn = #{houseSn,jdbcType=VARCHAR},
+      house_name = #{houseName,jdbcType=VARCHAR},
+      detail_url = #{detailUrl,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      review_score = #{reviewScore,jdbcType=FLOAT},
+      house_price = #{housePrice,jdbcType=INTEGER},
+      rent_type = #{rentType,jdbcType=INTEGER},
+      rent_type_name = #{rentTypeName,jdbcType=VARCHAR},
+      house_area = #{houseArea,jdbcType=DOUBLE},
+      room_num = #{roomNum,jdbcType=INTEGER},
+      hall_num = #{hallNum,jdbcType=INTEGER},
+      toilet_num = #{toiletNum,jdbcType=INTEGER},
+      toilet_type = #{toiletType,jdbcType=VARCHAR},
+      kitchen_num = #{kitchenNum,jdbcType=INTEGER},
+      balcony_num = #{balconyNum,jdbcType=INTEGER},
+      person_capacity = #{personCapacity,jdbcType=INTEGER},
+      bed_count = #{bedCount,jdbcType=INTEGER},
+      bed_info = #{bedInfo,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=DOUBLE},
+      latitude = #{latitude,jdbcType=DOUBLE},
+      review_count = #{reviewCount,jdbcType=INTEGER},
+      host_other_review_count = #{hostOtherReviewCount,jdbcType=INTEGER},
+      min_nights = #{minNights,jdbcType=VARCHAR},
+      max_nights = #{maxNights,jdbcType=VARCHAR},
+      listing_amenities = #{listingAmenities,jdbcType=VARCHAR},
+      allows_foreigner = #{allowsForeigner,jdbcType=VARCHAR},
+      sheet_replace = #{sheetReplace,jdbcType=VARCHAR},
+      charge_rule = #{chargeRule,jdbcType=VARCHAR},
+      host_sn = #{hostSn,jdbcType=VARCHAR},
+      host_name = #{hostName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      personal_desc = #{personalDesc,jdbcType=LONGVARCHAR},
+      indoor_desc = #{indoorDesc,jdbcType=LONGVARCHAR},
+      traffic_desc = #{trafficDesc,jdbcType=LONGVARCHAR},
+      surround_desc = #{surroundDesc,jdbcType=LONGVARCHAR},
+      require_rule = #{requireRule,jdbcType=LONGVARCHAR},
+      book_rule = #{bookRule,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.spider.xiaozhunew.entity.XiaozhuNewHouseInfoEntity" >
+    update t_xiaozhu_new_house_info
+    set house_sn = #{houseSn,jdbcType=VARCHAR},
+      house_name = #{houseName,jdbcType=VARCHAR},
+      detail_url = #{detailUrl,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      review_score = #{reviewScore,jdbcType=FLOAT},
+      house_price = #{housePrice,jdbcType=INTEGER},
+      rent_type = #{rentType,jdbcType=INTEGER},
+      rent_type_name = #{rentTypeName,jdbcType=VARCHAR},
+      house_area = #{houseArea,jdbcType=DOUBLE},
+      room_num = #{roomNum,jdbcType=INTEGER},
+      hall_num = #{hallNum,jdbcType=INTEGER},
+      toilet_num = #{toiletNum,jdbcType=INTEGER},
+      toilet_type = #{toiletType,jdbcType=VARCHAR},
+      kitchen_num = #{kitchenNum,jdbcType=INTEGER},
+      balcony_num = #{balconyNum,jdbcType=INTEGER},
+      person_capacity = #{personCapacity,jdbcType=INTEGER},
+      bed_count = #{bedCount,jdbcType=INTEGER},
+      bed_info = #{bedInfo,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=DOUBLE},
+      latitude = #{latitude,jdbcType=DOUBLE},
+      review_count = #{reviewCount,jdbcType=INTEGER},
+      host_other_review_count = #{hostOtherReviewCount,jdbcType=INTEGER},
+      min_nights = #{minNights,jdbcType=VARCHAR},
+      max_nights = #{maxNights,jdbcType=VARCHAR},
+      listing_amenities = #{listingAmenities,jdbcType=VARCHAR},
+      allows_foreigner = #{allowsForeigner,jdbcType=VARCHAR},
+      sheet_replace = #{sheetReplace,jdbcType=VARCHAR},
+      charge_rule = #{chargeRule,jdbcType=VARCHAR},
+      host_sn = #{hostSn,jdbcType=VARCHAR},
+      host_name = #{hostName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByHouseSn" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_xiaozhu_new_house_info
+    where house_sn = #{houseSn,jdbcType=VARCHAR}
+  </select>
+   <select id="selectByHostSn" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_xiaozhu_new_house_info
+    where host_sn = #{hostSn,jdbcType=VARCHAR}
+  </select>
+</mapper>

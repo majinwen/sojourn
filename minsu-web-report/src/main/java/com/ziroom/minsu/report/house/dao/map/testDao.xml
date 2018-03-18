@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="report.testDao" >
+
+	<select id="getAllRegNum"  parameterType="map"  resultType="int">
+		select 
+		  count(*) 
+		from
+		  minsu_customer_db.`t_customer_base_msg` tcbm 
+		where tcbm.`create_date` >=  #{startDate,jdbcType=TIMESTAMP}
+		  and `create_date` <![CDATA[ < ]]>#{endDate,jdbcType=TIMESTAMP}
+	</select>
+	
+	<select id="getAllLandlordNum"  parameterType="map"  resultType="int">
+		SELECT 
+		  count(*) 
+		FROM
+		  minsu_customer_db.`t_customer_base_msg` tcbm 
+		  LEFT JOIN minsu_house_db.`t_house_business_msg_ext` thbme 
+		    ON tcbm.customer_mobile = thbme.landlord_mobile 
+		WHERE tcbm.`create_date` >= #{startDate,jdbcType=TIMESTAMP} 
+		  AND tcbm.`create_date` <![CDATA[ < ]]>#{endDate,jdbcType=TIMESTAMP}
+		  AND tcbm.`is_landlord` = 1 
+		  AND thbme.fid IS NULL 
+	</select>
+	
+	<select id="getAllHouseNum"  parameterType="map"  resultType="int">
+		SELECT 
+		  COUNT(t.uid) 
+		FROM
+		  (SELECT 
+		    uid 
+		  FROM
+		    minsu_customer_db.`t_customer_base_msg` tcbm 
+		    LEFT JOIN minsu_house_db.`t_house_business_msg_ext` thbme 
+		      ON tcbm.customer_mobile = thbme.landlord_mobile 
+		    LEFT JOIN minsu_house_db.`t_house_base_msg` thbm 
+		      ON tcbm.`uid` = thbm.`landlord_uid` 
+		    LEFT JOIN minsu_house_db.`t_house_room_msg` thrm 
+		      ON thrm.`house_base_fid` = thbm.`fid` 
+		    LEFT JOIN minsu_house_db.`t_house_guard_rel` thgl 
+		      ON thgl.`house_fid` = thbm.`fid` 
+		  WHERE tcbm.`create_date` >= #{startDate,jdbcType=TIMESTAMP} 
+		    AND tcbm.`create_date` <![CDATA[ < ]]>#{endDate,jdbcType=TIMESTAMP}
+		    AND tcbm.`is_landlord` = 1 
+		    AND thbme.fid IS NULL 
+		    AND thbm.fid IS NOT NULL 
+		    AND (
+		      thgl.`emp_push_code` IS NULL 
+		      OR thgl.`fid` IS NULL
+		    ) 
+		  GROUP BY tcbm.uid) t 
+	</select>
+	
+	<select id="getHouseSucceedNum"  parameterType="map"  resultType="int">
+		SELECT 
+		  COUNT(t.uid) 
+		FROM
+		  (SELECT 
+		    uid 
+		  FROM
+		    minsu_customer_db.`t_customer_base_msg` tcbm 
+		    LEFT JOIN minsu_house_db.`t_house_business_msg_ext` thbme 
+		      ON tcbm.customer_mobile = thbme.landlord_mobile 
+		    LEFT JOIN minsu_house_db.`t_house_base_msg` thbm 
+		      ON tcbm.`uid` = thbm.`landlord_uid` 
+		    LEFT JOIN minsu_house_db.`t_house_room_msg` thrm 
+		      ON thrm.`house_base_fid` = thbm.`fid` 
+		    LEFT JOIN minsu_house_db.`t_house_guard_rel` thgl 
+		      ON thgl.`house_fid` = thbm.`fid` 
+		  WHERE tcbm.`create_date` >= #{startDate,jdbcType=TIMESTAMP} 
+		    AND tcbm.`create_date` <![CDATA[ < ]]>#{endDate,jdbcType=TIMESTAMP}
+		    AND tcbm.`is_landlord` = 1 
+		    AND thbme.fid IS NULL 
+		    AND thbm.fid IS NOT NULL 
+		    AND (
+		      thgl.`emp_push_code` IS NULL 
+		      OR thgl.`fid` IS NULL
+		    ) 
+		    and thbm.`house_status` != 10 
+		    and thrm.`room_status` != 10 
+		  GROUP BY tcbm.uid) t 
+	</select>
+	
+    <select id="getHouseAuthNum"  parameterType="map"  resultType="int">
+		SELECT 
+		  COUNT(t.uid) 
+		FROM
+		  (SELECT 
+		    uid 
+		  FROM
+		    minsu_customer_db.`t_customer_base_msg` tcbm 
+		    LEFT JOIN minsu_house_db.`t_house_business_msg_ext` thbme 
+		      ON tcbm.customer_mobile = thbme.landlord_mobile 
+		    LEFT JOIN minsu_house_db.`t_house_base_msg` thbm 
+		      ON tcbm.`uid` = thbm.`landlord_uid` 
+		    LEFT JOIN minsu_house_db.`t_house_room_msg` thrm 
+		      ON thrm.`house_base_fid` = thbm.`fid` 
+		    LEFT JOIN minsu_house_db.`t_house_guard_rel` thgl 
+		      ON thgl.`house_fid` = thbm.`fid` 
+		  WHERE tcbm.`create_date` >= #{startDate,jdbcType=TIMESTAMP}
+		    AND tcbm.`create_date` <![CDATA[ < ]]>#{endDate,jdbcType=TIMESTAMP}
+		    AND tcbm.`is_landlord` = 1 
+		    AND thbme.fid IS NULL 
+		    AND thbm.fid IS NOT NULL 
+		    AND (
+		      thgl.`emp_push_code` IS NULL 
+		      OR thgl.`fid` IS NULL
+		    ) 
+		    AND (
+		      thbm.`house_status` = 40 
+		      or thrm.`room_status` = 40
+		    ) 
+		  GROUP BY tcbm.uid) t 
+	</select>
+</mapper>

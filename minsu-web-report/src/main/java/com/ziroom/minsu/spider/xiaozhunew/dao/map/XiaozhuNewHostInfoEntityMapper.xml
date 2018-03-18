@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ziroom.minsu.spider.xiaozhunew.dao.XiaozhuNewHostInfoEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.spider.xiaozhunew.entity.XiaozhuNewHostInfoEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="host_sn" property="hostSn" jdbcType="VARCHAR" />
+    <result column="host_name" property="hostName" jdbcType="VARCHAR" />
+    <result column="detail_url" property="detailUrl" jdbcType="VARCHAR" />
+    <result column="host_info" property="hostInfo" jdbcType="VARCHAR" />
+    <result column="house_count" property="houseCount" jdbcType="INTEGER" />
+    <result column="online_reply_rate" property="onlineReplyRate" jdbcType="DOUBLE" />
+    <result column="reviews_count" property="reviewsCount" jdbcType="INTEGER" />
+    <result column="reviews_score" property="reviewsScore" jdbcType="REAL" />
+    <result column="order_count" property="orderCount" jdbcType="INTEGER" />
+    <result column="ave_sure_time" property="aveSureTime" jdbcType="VARCHAR" />
+    <result column="order_accept_rate" property="orderAcceptRate" jdbcType="DOUBLE" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, host_sn, host_name, detail_url, host_info, house_count, online_reply_rate, reviews_count, 
+    reviews_score, order_count, ave_sure_time, order_accept_rate, create_date, last_modify_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_xiaozhu_new_host_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_xiaozhu_new_host_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.spider.xiaozhunew.entity.XiaozhuNewHostInfoEntity" >
+    insert into t_xiaozhu_new_host_info (id, host_sn, host_name, 
+      detail_url, host_info, house_count, 
+      online_reply_rate, reviews_count, reviews_score, 
+      order_count, ave_sure_time, order_accept_rate, 
+      create_date, last_modify_date)
+    values (#{id,jdbcType=INTEGER}, #{hostSn,jdbcType=VARCHAR}, #{hostName,jdbcType=VARCHAR}, 
+      #{detailUrl,jdbcType=VARCHAR}, #{hostInfo,jdbcType=VARCHAR}, #{houseCount,jdbcType=INTEGER}, 
+      #{onlineReplyRate,jdbcType=DOUBLE}, #{reviewsCount,jdbcType=INTEGER}, #{reviewsScore,jdbcType=REAL}, 
+      #{orderCount,jdbcType=INTEGER}, #{aveSureTime,jdbcType=VARCHAR}, #{orderAcceptRate,jdbcType=DOUBLE}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{lastModifyDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.spider.xiaozhunew.entity.XiaozhuNewHostInfoEntity" >
+    insert into t_xiaozhu_new_host_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="hostSn != null" >
+        host_sn,
+      </if>
+      <if test="hostName != null" >
+        host_name,
+      </if>
+      <if test="detailUrl != null" >
+        detail_url,
+      </if>
+      <if test="hostInfo != null" >
+        host_info,
+      </if>
+      <if test="houseCount != null" >
+        house_count,
+      </if>
+      <if test="onlineReplyRate != null" >
+        online_reply_rate,
+      </if>
+      <if test="reviewsCount != null" >
+        reviews_count,
+      </if>
+      <if test="reviewsScore != null" >
+        reviews_score,
+      </if>
+      <if test="orderCount != null" >
+        order_count,
+      </if>
+      <if test="aveSureTime != null" >
+        ave_sure_time,
+      </if>
+      <if test="orderAcceptRate != null" >
+        order_accept_rate,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="hostSn != null" >
+        #{hostSn,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null" >
+        #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="detailUrl != null" >
+        #{detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="hostInfo != null" >
+        #{hostInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="houseCount != null" >
+        #{houseCount,jdbcType=INTEGER},
+      </if>
+      <if test="onlineReplyRate != null" >
+        #{onlineReplyRate,jdbcType=DOUBLE},
+      </if>
+      <if test="reviewsCount != null" >
+        #{reviewsCount,jdbcType=INTEGER},
+      </if>
+      <if test="reviewsScore != null" >
+        #{reviewsScore,jdbcType=REAL},
+      </if>
+      <if test="orderCount != null" >
+        #{orderCount,jdbcType=INTEGER},
+      </if>
+      <if test="aveSureTime != null" >
+        #{aveSureTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAcceptRate != null" >
+        #{orderAcceptRate,jdbcType=DOUBLE},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.spider.xiaozhunew.entity.XiaozhuNewHostInfoEntity" >
+    update t_xiaozhu_new_host_info
+    <set >
+      <if test="hostSn != null" >
+        host_sn = #{hostSn,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null" >
+        host_name = #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="detailUrl != null" >
+        detail_url = #{detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="hostInfo != null" >
+        host_info = #{hostInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="houseCount != null" >
+        house_count = #{houseCount,jdbcType=INTEGER},
+      </if>
+      <if test="onlineReplyRate != null" >
+        online_reply_rate = #{onlineReplyRate,jdbcType=DOUBLE},
+      </if>
+      <if test="reviewsCount != null" >
+        reviews_count = #{reviewsCount,jdbcType=INTEGER},
+      </if>
+      <if test="reviewsScore != null" >
+        reviews_score = #{reviewsScore,jdbcType=REAL},
+      </if>
+      <if test="orderCount != null" >
+        order_count = #{orderCount,jdbcType=INTEGER},
+      </if>
+      <if test="aveSureTime != null" >
+        ave_sure_time = #{aveSureTime,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAcceptRate != null" >
+        order_accept_rate = #{orderAcceptRate,jdbcType=DOUBLE},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.spider.xiaozhunew.entity.XiaozhuNewHostInfoEntity" >
+    update t_xiaozhu_new_host_info
+    set host_sn = #{hostSn,jdbcType=VARCHAR},
+      host_name = #{hostName,jdbcType=VARCHAR},
+      detail_url = #{detailUrl,jdbcType=VARCHAR},
+      host_info = #{hostInfo,jdbcType=VARCHAR},
+      house_count = #{houseCount,jdbcType=INTEGER},
+      online_reply_rate = #{onlineReplyRate,jdbcType=DOUBLE},
+      reviews_count = #{reviewsCount,jdbcType=INTEGER},
+      reviews_score = #{reviewsScore,jdbcType=REAL},
+      order_count = #{orderCount,jdbcType=INTEGER},
+      ave_sure_time = #{aveSureTime,jdbcType=VARCHAR},
+      order_accept_rate = #{orderAcceptRate,jdbcType=DOUBLE},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="selectByHostSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_xiaozhu_new_host_info
+    where host_sn = #{hostSn,jdbcType=VARCHAR}
+  </select>
+</mapper>

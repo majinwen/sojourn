@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ziroom.minsu.spider.airbnb.dao.AirbnbHostInfoEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.spider.airbnb.entity.AirbnbHostInfoEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="host_sn" property="hostSn" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="first_name" property="firstName" jdbcType="VARCHAR" />
+    <result column="last_name" property="lastName" jdbcType="VARCHAR" />
+    <result column="super_host" property="superHost" jdbcType="INTEGER" />
+    <result column="auth" property="auth" jdbcType="INTEGER" />
+    <result column="reviews_count" property="reviewsCount" jdbcType="INTEGER" />
+    <result column="host_img" property="hostImg" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="detail_url" property="detailUrl" jdbcType="VARCHAR" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, host_sn, city, first_name, last_name, super_host, auth, reviews_count, host_img, 
+    create_date, detail_url, last_modify_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_airbnb_host_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_airbnb_host_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.spider.airbnb.entity.AirbnbHostInfoEntity" >
+    insert into t_airbnb_host_info (id, host_sn, city, 
+      first_name, last_name, super_host, 
+      auth, reviews_count, host_img, 
+      create_date, detail_url,last_modify_date)
+    values (#{id,jdbcType=INTEGER}, #{hostSn,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{firstName,jdbcType=VARCHAR}, #{lastName,jdbcType=VARCHAR}, #{superHost,jdbcType=INTEGER}, 
+      #{auth,jdbcType=INTEGER}, #{reviewsCount,jdbcType=INTEGER}, #{hostImg,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{detailUrl,jdbcType=VARCHAR}, #{lastModifyDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.spider.airbnb.entity.AirbnbHostInfoEntity" >
+    insert into t_airbnb_host_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="hostSn != null" >
+        host_sn,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="firstName != null" >
+        first_name,
+      </if>
+      <if test="lastName != null" >
+        last_name,
+      </if>
+      <if test="superHost != null" >
+        super_host,
+      </if>
+      <if test="auth != null" >
+        auth,
+      </if>
+      <if test="reviewsCount != null" >
+        reviews_count,
+      </if>
+      <if test="hostImg != null" >
+        host_img,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="detailUrl != null" >
+        detail_url,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="hostSn != null" >
+        #{hostSn,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="firstName != null" >
+        #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null" >
+        #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="superHost != null" >
+        #{superHost,jdbcType=INTEGER},
+      </if>
+      <if test="auth != null" >
+        #{auth,jdbcType=INTEGER},
+      </if>
+      <if test="reviewsCount != null" >
+        #{reviewsCount,jdbcType=INTEGER},
+      </if>
+      <if test="hostImg != null" >
+        #{hostImg,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="detailUrl != null" >
+         #{detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.spider.airbnb.entity.AirbnbHostInfoEntity" >
+    update t_airbnb_host_info
+    <set >
+      <if test="hostSn != null" >
+        host_sn = #{hostSn,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="firstName != null" >
+        first_name = #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null" >
+        last_name = #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="superHost != null" >
+        super_host = #{superHost,jdbcType=INTEGER},
+      </if>
+      <if test="auth != null" >
+        auth = #{auth,jdbcType=INTEGER},
+      </if>
+      <if test="reviewsCount != null" >
+        reviews_count = #{reviewsCount,jdbcType=INTEGER},
+      </if>
+      <if test="hostImg != null" >
+        host_img = #{hostImg,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+       <if test="detailUrl != null" >
+        detail_url = #{detailUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date=#{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.spider.airbnb.entity.AirbnbHostInfoEntity" >
+    update t_airbnb_host_info
+    set host_sn = #{hostSn,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      first_name = #{firstName,jdbcType=VARCHAR},
+      last_name = #{lastName,jdbcType=VARCHAR},
+      super_host = #{superHost,jdbcType=INTEGER},
+      auth = #{auth,jdbcType=INTEGER},
+      reviews_count = #{reviewsCount,jdbcType=INTEGER},
+      host_img = #{hostImg,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      detail_url = #{detailUrl,jdbcType=VARCHAR},
+      last_modify_date=#{lastModifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByHostSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_airbnb_host_info
+    where host_sn = #{hostSn,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_airbnb_host_info 
+  </select>
+</mapper>

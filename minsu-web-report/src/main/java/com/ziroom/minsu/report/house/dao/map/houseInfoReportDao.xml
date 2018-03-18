@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.houseInfoReportDao" >
+
+ <!--  查询结果为集合的方法 -->
+ <select id="getListByHBaseMParam" parameterType="com.ziroom.minsu.report.house.dto.HouseInfoReportDto" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+    select fid as houseBaseFid from `minsu_house_db`.t_house_base_msg where is_del=0 
+   <if test="houseStatus != null">
+    AND house_status = #{houseStatus}
+   </if>
+   <if test="rentWay != null">
+    AND rent_way = #{rentWay}
+   </if>
+   <if test="leaseMinPrice != null">
+    AND lease_price &gt;=#{leaseMinPrice}
+   </if>
+   <if test="leaseMaxPrice != null">
+    AND lease_price &lt; #{leaseMaxPrice}
+   </if>
+   <if test="houseBaseFidList != null and houseBaseFidList.size > 0">
+		AND fid in
+        <foreach collection="houseBaseFidList" item="hBaseFid" index="index" open="(" separator="," close=")">  
+			#{hBaseFid,jdbcType=VARCHAR}
+        </foreach>
+   </if>     
+ </select>
+ 
+ <select id="getListByHextParam" parameterType="com.ziroom.minsu.report.house.dto.HouseInfoReportDto" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+   select house_base_fid as houseBaseFid from `minsu_house_db`.t_house_base_ext
+   <where>
+	   <if test="orderType != null and orderType != ''">
+	    AND order_type = #{orderType}
+	   </if>
+	   <if test="houseQualityGrade != null and houseQualityGrade != ''">
+	    AND house_quality_grade = #{houseQualityGrade}
+	   </if>
+   </where>
+ </select>
+ 
+ <select id="getListByHBizMParam" parameterType="com.ziroom.minsu.report.house.dto.HouseInfoReportDto" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+   select house_base_fid as houseBaseFid from `minsu_house_db`.t_house_biz_msg
+   <where>
+	   <if test="firstDeployBeginDate != null and firstDeployBeginDate != ''">
+	    AND first_deploy_date <![CDATA[ >= ]]> #{firstDeployBeginDate}
+	   </if>
+	   <if test="firstDeployEndDate != null and firstDeployEndDate != ''">
+	    AND first_deploy_date <![CDATA[ < ]]> #{firstDeployEndDate}
+	   </if>
+   </where>
+ </select>
+ 
+ <select id="getListByRegionParam" parameterType="com.ziroom.minsu.report.house.dto.HouseInfoReportDto" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+	    select hbm.fid as houseBaseFid from `minsu_house_db`.t_house_base_msg as hbm INNER JOIN `minsu_house_db`.t_house_phy_msg as hpm on hpm.fid=hbm.phy_fid
+	   <where>
+	   <if test="provinceCodeList != null and provinceCodeList.size > 0">
+		     and province_code in 
+		     <foreach collection="provinceCodeList" item="provinceCode" index="index" open="(" separator="," close=")">
+		         #{provinceCode,jdbcType=VARCHAR}
+		     </foreach>
+	   </if>
+	   </where>
+	</select>
+ 
+ <select id="getPCodeListByRCode" parameterType="java.lang.String" resultType="java.lang.String">
+	    select province_code as provinceCode 
+	    from t_city_region_rel 
+	    where region_fid = #{regionCode}
+  </select>
+ 
+  <select id="getListByHPhyMParam" parameterType="com.ziroom.minsu.report.house.dto.HouseInfoReportDto" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+   select hbm.fid as houseBaseFid from `minsu_house_db`.t_house_base_msg as hbm INNER JOIN `minsu_house_db`.t_house_phy_msg as hpm on hpm.fid=hbm.phy_fid
+   <where>
+	   <if test="nationCode != null and nationCode != ''">
+	    nation_code = #{nationCode}
+	   </if>
+	    <if test="cityCode != null and cityCode != ''">
+	    AND city_code = #{cityCode}
+	   </if>
+   </where>
+ </select>
+ 
+ <!-- 查询结果为单个对象的方法 -->
+ <select id="getVoFromHExtM" parameterType="com.ziroom.minsu.report.house.dto.HouseInfoReportDto" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+   select house_base_fid as houseBaseFid from `minsu_house_db`.t_house_base_ext where fid = #{houseBaseFid}
+   <if test="orderType != null and orderType != ''">
+	    AND order_type = #{orderType}
+   </if>
+   <if test="houseQualityGrade != null and houseQualityGrade != ''">
+	    AND house_quality_grade = #{houseQualityGrade}
+   </if>
+   limit 1
+ </select>
+ 
+ <select id="getVoFromHBizM" parameterType="com.ziroom.minsu.report.house.dto.HouseInfoReportDto" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+   select house_base_fid as houseBaseFid from `minsu_house_db`.t_house_biz_msg 
+   <where>
+       house_base_fid = #{houseBaseFid}
+	   <if test="firstDeployBeginDate != null and firstDeployBeginDate != ''">
+	    AND first_deploy_date <![CDATA[ >= ]]> #{firstDeployBeginDate}
+	   </if>
+	   <if test="firstDeployEndDate != null and firstDeployEndDate != ''">
+	    AND first_deploy_date <![CDATA[ < ]]> #{firstDeployEndDate}
+	   </if>
+	   limit 1
+   </where>
+ </select>
+ 
+ <select id="getVoFromHPhyM" parameterType="com.ziroom.minsu.report.house.dto.HouseInfoReportDto" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+   select hbm.fid as houseBaseFid from `minsu_house_db`.t_house_base_msg as hbm INNER JOIN `minsu_house_db`.t_house_phy_msg as hpm on hpm.fid=hbm.phy_fid
+   <where>
+       hbm.fid = #{houseBaseFid}
+	   <if test="nationCode != null and nationCode != ''">
+	    AND nation_code = #{nationCode}
+	   </if>
+	    <if test="cityCode != null and cityCode != ''">
+	    AND city_code = #{cityCode}
+	   </if>
+	   limit 1
+   </where>
+ </select>
+ 
+ <select id="getVoByRegion" parameterType="com.ziroom.minsu.report.house.dto.HouseInfoReportDto" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+	   select hbm.fid as houseBaseFid from `minsu_house_db`.t_house_base_msg as hbm INNER JOIN `minsu_house_db`.t_house_phy_msg as hpm on hpm.fid=hbm.phy_fid
+	   <where>
+	   hbm.fid = #{houseBaseFid}
+	   <if test="provinceCodeList != null and provinceCodeList.size > 0">
+		     and hpm.province_code in 
+		     <foreach collection="provinceCodeList" item="provinceCode" index="index" open="(" separator="," close=")">
+		         #{provinceCode,jdbcType=VARCHAR}
+		     </foreach>
+	   </if>
+	   </where>
+	</select>
+ 
+ <!-- 根据查询条件确定房源list之后，根据房源基础信息表中fid查找Vo中所有需要的字段, 接下来四个sql都是这个目的 -->
+ <select id="getVoByFid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+    select house_sn as houseSn, house_status as houseStatus, rent_way as rentWay, house_area as houseArea, room_num as roomNum, hall_num as hallNum, toilet_num as toiletNum, kitchen_num as kitchenNum, balcony_num as balconyNum 
+	from `minsu_house_db`.t_house_base_msg
+	where fid = #{houseBaseFid} limit 1
+ </select>
+ 
+ <select id="getHbizMByHbmfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+   select first_deploy_date as firstDeployDate
+   from `minsu_house_db`.t_house_biz_msg
+   where house_base_fid = #{houseBaseFid} limit 1 
+ </select>
+ 
+ <select id="getHOLogByHbmfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+   select min(create_date) as firstDeployDate 
+   from t_house_operate_log 
+   where house_base_fid=#{houseBaseFid} and to_status =11
+ </select>
+ 
+ <select id="getHextByHbmfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+   select order_type as orderType, house_quality_grade as houseQualityGrade 
+   from `minsu_house_db`.t_house_base_ext 
+   where house_base_fid = #{houseBaseFid} limit 1 
+ </select>
+ 
+ <select id="getHphyMByHbmfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+   select hpm.nation_code as nationCode, hpm.city_code as cityCode 
+   from `minsu_house_db`.t_house_phy_msg hpm INNER JOIN `minsu_house_db`.t_house_base_msg hbm on hpm.fid=hbm.phy_fid
+   where hbm.fid = #{houseBaseFid} limit 1 
+ </select>
+ 
+ <select id="getFromConfCity" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+	  select show_name as cityName
+	  from `minsu_base_db`.t_conf_city 
+	  where code = #{cityCode}
+ </select>
+ 
+ <select id="getFromCityRegionRel" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+	    select region_fid as regionCode, country_code as nationCode 
+		from t_city_region_rel
+		where province_code = #{provinceCode} limit 1
+	</select>
+ 
+ <!-- 整租查询所有Hfid -->
+ <select id="getEntireRentList" parameterType="com.ziroom.minsu.report.house.dto.HouseInfoReportDto" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+    SELECT phy.nation_code as nationCode, phy.city_code as cityCode, phy.province_code as provinceCode,
+           base.fid as houseBaseFid, base.house_sn as houseSn, base.house_status as houseStatus, base.rent_way as rentWay,
+           base.house_area as houseArea, base.room_num as roomNum, base.hall_num as hallNum, base.toilet_num as toiletNum, 
+           base.kitchen_num as kitchenNum, base.balcony_num as balconyNum,base.lease_price as leasePrice,
+           biz.first_deploy_date as firstDeployDate,
+           ext.order_type as orderType, ext.house_quality_grade as houseQualityGrade
+	FROM `minsu_house_db`.t_house_base_msg AS base
+	LEFT JOIN `minsu_house_db`.t_house_base_ext AS ext
+	ON base.fid=ext.house_base_fid 
+	LEFT JOIN `minsu_house_db`.t_house_phy_msg AS phy
+	ON base.phy_fid=phy.fid
+	LEFT JOIN `minsu_house_db`.t_house_biz_msg AS biz
+	ON base.fid=biz.house_base_fid
+	<where>
+	    base.is_del=0 
+	    <if test="houseStatus != null">
+	        AND base.house_status = #{houseStatus}
+	    </if>
+	    <if test="rentWay != null">
+	        AND base.rent_way = #{rentWay}
+	    </if>
+	    <if test="leaseMinPrice != null">
+	        AND base.lease_price &gt;=#{leaseMinPrice}
+	    </if>
+	    <if test="leaseMaxPrice != null">
+	        AND base.lease_price &lt; #{leaseMaxPrice}
+	    </if>
+	    <if test="orderType != null and orderType != ''">
+	        AND ext.order_type = #{orderType}
+	    </if>
+	    <if test="houseQualityGrade != null and houseQualityGrade != ''">
+	        AND ext.house_quality_grade = #{houseQualityGrade}
+	    </if>
+	    <if test="nationCode != null and nationCode != ''">
+	        AND phy.nation_code = #{nationCode}
+	    </if>
+	    <if test="cityCode != null and cityCode != ''">
+	        AND phy.city_code = #{cityCode}
+	    </if>
+	    <if test="firstDeployBeginDate != null and firstDeployBeginDate != ''">
+	        AND biz.first_deploy_date <![CDATA[ >= ]]> #{firstDeployBeginDate}
+	    </if>
+	    <if test="firstDeployEndDate != null and firstDeployEndDate != ''">
+	        AND biz.first_deploy_date <![CDATA[ < ]]> #{firstDeployEndDate}
+	    </if>
+	    <if test="provinceCodeList != null and provinceCodeList.size > 0">
+		     and phy.province_code in 
+		     <foreach collection="provinceCodeList" item="provinceCode" index="index" open="(" separator="," close=")">
+		         #{provinceCode}
+		     </foreach>
+	    </if>
+	</where>
+ </select>
+ 
+<!-- 分租查询所有roomfid -->
+ <select id="getJoinRentList" parameterType="com.ziroom.minsu.report.house.dto.HouseInfoReportDto" resultType="com.ziroom.minsu.report.house.vo.HouseInfoReportVo">
+    SELECT phy.nation_code as nationCode, phy.city_code as cityCode, phy.province_code as provinceCode,
+           room.fid as roomFid, room.room_sn as houseSn, room.room_status as houseStatus,room.room_area as houseArea,
+           base.room_num as roomNum, base.hall_num as hallNum, base.toilet_num as toiletNum, 
+           base.kitchen_num as kitchenNum, base.balcony_num as balconyNum,
+           biz.first_deploy_date as firstDeployDate,room.room_price as leasePrice,
+           roomExt.order_type as orderType, ext.house_quality_grade as houseQualityGrade
+	FROM `minsu_house_db`.t_house_room_msg AS room
+	LEFT JOIN `minsu_house_db`.t_house_base_msg AS base
+	ON base.fid=room.house_base_fid 
+	LEFT JOIN `minsu_house_db`.t_house_room_ext AS roomExt
+	ON room.fid=roomExt.room_fid 
+	LEFT JOIN `minsu_house_db`.t_house_base_ext AS ext
+	ON base.fid=ext.house_base_fid 
+	LEFT JOIN `minsu_house_db`.t_house_phy_msg AS phy
+	ON base.phy_fid=phy.fid
+	LEFT JOIN `minsu_house_db`.t_house_biz_msg AS biz
+	ON room.fid=biz.room_fid AND biz.rent_way=1
+	<where>
+	    base.is_del=0 and base.rent_way=1
+	    <if test="houseStatus != null">
+	        AND room.room_status = #{houseStatus}
+	    </if>
+	    <if test="leaseMinPrice != null">
+	        AND room.room_price &gt;=#{leaseMinPrice}
+	    </if>
+	    <if test="leaseMaxPrice != null">
+	        AND room.room_price &lt; #{leaseMaxPrice}
+	    </if>
+	    <if test="orderType != null and orderType != ''">
+	        AND roomExt.order_type = #{orderType}
+	    </if>
+	    <if test="houseQualityGrade != null and houseQualityGrade != ''">
+	        AND ext.house_quality_grade = #{houseQualityGrade}
+	    </if>
+	    <if test="nationCode != null and nationCode != ''">
+	        AND phy.nation_code = #{nationCode}
+	    </if>
+	    <if test="cityCode != null and cityCode != ''">
+	        AND phy.city_code = #{cityCode}
+	    </if>
+	    <if test="firstDeployBeginDate != null and firstDeployBeginDate != ''">
+	        AND biz.first_deploy_date <![CDATA[ >= ]]> #{firstDeployBeginDate}
+	    </if>
+	    <if test="firstDeployEndDate != null and firstDeployEndDate != ''">
+	        AND biz.first_deploy_date <![CDATA[ < ]]> #{firstDeployEndDate}
+	    </if>
+	    <if test="provinceCodeList != null and provinceCodeList.size > 0">
+		     and phy.province_code in 
+		     <foreach collection="provinceCodeList" item="provinceCode" index="index" open="(" separator="," close=")">
+		         #{provinceCode}
+		     </foreach>
+	    </if>
+	</where>
+ </select>
+ 
+
+</mapper>

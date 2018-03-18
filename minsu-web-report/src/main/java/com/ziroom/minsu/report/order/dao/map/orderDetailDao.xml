@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.orderDetailDao" >
+
+
+    <sql id="Base_Column_List" >
+    <!-- -->
+     tr.order_sn AS orderSn,tr.city_code AS cityCode,tr.landlord_name AS landlordName,tr.user_name AS userName,tm.sum_money AS sumMoney,tm.rental_money AS rentalMoney,tm.lan_comm_money AS lanCommMoney,tm.user_comm_money AS userCommMoney,tm.real_lan_money AS realLanMoney,tm.real_user_money AS realUserMoney 
+    </sql>
+
+     <!-- # 订单明细 -->
+     <select id="orderStaticsInfo" resultType="com.ziroom.minsu.report.order.vo.OrderDetailVo" parameterType="map">
+        SELECT 
+		  tr.`order_sn` AS orderSn,
+		  tr.`user_name` AS userName,
+		  tr.`user_tel` AS userTel,
+		  tr.`create_time` AS createTime,
+		  tr.`start_time` AS startTime,
+		  tr.`end_time` AS endTime,
+		  tr.`real_end_time` AS realEndTime,
+		  tr.city_code AS cityCode,
+		  tcc.show_name AS cityName,
+		  tohs.`house_fid` AS houseFid,
+		  tohs.`house_name` AS houseName,
+		  CASE
+		    tohs.rent_way 
+		    WHEN 0 
+		    THEN '整租' 
+		    WHEN 1 
+		    THEN '合租' 
+		    ELSE '未知' 
+		  END AS rentWayName,
+		  tohs.`house_addr` AS houseAddr,
+		  tcbm.`real_name` AS lanRealName,
+		  tcbm.`customer_mobile` AS lanMobile,
+		  thgr.`emp_guard_code` AS empGuardCode,
+		  thgr.`emp_guard_name` AS empGuardName,
+		  thgr.`emp_push_code` AS empPushCode,
+		  thgr.`emp_push_name` AS empPushName 
+		FROM
+		  minsu_order_db.`t_order` tr 
+		  INNER JOIN minsu_order_db.`t_order_house_snapshot` tohs 
+		    ON tr.`order_sn` = tohs.`order_sn` 
+		  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm 
+		    ON tr.landlord_uid = tcbm.`uid` 
+		  INNER JOIN `minsu_house_db`.`t_house_guard_rel` thgr 
+		    ON tohs.house_fid = thgr.`house_fid` 
+		  LEFT JOIN `minsu_base_db`.`t_conf_city` tcc 
+		    ON tr.city_code = tcc.code 
+		  WHERE tr.`pay_status` = 1 
+		  AND tr.is_del = 0
+		  <if test="cityCode != null and cityCode != '' ">
+		    AND tr.`city_code` = #{cityCode,jdbcType=VARCHAR}
+		    </if>
+		  <if test="beginTime != null and beginTime != '' ">
+		  AND tr.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		  </if>
+          <if test="endTime != null and endTime != '' ">
+	      AND tr.`create_time` <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	      </if>
+	      ORDER BY tr.`create_time` DESC
+    </select> 
+	
+	<select id="entireHouseOrderInfo" resultType="com.ziroom.minsu.report.order.vo.HouseOrderInfoVo" parameterType="map">
+	SELECT 
+    thbm.fid AS houseFid,
+    thbm.house_sn AS houseSn,
+    thbm.`house_name` AS houseName,
+    thbm.`house_addr` AS houseAddr,
+    thbm.`city_code` AS cityCode,
+    thbm.`emp_guard_code` AS empGuardCode,
+    thbm.`emp_guard_name` AS empGuardName,
+    thbm.`emp_push_code` AS empPushCode,
+    thbm.`emp_push_name` AS empPushName,
+    thbm.`real_name` AS lanRealName,
+    thbm.`customer_mobile` AS lanCusMobile,
+    tmp.orderNum,
+    tmp.orderNight,
+    tmp.rentalMoney,
+    tmp.orderServiceMoney,
+    staty.statyNight ,
+    eva.evaNum,
+    service.serviceMoney AS stayServiceMoney,
+    will_30_night.willStatyNight,
+    will_30_money.willServiceMoney
+    FROM
+    (SELECT 
+      thbm.fid,
+      thbm.house_sn,
+      thbm.`house_name`,
+      thbm.`house_addr`,
+      thpm.`city_code`,
+      thgr.`emp_guard_code`,
+      thgr.`emp_guard_name`,
+      thgr.`emp_push_code`,
+      thgr.`emp_push_name`,
+      tcbm.`real_name`,
+      tcbm.`customer_mobile` 
+    FROM
+      `minsu_house_db`.`t_house_base_msg` thbm 
+      INNER JOIN `minsu_house_db`.`t_house_phy_msg` thpm 
+        ON thpm.`fid` = thbm.`phy_fid` 
+      INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm 
+        ON thbm.`landlord_uid` = tcbm.`uid` 
+      LEFT JOIN `minsu_house_db`.`t_house_guard_rel` thgr 
+        ON thbm.`fid` = thgr.`house_fid` 
+    WHERE thbm.`rent_way` = 0
+    AND thpm.is_del = 0
+    AND tcbm.is_del = 0
+    AND thgr.is_del=0
+    <if test="cityCode != null and cityCode != '' ">
+	    AND thpm.city_code=#{cityCode,jdbcType=VARCHAR}
+	</if> 
+	<if test="lanCustomerMobile != null and lanCustomerMobile != '' ">
+	    AND tcbm.customer_mobile=#{lanCustomerMobile,jdbcType=VARCHAR}
+	</if>
+	<if test="empGuardName != null and empGuardName != '' ">
+	    AND thgr.emp_guard_name=#{empGuardName,jdbcType=VARCHAR}
+	</if>
+	<if test="empPushName != null and empPushName != '' ">
+	    AND thgr.emp_push_name=#{empPushName,jdbcType=VARCHAR}
+	</if>   
+    ) AS thbm 
+    LEFT JOIN 
+      (SELECT COUNT(tr.`order_sn`) AS orderNum,
+        tohs.`house_fid`,
+        COALESCE(SUM(DATEDIFF(tr.end_time, tr.start_time)),0) AS orderNight,
+        COALESCE(SUM(tom.`rental_money`),0) AS rentalMoney,
+        COALESCE(SUM(tom.`lan_comm_money` + tom.`user_comm_money`), 0) AS orderServiceMoney 
+      FROM
+        minsu_order_db.`t_order` tr 
+        INNER JOIN minsu_order_db.`t_order_house_snapshot` tohs 
+          ON tr.`order_sn` = tohs.`order_sn` 
+        INNER JOIN minsu_order_db.`t_order_money` tom 
+          ON tr.`order_sn` = tom.`order_sn` 
+      WHERE tohs.`rent_way` = 0 
+        AND tr.pay_status = 1
+        <if test="beginTime != null and beginTime != '' ">
+	    AND tr.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	    </if>
+	    <if test="endTime != null and endTime != '' ">
+	    AND tr.`create_time` <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+	    GROUP BY tohs.`house_fid`
+      ) AS tmp 
+      ON thbm.`fid` = tmp.house_fid
+   LEFT JOIN (SELECT COUNT(tbhl.`fid`) AS statyNight,tbhl.house_fid FROM minsu_order_db.`t_base_house_lock` tbhl 
+      WHERE tbhl.rent_way = 0 
+      AND tbhl.lock_type = 1
+     <if test="beginTime != null and beginTime != '' ">
+      AND tbhl.`lock_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+     </if>
+     <if test="endTime != null and endTime != '' ">
+     AND tbhl.`lock_time` <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+     </if>
+      GROUP BY tbhl.house_fid ) AS staty
+   ON thbm.`fid` = staty.house_fid
+   LEFT JOIN (SELECT COUNT(teo.fid) AS evaNum,teo.house_fid FROM `minsu_evaluate_db`.`t_evaluate_order` teo 
+    WHERE teo.rent_way = 0
+    
+     <if test="beginTime != null and beginTime != '' ">
+      AND teo.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+     </if>
+     <if test="endTime != null and endTime != '' ">
+     AND teo.`create_time` <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+     </if>
+   AND teo.`eva_user_type` = 2 
+   
+    GROUP BY teo.house_fid ORDER BY NULL) AS eva
+    ON thbm.`fid` = eva.house_fid
+    LEFT JOIN(
+     SELECT SUM(t1.total_fee) AS serviceMoney,tohs.`house_fid`
+        FROM (SELECT tfi.`total_fee` ,tfi .order_sn
+      FROM minsu_order_db.`t_finance_income` tfi 
+         WHERE  tfi.income_source_type !=3
+         AND tfi.is_del = 0
+        <if test="beginTime != null and beginTime != '' ">
+	     AND tfi.`generate_fee_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	    </if>
+	    <if test="endTime != null and endTime != '' ">
+	    AND tfi.`generate_fee_time` <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+        ) AS t1
+     INNER JOIN minsu_order_db.`t_order_house_snapshot` tohs 
+        ON t1.order_sn = tohs.`order_sn` 
+        WHERE tohs.rent_way = 0
+     GROUP BY tohs.`house_fid` ORDER BY NULL    
+    
+    )AS service  
+    ON   thbm.`fid` = service.house_fid
+    LEFT JOIN(
+    SELECT 
+	  COUNT(tbhl.`fid`) AS willStatyNight,
+	  tbhl.house_fid 
+	FROM
+	  minsu_order_db.`t_base_house_lock` tbhl 
+	WHERE tbhl.rent_way = 0 
+	  AND tbhl.lock_type = 1 
+	 <choose>
+	    <when test="endTime != null and endTime != '' ">
+		  AND tbhl.`lock_time` <![CDATA[ >= ]]> #{endTime,jdbcType=VARCHAR}
+		  AND tbhl.`lock_time` <![CDATA[ < ]]> DATE_ADD(#{endTime,jdbcType=VARCHAR}, INTERVAL 30 DAY) 
+		</when>
+		
+		<otherwise>
+		  AND tbhl.`lock_time` <![CDATA[ >= ]]> CURDATE() 
+	      AND tbhl.`lock_time` <![CDATA[ < ]]> DATE_ADD(CURDATE(), INTERVAL 30 DAY) 
+		</otherwise>
+	</choose>   
+	GROUP BY tbhl.house_fid  
+    ) AS will_30_night
+    ON thbm.`fid` = will_30_night.house_fid
+    LEFT JOIN(
+    
+SELECT 
+  SUM(t1.total_fee) AS willServiceMoney,
+  tohs.`house_fid` 
+FROM
+  (SELECT 
+    tfi.`total_fee`,
+    tfi.order_sn 
+  FROM
+    minsu_order_db.`t_finance_income` tfi 
+  WHERE tfi.income_source_type != 3 
+    AND tfi.is_del = 0 
+   <choose>
+    <when test="endTime != null and endTime != '' ">
+	  AND tfi.`generate_fee_time` <![CDATA[ >= ]]> #{endTime,jdbcType=VARCHAR}
+	  AND tfi.`generate_fee_time` <![CDATA[ < ]]> DATE_ADD(#{endTime,jdbcType=VARCHAR}, INTERVAL 30 DAY) 
+	</when>
+	<otherwise>
+	  AND tfi.`generate_fee_time` <![CDATA[ >= ]]> CURDATE() 
+      AND tfi.`generate_fee_time` <![CDATA[ < ]]> DATE_ADD(CURDATE(), INTERVAL 30 DAY) 
+	</otherwise>
+    </choose>   ) AS t1 
+	  INNER JOIN minsu_order_db.`t_order_house_snapshot` tohs 
+	    ON t1.order_sn = tohs.`order_sn` 
+	WHERE tohs.rent_way = 0 
+	GROUP BY tohs.`house_fid` 
+	ORDER BY NULL 
+    ) AS will_30_money
+    ON thbm.`fid` = will_30_money.house_fid
+   ORDER BY tmp.orderNum DESC 
+  
+	</select>
+	
+	<select id="subHouseOrderInfo" resultType="com.ziroom.minsu.report.order.vo.HouseOrderInfoVo" parameterType="map">
+	SELECT 
+    thbm.fid AS houseFid,
+    thbm.room_sn AS houseSn,
+    thbm.`room_name` AS houseName,
+    thbm.`house_addr` AS houseAddr,
+    thbm.`city_code` AS cityCode,
+    thbm.`emp_guard_code` AS empGuardCode,
+    thbm.`emp_guard_name` AS empGuardName,
+    thbm.`emp_push_code` AS empPushCode,
+    thbm.`emp_push_name` AS empPushName,
+    thbm.`real_name` AS lanRealName,
+    thbm.`customer_mobile` AS lanCusMobile,
+    tmp.orderNum,
+    tmp.orderNight,
+    tmp.rentalMoney,
+    tmp.orderServiceMoney,
+    staty.statyNight ,
+    eva.evaNum,
+    service.serviceMoney AS stayServiceMoney,
+    will_30_night.willStatyNight,
+    will_30_money.willServiceMoney
+    FROM
+    (SELECT 
+      thrm.fid,
+      thrm.room_sn,
+      thrm.`room_name`,
+      thbm.`house_addr`,
+      thpm.`city_code`,
+      thgr.`emp_guard_code`,
+      thgr.`emp_guard_name`,
+      thgr.`emp_push_code`,
+      thgr.`emp_push_name`,
+      tcbm.`real_name`,
+      tcbm.`customer_mobile` 
+    FROM `minsu_house_db`.`t_house_room_msg` thrm
+      LEFT JOIN `minsu_house_db`.`t_house_base_msg` thbm 
+      ON thrm.house_base_fid = thbm.`fid` 
+      INNER JOIN `minsu_house_db`.`t_house_phy_msg` thpm 
+        ON thpm.`fid` = thbm.`phy_fid` 
+      INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm 
+        ON thbm.`landlord_uid` = tcbm.`uid` 
+      LEFT JOIN `minsu_house_db`.`t_house_guard_rel` thgr 
+        ON thbm.`fid` = thgr.`house_fid` 
+    WHERE thbm.`rent_way` = 1
+    AND thpm.is_del = 0
+    AND tcbm.is_del = 0
+    AND thgr.is_del=0 
+    <if test="cityCode != null and cityCode != '' ">
+	    AND thpm.city_code=#{cityCode,jdbcType=VARCHAR}
+	</if> 
+	<if test="lanCustomerMobile != null and lanCustomerMobile != '' ">
+	    AND tcbm.customer_mobile=#{lanCustomerMobile,jdbcType=VARCHAR}
+	</if>
+	<if test="empGuardName != null and empGuardName != '' ">
+	    AND thgr.emp_guard_name=#{empGuardName,jdbcType=VARCHAR}
+	</if>
+	<if test="empPushName != null and empPushName != '' ">
+	    AND thgr.emp_push_name=#{empPushName,jdbcType=VARCHAR}
+	</if>
+	       
+    ) AS thbm 
+    LEFT JOIN 
+      (SELECT COUNT(tr.`order_sn`) AS orderNum,
+        tohs.`room_fid`,
+        COALESCE(SUM(DATEDIFF(tr.end_time, tr.start_time)),0) AS orderNight,
+        COALESCE(SUM(tom.`rental_money`),0) AS rentalMoney,
+        COALESCE(SUM(tom.`lan_comm_money` + tom.`user_comm_money`), 0) AS orderServiceMoney  
+      FROM
+        minsu_order_db.`t_order` tr 
+        INNER JOIN minsu_order_db.`t_order_house_snapshot` tohs 
+          ON tr.`order_sn` = tohs.`order_sn` 
+        INNER JOIN minsu_order_db.`t_order_money` tom 
+          ON tr.`order_sn` = tom.`order_sn` 
+      WHERE tohs.`rent_way` = 1 
+        AND tr.pay_status = 1
+        <if test="beginTime != null and beginTime != '' ">
+	    AND tr.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	    </if>
+	    <if test="endTime != null and endTime != '' ">
+	    AND tr.`create_time` <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+	    GROUP BY tohs.`room_fid`
+      ) AS tmp 
+      ON thbm.`fid` = tmp.room_fid
+   LEFT JOIN (SELECT COUNT(tbhl.`fid`) AS statyNight,tbhl.room_fid FROM minsu_order_db.`t_base_house_lock` tbhl 
+      WHERE tbhl.rent_way = 1 
+      AND tbhl.lock_type = 1
+     <if test="beginTime != null and beginTime != '' ">
+      AND tbhl.`lock_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+     </if>
+     <if test="endTime != null and endTime != '' ">
+     AND tbhl.`lock_time` <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+     </if>
+      GROUP BY tbhl.room_fid ) AS staty
+   ON thbm.`fid` = staty.room_fid
+   LEFT JOIN (SELECT COUNT(teo.fid) AS evaNum,teo.room_fid FROM `minsu_evaluate_db`.`t_evaluate_order` teo 
+    WHERE teo.rent_way = 1
+    AND teo.`eva_user_type` = 2
+    
+    <if test="beginTime != null and beginTime != '' ">
+      AND teo.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+     </if>
+     <if test="endTime != null and endTime != '' ">
+     AND teo.`create_time` <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+     </if>
+    
+    GROUP BY teo.room_fid ORDER BY NULL) AS eva
+    ON thbm.`fid` = eva.room_fid
+    LEFT JOIN(
+     SELECT SUM(t1.total_fee) AS serviceMoney,tohs.`room_fid`
+        FROM (SELECT tfi.`total_fee` ,tfi .order_sn
+      FROM minsu_order_db.`t_finance_income` tfi 
+         WHERE  tfi.income_source_type !=3
+        <if test="beginTime != null and beginTime != '' ">
+	     AND tfi.`generate_fee_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	    </if>
+	    <if test="endTime != null and endTime != '' ">
+	    AND tfi.`generate_fee_time` <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+        ) AS t1
+     INNER JOIN minsu_order_db.`t_order_house_snapshot` tohs 
+        ON t1.order_sn = tohs.`order_sn` 
+        WHERE tohs.rent_way = 1
+     GROUP BY tohs.`room_fid` ORDER BY NULL    
+    )AS service  
+    ON   thbm.`fid` = service.room_fid
+    LEFT JOIN(
+    SELECT 
+	  COUNT(tbhl.`fid`) AS willStatyNight,
+	  tbhl.room_fid 
+	FROM
+	  minsu_order_db.`t_base_house_lock` tbhl 
+	WHERE tbhl.rent_way = 1 
+	  AND tbhl.lock_type = 1 
+	   <choose>
+	    <when test="endTime != null and endTime != '' ">
+		  AND tbhl.`lock_time` <![CDATA[ >= ]]> #{endTime,jdbcType=VARCHAR}
+		  AND tbhl.`lock_time` <![CDATA[ < ]]> DATE_ADD(#{endTime,jdbcType=VARCHAR}, INTERVAL 30 DAY) 
+		</when>
+		
+		<otherwise>
+		  AND tbhl.`lock_time` <![CDATA[ >= ]]> CURDATE() 
+	      AND tbhl.`lock_time` <![CDATA[ < ]]> DATE_ADD(CURDATE(), INTERVAL 30 DAY) 
+		</otherwise>
+	  </choose> 
+	GROUP BY tbhl.room_fid 
+    )AS will_30_night
+    ON thbm.`fid` = will_30_night.room_fid
+    LEFT JOIN(
+    SELECT SUM(t1.total_fee) AS willServiceMoney,tohs.`room_fid`
+        FROM (SELECT tfi.`total_fee` ,tfi .order_sn
+      FROM minsu_order_db.`t_finance_income` tfi 
+         WHERE  tfi.income_source_type !=3
+       <choose>
+	    <when  test="endTime != null and endTime != '' ">
+		  AND tfi.`generate_fee_time` <![CDATA[ >= ]]> #{endTime,jdbcType=VARCHAR}
+		  AND tfi.`generate_fee_time` <![CDATA[ < ]]> DATE_ADD(#{endTime,jdbcType=VARCHAR}, INTERVAL 30 DAY) 
+		</when>
+		
+		<otherwise>
+		  AND tfi.`generate_fee_time` <![CDATA[ >= ]]> CURDATE() 
+	      AND tfi.`generate_fee_time` <![CDATA[ < ]]> DATE_ADD(CURDATE(), INTERVAL 30 DAY) 
+		</otherwise>
+	   </choose>   
+        ) AS t1
+     INNER JOIN minsu_order_db.`t_order_house_snapshot` tohs 
+        ON t1.order_sn = tohs.`order_sn` 
+        WHERE tohs.rent_way = 1
+     GROUP BY tohs.`room_fid` ORDER BY NULL  
+    )AS will_30_money
+    ON thbm.`fid` = will_30_money.room_fid
+  ORDER BY tmp.orderNum DESC 
+  
+	</select>
+
+
+
+    <select id="getOrderInformation" resultType="com.ziroom.minsu.report.order.vo.OrderInformationVo" parameterType="map">
+        SELECT o.city_code cityCode, o.order_sn orderSn, o.order_status orderStatus, o.user_uid userUid,
+        o.create_time createTime, o.start_time startTime, o.end_time endTime, o.real_end_time realEndTime, lo.create_date cancelTime, o.pay_status payStatus,
+        house.rent_way rentWay, house.order_type orderType, house.house_sn houseSn, house.house_fid houseFid FROM minsu_order_db.t_order o
+        LEFT JOIN minsu_order_db.t_order_log lo ON lo.to_status>=30 AND lo.to_status<![CDATA[ < ]]>40 AND o.order_sn=lo.order_sn
+        LEFT JOIN minsu_order_db.t_order_house_snapshot house ON o.order_sn=house.order_sn
+        <where>
+        <if test="cityList != null">
+            <if test="cityList.size > 0">
+                AND o.city_code in
+                <foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+                    #{cityCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </if>
+        <if test="payStatus != null and payStatus != ''">
+            AND o.pay_status=#{payStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="rentWay != null and rentWay != ''">
+            AND house.rent_way=#{rentWay,jdbcType=VARCHAR}
+        </if>
+        <if test="orderType != null and orderType != ''">
+            AND house.order_type=#{orderType,jdbcType=VARCHAR}
+        </if>
+        <if test="createStartTime != null and createStartTime != ''">
+            AND o.create_time>=#{createStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="createEndTime != null and createEndTime != ''">
+            AND o.create_time<![CDATA[ <= ]]>#{createEndTime,jdbcType=VARCHAR}
+        </if>
+        <if test="checkInStartTime != null and checkInStartTime != ''">
+            AND o.start_time>=#{checkInStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="checkInEndTime != null and checkInEndTime != ''">
+            AND o.start_time<![CDATA[ <= ]]>#{checkInEndTime,jdbcType=VARCHAR}
+        </if>
+        <if test="checkOutStartTime != null and checkOutStartTime != ''">
+            AND o.end_time>=#{checkOutStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="checkOutEndTime != null and checkOutEndTime != ''">
+            AND o.end_time<![CDATA[ <= ]]>#{checkOutEndTime,jdbcType=VARCHAR}
+        </if>
+        <if test="realCheckOutStartTime != null and realCheckOutStartTime != ''">
+            AND o.real_end_time>=#{realCheckOutStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="realCheckOutEndTime != null and realCheckOutEndTime != ''">
+            AND o.real_end_time <![CDATA[ <= ]]> #{realCheckOutEndTime,jdbcType=VARCHAR}
+        </if>
+        </where>
+    </select>
+
+
+    <select id="getOrderFinance" resultType="com.ziroom.minsu.report.order.vo.OrderFinanceVo" parameterType="map">
+        SELECT o.city_code cityCode, o.order_sn orderSn, o.order_status orderStatus, o.pay_status payStatus,
+        FORMAT(money.rental_money_all/100/DATEDIFF(o.end_time, o.start_time),4) dayMoney, money.rental_money_all/100 rentalMoney, money.user_comm_money/100 userCommMoney,
+        money.clean_money/100 cleanMoney, money.deposit_money/100 depositMoney, money.coupon_money/100 couponMoney,
+        act.ac_fid couponSn, money.need_pay/100 needPay, money.lan_comm_money/100 lanCommMoney
+        FROM minsu_order_db.t_order o
+        INNER JOIN minsu_order_db.t_order_money money ON o.order_sn=money.order_sn
+        LEFT JOIN minsu_order_db.t_order_activity act ON o.order_sn=act.order_sn AND act.ac_type=2
+        <where>
+        <if test="cityList != null">
+            <if test="cityList.size > 0">
+                AND o.city_code in
+                <foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+                    #{cityCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </if>
+        <if test="payStatus != null and payStatus != ''">
+            AND o.pay_status=#{payStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="createStartTime != null and createStartTime != ''">
+            AND o.create_time>=#{createStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="createEndTime != null and createEndTime != ''">
+            AND o.create_time<![CDATA[ <= ]]>#{createEndTime,jdbcType=VARCHAR}
+        </if>
+        </where>
+    </select>
+
+
+    <select id="getOrderFresh" resultType="com.ziroom.minsu.report.order.vo.OrderFreshVo" parameterType="map">
+        SELECT o.city_code cityCode, o.landlord_uid landlordUid,
+        ((SELECT COUNT(house.id) FROM minsu_house_db.t_house_base_msg house WHERE house.landlord_uid=o.landlord_uid AND house.house_status=40 AND house.rent_way=0) +
+        (SELECT COUNT(room.id) FROM minsu_house_db.t_house_base_msg house, minsu_house_db.t_house_room_msg room
+        WHERE house.landlord_uid=o.landlord_uid AND house.rent_way=1 AND house.fid=room.house_base_fid AND room.room_status=40)) houseNum,
+        COUNT(o.id) orderNum, COUNT(IF(m.coupon_money>0,1,NULL)) couponNum, SUM(m.rental_money_all)/100 rentalMoneyAll, SUM(m.coupon_money_all)/100 couponMoneyAll
+        FROM minsu_order_db.t_order o
+        INNER JOIN minsu_order_db.t_order_money m ON o.order_sn=m.order_sn
+        WHERE o.pay_status=1
+        <if test="cityList != null">
+            <if test="cityList.size > 0">
+                AND o.city_code in
+                <foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+                    #{cityCode,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </if>
+        <if test="createStartTime != null and createStartTime != ''">
+            AND o.create_time>=#{createStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="createEndTime != null and createEndTime != ''">
+            AND o.create_time<![CDATA[ <= ]]>#{createEndTime,jdbcType=VARCHAR}
+        </if>
+        GROUP BY o.nation_code, o.province_code, o.city_code, o.landlord_uid
+        HAVING 1=1
+        <if test="orderNumStart != null and orderNumStart != ''">
+            AND orderNum >= #{orderNumStart,jdbcType=VARCHAR}
+        </if>
+        <if test="orderNumEnd != null and orderNumEnd != ''">
+            AND orderNum <![CDATA[ <= ]]> #{orderNumEnd,jdbcType=VARCHAR}
+        </if>
+        <if test="couponMoneyAllStart != null and couponMoneyAllStart != ''">
+            AND couponMoneyAll >= #{couponMoneyAllStart,jdbcType=DOUBLE}
+        </if>
+        <if test="couponMoneyAllEnd != null and couponMoneyAllEnd != ''">
+            AND couponMoneyAll <![CDATA[ <= ]]> #{couponMoneyAllEnd,jdbcType=DOUBLE}
+        </if>
+    </select>
+
+
+
+</mapper>

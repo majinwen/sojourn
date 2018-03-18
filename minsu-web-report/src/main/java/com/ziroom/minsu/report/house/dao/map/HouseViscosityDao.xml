@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.houseViscosityDao" >
+
+	 <!-- 整租查询开始 -->
+	 <select id="getEntireRentList"  parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	   SELECT phy.nation_code as nationCode, phy.city_code as cityCode,  phy.province_code as provinceCode,
+		           base.fid as houseBaseFid, base.house_sn as houseSn, base.house_status as houseStatus,
+		           biz.first_up_date as firstUpDate
+			FROM `minsu_house_db`.t_house_base_msg AS base
+			LEFT JOIN `minsu_house_db`.t_house_phy_msg AS phy
+			ON base.phy_fid=phy.fid
+			LEFT JOIN `minsu_house_db`.t_house_biz_msg AS biz
+			ON base.fid=biz.house_base_fid
+			<where>
+			    base.is_del=0 and base.rent_way=0
+			    <if test="houseStatus != null">
+			        AND base.house_status = #{houseStatus}
+			    </if>
+			    <if test="nationCode != null and nationCode != ''">
+			        AND phy.nation_code = #{nationCode}
+			    </if>
+			    <if test="cityCode != null and cityCode != ''">
+			        AND phy.city_code = #{cityCode}
+			    </if>
+			    <if test="firstUpBeginDate != null and firstUpBeginDate != ''">
+			        AND biz.first_up_date <![CDATA[ >= ]]> #{firstUpBeginDate}
+			    </if>
+			    <if test="firstUpEndDate != null and firstUpEndDate != ''">
+			        AND biz.first_up_date <![CDATA[ < ]]> #{firstUpEndDate}
+			    </if>
+			    <if test="provinceCodeList != null and provinceCodeList.size > 0">
+				     and phy.province_code in 
+				     <foreach collection="provinceCodeList" item="provinceCode" index="index" open="(" separator="," close=")">
+				         #{provinceCode,jdbcType=VARCHAR}
+				     </foreach>
+			   </if>
+			</where>
+	 </select>
+	 
+	 
+	 <!-- 分租查询开始 -->
+	 <select id="getJoinRentList"  parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	    SELECT phy.nation_code as nationCode, phy.city_code as cityCode,  phy.province_code as provinceCode,
+	           base.fid as houseBaseFid, 
+	           room.fid as roomFid,room.room_sn as houseSn, room.room_status as houseStatus,
+	           biz.first_up_date as firstUpDate
+		FROM `minsu_house_db`.t_house_room_msg AS room
+		LEFT JOIN `minsu_house_db`.t_house_base_msg AS base
+		ON base.fid=room.house_base_fid 
+		LEFT JOIN `minsu_house_db`.t_house_phy_msg AS phy
+		ON base.phy_fid=phy.fid
+		LEFT JOIN `minsu_house_db`.t_house_biz_msg AS biz
+		ON room.fid=room_fid AND biz.rent_way=1
+		<where>
+		    base.is_del=0 and base.rent_way=1
+		    <if test="houseStatus != null">
+		        AND room.room_status = #{houseStatus}
+		    </if>
+		    <if test="nationCode != null and nationCode != ''">
+		        AND phy.nation_code = #{nationCode}
+		    </if>
+		    <if test="cityCode != null and cityCode != ''">
+		        AND phy.city_code = #{cityCode}
+		    </if>
+		    <if test="firstUpBeginDate != null and firstUpBeginDate != ''">
+		        AND biz.first_up_date <![CDATA[ >= ]]> #{firstUpBeginDate}
+		    </if>
+		    <if test="firstUpEndDate != null and firstUpEndDate != ''">
+		        AND biz.first_up_date <![CDATA[ < ]]> #{firstUpEndDate}
+		    </if>
+		    <if test="provinceCodeList != null and provinceCodeList.size > 0">
+			     and phy.province_code in 
+			     <foreach collection="provinceCodeList" item="code" index="index" open="(" separator="," close=")">
+			         	#{code,jdbcType=VARCHAR}
+			     </foreach>
+		   </if> 
+		</where>
+	 </select>
+	
+	<!-- 根据大区Code获取省份CodeList -->
+	<select id="getPCodeListByRCode" parameterType="java.lang.String" resultType="java.lang.String">
+	    select province_code as provinceCode 
+	    from t_city_region_rel 
+	    where region_fid = #{regionCode}
+	</select>
+	
+	<!-- 城市Code获取==》城市名称 -->
+	<select id="getFromConfCity" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	  select show_name as cityName
+	  from `minsu_base_db`.t_conf_city 
+	  where code = #{cityCode}
+	</select>
+	
+	<!-- 省份code==》大区名称 -->
+	<select id="getFromCityRegionRel" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	    select region_fid as regionCode, country_code as nationCode
+		from t_city_region_rel
+		where province_code = #{privinceCode} limit 1
+	</select>
+	
+	<!-- 查询累计浏览量——房源 -->
+	<select id="getCumulViewVoByHfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	   select house_pv as cumulViewNum 
+	   from `minsu_house_db`.t_house_statistics_msg 
+	   where house_base_fid=#{houseBaseFid}
+	   and rent_way=0 limit 1
+	</select>
+	<!-- 查询累计浏览量——房间 -->
+	<select id="getCumulViewVoByRfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	   select house_pv as cumulViewNum 
+	   from `minsu_house_db`.t_house_statistics_msg 
+	   where room_fid=#{roomFid}
+	   and rent_way=1 limit 1
+	</select>
+	
+	<!-- 累计咨询量——房源或者房间  cumulAdviceNum      -->
+	<select id="getCumulAdviceVoByHfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	   select sum(consult_num) as cumulAdviceNum 
+	   from `minsu_house_db`.t_house_stats_day_msg 
+	   <where> 
+	       house_fid=#{houseBaseFid}
+	       <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+		        AND create_date <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+		    </if>
+		    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+		        AND create_date <![CDATA[ < ]]> #{dataQueryEndDate}
+		    </if> 
+		   and is_del=0
+	    </where>
+	</select>
+	
+	<!-- 累计申请量——整租  cumulApplyNum     所有订单    无论订单状态    无论下单类型  -->
+	<select id="getCumulApplyVoByHfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	    select COUNT(tohs.order_sn) as cumulApplyNum 
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs
+		on tohs.order_sn = tod.order_sn
+		<where>
+		    tohs.house_fid=#{houseBaseFid}
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+			 and tod.is_del=0
+	    </where>
+	</select>
+	<!-- 累计申请量——分租房间   cumulApplyNum     所有订单    无论订单状态    无论下单类型  -->
+	<select id="getCumulApplyVoByRfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	    select COUNT(tohs.order_sn) as cumulApplyNum 
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs
+		on tohs.order_sn = tod.order_sn
+		<where>
+		    tohs.room_fid=#{roomFid}
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+			 and tod.is_del=0
+	    </where>
+	</select>
+	
+	<!-- 累计接单量——整租  -->
+	<select id="getCumulGetOrderVoByHfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	   select SUM(a.cumulGetOrderNum) as cumulGetOrderNum from
+	       (select COUNT(tohs.order_sn) as cumulGetOrderNum 
+			from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+			<where>
+			    tohs.house_fid=#{houseBaseFid} and tohs.order_type=2
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+	            AND tod.order_status not in (10,31,35)
+		        AND tod.is_del=0
+		   </where>
+	 UNION 
+	        select COUNT(tohs.order_sn) as cumulGetOrderNum 
+			from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+			<where>
+			    tohs.house_fid=#{houseBaseFid} and tohs.order_type=1
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+		        AND tod.is_del=0
+		   </where>) as a
+	</select>
+	<!-- 累计接单量——分租  -->
+	<select id="getCumulGetOrderVoByRfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	   select SUM(a.cumulGetOrderNum) as cumulGetOrderNum from
+	       (select COUNT(tohs.order_sn) as cumulGetOrderNum 
+			from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+			<where>
+			    tohs.room_fid=#{roomFid} and tohs.order_type=2
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+	            AND tod.order_status not in (10,31,35)
+		        AND tod.is_del=0
+		   </where>
+	 UNION 
+	        select COUNT(tohs.order_sn) as cumulGetOrderNum 
+			from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+			<where>
+			    tohs.room_fid=#{roomFid} and tohs.order_type=1
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+		        AND tod.is_del=0
+		   </where>) as a
+	</select>
+	
+	<!-- 累计订单量 -->
+	<select id="getCumulOrderVoByHfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	    select COUNT(tohs.order_sn) as cumulOrderNum 
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+		<where>
+		    tohs.house_fid=#{houseBaseFid} 
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+			and tod.pay_status=1
+			and tod.is_del=0    
+	    </where>
+	</select>
+	
+	<!-- 累计预定间夜量——整租  -->
+	<select id="getReserveJYByHfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	    select tod.start_time as orderStartTime, tod.end_time as orderEndTime
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+		<where>
+		    tohs.house_fid=#{houseBaseFid} 
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+			and tod.pay_status=1
+			and tod.is_del=0    
+	    </where>
+	</select>
+	<!-- 累计预定间夜量——分租  -->
+	<select id="getReserveJYByRfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	    select tod.start_time as orderStartTime, tod.end_time as orderEndTime
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+		<where>
+		    tohs.room_fid=#{roomFid} 
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+			and tod.pay_status=1
+			and tod.is_del=0    
+	    </where>
+	</select>
+	
+	<!-- 累计入住订单量 -->
+	<select id="getCumulCheckInByHfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	    select  COUNT(tohs.order_sn) as cumulCheckInOrderNum 
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+		<where>
+		    tohs.house_fid=#{houseBaseFid} 
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+			and tod.order_status <![CDATA[ >= ]]> 40
+			and tod.is_del=0    
+	    </where>
+	</select>
+	
+	<!-- 累计入住间夜量——整租 -->
+	<select id="getCheckInListByHfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	   select tod.start_time as orderStartTime, tod.real_end_time as orderRelEndTime
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+		<where>
+		    tohs.house_fid=#{houseBaseFid}
+		    
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+			and tod.order_status <![CDATA[ >= ]]> 40
+			and tod.is_del=0    
+	    </where>
+	</select>
+	<!-- 累计入住间夜量——分租 -->
+	<select id="getCheckInListByRfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	   select tod.start_time as orderStartTime, tod.real_end_time as orderRelEndTime
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+		<where>
+		    tohs.room_fid=#{roomFid} 
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+			and tod.order_status <![CDATA[ >= ]]> 40
+			and tod.is_del=0    
+	    </where>
+	</select>
+	
+	<!-- 累计屏蔽间夜量——整租 -->
+	<select id="getShieldJYByHfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	    select count(house_fid) as cumulShieldJYNum
+		from `minsu_order_db`.t_base_house_lock 
+		<where>
+		       house_fid=#{houseBaseFid} AND lock_type=2
+               <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND lock_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND lock_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+			    and is_del=0
+		</where>	    
+	</select>
+	<!-- 累计屏蔽间夜量——分租 -->
+	<select id="getShieldJYByRfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	    select count(house_fid) as cumulShieldJYNum
+		from `minsu_order_db`.t_base_house_lock 
+		<where>
+		       room_fid=#{roomFid} AND lock_type=2
+               <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND lock_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND lock_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+			    and is_del=0
+		</where>	    
+	</select>
+	
+	<!-- 房源收益——整租 -->
+	<select id="getCumulProfitByHfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	    select sum(tom.rental_money) as cumulProfit
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+        inner join `minsu_order_db`.t_order_money tom on tohs.order_sn=tom.order_sn
+		where
+		    tohs.house_fid=#{houseBaseFid}
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+			and tod.order_status >= 70
+			and tod.is_del=0  
+	</select>
+	<!-- 房源收益——分租 -->
+	<select id="getCumulProfitByRfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	    select sum(tom.rental_money) as cumulProfit
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+        inner join `minsu_order_db`.t_order_money tom on tohs.order_sn=tom.order_sn
+		where
+		    tohs.room_fid=#{roomFid}
+		        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			    </if>
+			    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+			    </if> 
+			and tod.order_status >= 70
+			and tod.is_del=0  
+	</select>
+	
+	
+	<!-- 累计收到评价量——整租 -->
+	<select id="getCumulGetEvalByHfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	   select eva_total as cumulGetEvalNum
+	   from `minsu_evaluate_db`.t_stats_house_eva 
+	   where house_fid=#{houseBaseFid} limit 1
+	</select>
+	<!-- 累计收到评价量——分租 -->
+	<select id="getCumulGetEvalByRfid" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	   select eva_total as cumulGetEvalNum
+	   from `minsu_evaluate_db`.t_stats_house_eva 
+	   where room_fid=#{roomFid} limit 1
+	</select>
+	
+	<!-- 房源粘性报表（整租）——一条sql解决，已经校验可用   -->
+	<select id="getAllVoByParam" parameterType="com.ziroom.minsu.report.house.dto.HouseViscosityDto" resultType="com.ziroom.minsu.report.house.vo.HouseViscosityVo">
+	   SELECT a.nationCode as nationCode, a.cityCode as cityCode, a.provinceCode as provinceCode, a.houseBaseFid as houseBaseFid, 
+	   a.houseSn as houseSn, a.houseStatus as houseStatus, a.firstUpDate as firstUpDate,
+	   v1.cumulViewNum as cumulViewNum, v2.cumulAdviceNum as cumulAdviceNum, v3.cumulApplyNum as cumulApplyNum, v4.cumulGetOrderNum as cumulGetOrderNum, 
+	   v5.cumulOrderNum as cumulOrderNum, v6.cumulReserveJYNum as cumulReserveJYNum, v7.cumulCheckInOrderNum as cumulCheckInOrderNum, 
+	   v8.cumulCheckInJYNum as cumulCheckInJYNum, v9.cumulShieldJYNum as cumulShieldJYNum, v11.cumulGetEvalNum as cumulGetEvalNum,
+	   v12.cumulProfit as cumulProfit
+	   FROM
+            (SELECT phy.nation_code AS nationCode, phy.city_code AS cityCode,  phy.province_code AS provinceCode,
+		           base.fid AS houseBaseFid, base.house_sn AS houseSn, base.house_status AS houseStatus,
+		           biz.first_up_date AS firstUpDate
+			FROM `minsu_house_db`.t_house_base_msg AS base
+			LEFT JOIN `minsu_house_db`.t_house_phy_msg AS phy
+			ON base.phy_fid=phy.fid
+			LEFT JOIN `minsu_house_db`.t_house_biz_msg AS biz
+			ON base.fid=biz.house_base_fid
+			<where>
+			    base.is_del=0 
+			    <if test="houseStatus != null">
+			        AND base.house_status = #{houseStatus}
+			    </if>
+			    <if test="nationCode != null and nationCode != ''">
+			        AND phy.nation_code = #{nationCode}
+			    </if>
+			    <if test="cityCode != null and cityCode != ''">
+			        AND phy.city_code = #{cityCode}
+			    </if>
+			    <if test="firstUpBeginDate != null and firstUpBeginDate != ''">
+			        AND biz.first_up_date <![CDATA[ >= ]]> #{firstUpBeginDate}
+			    </if>
+			    <if test="firstUpEndDate != null and firstUpEndDate != ''">
+			        AND biz.first_up_date <![CDATA[ < ]]> #{firstUpEndDate}
+			    </if>
+			    <if test="provinceCodeList != null and provinceCodeList.size > 0">
+				     and phy.province_code in 
+				     <foreach collection="provinceCodeList" item="provinceCode" index="index" open="(" separator="," close=")">
+				         ${provinceCode}
+				     </foreach>
+			   </if>
+			</where>)
+           AS a
+           LEFT JOIN 
+			  (SELECT house_pv AS cumulViewNum, house_base_fid 
+			   FROM `minsu_house_db`.t_house_statistics_msg 
+			   WHERE rent_way=0 )
+	        AS v1
+            on a.houseBaseFid = v1.house_base_fid
+	        LEFT JOIN 
+	           (SELECT SUM(consult_num) AS cumulAdviceNum, house_fid 
+			   FROM `minsu_house_db`.t_house_stats_day_msg 
+			   <where> 
+		           <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+			          AND create_date <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+			       </if>
+			       <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+			          AND create_date <![CDATA[ < ]]> #{dataQueryEndDate}
+			       </if> 
+			       and is_del=0
+			       GROUP BY house_fid
+		      </where>
+			   )
+	        AS v2
+	        ON a.houseBaseFid=v2.house_fid
+	        LEFT JOIN
+		       (SELECT COUNT(tohs.order_sn) AS cumulApplyNum,tohs.house_fid
+			   FROM `minsu_order_db`.t_order tod LEFT JOIN `minsu_order_db`.t_order_house_snapshot tohs
+			   ON tohs.order_sn = tod.order_sn
+			    <where>
+			        <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+				        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+				    </if>
+				    <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+				        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+				    </if> 
+				     and tod.is_del=0
+				     GROUP BY tohs.house_fid 
+	           </where>
+			   )
+            AS v3 
+            ON a.houseBaseFid=v3.house_fid
+		    LEFT JOIN 
+			  (SELECT SUM(a.cumulGetOrderNum) AS cumulGetOrderNum, house_fid FROM 
+				   (SELECT COUNT(tohs.order_sn) AS cumulGetOrderNum,tohs.house_fid 
+					FROM `minsu_order_db`.t_order tod LEFT JOIN `minsu_order_db`.t_order_house_snapshot tohs ON tohs.order_sn = tod.order_sn
+					 <where>
+					    tohs.order_type=2
+					     <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+					        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+					     </if>
+					     <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+					        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+					     </if> 
+					    AND tod.order_status NOT IN (10,31,35)
+					    AND tod.is_del=0 
+					    GROUP BY tohs.house_fid
+			          </where>
+				   UNION
+			 
+				   SELECT COUNT(tohs.order_sn) AS cumulGetOrderNum,tohs.house_fid 
+					FROM `minsu_order_db`.t_order tod LEFT JOIN `minsu_order_db`.t_order_house_snapshot tohs ON tohs.order_sn = tod.order_sn
+					<where>
+					    tohs.order_type=1
+					    <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+					        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+					     </if>
+					     <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+					        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+					     </if> 
+					     AND tod.is_del=0 
+					     GROUP BY tohs.house_fid 
+					</where>
+				   ) AS a GROUP BY house_fid)
+	        AS v4
+	        ON a.houseBaseFid=v4.house_fid
+	        LEFT JOIN 
+	                 (SELECT COUNT(tohs.order_sn) AS cumulOrderNum, tohs.house_fid 
+			          FROM `minsu_order_db`.t_order tod LEFT JOIN `minsu_order_db`.t_order_house_snapshot tohs ON tohs.order_sn = tod.order_sn
+					  <where>
+					  tod.pay_status=1
+					  
+					     <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+							        AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+					     </if>
+					     <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+							        AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+						 </if> 
+					      AND tod.is_del=0
+					      GROUP BY tohs.house_fid
+					  </where>
+			        )
+	        AS v5
+	        ON a.houseBaseFid=v5.house_fid
+	        LEFT JOIN 
+	                 (SELECT SUM(DATEDIFF(tod.real_end_time, tod.create_time)) AS cumulReserveJYNum , tohs.house_fid
+					  FROM `minsu_order_db`.t_order tod LEFT JOIN `minsu_order_db`.t_order_house_snapshot tohs ON tohs.order_sn = tod.order_sn 
+					  <where>
+					  tod.pay_status=1
+					  <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+							 AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+					  </if>
+					  <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+							 AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+					  </if> 
+					  AND tod.is_del=0 
+					  GROUP BY tohs.house_fid
+					  </where>)
+	        AS v6
+	        ON a.houseBaseFid=v6.house_fid
+	        LEFT JOIN 
+	                 (SELECT  COUNT(tohs.order_sn) AS cumulCheckInOrderNum, tohs.house_fid 
+					  FROM `minsu_order_db`.t_order tod LEFT JOIN `minsu_order_db`.t_order_house_snapshot tohs ON tohs.order_sn = tod.order_sn
+					  <where>
+					  tod.order_status >=  40
+					 <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+							 AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+					  </if>
+					  <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+							 AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+					  </if> 
+					  AND tod.is_del=0 
+					  GROUP BY tohs.house_fid
+					  </where>)
+	        AS v7
+	        ON a.houseBaseFid=v7.house_fid
+	        LEFT JOIN
+	                 ( SELECT SUM(DATEDIFF(tod.real_end_time, tod.create_time)) AS cumulCheckInJYNum , tohs.house_fid 
+					  FROM `minsu_order_db`.t_order tod LEFT JOIN `minsu_order_db`.t_order_house_snapshot tohs ON tohs.order_sn = tod.order_sn
+					  <where>
+					  tod.order_status >=  40
+					  <if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+							 AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+					  </if>
+					  <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+							 AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+					  </if> 
+					  AND tod.is_del=0
+					  GROUP BY tohs.house_fid
+					  </where>)
+	        AS v8
+	        ON a.houseBaseFid=v8.house_fid
+	        LEFT JOIN
+	                (SELECT COUNT(house_fid) AS cumulShieldJYNum,house_fid
+			        FROM `minsu_order_db`.t_base_house_lock 
+			        <where>
+			        lock_type=2
+					<if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+							 AND create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+					  </if>
+					  <if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+							 AND create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+					  </if> 
+					AND is_del=0
+					GROUP BY house_fid
+					</where>)
+	        AS v9
+	        ON a.houseBaseFid=v9.house_fid
+	        LEFT JOIN
+	              ( SELECT eva_total AS cumulGetEvalNum, house_fid
+		            FROM `minsu_evaluate_db`.t_stats_house_eva )
+		    AS v11
+	        ON a.houseBaseFid=v11.house_fid
+	        LEFT JOIN 
+	               (SELECT SUM(tom.rental_money) AS cumulProfit, tohs.house_fid
+					FROM `minsu_order_db`.t_order tod LEFT JOIN `minsu_order_db`.t_order_house_snapshot tohs ON tohs.order_sn = tod.order_sn
+					LEFT JOIN `minsu_order_db`.t_order_money tom ON tohs.order_sn=tom.order_sn
+					<where>
+					tod.order_status >= 70
+					<if test="dataQueryBeaginDate != null and dataQueryBeaginDate != ''">
+							 AND tod.create_time <![CDATA[ >= ]]> #{dataQueryBeaginDate}
+					</if>
+					<if test="dataQueryEndDate != null and dataQueryEndDate != ''">
+							 AND tod.create_time <![CDATA[ < ]]> #{dataQueryEndDate}
+					</if> 
+					
+					AND tod.is_del=0 
+					GROUP BY tohs.house_fid
+					</where>)
+		    AS v12
+	        ON a.houseBaseFid=v12.house_fid
+	</select>
+</mapper>

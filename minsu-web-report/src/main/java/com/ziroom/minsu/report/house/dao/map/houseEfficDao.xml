@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.houseEfficDao" >
+
+	 <!-- 整租，查询出所有房源Hfid集合 -->
+	 <select id="getEntireRentList"  parameterType="com.ziroom.minsu.report.house.dto.HouseEfficDto" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+	    SELECT phy.nation_code as nationCode, phy.city_code as cityCode,  phy.province_code as provinceCode,
+	           base.fid as houseBaseFid, base.house_sn as houseSn, base.house_status as houseStatus,
+	           biz.first_up_date as firstUpDate
+		FROM `minsu_house_db`.t_house_base_msg AS base
+		LEFT JOIN `minsu_house_db`.t_house_phy_msg AS phy
+		ON base.phy_fid=phy.fid
+		LEFT JOIN `minsu_house_db`.t_house_biz_msg AS biz
+		ON base.fid=biz.house_base_fid
+		<where>
+		    base.is_del=0 and base.rent_way=0
+		    <if test="houseStatus != null">
+		        AND base.house_status = #{houseStatus}
+		    </if>
+		    <if test="nationCode != null and nationCode != ''">
+		        AND phy.nation_code = #{nationCode}
+		    </if>
+		    <if test="cityCode != null and cityCode != ''">
+		        AND phy.city_code = #{cityCode}
+		    </if>
+		    <if test="firstUpBeginDate != null and firstUpBeginDate != ''">
+		        AND biz.first_up_date <![CDATA[ >= ]]> #{firstUpBeginDate}
+		    </if>
+		    <if test="firstUpEndDate != null and firstUpEndDate != ''">
+		        AND biz.first_up_date <![CDATA[ < ]]> #{firstUpEndDate}
+		    </if>
+		    <if test="provinceCodeList != null and provinceCodeList.size > 0">
+			     and phy.province_code in 
+			     <foreach collection="provinceCodeList" item="provinceCode" index="index" open="(" separator="," close=")">
+			         #{provinceCode,jdbcType=VARCHAR}
+			     </foreach>
+		   </if>
+		</where>
+	 </select>
+	
+	  <!--  分租，查询出所有房间Rfid集合 -->
+	  <select id="getJoinRentList"  parameterType="com.ziroom.minsu.report.house.dto.HouseEfficDto" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+	    SELECT phy.nation_code as nationCode, phy.city_code as cityCode,  phy.province_code as provinceCode,
+	           base.fid as houseBaseFid, 
+	           room.fid as roomFid, room.room_sn as houseSn, room.room_status as houseStatus,
+	           biz.first_up_date as firstUpDate
+		FROM `minsu_house_db`.t_house_base_msg AS base
+		LEFT JOIN `minsu_house_db`.t_house_room_msg AS room
+		ON base.fid=room.house_base_fid
+		LEFT JOIN `minsu_house_db`.t_house_phy_msg AS phy
+		ON base.phy_fid=phy.fid
+		LEFT JOIN `minsu_house_db`.t_house_biz_msg AS biz
+		ON room.fid=room_fid AND biz.rent_way=1
+		<where>
+		    base.is_del=0 and base.rent_way=1
+		    <if test="houseStatus != null">
+		        AND room.room_status = #{houseStatus}
+		    </if>
+		    <if test="nationCode != null and nationCode != ''">
+		        AND phy.nation_code = #{nationCode}
+		    </if>
+		    <if test="cityCode != null and cityCode != ''">
+		        AND phy.city_code = #{cityCode}
+		    </if>
+		    <if test="firstUpBeginDate != null and firstUpBeginDate != ''">
+		        AND biz.first_up_date <![CDATA[ >= ]]> #{firstUpBeginDate}
+		    </if>
+		    <if test="firstUpEndDate != null and firstUpEndDate != ''">
+		        AND biz.first_up_date <![CDATA[ < ]]> #{firstUpEndDate}
+		    </if>
+		    <if test="provinceCodeList != null and provinceCodeList.size > 0">
+			     and phy.province_code in 
+			     <foreach collection="provinceCodeList" item="provinceCode" index="index" open="(" separator="," close=")">
+			         #{provinceCode}
+			     </foreach>
+		   </if>
+		</where>
+	 </select>
+	 
+    <!-- 根据regionCode获取所有ProvinceCode集合 -->
+    <select id="getPCodeListByRCode" parameterType="java.lang.String" resultType="java.lang.String">
+	    select province_code as provinceCode 
+	    from t_city_region_rel 
+	    where region_fid = #{regionCode}
+	</select>
+	
+	<!-- 大区code==》大区名称 -->
+	<select id="getFromCityRegionRel" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+	    select region_fid as regionCode, country_code as nationCode 
+		from t_city_region_rel
+		where province_code = #{privinceCode} limit 1
+	</select>
+	
+	<!-- 城市code==》城市名称 -->
+	<select id="getFromConfCity" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+	  select show_name as cityName
+	  from `minsu_base_db`.t_conf_city 
+	  where code = #{cityCode}
+	</select>
+	
+	<!-- message库，t_msg_base表 首次咨询 -->
+	<select id="getFromTMsgByHfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+		SELECT t1.firstAdviceDate FROM 
+			 (SELECT MIN(create_time) AS firstAdviceDate, house_fid
+			  FROM `minsu_message_db`.t_msg_base 
+			  WHERE  msg_sender_type=2 OR msg_sender_type=20 GROUP BY house_fid) t1
+		WHERE t1.house_fid = #{houseBaseFid}
+	</select>
+	<select id="getFromTMsgByRfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+		
+	  	SELECT t1.firstAdviceDate FROM 
+			 (SELECT MIN(create_time) AS firstAdviceDate, house_fid
+			  FROM `minsu_message_db`.t_msg_base 
+			  WHERE  msg_sender_type=2 OR msg_sender_type=20 AND rent_way=1 GROUP BY house_fid) t1 
+	    WHERE t1.house_fid =  #{houseBaseFid}
+	</select>
+	
+	<!-- message库，t_msg_first_advisory表 首次咨询 -->
+	<select id="getFromTMsgFAByHfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+		 SELECT t1.firstAdviceDate FROM 
+			 (SELECT house_fid,MIN(msg_send_time) AS firstAdviceDate
+			 FROM `minsu_message_db`.t_msg_first_advisory WHERE rent_way=0 GROUP BY house_fid) t1  
+		 WHERE t1.house_fid=#{houseBaseFid}
+	</select>
+	<select id="getFromTMsgFAByRfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+	  	   SELECT t1.firstAdviceDate FROM 
+			 (SELECT house_fid,MIN(msg_send_time) AS firstAdviceDate
+			 FROM `minsu_message_db`.t_msg_first_advisory WHERE rent_way=1 GROUP BY house_fid) t1  
+		   WHERE t1.house_fid=#{houseBaseFid}
+	</select>
+	
+	
+	<!-- order库，订单快照表关联订单表     查询 首次申请（整租，分租） -->
+	<select id="getApplyFromTOrderByHfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+	    select min(tod.create_time) as firstApplyDate
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+		where tohs.house_fid=#{houseBaseFid} and tod.is_del=0
+	</select>
+	<select id="getApplyFromTOrderByRfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+	    select min(tod.create_time) as firstApplyDate
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+		where tohs.room_fid=#{roomFid} and tod.is_del=0
+	</select>
+	
+	<!-- order库，订单快照表关联订单表      查询首次支付（整租，分租） -->
+	<select id="getFromTOrderByHfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+		select min(tod.pay_time) as firstPayDate
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+		where tohs.house_fid=#{houseBaseFid}
+		and tod.pay_status =1 and tod.is_del=0	
+	</select>
+	<select id="getFromTOrderRfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+		select min(tod.pay_time) as firstPayDate
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+		where tohs.room_fid=#{roomFid}
+		and tod.pay_status =1 and tod.is_del=0	
+	</select>
+	
+	<!-- order库，订单快照表关联订单表     首次入住（整租，分租） -->
+	<select id="getFirstRealCheckInTime" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+		select min(tod.start_time) as firstCheckinDate 
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+		where tohs.house_fid=#{houseBaseFid}
+		and tod.pay_status =1 and tod.is_del=0	and tod.order_status>=40
+	</select>
+	<select id="getFirstRealCheckInTimeRoom" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+		select min(tod.start_time) as firstCheckinDate 
+		from `minsu_order_db`.t_order tod inner join `minsu_order_db`.t_order_house_snapshot tohs on tohs.order_sn = tod.order_sn
+		where tohs.room_fid=#{roomFid}
+		and tod.pay_status =1 and tod.is_del=0	and tod.order_status>=40
+	</select>
+	
+	<!-- evaluate库， t_evaluate_order表此房子 	  查询首次评价时间（整租，分租） -->
+	<select id="getFromTEvalOrderdByHfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+	    select  min(tte.create_time) as firstEvalDate
+		from `minsu_evaluate_db`.t_tenant_evaluate tte inner join `minsu_evaluate_db`.t_evaluate_order teo on tte.eva_order_fid=teo.fid
+		where teo.house_fid=#{houseBaseFid} and tte.is_del=0
+	</select>
+	<select id="getFromTEvalOrderdByRfid" parameterType="java.lang.String" resultType="com.ziroom.minsu.report.house.vo.HouseEfficVo">
+	    select  min(tte.create_time) as firstEvalDate
+		from `minsu_evaluate_db`.t_tenant_evaluate tte inner join `minsu_evaluate_db`.t_evaluate_order teo on tte.eva_order_fid=teo.fid
+		where teo.room_fid=#{roomFid} and tte.is_del=0
+	</select>
+	
+	
+</mapper>

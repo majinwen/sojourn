@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.landlordDataDao" >
+ <resultMap id="BaseResultMap" type="com.ziroom.minsu.report.board.vo.LandlordDataItem" >
+    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="total_house_num" property="totalHouseNum" jdbcType="INTEGER" />
+    <result column="total_land_num" property="totalLandNum" jdbcType="INTEGER" />
+    <result column="per_house_num" property="perHouseNum" jdbcType="DOUBLE" />
+    <result column="exp_land_num" property="expLandNum" jdbcType="INTEGER" />
+    <result column="non_pro_land_num" property="nonProLandNum" jdbcType="INTEGER" />
+    <result column="pro_land_num" property="proLandNum" jdbcType="INTEGER" />
+    <result column="immediate_book_type_num" property="immediateBookTypeNum" jdbcType="INTEGER" />
+    <result column="exp_rate" property="expRate" jdbcType="DOUBLE" />
+    <result column="non_pro_rate" property="nonProRate" jdbcType="DOUBLE" />
+    <result column="pro_rate" property="proRate" jdbcType="DOUBLE" />
+ </resultMap>
+ 
+ <select id="findLandlordDataItemListFromTask" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.report.board.dto.LandlordRequest" >
+  	SELECT
+		t2.`code` city_code,
+		t2.show_name city_name,
+		t3.total_up_num total_house_num,
+		t3.exp_land_num,
+		t3.non_pro_land_num,
+		t3.pro_land_num,
+		t3.immediate_book_type_num
+	FROM
+		minsu_base_db.t_city_region_rel t1,
+		minsu_base_db.t_conf_city t2,
+		minsu_report_db.t_city_daily_msg t3
+	WHERE
+		t1.province_code = t2.pcode
+	AND t2.`code` = t3.city_code
+	AND t1.is_del = 0
+	AND t2.is_del = 0
+	AND t2.`level` = 3
+	AND t3.is_del = 0
+	AND t1.region_fid = #{regionFid,jdbcType=VARCHAR}
+	AND t3.stat_date = #{queryDate,jdbcType=VARCHAR}
+ </select>
+ 
+ <resultMap id="BaseItemMap" type="com.ziroom.minsu.report.board.vo.LandlordDataItem" >
+    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="total_land_num" property="totalLandNum" jdbcType="INTEGER" />
+    <result column="per_house_num" property="perHouseNum" jdbcType="DOUBLE" />
+    <result column="exp_rate" property="expRate" jdbcType="DOUBLE" />
+    <result column="non_pro_rate" property="nonProRate" jdbcType="DOUBLE" />
+    <result column="pro_rate" property="proRate" jdbcType="DOUBLE" />
+    <association column="cityCode=city_code" property="totalHouseNum" jdbcType="INTEGER" select="report.cityDailyMsgDao.getTotalUpNum"/>
+    <association column="cityCode=city_code" property="expLandNum" jdbcType="INTEGER" select="report.cityDailyMsgDao.getExpLandNum"/>
+    <association column="cityCode=city_code" property="nonProLandNum" jdbcType="INTEGER" select="report.cityDailyMsgDao.getNonProLandNum"/>
+    <association column="cityCode=city_code" property="proLandNum" jdbcType="INTEGER" select="report.cityDailyMsgDao.getProLandNum"/>
+    <association column="cityCode=city_code" property="immediateBookTypeNum" jdbcType="INTEGER" select="report.cityDailyMsgDao.getImmediateBookTypeNumByCityCode"/>
+ </resultMap>
+ 
+ <select id="findLandlordDataItemList" resultMap="BaseItemMap" parameterType="com.ziroom.minsu.report.board.dto.LandlordRequest" >
+  	SELECT
+		t2.`code` city_code,
+		t2.show_name city_name
+	FROM
+		minsu_base_db.t_city_region_rel t1,
+		minsu_base_db.t_conf_city t2
+	WHERE
+		t1.province_code = t2.pcode
+	AND t1.is_del = 0
+	AND t2.is_del = 0
+	AND t2.`level` = 3
+	AND t2.city_status IN (1, 3)
+	AND t1.region_fid = #{regionFid,jdbcType=VARCHAR}
+ </select>
+</mapper>

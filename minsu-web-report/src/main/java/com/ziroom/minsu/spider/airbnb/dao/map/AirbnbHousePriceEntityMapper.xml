@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ziroom.minsu.spider.airbnb.dao.AirbnbHousePriceEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.spider.airbnb.entity.AirbnbHousePriceEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="DATE" />
+    <result column="local_currency" property="localCurrency" jdbcType="VARCHAR" />
+    <result column="local_price" property="localPrice" jdbcType="INTEGER" />
+    <result column="native_currency" property="nativeCurrency" jdbcType="VARCHAR" />
+    <result column="native_price" property="nativePrice" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="available" property="available" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, house_sn, date, local_currency, local_price, native_currency, native_price, create_date, 
+    last_modify_date,available
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_airbnb_house_price
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_airbnb_house_price
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.spider.airbnb.entity.AirbnbHousePriceEntity" >
+    insert ignore into t_airbnb_house_price (id, house_sn, date, 
+      local_currency, local_price, native_currency, 
+      native_price, create_date, last_modify_date,available
+      )
+    values (#{id,jdbcType=INTEGER}, #{houseSn,jdbcType=VARCHAR}, #{date,jdbcType=DATE}, 
+      #{localCurrency,jdbcType=VARCHAR}, #{localPrice,jdbcType=INTEGER}, #{nativeCurrency,jdbcType=VARCHAR}, 
+      #{nativePrice,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{lastModifyDate,jdbcType=TIMESTAMP},#{available,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.spider.airbnb.entity.AirbnbHousePriceEntity" >
+    insert ignore into t_airbnb_house_price
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="houseSn != null" >
+        house_sn,
+      </if>
+      <if test="date != null" >
+        date,
+      </if>
+      <if test="localCurrency != null" >
+        local_currency,
+      </if>
+      <if test="localPrice != null" >
+        local_price,
+      </if>
+      <if test="nativeCurrency != null" >
+        native_currency,
+      </if>
+      <if test="nativePrice != null" >
+        native_price,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="available != null" >
+        available,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="houseSn != null" >
+        #{houseSn,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=DATE},
+      </if>
+      <if test="localCurrency != null" >
+        #{localCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="localPrice != null" >
+        #{localPrice,jdbcType=INTEGER},
+      </if>
+      <if test="nativeCurrency != null" >
+        #{nativeCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePrice != null" >
+        #{nativePrice,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="available != null" >
+        #{available,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.spider.airbnb.entity.AirbnbHousePriceEntity" >
+    update t_airbnb_house_price
+    <set >
+      <if test="houseSn != null" >
+        house_sn = #{houseSn,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null" >
+        date = #{date,jdbcType=DATE},
+      </if>
+      <if test="localCurrency != null" >
+        local_currency = #{localCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="localPrice != null" >
+        local_price = #{localPrice,jdbcType=INTEGER},
+      </if>
+      <if test="nativeCurrency != null" >
+        native_currency = #{nativeCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePrice != null" >
+        native_price = #{nativePrice,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="available != null" >
+        available= #{available,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.spider.airbnb.entity.AirbnbHousePriceEntity" >
+    update t_airbnb_house_price
+    set house_sn = #{houseSn,jdbcType=VARCHAR},
+      date = #{date,jdbcType=DATE},
+      local_currency = #{localCurrency,jdbcType=VARCHAR},
+      local_price = #{localPrice,jdbcType=INTEGER},
+      native_currency = #{nativeCurrency,jdbcType=VARCHAR},
+      native_price = #{nativePrice,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      available= #{available,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="findByHouseSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_airbnb_house_price
+    where house_sn = #{houseSn,jdbcType=VARCHAR}
+  </select>
+   <select id="findByHouseSnDate" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from t_airbnb_house_price
+    where house_sn = #{houseSn,jdbcType=VARCHAR}
+    and date = #{date,jdbcType=DATE}
+  </select>
+  <delete id="delByHouseSn" parameterType="java.lang.String" >
+    delete from t_airbnb_house_price
+    where house_sn = #{houseSn,jdbcType=VARCHAR}
+  </delete>
+</mapper>

@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.msgAdvisoryFollowupDao" >
+	<select id="queryAllNeedFollowPage" parameterType="com.ziroom.minsu.report.message.dto.MsgAdvisoryFollowRequest" resultType="com.ziroom.minsu.report.message.vo.MsgAdvisoryFollowVo">
+SELECT t4.tenantUid from (	
+	SELECT tem.from_uid as tenantUid,tem.house_fid FROM (
+	     SELECT from_uid,to_uid,house_fid,follow_status from (
+	           SELECT mfa.from_uid,mfa.to_uid,mfa.house_fid,mfa.follow_status FROM `minsu_message_db`.`t_msg_first_advisory` mfa
+		       <where> EXISTS(
+				             SELECT cbm.uid  FROM `minsu_customer_db`.`t_customer_base_msg` cbm
+						     <where> 
+								   <if test="tenantName !=null and tenantName!=''">
+									 cbm.`real_name`=#{tenantName}
+								   </if>
+								   <if test="tenantTel !=null and tenantTel!=''">
+									 AND  cbm.`customer_mobile`=#{tenantTel}
+								   </if>
+									AND mfa.from_uid = cbm.uid
+						    </where>
+			                 )
+			    <if test="followStatus !=null and followStatus!=''">
+				    AND mfa.`follow_status`=#{followStatus}
+			    </if> 
+			    <if test="msgSendStartTime != null and msgSendStartTime !=''">
+				    AND mfa.msg_send_time <![CDATA[ >= ]]> #{msgSendStartTime}
+			   </if>
+			   <if test="msgSendEndTime != null and msgSendEndTime !=''">
+				    AND mfa.msg_send_time <![CDATA[ < ]]> #{msgSendEndTime}
+			   </if>
+		   </where>
+	   )as t1 WHERE EXISTS(
+                     SELECT cbm1.uid  FROM `minsu_customer_db`.`t_customer_base_msg` cbm1 
+                    <where>
+                       <if test="landlordName !=null and landlordName!=''">
+						 AND cbm1.real_name=#{landlordName}
+					   </if>
+					   <if test="landlordTel !=null and landlordTel!=''">
+						AND cbm1.`customer_mobile`=#{landlordTel}
+					   </if>
+                       and t1.to_uid = cbm1.uid 
+                    </where>     
+             )
+) AS tem  
+      <where> EXISTS(
+	              SELECT  t3.housefid  FROM (SELECT base.fid AS housefid,base.`house_name` AS  houseName, phy.`city_code` AS cityCode,phy.`nation_code` AS nationCode
+						 FROM `minsu_house_db`.`t_house_base_msg`  base 
+						 JOIN `minsu_house_db`.`t_house_phy_msg` phy
+						 ON base.phy_fid = phy.fid
+						  <where> 
+						       base.rent_way =0 AND base.`is_del`=0 AND phy.`is_del`=0
+							   <if test="nationCode !=null and nationCode!=''">
+								 AND phy.nation_code=#{nationCode}
+							   </if>
+							   <if test="cityCode !=null and cityCode!=''">
+								 AND phy.city_code=#{cityCode}
+							   </if>
+							    <if test="houseName !=null and houseName!=''">
+								 AND base.house_name LIKE CONCAT('%',#{houseName},'%')
+							   </if>
+						  </where>
+			         UNION
+				                  SELECT room.fid AS housefid,room.room_name AS houseName, phy.`city_code` AS cityCode,phy.`nation_code` AS nationCode
+							FROM `minsu_house_db`.`t_house_room_msg` room
+							JOIN `minsu_house_db`.`t_house_base_msg` base
+							ON room.house_base_fid=base.`fid`
+							JOIN  `minsu_house_db`.`t_house_phy_msg` phy
+							ON base.phy_fid = phy.fid
+							<where> 
+							   base.rent_way =0 AND base.`is_del`=0 AND phy.`is_del`=0
+							   <if test="nationCode !=null and nationCode!=''">
+								 AND phy.nation_code=#{nationCode}
+							   </if>
+							   <if test="cityCode !=null and cityCode!=''">
+								 AND phy.city_code=#{cityCode}
+							   </if>
+							    <if test="houseName !=null and houseName!=''">
+								 AND room.room_name LIKE CONCAT('%',#{houseName},'%')
+							   </if>
+						   </where>
+					       ) AS t3		   
+	               where tem.house_fid = t3.housefid	 
+	              )
+	</where>
+) as t4	group by t4.tenantUid     
+</select>
+	
+	
+	<select id="queryAllNeedFollowList" parameterType="com.ziroom.minsu.report.message.dto.MsgAdvisoryFollowRequest" resultType="com.ziroom.minsu.report.message.vo.MsgAdvisoryFollowVo">
+  select t5.msg_base_fid,t5.fid,from_uid as tenantUid,to_uid,house_fid,follow_status  as followStatus,create_time as createTime, 
+       cbm2.real_name as tenantName,cbm2.customer_mobile as tenantTel,cbm2.nick_name as nickName,cbm2.customer_email as tenantEmail,
+       cbm3.real_name as landlordName, cbm3.customer_mobile as landlordTel,
+       t6.houseName,t6.cityCode,
+       f1.empNameList,
+       CASE `follow_status`
+	               WHEN 10 THEN '未跟进'
+	               WHEN 20 THEN '跟进中'
+	               WHEN 30 THEN '跟进结束'
+	               ELSE '未知'
+	               END AS followStatusName 
+ FROM
+(SELECT msg_base_fid,fid,from_uid,to_uid,house_fid,follow_status,create_time 
+FROM (
+	     SELECT msg_base_fid,fid,from_uid,to_uid,house_fid,follow_status,create_time from (
+	           SELECT  mfa.msg_base_fid,mfa.fid, mfa.from_uid,mfa.to_uid,mfa.house_fid,mfa.follow_status,mfa.create_time FROM `minsu_message_db`.`t_msg_first_advisory` mfa
+			    <where>
+			    EXISTS(
+				             SELECT cbm.uid  FROM `minsu_customer_db`.`t_customer_base_msg` cbm
+				             <where>
+							    cbm.is_del=0
+								<if test="tenantName !=null and tenantName!=''">
+							        AND cbm.real_name=#{tenantName}
+							    </if>
+							    <if test="tenantTel !=null and tenantTel!=''">
+							         AND  cbm.customer_mobile=#{tenantTel}
+							    </if>
+							    and mfa.from_uid = cbm.uid
+						    </where> 
+			                 )
+			   <if test="followStatus !=null and followStatus!=''">
+			         AND mfa.`follow_status`=#{followStatus}
+			   </if>
+			   <if test="msgSendStartTime != null and msgSendStartTime !=''">
+			        AND mfa.msg_send_time <![CDATA[ >= ]]> #{msgSendStartTime}
+			   </if>
+			   <if test="msgSendEndTime != null and msgSendEndTime !=''">
+			        AND mfa.msg_send_time <![CDATA[ < ]]> #{msgSendEndTime}
+			   </if>
+			    <if test="tenantUidList != null and tenantUidList.size > 0">
+					 AND mfa.from_uid in
+				        <foreach collection="tenantUidList" item="tuid" index="index" open="(" separator="," close=")">  
+							#{tuid,jdbcType=VARCHAR}
+				        </foreach>
+		         </if> 
+	       </where>  
+	   )as t1 WHERE EXISTS(
+                     SELECT cbm1.uid  FROM `minsu_customer_db`.`t_customer_base_msg` cbm1 
+                    <where>
+                       <if test="landlordName !=null and landlordName!=''">
+						 AND cbm1.real_name=#{landlordName}
+					   </if>
+					   <if test="landlordTel !=null and landlordTel!=''">
+						AND cbm1.`customer_mobile`=#{landlordTel}
+					   </if>
+                       and t1.to_uid = cbm1.uid 
+                    </where>      
+             )
+) AS tem  
+      where EXISTS(
+	              SELECT  t3.housefid  FROM (SELECT base.fid AS housefid,base.`house_name` AS  houseName, phy.`city_code` AS cityCode,phy.`nation_code` AS nationCode
+						 FROM `minsu_house_db`.`t_house_base_msg`  base 
+						 JOIN `minsu_house_db`.`t_house_phy_msg` phy
+						 ON base.phy_fid = phy.fid
+						  <where> 
+						       base.rent_way =0 AND base.`is_del`=0 AND phy.`is_del`=0
+							   <if test="nationCode !=null and nationCode!=''">
+								 AND phy.nation_code=#{nationCode}
+							   </if>
+							   <if test="cityCode !=null and cityCode!=''">
+								 AND phy.city_code=#{cityCode}
+							   </if>
+							    <if test="houseName !=null and houseName!=''">
+								 AND base.house_name LIKE CONCAT('%',#{houseName},'%')
+							   </if>
+						  </where>
+							
+			         UNION
+				                  SELECT room.fid AS housefid,room.room_name AS houseName, phy.`city_code` AS cityCode,phy.`nation_code` AS nationCode
+							FROM `minsu_house_db`.`t_house_room_msg` room
+							JOIN `minsu_house_db`.`t_house_base_msg` base
+							ON room.house_base_fid=base.`fid`
+							JOIN  `minsu_house_db`.`t_house_phy_msg` phy
+							ON base.phy_fid = phy.fid
+							<where> 
+							   base.rent_way =0 AND base.`is_del`=0 AND phy.`is_del`=0
+							   <if test="nationCode !=null and nationCode!=''">
+								 AND phy.nation_code=#{nationCode}
+							   </if>
+							   <if test="cityCode !=null and cityCode!=''">
+								 AND phy.city_code=#{cityCode}
+							   </if>
+							    <if test="houseName !=null and houseName!=''">
+								 AND room.room_name LIKE CONCAT('%',#{houseName},'%')
+							   </if>
+						   </where>	  
+					       ) AS t3		   
+	               where tem.house_fid = t3.housefid	 
+	              ) 
+) t5
+left join `minsu_customer_db`.`t_customer_base_msg` cbm2 
+on t5.from_uid = cbm2.uid
+left join `minsu_customer_db`.`t_customer_base_msg` cbm3
+on t5.to_uid = cbm3.uid
+left join 
+        (    SELECT base.fid AS housefid,base.`house_name` AS  houseName, phy.`city_code` AS cityCode,phy.`nation_code` AS nationCode
+						 FROM `minsu_house_db`.`t_house_base_msg`  base 
+						 JOIN `minsu_house_db`.`t_house_phy_msg` phy
+						 ON base.phy_fid = phy.fid
+						 <where> 
+						       base.rent_way =0 AND base.`is_del`=0 AND phy.`is_del`=0
+							   <if test="nationCode !=null and nationCode!=''">
+								 AND phy.nation_code=#{nationCode}
+							   </if>
+							   <if test="cityCode !=null and cityCode!=''">
+								 AND phy.city_code=#{cityCode}
+							   </if>
+							    <if test="houseName !=null and houseName!=''">
+								 AND base.house_name LIKE CONCAT('%',#{houseName},'%')
+							   </if>
+						  </where>	
+			         UNION
+				       SELECT room.fid AS housefid,room.room_name AS houseName, phy.`city_code` AS cityCode,phy.`nation_code` AS nationCode
+							FROM `minsu_house_db`.`t_house_room_msg` room
+							JOIN `minsu_house_db`.`t_house_base_msg` base
+							ON room.house_base_fid=base.`fid`
+							JOIN  `minsu_house_db`.`t_house_phy_msg` phy
+							ON base.phy_fid = phy.fid
+							<where> 
+							   base.rent_way =0 AND base.`is_del`=0 AND phy.`is_del`=0
+							   <if test="nationCode !=null and nationCode!=''">
+								 AND phy.nation_code=#{nationCode}
+							   </if>
+							   <if test="cityCode !=null and cityCode!=''">
+								 AND phy.city_code=#{cityCode}
+							   </if>
+							    <if test="houseName !=null and houseName!=''">
+								 AND room.room_name LIKE CONCAT('%',#{houseName},'%')
+							   </if>
+						   </where>	   
+) AS t6	
+on t5.house_fid = t6.housefid
+LEFT JOIN 
+					(SELECT b.`msg_first_advisory_fid`,GROUP_CONCAT(b.`emp_name` SEPARATOR '；') AS empNameList,
+                  MIN(b.`create_time`) as firstFollowTime
+           FROM  `minsu_message_db`.`t_msg_advisory_followup` b
+           GROUP BY b.`msg_first_advisory_fid`  
+ ) as f1
+on f1.msg_first_advisory_fid=t5.fid
+ORDER BY t5.from_uid ASC , t5.create_time DESC
+	</select>
+	
+	<select id="exportAllNeedFollowByPage" parameterType="com.ziroom.minsu.report.message.dto.MsgAdvisoryFollowRequest" resultType="com.ziroom.minsu.report.message.vo.MsgAdvisoryFollowVo">
+       select t5.msg_base_fid,t5.fid,from_uid ,to_uid,house_fid,follow_status  as followStatus,create_time as createTime, 
+       cbm2.real_name as tenantName,cbm2.customer_mobile as tenantTel,
+       cbm3.real_name as landlordName, cbm3.customer_mobile as landlordTel,
+       t6.houseName,t6.cityCode,
+       f1.firstFollowTime, f1.empNameList,f1.allFollowRemark,
+       m2.landLordFirstReplyTime,m2.replayTimeHouse,
+       CASE `follow_status`
+	               WHEN 10 THEN '未跟进'
+	               WHEN 20 THEN '跟进中'
+	               WHEN 30 THEN '跟进结束'
+	               ELSE '未知'
+	               END AS followStatusName 
+ FROM
+(SELECT msg_base_fid,fid,from_uid,to_uid,house_fid,follow_status,create_time 
+FROM (
+	     SELECT msg_base_fid,fid,from_uid,to_uid,house_fid,follow_status,create_time from (
+	           SELECT  mfa.msg_base_fid,mfa.fid, mfa.from_uid,mfa.to_uid,mfa.house_fid,mfa.follow_status,mfa.create_time FROM `minsu_message_db`.`t_msg_first_advisory` mfa
+			    <where>
+			    EXISTS(
+				             SELECT cbm.uid  FROM `minsu_customer_db`.`t_customer_base_msg` cbm
+				             <where>
+							    cbm.is_del=0
+								<if test="tenantName !=null and tenantName!=''">
+							        AND cbm.real_name=#{tenantName}
+							    </if>
+							    <if test="tenantTel !=null and tenantTel!=''">
+							         AND  cbm.customer_mobile=#{tenantTel}
+							    </if>
+							    and mfa.from_uid = cbm.uid
+						    </where> 
+			                 )
+			   <if test="followStatus !=null and followStatus!=''">
+			         AND mfa.`follow_status`=#{followStatus}
+			   </if>
+			   <if test="msgSendStartTime != null and msgSendStartTime !=''">
+			        AND mfa.msg_send_time <![CDATA[ >= ]]> #{msgSendStartTime}
+			   </if>
+			   <if test="msgSendEndTime != null and msgSendEndTime !=''">
+			        AND mfa.msg_send_time <![CDATA[ < ]]> #{msgSendEndTime}
+			   </if>
+	       </where>  
+	   )as t1 WHERE EXISTS(
+                     SELECT cbm1.uid  FROM `minsu_customer_db`.`t_customer_base_msg` cbm1 
+                    <where>
+                       <if test="landlordName !=null and landlordName!=''">
+						 AND cbm1.real_name=#{landlordName}
+					   </if>
+					   <if test="landlordTel !=null and landlordTel!=''">
+						AND cbm1.`customer_mobile`=#{landlordTel}
+					   </if>
+                       and t1.to_uid = cbm1.uid 
+                    </where>      
+             )
+) AS tem  
+      where EXISTS(
+	              SELECT  t3.housefid  FROM (SELECT base.fid AS housefid,base.`house_name` AS  houseName, phy.`city_code` AS cityCode,phy.`nation_code` AS nationCode
+						 FROM `minsu_house_db`.`t_house_base_msg`  base 
+						 JOIN `minsu_house_db`.`t_house_phy_msg` phy
+						 ON base.phy_fid = phy.fid
+						  <where> 
+						       base.rent_way =0 AND base.`is_del`=0 AND phy.`is_del`=0
+							   <if test="nationCode !=null and nationCode!=''">
+								 AND phy.nation_code=#{nationCode}
+							   </if>
+							   <if test="cityCode !=null and cityCode!=''">
+								 AND phy.city_code=#{cityCode}
+							   </if>
+							    <if test="houseName !=null and houseName!=''">
+								 AND base.house_name LIKE CONCAT('%',#{houseName},'%')
+							   </if>
+						  </where>
+							
+			         UNION
+				                  SELECT room.fid AS housefid,room.room_name AS houseName, phy.`city_code` AS cityCode,phy.`nation_code` AS nationCode
+							FROM `minsu_house_db`.`t_house_room_msg` room
+							JOIN `minsu_house_db`.`t_house_base_msg` base
+							ON room.house_base_fid=base.`fid`
+							JOIN  `minsu_house_db`.`t_house_phy_msg` phy
+							ON base.phy_fid = phy.fid
+							<where> 
+							   base.rent_way =0 AND base.`is_del`=0 AND phy.`is_del`=0
+							   <if test="nationCode !=null and nationCode!=''">
+								 AND phy.nation_code=#{nationCode}
+							   </if>
+							   <if test="cityCode !=null and cityCode!=''">
+								 AND phy.city_code=#{cityCode}
+							   </if>
+							    <if test="houseName !=null and houseName!=''">
+								 AND room.room_name LIKE CONCAT('%',#{houseName},'%')
+							   </if>
+						   </where>	  
+					       ) AS t3		   
+	               where tem.house_fid = t3.housefid	 
+	              ) 
+) t5
+left join `minsu_customer_db`.`t_customer_base_msg` cbm2 
+on t5.from_uid = cbm2.uid
+left join `minsu_customer_db`.`t_customer_base_msg` cbm3
+on t5.to_uid = cbm3.uid
+left join 
+        (    SELECT base.fid AS housefid,base.`house_name` AS  houseName, phy.`city_code` AS cityCode,phy.`nation_code` AS nationCode
+						 FROM `minsu_house_db`.`t_house_base_msg`  base 
+						 JOIN `minsu_house_db`.`t_house_phy_msg` phy
+						 ON base.phy_fid = phy.fid
+						 <where> 
+						       base.rent_way =0 AND base.`is_del`=0 AND phy.`is_del`=0
+							   <if test="nationCode !=null and nationCode!=''">
+								 AND phy.nation_code=#{nationCode}
+							   </if>
+							   <if test="cityCode !=null and cityCode!=''">
+								 AND phy.city_code=#{cityCode}
+							   </if>
+							    <if test="houseName !=null and houseName!=''">
+								 AND base.house_name LIKE CONCAT('%',#{houseName},'%')
+							   </if>
+						  </where>	
+			         UNION
+				       SELECT room.fid AS housefid,room.room_name AS houseName, phy.`city_code` AS cityCode,phy.`nation_code` AS nationCode
+							FROM `minsu_house_db`.`t_house_room_msg` room
+							JOIN `minsu_house_db`.`t_house_base_msg` base
+							ON room.house_base_fid=base.`fid`
+							JOIN  `minsu_house_db`.`t_house_phy_msg` phy
+							ON base.phy_fid = phy.fid
+							<where> 
+							   base.rent_way =0 AND base.`is_del`=0 AND phy.`is_del`=0
+							   <if test="nationCode !=null and nationCode!=''">
+								 AND phy.nation_code=#{nationCode}
+							   </if>
+							   <if test="cityCode !=null and cityCode!=''">
+								 AND phy.city_code=#{cityCode}
+							   </if>
+							    <if test="houseName !=null and houseName!=''">
+								 AND room.room_name LIKE CONCAT('%',#{houseName},'%')
+							   </if>
+						   </where>	   
+) AS t6	
+on t5.house_fid = t6.housefid
+LEFT JOIN 
+					(SELECT b.`msg_first_advisory_fid`,GROUP_CONCAT(CONCAT(b.emp_name,':',b.create_time,':',b.remark) SEPARATOR '；') AS allFollowRemark,
+                  MIN(b.`create_time`) as firstFollowTime,GROUP_CONCAT(b.`emp_name` SEPARATOR '；') AS empNameList
+           FROM  `minsu_message_db`.`t_msg_advisory_followup` b
+           GROUP BY b.`msg_first_advisory_fid` 
+ ) as f1
+on f1.msg_first_advisory_fid=t5.fid
+ LEFT JOIN
+			 	 ( SELECT  m1.`fid`, MIN(m1.create_time) AS landLordFirstReplyTime, MIN(m1.replay_time_house) AS replayTimeHouse
+		       FROM (SELECT fid,create_time,replay_time_house,msg_house_fid FROM `minsu_message_db`.`t_msg_base` WHERE msg_sender_type=20 AND is_del=0) as m1
+		       GROUP BY m1.`fid`
+		       HAVING MIN(m1.replay_time_house)>0  
+) as m2
+on t5.msg_base_fid=m2.fid
+order by t5.create_time desc 	
+	</select>
+	
+	<!-- 根据msgFirstAdvisoryFid获取所有跟进人集合 -->
+	<select id="getAllEmpNameByFirstAdvFid" parameterType="map" resultType="string">
+	    SELECT t1.emp_name AS empName 
+		FROM
+			(SELECT msg_first_advisory_fid,emp_name
+			FROM `minsu_message_db`.`t_msg_advisory_followup` 
+			GROUP BY msg_first_advisory_fid,emp_name) t1
+		WHERE msg_first_advisory_fid=#{msgFirstAdvisoryFid}
+	</select>
+	
+	<!-- 根据首次咨询fid获取跟进人名称，备注，创建时间 -->
+	<select id="getMsgFollowupByFirstAdvFid" parameterType="map" resultType="com.ziroom.minsu.entity.message.MsgAdvisoryFollowupEntity">
+	  SELECT emp_name as empName,remark,create_time as createTime
+			FROM `minsu_message_db`.`t_msg_advisory_followup` 
+		WHERE msg_first_advisory_fid=#{msgFirstAdvisoryFid}
+	</select>
+	
+	<!-- 获取某个首次咨询记录对应的房东首次回复时间 -->
+	<select id="getLandLordFirstReplyTime" parameterType="java.util.Map" resultType="com.ziroom.minsu.report.message.vo.MsgAdvisoryFollowVo">
+        SELECT  create_time AS landLordFirstReplyTime, replay_time_house AS replayTimeHouse
+		FROM `minsu_message_db`.t_msg_base 
+		WHERE fid = #{msgBaseFid}
+		AND house_fid = #{houseFid}
+		AND replay_time_house >0
+		AND is_del=0
+	</select>
+</mapper>

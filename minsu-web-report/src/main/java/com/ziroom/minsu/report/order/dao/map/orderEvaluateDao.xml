@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.orderEvaluateDao" >
+
+
+
+
+
+
+	<!-- 获取当前城市的订单评价统计信息 -->
+	<select id="getOrderEvaluateByCityCode" resultType="com.ziroom.minsu.report.order.entity.OrderEvaluateEntity" parameterType="map">
+
+		SELECT
+		sum(num) AS orderNum,
+		sum(tenNum) AS  tenNum,
+		sum(lanNum) AS lanNum
+		FROM
+		(
+		SELECT
+		city_code,
+		1 AS num,
+		CASE
+		WHEN t.eva_status = 101 THEN 1
+		WHEN t.eva_status = 111 THEN 1
+		ELSE 0
+		END AS tenNum,
+		CASE
+		WHEN t.eva_status = 110 THEN 1
+		WHEN t.eva_status = 111 THEN 1
+		ELSE 0
+		END AS lanNum
+		FROM
+		minsu_order_db.t_order t
+
+		LEFT JOIN minsu_order_db.t_order_log tl  ON t.order_sn = tl.order_sn
+		WHERE t.`order_status` IN(70,71)
+		AND tl.to_status IN(70,71)
+		AND t.`is_del` = 0
+		AND t.city_code = #{cityCode,jdbcType=VARCHAR}
+		<if test="starTime != null  and starTime != ''">
+			AND t.create_time <![CDATA[ >= ]]> #{starTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null and endTime != '' ">
+			AND t.create_time <![CDATA[ <= ]]> #{endTime,jdbcType=TIMESTAMP}
+		</if>
+		)tmp
+		limit 1
+	</select>
+
+
+
+
+	<!-- 获取当前城市的订单评价统计信息 -->
+	<select id="getOrderEvaluateListByCityCode" resultType="com.ziroom.minsu.report.order.entity.OrderEvaluateEntity" parameterType="com.ziroom.minsu.report.order.dto.OrderEvaluateRequest">
+
+		SELECT
+			city_code  AS cityCode,
+			sum(num) AS orderNum,
+			sum(tenNum) AS  tenNum,
+			sum(lanNum) AS lanNum
+		FROM
+		(
+			SELECT
+				city_code,
+				1 AS num,
+				CASE
+				WHEN t.eva_status = 101 THEN 1
+				WHEN t.eva_status = 111 THEN 1
+				ELSE 0
+				END AS tenNum,
+				CASE
+				WHEN t.eva_status = 110 THEN 1
+				WHEN t.eva_status = 111 THEN 1
+				ELSE 0
+				END AS lanNum
+			FROM
+			minsu_order_db.t_order t
+
+			LEFT JOIN minsu_order_db.t_order_log tl  ON t.order_sn = tl.order_sn
+			WHERE t.`order_status` IN(70,71)
+			AND tl.to_status IN(70,71)
+			AND t.`is_del` = 0
+			AND to_days(t.start_time)<![CDATA[<]]>to_days(t.real_end_time)
+			<if test="starTime != null and starTime != '' ">
+				AND t.real_end_time <![CDATA[ >= ]]> #{starTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="endTime != null and endTime != '' ">
+				AND t.real_end_time <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="cityList != null">
+				<if test="cityList.size > 0">
+					AND t.city_code in
+					<foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+						#{cityCode,jdbcType=VARCHAR}
+					</foreach>
+				</if>
+			</if>
+		)tmp  group by city_code
+
+   </select>
+
+
+
+	<!-- #房东平均评分 -->
+	<select id="avgLanScoreInfoByCityCode" resultType="com.ziroom.minsu.report.order.entity.OrderEvaluateDetailEntity" parameterType="map">
+		SELECT
+			COALESCE(AVG((tle.house_clean+tle.description_match+tle.safety_degree+tle.traffic_position+tle.cost_performance)/5),0) AS sumAvgLanScore,
+			COALESCE(AVG(tle.house_clean),0) AS houseAvgCleanScore,
+			COALESCE(AVG(tle.description_match),0) AS descriptionAvgMatchScore,
+			COALESCE(AVG(tle.safety_degree),0) AS safetyAvgDegreeScore,
+			COALESCE(AVG(tle.traffic_position),0) AS trafficPositionAvgScore,
+			COALESCE(AVG(tle.cost_performance),0) AS costPerformanceAvgScore,
+
+			COALESCE(sum((tle.house_clean+tle.description_match+tle.safety_degree+tle.traffic_position+tle.cost_performance)/5),0) AS sumAvgLanScoreAll,
+			COALESCE(sum(tle.house_clean),0) AS houseAvgCleanScoreAll,
+			COALESCE(sum(tle.description_match),0) AS descriptionAvgMatchScoreAll,
+			COALESCE(sum(tle.safety_degree),0) AS safetyAvgDegreeScoreAll,
+			COALESCE(sum(tle.traffic_position),0) AS trafficPositionAvgScoreAll,
+			COALESCE(sum(tle.cost_performance),0) AS costPerformanceAvgScoreAll,
+			count(1) AS  numEval
+		FROM `minsu_evaluate_db`.`t_tenant_evaluate` tle
+			LEFT JOIN `minsu_evaluate_db`.`t_evaluate_order` teo
+			ON tle.eva_order_fid = teo.fid
+			INNER JOIN (
+				SELECT tr.order_sn FROM `minsu_order_db`.`t_order` tr
+				LEFT JOIN minsu_order_db.`t_order_log` tl
+				ON tr.`order_sn` = tl.order_sn
+				WHERE tr.`pay_status` = 1
+				AND tr.`order_status` IN(70,71)
+				AND tl.to_status IN(70,71)
+				AND tr.`is_del` = 0
+				<if test="beginTime != null and beginTime != '' ">
+					AND tl.create_date <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+				</if>
+				<if test="endTime != null and endTime != '' ">
+					AND tl.create_date <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+				</if>
+				<if test="cityCode != null and cityCode != '' ">
+					AND tr.`city_code` = #{cityCode,jdbcType=VARCHAR}
+				</if>
+			) tmp
+			ON teo.order_sn = tmp.order_sn
+		WHERE teo.eva_user_type = 2
+	</select>
+
+
+
+	<!-- #房客总评分 -->
+	<select id="avgUserScoreInfo" resultType="java.lang.Double"  parameterType="map">
+		SELECT COALESCE(AVG(tle.landlord_satisfied),0) FROM `minsu_evaluate_db`.`t_landlord_evaluate` tle
+		LEFT JOIN `minsu_evaluate_db`.`t_evaluate_order` teo
+		ON tle.eva_order_fid = teo.fid
+		INNER JOIN (
+		SELECT tr.order_sn FROM `minsu_order_db`.`t_order` tr
+		LEFT JOIN minsu_order_db.`t_order_log` tl
+		ON tr.`order_sn` = tl.order_sn
+		WHERE tr.`order_status` IN(70,71)
+		AND tl.to_status IN(70,71)
+		AND tr.`is_del` = 0
+		<if test="beginTime != null and beginTime != '' ">
+			AND tl.create_date <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != '' ">
+			AND tl.create_date <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="cityCode != null and cityCode != '' ">
+			AND tr.`city_code` = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		) AS tmp
+		ON teo.order_sn = tmp.order_sn
+		WHERE teo.eva_user_type = 1
+	</select>
+
+
+
+	<select id="getOrderEvaluate" resultType="com.ziroom.minsu.report.order.vo.OrderEvaluateVo" parameterType="map">
+		SELECT o.city_code cityCode, o.order_sn orderSn, snap.house_sn houseSn, o.real_end_time realEndTime, eva_t_order.create_time tenantEvaTime,
+		FORMAT((t_eva.house_clean+t_eva.description_match+t_eva.safety_degree+t_eva.traffic_position+t_eva.cost_performance)/5,2) avgTenantScore,
+		t_eva.house_clean scoreHouseClean, t_eva.description_match scoreDescriptionMatch, t_eva.safety_degree scoreSafetyDegree, t_eva.traffic_position scoreTrafficPosition, t_eva.cost_performance scoreCostPerformance, t_eva.content tenantContent,
+		eva_l_order.create_time landlordEvaTime, l_eva.content landlordContent, l_eva.landlord_satisfied landlordSatisfied
+		FROM minsu_order_db.t_order o
+		INNER JOIN minsu_order_db.t_order_house_snapshot snap ON o.order_sn=snap.order_sn
+		LEFT JOIN  minsu_evaluate_db.t_evaluate_order eva_t_order ON o.order_sn=eva_t_order.order_sn AND eva_t_order.eva_user_type=2
+		LEFT JOIN  minsu_evaluate_db.t_tenant_evaluate t_eva ON t_eva.eva_order_fid=eva_t_order.fid
+		LEFT JOIN  minsu_evaluate_db.t_evaluate_order eva_l_order ON o.order_sn=eva_l_order.order_sn AND eva_l_order.eva_user_type=1
+		LEFT JOIN  minsu_evaluate_db.t_landlord_evaluate l_eva ON l_eva.eva_order_fid=eva_l_order.fid
+		<where>
+		<if test="cityList != null">
+			<if test="cityList.size > 0">
+				AND o.city_code in
+				<foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+					#{cityCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		<if test="createStartTime != null and createStartTime != ''">
+			AND o.create_time>=#{createStartTime,jdbcType=VARCHAR}
+		</if>
+		<if test="createEndTime != null and createEndTime != ''">
+			AND o.create_time<![CDATA[ <= ]]>#{createEndTime,jdbcType=VARCHAR}
+		</if>
+		<if test="tenantEvaStartTime != null and tenantEvaStartTime != ''">
+			AND eva_t_order.create_time >= #{tenantEvaStartTime,jdbcType=VARCHAR}
+		</if>
+		<if test="tenantEvaEndTime != null and tenantEvaEndTime != ''">
+			AND eva_t_order.create_time <![CDATA[ <= ]]> #{tenantEvaEndTime,jdbcType=VARCHAR}
+		</if>
+		<if test="landlordEvaStartTime != null and landlordEvaStartTime != ''">
+			AND eva_l_order.create_time >= #{landlordEvaStartTime,jdbcType=VARCHAR}
+		</if>
+		<if test="landlordEvaEndTime != null and landlordEvaEndTime != ''">
+			AND eva_l_order.create_time <![CDATA[ <= ]]> #{landlordEvaEndTime,jdbcType=VARCHAR}
+		</if>
+		<if test="realEndTimeStart != null and realEndTimeStart != ''">
+			AND o.real_end_time>=#{realEndTimeStart,jdbcType=VARCHAR}
+		</if>
+		<if test="realEndTimeEnd != null and realEndTimeEnd != ''">
+			AND o.real_end_time<![CDATA[ <= ]]>#{realEndTimeEnd,jdbcType=VARCHAR}
+		</if>
+		</where>
+	</select>
+
+</mapper>

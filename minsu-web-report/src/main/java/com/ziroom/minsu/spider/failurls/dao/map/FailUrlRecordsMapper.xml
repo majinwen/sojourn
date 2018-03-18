@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ziroom.minsu.spider.failurls.dao.FailUrlRecordsMapper" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.spider.failurls.entity.FailUrlRecordsEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="url_type" property="urlType" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="try_count" property="tryCount" jdbcType="INTEGER" />
+     <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.ziroom.minsu.spider.failurls.entity.FailUrlRecordsEntity" extends="BaseResultMap" >
+    <result column="fail_reason" property="failReason" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, url, url_type, create_date,try_count,last_modify_date
+  </sql>
+  <sql id="Blob_Column_List" >
+    fail_reason
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_fail_url_records
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_fail_url_records
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.spider.failurls.entity.FailUrlRecordsEntity" >
+    insert ignore into t_fail_url_records (id, url, url_type, 
+      create_date, fail_reason,try_count,last_modify_date)
+    values (#{id,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{urlType,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{failReason,jdbcType=LONGVARCHAR}, #{tryCount,jdbcType=INTEGER}, #{lastModifyDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.spider.failurls.entity.FailUrlRecordsEntity" >
+    insert ignore into t_fail_url_records
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="urlType != null" >
+        url_type,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="failReason != null" >
+        fail_reason,
+      </if>
+      <if test="tryCount != null" >
+        try_count,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="urlType != null" >
+        #{urlType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="failReason != null" >
+        #{failReason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tryCount != null" >
+        try_count=#{tryCount,jdbcType=INTEGER},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.spider.failurls.entity.FailUrlRecordsEntity" >
+    update t_fail_url_records
+    <set >
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="urlType != null" >
+        url_type = #{urlType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="failReason != null" >
+        fail_reason = #{failReason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tryCount != null" >
+        try_count=#{tryCount,jdbcType=INTEGER},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.ziroom.minsu.spider.failurls.entity.FailUrlRecordsEntity" >
+    update t_fail_url_records
+    set url = #{url,jdbcType=VARCHAR},
+      url_type = #{urlType,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      fail_reason = #{failReason,jdbcType=LONGVARCHAR},
+      try_count=#{tryCount,jdbcType=INTEGER},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.spider.failurls.entity.FailUrlRecordsEntity" >
+    update t_fail_url_records
+    set url = #{url,jdbcType=VARCHAR},
+      url_type = #{urlType,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      try_count=#{tryCount,jdbcType=INTEGER},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="selectByUrl" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_fail_url_records
+    where url = #{url,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByUrl" parameterType="java.lang.String" >
+    delete from t_fail_url_records
+    where url = #{url,jdbcType=VARCHAR}
+  </delete>
+  
+  <select id="selectByIDs" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" /> 
+    from t_fail_url_records
+    where id in 
+    <foreach collection="list"  item="id" index="index" open="(" separator="," close=")">
+       #{id,jdbcType=INTEGER}
+    </foreach>
+    order by try_count  asc,last_modify_date desc
+  </select>
+  
+  <select id="selectByUrlTypes" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" /> 
+    from t_fail_url_records
+    where url_type in 
+    <foreach collection="array"  item="urlType" index="index" open="(" separator="," close=")">
+       #{urlType,jdbcType=INTEGER}
+    </foreach>
+    order by try_count  asc,last_modify_date desc
+  </select>
+  
+  <select id="selectAll" resultMap="ResultMapWithBLOBs" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_fail_url_records 
+  </select>
+  
+</mapper>

@@ -1,0 +1,1445 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.houseDetailDao" >
+
+
+ <sql id="Base_Column_List" >
+ <!-- -->
+ </sql>
+
+    <!-- 上线房源渠道表-整租 -->
+    <select id="entireHouseChannelInfo" resultType="com.ziroom.minsu.report.house.vo.HouseCommonVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    SELECT
+	  thbm.`house_sn` AS houseSn,
+	  thbm.`house_name` AS houseName,
+	  thbm.`house_addr` AS houseAddr,
+	  thbm.`house_channel` AS houseChannel,
+	  CASE
+	    thbm.`house_channel`
+	    WHEN 0
+	    THEN '地推'
+	    WHEN 1
+	    THEN '直营'
+	    WHEN 2
+	    THEN '自主'
+	    ELSE '未知'
+	  END AS houseChannelName,
+	  thbm.`house_status` AS houseStatus,
+	  CASE
+	    thbm.house_status
+	    WHEN 10
+	    THEN '待发布'
+	    WHEN 11
+	    THEN '已发布'
+	    WHEN 20
+	    THEN '管家审核通过'
+	    WHEN 21
+	    THEN '管家审核未通过'
+	    WHEN 30
+	    THEN '品质审核未通过'
+	    WHEN 40
+	    THEN '上架'
+	    WHEN 41
+	    THEN '下架'
+	    WHEN 50
+	    THEN '强制下架'
+	    ELSE '未知'
+	  END AS houseStatusName,
+	  thbm.`create_date` AS createDate,
+	  thbm.`fid`,
+	  thbm.landlord_uid,
+	  thbm.`phy_fid`,
+	  thol.create_date AS onLineDate,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName
+	FROM
+	  minsu_house_db.`t_house_base_msg` thbm
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	    ON thbm.phy_fid = thp.fid
+	  LEFT JOIN minsu_house_db.`t_house_operate_log` thol
+	    ON thbm.fid = thol.house_base_fid
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm
+	    ON thbm.landlord_uid = tcbm.`uid`
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr
+	    ON thbm.fid = thgr.`house_fid`
+	 WHERE thbm.`rent_way` = 0
+	   AND thbm.house_status = 40
+	   <if test="beginTime != null and beginTime != ''">
+	   AND thol.create_date  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	   </if>
+	   <if test="endTime != null and endTime != ''">
+	   AND thol.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	   </if>
+	   <if test="cityCode != null and cityCode != ''">
+	   AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+	   </if>
+	  AND tcbm.`is_del` = 0
+	  AND tcbm.is_landlord = 1
+	  AND thp.`is_del` = 0
+	  ORDER BY thol.create_date DESC
+	</select>
+
+    <!-- 上线房源渠道表-分租 -->
+    <select id="subHouseChannelInfo" resultType="com.ziroom.minsu.report.house.vo.HouseCommonVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    SELECT
+	  thrm.`room_sn` AS houseSn,
+	  thrm.`room_name` AS houseName,
+	  thbm.`house_addr` AS houseAddr,
+	  thbm.`house_channel` AS houseChannel,
+	  CASE
+	    thbm.`house_channel`
+	    WHEN 0
+	    THEN '地推'
+	    WHEN 1
+	    THEN '直营'
+	    WHEN 2
+	    THEN '自主'
+	    ELSE '未知'
+	  END AS houseChannelName,
+	  thrm.`room_status` AS houseStatus,
+	  CASE
+	    thrm.`room_status`
+	    WHEN 10
+	    THEN '待发布'
+	    WHEN 11
+	    THEN '已发布'
+	    WHEN 20
+	    THEN '管家审核通过'
+	    WHEN 21
+	    THEN '管家审核未通过'
+	    WHEN 30
+	    THEN '品质审核未通过'
+	    WHEN 40
+	    THEN '上架'
+	    WHEN 41
+	    THEN '下架'
+	    WHEN 50
+	    THEN '强制下架'
+	    ELSE '未知'
+	  END AS houseStatusName,
+	  thrm.`create_date` AS createDate,
+	  thrm.`fid`,
+	  thbm.landlord_uid,
+	  thbm.`phy_fid`,
+	  thbm.`fid` AS house_fid,
+	  thol.create_date AS onLineDate,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName
+	FROM
+	  minsu_house_db.`t_house_room_msg` thrm
+	  LEFT JOIN minsu_house_db.`t_house_base_msg` thbm
+	    ON thrm.`house_base_fid` = thbm.`fid`
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	    ON thbm.phy_fid = thp.fid
+	  LEFT JOIN minsu_house_db.`t_house_operate_log` thol
+	    ON thrm.fid = thol.room_fid
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm
+	    ON thbm.landlord_uid = tcbm.`uid`
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr
+	    ON thbm.fid = thgr.`house_fid`
+	WHERE thbm.`rent_way` = 1
+	  AND thrm.room_status = 40
+	  <if test="beginTime != null and beginTime != ''">
+	   AND thol.create_date  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	   </if>
+	   <if test="endTime != null and endTime != ''">
+	   AND thol.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	   </if>
+	   <if test="cityCode != null and cityCode != ''">
+	   AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+	   </if>
+	  AND thp.`is_del` = 0
+	  AND tcbm.`is_del` = 0
+	  AND tcbm.is_landlord = 1
+	  ORDER BY thol.create_date DESC
+    </select>
+
+    <!-- 房源评价-整租 -->
+    <select id="entireHouseEvaInfo" resultType="com.ziroom.minsu.report.house.vo.HouseEvaluateVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    SELECT
+	  thbm.`house_sn` AS houseSn,
+	  thbm.`house_name` AS houseName,
+	  thbm.`house_addr` AS houseAddr,
+	  thbm.`lease_price` AS price,
+	  thbm.`house_status` AS houseStatus,
+	  CASE
+	    thbm.house_status
+	    WHEN 10
+	    THEN '待发布'
+	    WHEN 11
+	    THEN '已发布'
+	    WHEN 20
+	    THEN '管家审核通过'
+	    WHEN 21
+	    THEN '管家审核未通过'
+	    WHEN 30
+	    THEN '品质审核未通过'
+	    WHEN 40
+	    THEN '上架'
+	    WHEN 41
+	    THEN '下架'
+	    WHEN 50
+	    THEN '强制下架'
+	    ELSE '未知'
+	  END AS houseStatusName,
+	  thbm.`create_date` AS createDate,
+	  thbm.`fid`,
+	  thbm.landlord_uid,
+	  thbm.`phy_fid`,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName,
+      tcr.`region_name`AS regionName,
+      tcc.show_name AS nationCode,
+      tcc2.show_name AS cityName,
+      thbz.first_up_date AS putawayTime,
+      eva_tmp2.evaLessFour AS evaLessFourNum,
+      check_in_tmp.checkInOrderNum,
+	  evaTotal/checkInOrderNum AS evaRate,
+	  eva_tmp.houseCleanTal,
+	  eva_tmp.desMathTal,
+	  eva_tmp.safeDegreeTal,
+	  eva_tmp.trafPosTal,
+	  eva_tmp.costPerforTal,
+	  eva_tmp.evaTotal,
+	  eva_tmp.houseCleanTal + eva_tmp.desMathTal + eva_tmp.safeDegreeTal + eva_tmp.trafPosTal + eva_tmp.costPerforTal AS sumScore,
+	  ROUND( IF(eva_tmp.evaTotal!=0,eva_tmp.houseCleanTal/eva_tmp.evaTotal,0), 1) AS houseCleanAvg,
+	  ROUND( IF(eva_tmp.evaTotal!=0,eva_tmp.desMathTal/eva_tmp.evaTotal,0), 1) AS desMathAvg,
+	  ROUND( IF(eva_tmp.evaTotal!=0,eva_tmp.safeDegreeTal/eva_tmp.evaTotal,0), 1) AS safeDegreeAvg,
+	  ROUND( IF(eva_tmp.evaTotal!=0,eva_tmp.trafPosTal/eva_tmp.evaTotal,0), 1) AS trafPosAvg,
+	  ROUND( IF(eva_tmp.evaTotal!=0,eva_tmp.costPerforTal/eva_tmp.evaTotal,0), 1) AS costPerforAvg,
+	  ROUND( IF(eva_tmp.evaTotal!=0,(eva_tmp.houseCleanTal + eva_tmp.desMathTal + eva_tmp.safeDegreeTal + eva_tmp.trafPosTal + eva_tmp.costPerforTal)/(5*eva_tmp.evaTotal),0), 1) AS sumScoreAvg
+	FROM
+	  minsu_house_db.`t_house_base_msg` thbm 
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp 
+	    ON thbm.phy_fid = thp.fid 
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm 
+	    ON thbm.landlord_uid = tcbm.`uid` 
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr 
+	    ON thbm.fid = thgr.`house_fid` 
+	  LEFT JOIN 
+	    (SELECT 
+	      COUNT(tr.order_sn) AS checkInOrderNum,
+	      tohs.house_fid
+	    FROM
+	      `minsu_order_db`.`t_order` tr
+	      LEFT JOIN `minsu_order_db`.`t_order_house_snapshot` tohs
+	        ON tr.order_sn = tohs.order_sn
+	    WHERE tr.pay_status = 1
+	      AND tr.is_del = 0
+	      AND tr.order_status IN (40, 41, 50, 51, 60, 61, 70, 71)
+	      AND tohs.rent_way = 0
+	    GROUP BY tohs.house_fid
+	    ORDER BY NULL) AS check_in_tmp
+	    ON thbm.fid = check_in_tmp.`house_fid`
+	  LEFT JOIN
+	    (SELECT
+		  teo.house_fid,
+		  SUM(tte.house_clean) AS houseCleanTal,
+		  SUM(tte.description_match) AS desMathTal,
+		  SUM(tte.safety_degree) AS safeDegreeTal,
+		  SUM(tte.traffic_position) AS trafPosTal,
+		  SUM(tte.cost_performance) AS costPerforTal,
+		  COUNT(*) AS evaTotal
+		FROM
+		  `minsu_evaluate_db`.t_tenant_evaluate tte
+		  INNER JOIN `minsu_evaluate_db`.`t_evaluate_order` teo
+		    ON tte.eva_order_fid = teo.fid
+		WHERE tte.is_del = 0
+	   <if test="beginTime != null and beginTime != ''">
+	   AND tte.create_time  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	   </if>
+	   <if test="endTime != null and endTime != ''">
+	   AND tte.create_time  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	   </if>
+	   AND teo.rent_way = 0
+	   GROUP BY teo.house_fid 
+	    ) AS eva_tmp
+	ON thbm.fid = eva_tmp.`house_fid`
+    LEFT JOIN  `minsu_base_db`.`t_city_region_rel` tcrr
+    ON thp.nation_code = tcrr.`country_code` AND thp.`province_code` = tcrr.`province_code`
+    LEFT JOIN `minsu_base_db`.`t_city_region` tcr
+    ON tcrr.`region_fid` = tcr.`fid`
+    LEFT JOIN  (
+        SELECT tcc_tmp.code, tcc_tmp.show_name
+        FROM `minsu_base_db`.`t_conf_city` tcc_tmp
+        WHERE tcc_tmp.level = 1
+        AND tcc_tmp.is_del = 0) AS tcc
+    ON thp.nation_code = tcc.code
+    LEFT JOIN(
+        SELECT tcc_tmp.code, tcc_tmp.show_name
+      FROM `minsu_base_db`.`t_conf_city` tcc_tmp
+      WHERE tcc_tmp.level = 3
+      AND tcc_tmp.is_del = 0) AS tcc2
+    ON thp.city_code = tcc2.code
+    LEFT JOIN `minsu_house_db`.`t_house_biz_msg`  thbz
+    ON thbm.fid = thbz.house_base_fid
+    LEFT JOIN
+        (SELECT teo.house_fid,
+        COUNT(*) AS evaLessFour
+        FROM     `minsu_evaluate_db`.t_tenant_evaluate tte
+        INNER JOIN `minsu_evaluate_db`.`t_evaluate_order` teo
+        ON tte.eva_order_fid = teo.fid
+        WHERE tte.is_del = 0
+        AND (tte.house_clean + tte.description_match + safety_degree + traffic_position + cost_performance)/5  <![CDATA[ < ]]> 4
+        AND teo.rent_way = 0
+        GROUP BY teo.house_fid
+        )AS eva_tmp2
+    ON thbm.fid = eva_tmp2.`house_fid`
+    WHERE thbm.`rent_way` = 0
+	  <if test="nationCode != null and nationCode != ''">
+	  AND thp.nation_code=#{nationCode,jdbcType=VARCHAR}
+	  </if>
+	  <if test="cityCode != null and cityCode != ''">
+	  AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+	  </if> 
+	  AND tcbm.`is_del` = 0 
+	  AND tcbm.is_landlord = 1
+	  <if test="houseStatus != null and houseStatus != ''">
+		AND thbm.house_status=#{houseStatus,jdbcType=INTEGER}
+	  </if>
+		<if test="putawayBeginTime != null and putawayBeginTime != ''">
+			AND thbz.first_up_date  <![CDATA[ >= ]]> #{putawayBeginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="putawayEndTime != null and putawayEndTime != ''">
+			AND thbz.first_up_date  <![CDATA[ < ]]> #{putawayEndTime,jdbcType=VARCHAR}
+		</if>
+		<if test="regionName != null and regionName != ''">
+			AND tcr.region_name = #{regionName,jdbcType=VARCHAR}
+		</if>
+	  AND thp.`is_del` = 0
+      AND tcrr.`is_del` = 0
+      AND tcr.`is_del` = 0
+	  ORDER BY eva_tmp.evaTotal DESC
+   </select>
+
+
+    <!-- 房源评价-分租 -->
+    <select id="subHouseEvaInfo" resultType="com.ziroom.minsu.report.house.vo.HouseEvaluateVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    SELECT
+	  thrm.`room_sn` AS houseSn,
+	  thrm.`room_name` AS houseName,
+	  thbm.`house_addr` AS houseAddr,
+	  thrm.`room_price` AS price,
+	  thrm.`room_status` AS houseStatus,
+	  CASE
+	    thrm.`room_status`
+	    WHEN 10
+	    THEN '待发布'
+	    WHEN 11
+	    THEN '已发布'
+	    WHEN 20
+	    THEN '管家审核通过'
+	    WHEN 21
+	    THEN '管家审核未通过'
+	    WHEN 30
+	    THEN '品质审核未通过'
+	    WHEN 40
+	    THEN '上架'
+	    WHEN 41
+	    THEN '下架'
+	    WHEN 50
+	    THEN '强制下架'
+	    ELSE '未知'
+	  END AS houseStatusName,
+	  thrm.`create_date` AS createDate,
+	  thrm.`fid`,
+	  thbm.landlord_uid,
+	  thbm.`phy_fid`,
+	  thbm.`fid` AS house_fid,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName,
+	  tcr.`region_name`AS regionName,
+	  tcc.show_name AS nationCode,
+	  tcc2.show_name AS cityName,
+	  thbz.first_up_date AS putawayTime,
+	  eva_tmp2.evaLessFour AS evaLessFourNum,
+	  check_in_tmp.checkInOrderNum,
+	  evaTotal/checkInOrderNum AS evaRate,
+	  eva_tmp.houseCleanTal,
+	  eva_tmp.desMathTal,
+	  eva_tmp.safeDegreeTal,
+	  eva_tmp.trafPosTal,
+	  eva_tmp.costPerforTal,
+	  eva_tmp.evaTotal,
+	  eva_tmp.houseCleanTal + eva_tmp.desMathTal + eva_tmp.safeDegreeTal + eva_tmp.trafPosTal + eva_tmp.costPerforTal  AS sumScore,
+	  ROUND( IF(eva_tmp.evaTotal!=0,eva_tmp.houseCleanTal/eva_tmp.evaTotal,0), 1)  AS houseCleanAvg,
+	  ROUND( IF(eva_tmp.evaTotal!=0,eva_tmp.desMathTal/eva_tmp.evaTotal,0), 1) AS desMathAvg,
+	  ROUND( IF(eva_tmp.evaTotal!=0,eva_tmp.safeDegreeTal/eva_tmp.evaTotal,0), 1) AS safeDegreeAvg,
+	  ROUND( IF(eva_tmp.evaTotal!=0,eva_tmp.trafPosTal/eva_tmp.evaTotal,0), 1) AS trafPosAvg,
+	  ROUND( IF(eva_tmp.evaTotal!=0,eva_tmp.costPerforTal/eva_tmp.evaTotal,0), 1) AS costPerforAvg,
+	  ROUND( IF(eva_tmp.evaTotal!=0,(eva_tmp.houseCleanTal + eva_tmp.desMathTal + eva_tmp.safeDegreeTal + eva_tmp.trafPosTal + eva_tmp.costPerforTal)/(5*eva_tmp.evaTotal),0), 1) AS sumScoreAvg
+	  FROM
+		 minsu_house_db.`t_house_room_msg` thrm 
+	  LEFT JOIN minsu_house_db.`t_house_base_msg` thbm 
+	    ON thrm.`house_base_fid` = thbm.`fid` 
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp 
+	    ON thbm.phy_fid = thp.fid 
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm 
+	    ON thbm.landlord_uid = tcbm.`uid` 
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr 
+	    ON thbm.fid = thgr.`house_fid` 
+	  LEFT JOIN 
+	    (SELECT 
+	      COUNT(tr.order_sn) AS checkInOrderNum,
+	      tohs.room_fid
+	    FROM
+	      `minsu_order_db`.`t_order` tr
+	      LEFT JOIN `minsu_order_db`.`t_order_house_snapshot` tohs
+	        ON tr.order_sn = tohs.order_sn
+	    WHERE tr.pay_status = 1
+	      AND tr.is_del = 0
+	      AND tr.order_status IN (40, 41, 50, 51, 60, 61, 70, 71)
+	      AND tohs.rent_way = 1
+	    GROUP BY tohs.room_fid
+	    ORDER BY NULL) AS check_in_tmp
+	    ON thrm.fid = check_in_tmp.`room_fid`
+	  LEFT JOIN
+	    (SELECT
+		  teo.room_fid,
+		  SUM(tte.house_clean) AS houseCleanTal,
+		  SUM(tte.description_match) AS desMathTal,
+		  SUM(tte.safety_degree) AS safeDegreeTal,
+		  SUM(tte.traffic_position) AS trafPosTal,
+		  SUM(tte.cost_performance) AS costPerforTal,
+		  COUNT(*) AS evaTotal
+		FROM
+		  `minsu_evaluate_db`.t_tenant_evaluate tte
+		  INNER JOIN `minsu_evaluate_db`.`t_evaluate_order` teo
+		    ON tte.eva_order_fid = teo.fid
+		WHERE tte.is_del = 0
+	   <if test="beginTime != null and beginTime != ''">
+	   AND tte.create_time  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	   </if>
+	   <if test="endTime != null and endTime != ''">
+	   AND tte.create_time  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	   </if>
+		AND teo.rent_way = 1
+		GROUP BY teo.room_fid
+	   ) AS eva_tmp
+	    ON thrm.fid = eva_tmp.`room_fid`
+		LEFT JOIN  `minsu_base_db`.`t_city_region_rel` tcrr
+		ON thp.nation_code = tcrr.`country_code` AND thp.`province_code` = tcrr.`province_code`
+		LEFT JOIN `minsu_base_db`.`t_city_region`  tcr
+		ON tcrr.`region_fid` = tcr.`fid`
+		LEFT JOIN  (
+			SELECT tcc_tmp.code, tcc_tmp.show_name
+			FROM `minsu_base_db`.`t_conf_city` tcc_tmp
+			WHERE tcc_tmp.level = 1
+			AND tcc_tmp.is_del = 0) AS tcc
+		ON thp.nation_code = tcc.code
+		LEFT JOIN(
+			SELECT tcc_tmp.code, tcc_tmp.show_name
+			FROM `minsu_base_db`.`t_conf_city` tcc_tmp
+			WHERE tcc_tmp.level = 3
+			AND tcc_tmp.is_del = 0) AS tcc2
+		ON thp.city_code = tcc2.code
+		LEFT JOIN `minsu_house_db`.`t_house_biz_msg` thbz
+		ON thbm.fid = thbz.house_base_fid
+		LEFT JOIN
+			(SELECT teo.house_fid,
+			COUNT(*) AS evaLessFour
+			FROM     `minsu_evaluate_db`.t_tenant_evaluate tte
+			INNER JOIN `minsu_evaluate_db`.`t_evaluate_order` teo
+			ON tte.eva_order_fid = teo.fid
+			WHERE tte.is_del = 0
+			AND (tte.house_clean + tte.description_match + safety_degree + traffic_position + cost_performance)/5  <![CDATA[ < ]]> 4
+			AND teo.rent_way = 1
+			GROUP BY teo.house_fid
+			)AS eva_tmp2
+		ON thbm.fid = eva_tmp2.`house_fid`
+		WHERE thbm.`rent_way` = 1
+		<if test="nationCode != null and nationCode != ''">
+			AND thp.nation_code=#{nationCode,jdbcType=VARCHAR}
+		</if>
+		<if test="cityCode != null and cityCode != ''">
+			AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+		</if>
+		AND tcbm.`is_del` = 0
+		AND tcbm.is_landlord = 1
+		<if test="houseStatus != null and houseStatus != ''">
+			AND thbm.house_status=#{houseStatus,jdbcType=INTEGER}
+		</if>
+		<if test="putawayBeginTime != null and putawayBeginTime != ''">
+			AND thbz.first_up_date  <![CDATA[ >= ]]> #{putawayBeginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="putawayEndTime != null and putawayEndTime != ''">
+			AND thbz.first_up_date  <![CDATA[ < ]]> #{putawayEndTime,jdbcType=VARCHAR}
+		</if>
+		<if test="regionName != null and regionName != ''">
+			AND tcr.region_name = #{regionName,jdbcType=VARCHAR}
+		</if>
+		AND thp.`is_del` = 0
+		AND tcrr.`is_del` = 0
+		AND tcr.`is_del` = 0
+		ORDER BY eva_tmp.evaTotal DESC
+   </select>
+
+
+
+
+
+
+
+    <!-- 房源订单漏斗评价-整租 -->
+    <select id="entireHouseFilterInfo" resultType="com.ziroom.minsu.report.order.vo.HouseOrderFilterVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    SELECT
+	  thbm.`house_sn` AS houseSn,
+	  thbm.`house_name` AS houseName,
+	  thbm.`house_addr` AS houseAddr,
+	  thbm.`lease_price` AS price,
+	  thbm.`house_status` AS houseStatus,
+	  CASE
+	    thbm.house_status
+	    WHEN 10
+	    THEN '待发布'
+	    WHEN 11
+	    THEN '已发布'
+	    WHEN 20
+	    THEN '管家审核通过'
+	    WHEN 21
+	    THEN '管家审核未通过'
+	    WHEN 30
+	    THEN '品质审核未通过'
+	    WHEN 40
+	    THEN '上架'
+	    WHEN 41
+	    THEN '下架'
+	    WHEN 50
+	    THEN '强制下架'
+	    ELSE '未知'
+	  END AS houseStatusName,
+	  thbm.`create_date` AS createDate,
+	  thbm.`fid`,
+	  thbm.landlord_uid,
+	  thbm.`phy_fid`,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName,
+	  thsm.house_pv AS browseNum,
+	  IM_tmp.IMAskNum,
+	  order_applay_tmp.orderApplyNum,
+	  order_applay_tmp.orderSuccNum,
+	  lan_accept_tmp.lanAcceptNum
+	FROM
+	  minsu_house_db.`t_house_base_msg` thbm
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	    ON thbm.phy_fid = thp.fid
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm
+	    ON thbm.landlord_uid = tcbm.`uid`
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr
+	    ON thbm.fid = thgr.`house_fid`
+	  LEFT JOIN minsu_house_db.`t_house_statistics_msg` thsm
+	    ON thbm.fid = thsm.`house_base_fid`
+	  LEFT JOIN
+	    (SELECT
+	      COUNT(*) AS IMAskNum,
+	      im_tmp.house_fid
+	    FROM
+	      (SELECT
+	        tmh.house_fid,
+	        DATE_FORMAT(tmb.create_time, '%Y-%m-%d') AS days
+	      FROM
+	        `minsu_message_db`.`t_msg_house` tmh
+	        LEFT JOIN `minsu_message_db`.`t_msg_base` tmb
+	          ON tmh.fid = tmb.msg_house_fid
+	      WHERE tmh.is_del = 0
+	        AND tmh.rent_way = 0
+	        AND tmb.msg_sender_type = 2
+	       <if test="beginTime != null and beginTime != ''">
+		   AND tmb.create_time  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		   </if>
+		   <if test="endTime != null and endTime != ''">
+		   AND tmb.create_time  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+		   </if>
+	      GROUP BY tmh.house_fid,
+	        days
+	      ORDER BY NULL) AS im_tmp
+	    GROUP BY im_tmp.house_fid) AS IM_tmp
+	    ON thbm.fid = IM_tmp.`house_fid`
+	  LEFT JOIN
+	    (SELECT
+	      tohs.house_fid,
+	      COUNT(tr.order_sn) AS orderApplyNum,
+	      COUNT(
+	        CASE
+	          WHEN tr.pay_status = 1
+	          AND tr.order_status IN (20, 40, 41, 50, 51, 60, 61, 70, 71)
+	          THEN tr.pay_status
+	        END
+	      ) AS orderSuccNum
+	    FROM
+	      `minsu_order_db`.`t_order` tr
+	      LEFT JOIN `minsu_order_db`.`t_order_house_snapshot` tohs
+	        ON tr.order_sn = tohs.order_sn
+	    WHERE tr.is_del = 0
+	      <if test="beginTime != null and beginTime != ''">
+		   AND tr.create_time  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		   </if>
+		   <if test="endTime != null and endTime != ''">
+		   AND tr.create_time  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+		   </if>
+	      AND tohs.rent_way = 0
+	    GROUP BY tohs.house_fid
+	    ORDER BY NULL) AS order_applay_tmp
+	    ON thbm.fid = order_applay_tmp.`house_fid`
+	  LEFT JOIN
+	    (SELECT
+	      tohs.house_fid,
+	      COUNT(tr.order_sn) AS lanAcceptNum
+	    FROM
+	      `minsu_order_db`.`t_order` tr
+	      LEFT JOIN `minsu_order_db`.`t_order_house_snapshot` tohs
+	        ON tr.order_sn = tohs.order_sn
+	      LEFT JOIN `minsu_order_db`.`t_order_log` tol
+	        ON tr.order_sn = tol.order_sn
+	    WHERE tr.is_del = 0
+	      AND tol.from_status = 10
+	      AND tol.to_status = 20
+	      <if test="beginTime != null and beginTime != ''">
+		   AND tol.create_date  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		   </if>
+		   <if test="endTime != null and endTime != ''">
+		   AND tol.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+		   </if>
+	      AND tohs.rent_way = 0
+	    GROUP BY tohs.house_fid
+	    ORDER BY NULL) AS lan_accept_tmp
+	    ON thbm.fid = lan_accept_tmp.`house_fid`
+	WHERE thbm.`rent_way` = 0
+	  <if test="cityCode != null and cityCode != ''">
+	  AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+	  </if>
+	  AND tcbm.`is_del` = 0
+	  AND tcbm.is_landlord = 1
+	  AND thp.`is_del` = 0
+	 ORDER BY order_applay_tmp.orderSuccNum DESC
+    </select>
+
+    <!-- 房源订单漏斗评价-分租 -->
+    <select id="subHouseFilterInfo" resultType="com.ziroom.minsu.report.order.vo.HouseOrderFilterVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    SELECT
+	  thrm.`room_sn` AS houseSn,
+	  thrm.`room_name` AS houseName,
+	  thbm.`house_addr` AS houseAddr,
+	  thrm.`room_price` AS price,
+	  thrm.`room_status` AS houseStatus,
+	  CASE
+	    thrm.`room_status`
+	    WHEN 10
+	    THEN '待发布'
+	    WHEN 11
+	    THEN '已发布'
+	    WHEN 20
+	    THEN '管家审核通过'
+	    WHEN 21
+	    THEN '管家审核未通过'
+	    WHEN 30
+	    THEN '品质审核未通过'
+	    WHEN 40
+	    THEN '上架'
+	    WHEN 41
+	    THEN '下架'
+	    WHEN 50
+	    THEN '强制下架'
+	    ELSE '未知'
+	  END AS houseStatusName,
+	  thrm.`create_date` AS createDate,
+	  thrm.`fid`,
+	  thbm.landlord_uid,
+	  thbm.`phy_fid`,
+	  thbm.`fid` AS house_fid,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName,
+	  thsm.house_pv,
+	  IM_tmp.IMAskNum,
+	  order_applay_tmp.orderApplyNum,
+	  order_applay_tmp.orderSuccNum,
+	  lan_accept_tmp.lanAcceptNum
+	FROM
+	  minsu_house_db.`t_house_room_msg` thrm
+	  LEFT JOIN minsu_house_db.`t_house_base_msg` thbm
+	    ON thrm.`house_base_fid` = thbm.`fid`
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	    ON thbm.phy_fid = thp.fid
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm
+	    ON thbm.landlord_uid = tcbm.`uid`
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr
+	    ON thbm.fid = thgr.`house_fid`
+	  LEFT JOIN minsu_house_db.`t_house_statistics_msg` thsm
+	    ON thrm.fid = thsm.`room_fid`
+	  LEFT JOIN
+	    (SELECT
+	      COUNT(*) AS IMAskNum,
+	      im_tmp.room_fid
+	    FROM
+	      (SELECT
+	        tmh.room_fid,
+	        DATE_FORMAT(tmb.create_time, '%Y-%m-%d') AS days
+	      FROM
+	        `minsu_message_db`.`t_msg_house` tmh
+	        LEFT JOIN `minsu_message_db`.`t_msg_base` tmb
+	          ON tmh.fid = tmb.msg_house_fid
+	      WHERE tmh.is_del = 0
+	        AND tmh.rent_way = 1
+	        AND tmb.msg_sender_type = 2
+	       <if test="beginTime != null and beginTime != ''">
+		   AND tmb.create_time  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		   </if>
+		   <if test="endTime != null and endTime != ''">
+		   AND tmb.create_time  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+		   </if>
+	      GROUP BY tmh.room_fid,
+	        days
+	      ORDER BY NULL) AS im_tmp
+	    GROUP BY im_tmp.room_fid) AS IM_tmp
+	    ON thrm.fid = IM_tmp.`room_fid`
+	  LEFT JOIN
+	    (SELECT
+	      tohs.room_fid,
+	      COUNT(tr.order_sn) AS orderApplyNum,
+	      COUNT(
+	        CASE
+	          WHEN tr.pay_status = 1
+	          AND tr.order_status IN (20, 40, 41, 50, 51, 60, 61, 70, 71)
+	          THEN tr.pay_status
+	        END
+	      ) AS orderSuccNum
+	    FROM
+	      `minsu_order_db`.`t_order` tr
+	      LEFT JOIN `minsu_order_db`.`t_order_house_snapshot` tohs
+	        ON tr.order_sn = tohs.order_sn
+	    WHERE tr.is_del = 0
+	      <if test="beginTime != null and beginTime != ''">
+		   AND tr.create_time  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		   </if>
+		   <if test="endTime != null and endTime != ''">
+		   AND tr.create_time  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+		   </if>
+	      AND tohs.rent_way = 1
+	    GROUP BY tohs.room_fid) AS order_applay_tmp
+	    ON thrm.fid = order_applay_tmp.`room_fid`
+	  LEFT JOIN
+	    (SELECT
+	      tohs.room_fid,
+	      COUNT(tr.order_sn) AS lanAcceptNum
+	    FROM
+	      `minsu_order_db`.`t_order` tr
+	      LEFT JOIN `minsu_order_db`.`t_order_house_snapshot` tohs
+	        ON tr.order_sn = tohs.order_sn
+	      LEFT JOIN `minsu_order_db`.`t_order_log` tol
+	        ON tr.order_sn = tol.order_sn
+	    WHERE tr.is_del = 0
+	      AND tol.from_status = 10
+	      AND tol.to_status = 20
+	      AND tohs.rent_way = 1
+	      <if test="beginTime != null and beginTime != ''">
+		   AND tol.create_date  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		   </if>
+		   <if test="endTime != null and endTime != ''">
+		   AND tol.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+		   </if>
+	    GROUP BY tohs.room_fid
+	    ORDER BY NULL) AS lan_accept_tmp
+	    ON thrm.fid = lan_accept_tmp.`room_fid`
+	WHERE thbm.`rent_way` = 1
+	  <if test="cityCode != null and cityCode != ''">
+	  AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+	  </if>
+	  AND thp.`is_del` = 0
+	  AND tcbm.`is_del` = 0
+	  AND tcbm.is_landlord = 1
+	  ORDER BY order_applay_tmp.orderSuccNum DESC
+   </select>
+
+   <!-- 整租房子生命周期 -->
+    <select id="entireHouseLifeCycle" resultType="com.ziroom.minsu.report.house.vo.HouseLifeCycleVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+      SELECT
+	  t.* ,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName
+	FROM
+	  (SELECT
+	    tmp.house_sn AS houseSn,
+	    tmp.house_name AS houseName,
+	    tmp.house_addr AS houseAddr,
+	    tmp.lease_price AS price,
+	    tmp.house_status AS houseStatus,
+	    CASE  tmp.house_status
+		WHEN 10 THEN '待发布'
+		WHEN 11 THEN '已发布'
+		WHEN 20 THEN '管家审核通过'
+		WHEN 21 THEN '管家审核未通过'
+		WHEN 30 THEN '品质审核未通过'
+		WHEN 40 THEN '上架'
+		WHEN 41 THEN '下架'
+		WHEN 50 THEN '强制下架'
+		ELSE '未知'
+		END AS houseStatusName,
+	    tmp.create_date AS createDate,
+	    tmp.fid,
+	    tmp.landlord_uid,
+	    tmp.phy_fid,
+	    MAX(tlog1.create_date) AS publishDate,
+	    MAX(tlog2.create_date) AS grardAccessDate,
+	    MAX(tlog3.create_date) AS onLineDate
+	  FROM
+	    (SELECT
+	      thbm.`house_sn`,
+	      thbm.`house_name`,
+	      thbm.`house_addr`,
+	      thbm.`lease_price`,
+	      thbm.`house_status`,
+	      thbm.`create_date`,
+	      thbm.`fid`,
+	      thbm.landlord_uid,
+	      thbm.`phy_fid`
+	    FROM
+	      minsu_house_db.`t_house_base_msg` thbm
+	    INNER JOIN  minsu_house_db.`t_house_phy_msg` thp
+	    ON thbm.phy_fid = thp.fid
+	    WHERE thbm.`rent_way` = 0
+	   <if test="cityCode != null and cityCode != ''">
+	    AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+	    </if>
+	    ) AS tmp
+	    LEFT JOIN
+	      (SELECT
+	        thol.`house_base_fid`,
+	        thol.`create_date`
+	      FROM
+	        minsu_house_db.`t_house_operate_log` thol
+	      WHERE thol.`from_status` = 10
+	        AND thol.`to_status` = 11
+	   <if test="beginTime != null and beginTime != ''">
+		AND thol.create_date  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		 <if test="endTime != null and endTime != ''">
+	    AND thol.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+
+	        ) AS tlog1
+	      ON tmp.fid = tlog1.house_base_fid
+	    LEFT JOIN
+	      (SELECT
+	        thol.`house_base_fid`,
+	        thol.`create_date`
+	      FROM
+	        minsu_house_db.`t_house_operate_log` thol
+	      WHERE thol.`from_status` = 11
+	        AND thol.`to_status` = 20) AS tlog2
+	      ON tmp.fid = tlog2.house_base_fid
+	    LEFT JOIN
+	      (SELECT
+	        thol.`house_base_fid`,
+	        thol.`create_date`
+	      FROM
+	        minsu_house_db.`t_house_operate_log` thol
+	      WHERE thol.`from_status` = 20
+	        AND thol.`to_status` = 40) AS tlog3
+	      ON tmp.fid = tlog3.house_base_fid
+	  GROUP BY tmp.fid
+	  ORDER BY NULL) AS t
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	    ON t.phy_fid = thp.`fid`
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm
+	    ON t.landlord_uid = tcbm.`uid`
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr
+	    ON t.fid = thgr.`house_fid`
+	WHERE thp.`is_del` = 0
+	  AND tcbm.`is_del` = 0
+	  AND tcbm.is_landlord = 1
+    ORDER BY t.publishDate DESC
+    </select>
+
+
+    <!-- 合租房子生命周期 -->
+    <select id="subHouseLifeCycle" resultType="com.ziroom.minsu.report.house.vo.HouseLifeCycleVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+      SELECT
+	  t.* ,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName
+	FROM
+	  (SELECT
+	    tmp.room_sn AS houseSn,
+	    tmp.room_name AS houseName,
+	    tmp.house_addr AS houseAddr,
+	    tmp.room_price AS price,
+	    tmp.room_status AS houseStatus,
+	    CASE  tmp.`room_status`
+		WHEN  10 THEN '待发布'
+		WHEN 11 THEN '已发布'
+		WHEN 20 THEN '管家审核通过'
+		WHEN 21 THEN '管家审核未通过'
+		WHEN 30 THEN '品质审核未通过'
+		WHEN 40 THEN '上架'
+		WHEN 41 THEN '下架'
+		WHEN 50 THEN '强制下架'
+		ELSE '未知'
+		END AS houseStatusName,
+        tmp.create_date AS createDate,
+	    tmp.fid,
+	    tmp.landlord_uid,
+	    tmp.phy_fid,
+	    tmp.house_fid,
+	    MAX(tlog1.create_date) AS publishDate,
+	    MAX(tlog2.create_date) AS grardAccessDate,
+	    MAX(tlog3.create_date) AS onLineDate
+	  FROM
+	    (SELECT
+	      thrm.`room_sn`,
+	      thrm.`room_name`,
+	      thbm.`house_addr`,
+	      thrm.`room_price`,
+	      thrm.`room_status`,
+	      thrm.`create_date`,
+	      thrm.`fid`,
+	      thbm.landlord_uid,
+	      thbm.`phy_fid`,
+	      thbm.`fid` AS house_fid
+	    FROM minsu_house_db.`t_house_room_msg` thrm
+	    LEFT JOIN  minsu_house_db.`t_house_base_msg` thbm
+	    ON thrm.`house_base_fid` = thbm.`fid`
+	    INNER JOIN  minsu_house_db.`t_house_phy_msg` thp
+	    ON thbm.phy_fid = thp.fid
+	    WHERE thbm.`rent_way` = 1
+
+	    <if test="cityCode != null and cityCode != ''">
+	    AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+	    </if>
+	    ) AS tmp
+	    LEFT JOIN
+	      (SELECT
+	        thol.`house_base_fid`,
+	        thol.`create_date`
+	      FROM
+	        minsu_house_db.`t_house_operate_log` thol
+	      WHERE thol.`from_status` = 10
+	        AND thol.`to_status` = 11) AS tlog1
+	      ON tmp.fid = tlog1.house_base_fid
+	    LEFT JOIN
+	      (SELECT
+	        thol.`house_base_fid`,
+	        thol.`create_date`
+	      FROM
+	        minsu_house_db.`t_house_operate_log` thol
+	      WHERE thol.`from_status` = 11
+	        AND thol.`to_status` = 20
+	    <if test="beginTime != null and beginTime != ''">
+		AND thol.create_date  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		 <if test="endTime != null and endTime != ''">
+	    AND thol.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+	        ) AS tlog2
+	      ON tmp.fid = tlog2.house_base_fid
+	    LEFT JOIN
+	      (SELECT
+	        thol.`house_base_fid`,
+	        thol.`create_date`
+	      FROM
+	        minsu_house_db.`t_house_operate_log` thol
+	      WHERE thol.`from_status` = 20
+	        AND thol.`to_status` = 40) AS tlog3
+	      ON tmp.fid = tlog3.house_base_fid
+	  GROUP BY tmp.fid
+	  ORDER BY NULL) AS t
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	    ON t.phy_fid = thp.`fid`
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm
+	    ON t.landlord_uid = tcbm.`uid`
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr
+	    ON t.house_fid = thgr.`house_fid`
+	WHERE thp.`is_del` = 0
+	  AND tcbm.`is_del` = 0
+	  AND tcbm.is_landlord = 1
+	  ORDER BY t.publishDate DESC
+    </select>
+
+    <!-- 增租房子订单周期表 -->
+    <select id="entireHouseOrderLifeCycle" resultType="com.ziroom.minsu.report.order.vo.HouseOrderLifeCycleVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    SELECT
+	  t.*,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName,
+	  order_tmp.firstOrderTime,
+	  order_tmp.firstStartTime,
+	  order_tmp.firstEvaTime
+	FROM
+	  (SELECT
+	    thbm.`house_sn` AS houseSn,
+	    thbm.`house_name` AS houseName,
+	    thbm.`house_addr` AS houseAddr,
+	    thbm.`lease_price` AS price,
+	    thbm.`house_status` AS houseStatus,
+	    CASE  thbm.house_status
+		WHEN 10 THEN '待发布'
+		WHEN 11 THEN '已发布'
+		WHEN 20 THEN '管家审核通过'
+		WHEN 21 THEN '管家审核未通过'
+		WHEN 30 THEN '品质审核未通过'
+		WHEN 40 THEN '上架'
+		WHEN 41 THEN '下架'
+		WHEN 50 THEN '强制下架'
+		ELSE '未知'
+		END AS houseStatusName,
+	    thbm.`create_date` AS createDate,
+	    thbm.`fid`,
+	    thbm.landlord_uid,
+	    thbm.`phy_fid`,
+	    MIN(thol.create_date) AS onLineDate
+	  FROM
+	    minsu_house_db.`t_house_base_msg` thbm
+	    INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	      ON thbm.phy_fid = thp.fid
+	    LEFT JOIN minsu_house_db.`t_house_operate_log` thol
+	      ON thbm.fid = thol.house_base_fid
+	  WHERE thbm.`rent_way` = 0
+	   <!--  AND thbm.`house_status` = 40 -->
+	    AND thol.`from_status` IN ('20','11')
+	    AND thol.`to_status` = 40
+	    <if test="beginTime != null and beginTime != ''">
+		AND thol.create_date  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		 <if test="endTime != null and endTime != ''">
+	    AND thol.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+	    <if test="cityCode != null and cityCode != ''">
+	    AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+	    </if>
+
+	  GROUP BY thbm.fid
+
+	  ) AS t
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	    ON t.phy_fid = thp.`fid`
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm
+	    ON t.landlord_uid = tcbm.`uid`
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr
+	    ON t.fid = thgr.`house_fid`
+	  LEFT JOIN
+	    (SELECT
+	      MIN(tmp.create_time) AS firstOrderTime,
+	      MIN(tmp.start_time) AS firstStartTime,
+	      MIN(teo.`create_time`) AS firstEvaTime,
+	      tohs.house_fid
+	    FROM
+	      (SELECT
+	        tr.order_sn,
+	        tr.`create_time`,
+	        tr.`start_time`
+	      FROM
+	        `minsu_order_db`.`t_order` tr
+	      WHERE tr.`pay_status` = 1
+	        AND tr.is_del = 0) AS tmp
+	      INNER JOIN `minsu_order_db`.`t_order_house_snapshot` tohs
+	        ON tmp.order_sn = tohs.`order_sn`
+	      LEFT JOIN `minsu_evaluate_db`.`t_evaluate_order` teo
+	        ON tmp.order_sn = teo.`order_sn`
+	    WHERE teo.`order_eva_flag` = 1
+	    GROUP BY tohs.house_fid
+	    ORDER BY NULL) AS order_tmp
+	    ON t.fid = order_tmp.house_fid
+	WHERE thp.`is_del` = 0
+	  AND tcbm.`is_del` = 0
+	  AND tcbm.is_landlord = 1
+	  ORDER BY t.onLineDate DESC
+    </select>
+
+    <!-- 分租房子订单周期表 -->
+    <select id="subHouseOrderLifeCycle" resultType="com.ziroom.minsu.report.order.vo.HouseOrderLifeCycleVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    SELECT
+	  t.*,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName,
+	  order_tmp.firstOrderTime,
+	  order_tmp.firstStartTime,
+	  order_tmp.firstEvaTime
+	FROM
+	  (SELECT
+	  thrm.`room_sn`AS houseSn,
+      thrm.`room_name` AS houseName,
+      thbm.`house_addr` AS houseAddr,
+      thrm.`room_price` AS price,
+      thrm.`room_status` AS houseStatus,
+      CASE  thrm.`room_status`
+		WHEN  10 THEN '待发布'
+		WHEN 11 THEN '已发布'
+		WHEN 20 THEN '管家审核通过'
+		WHEN 21 THEN '管家审核未通过'
+		WHEN 30 THEN '品质审核未通过'
+		WHEN 40 THEN '上架'
+		WHEN 41 THEN '下架'
+		WHEN 50 THEN '强制下架'
+		ELSE '未知'
+		END AS houseStatusName,
+      thrm.`create_date` AS createDate,
+      thrm.`fid`,
+      thbm.landlord_uid,
+      thbm.`phy_fid`,
+      thbm.`fid` AS house_fid,
+      MIN(thol.create_date) AS onLineDate
+      FROM minsu_house_db.`t_house_room_msg` thrm
+      LEFT JOIN  minsu_house_db.`t_house_base_msg` thbm
+      ON thrm.`house_base_fid` = thbm.`fid`
+	    INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	      ON thbm.phy_fid = thp.fid
+	    LEFT JOIN minsu_house_db.`t_house_operate_log` thol
+	      ON thrm.fid = thol.room_fid
+	  WHERE thbm.`rent_way` = 1
+	    <!-- AND thrm.`room_status` = 40 -->
+	    AND thol.`from_status` IN ('20','11')
+	    AND thol.`to_status` = 40
+	    <if test="beginTime != null and beginTime != ''">
+		AND thol.create_date  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		 <if test="endTime != null and endTime != ''">
+	    AND thol.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+	    <if test="cityCode != null and cityCode != ''">
+	    AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+	    </if>
+
+	  GROUP BY thrm.fid
+	  ORDER BY NULL
+	  ) AS t
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	    ON t.phy_fid = thp.`fid`
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm
+	    ON t.landlord_uid = tcbm.`uid`
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr
+	    ON t.house_fid = thgr.`house_fid`
+	  LEFT JOIN
+	    (SELECT
+	      MIN(tmp.create_time) AS firstOrderTime,
+	      MIN(tmp.start_time) AS firstStartTime,
+	      MIN(teo.`create_time`) AS firstEvaTime,
+	      tohs.room_fid
+	    FROM
+	      (SELECT
+	        tr.order_sn,
+	        tr.`create_time`,
+	        tr.`start_time`
+	      FROM
+	        `minsu_order_db`.`t_order` tr
+	      WHERE tr.`pay_status` = 1
+	        AND tr.is_del = 0) AS tmp
+	      INNER JOIN `minsu_order_db`.`t_order_house_snapshot` tohs
+	        ON tmp.order_sn = tohs.`order_sn`
+	      LEFT JOIN `minsu_evaluate_db`.`t_evaluate_order` teo
+	        ON tmp.order_sn = teo.`order_sn`
+	    WHERE teo.`order_eva_flag` = 1
+	    GROUP BY tohs.room_fid
+	    ORDER BY NULL) AS order_tmp
+	    ON t.fid = order_tmp.room_fid
+	WHERE thp.`is_del` = 0
+	  AND tcbm.`is_del` = 0
+	  AND tcbm.is_landlord = 1
+	  ORDER BY t.onLineDate DESC
+    </select>
+
+    <!-- 上线房源拍摄需求-整租 -->
+    <select id="entireHousePhotoInfo" resultType="com.ziroom.minsu.report.house.vo.HousePhotoVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    SELECT
+	  thbm.`house_sn` AS houseSn,
+	  thbm.`house_name` AS houseName,
+	  thbm.`house_addr` AS houseAddr,
+	  thbm.`lease_price` AS price,
+	  thbm.`house_status` AS houseStatus,
+	  thbm.`create_date` AS createDate,
+	  thbm.`fid`,
+	  thbm.landlord_uid,
+	  thbm.`phy_fid`,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName,
+	  CASE
+	    thol.`cause`
+	    WHEN 0
+	    THEN '不需要'
+	    WHEN 1
+	    THEN '需要'
+	    ELSE '未知'
+	  END AS isNeedPhoto
+	FROM
+	  minsu_house_db.`t_house_base_msg` thbm
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	    ON thbm.phy_fid = thp.fid
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm
+	    ON thbm.landlord_uid = tcbm.`uid`
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr
+	    ON thbm.fid = thgr.`house_fid`
+	  LEFT JOIN minsu_house_db.`t_house_operate_log` thol
+	    ON thbm.fid = thol.`house_base_fid`
+	WHERE thbm.`rent_way` = 0
+	  AND thbm.house_status = 40
+	  AND thol.`to_status` = 40
+	  AND tcbm.`is_del` = 0
+	  AND tcbm.is_landlord = 1
+	  AND thp.`is_del` = 0
+      <if test="beginTime != null and beginTime != ''">
+	  AND thol.create_date  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	  </if>
+	  <if test="endTime != null and endTime != ''">
+      AND thol.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+      </if>
+      <if test="cityCode != null and cityCode != ''">
+      AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+      </if>
+      ORDER BY thol.create_date DESC
+    </select>
+
+    <!-- 上线房源拍摄需求-分租 -->
+    <select id="subHousePhotoInfo" resultType="com.ziroom.minsu.report.house.vo.HousePhotoVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    SELECT
+	  thrm.`room_sn` AS houseSn,
+	  thrm.`room_name` AS houseName,
+	  thbm.`house_addr` AS houseAddr,
+	  thrm.`fid`,
+	  thbm.landlord_uid,
+	  thbm.`phy_fid`,
+	  thbm.`fid` AS house_fid,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName,
+	  CASE
+	    thol.`cause`
+	    WHEN 0
+	    THEN '不需要'
+	    WHEN 1
+	    THEN '需要'
+	    ELSE '未知'
+	  END AS isNeedPhoto
+	FROM
+	  minsu_house_db.`t_house_room_msg` thrm
+	  LEFT JOIN minsu_house_db.`t_house_base_msg` thbm
+	    ON thrm.`house_base_fid` = thbm.`fid`
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	    ON thbm.phy_fid = thp.fid
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm
+	    ON thbm.landlord_uid = tcbm.`uid`
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr
+	    ON thbm.fid = thgr.`house_fid`
+	  LEFT JOIN minsu_house_db.`t_house_operate_log` thol
+	    ON thrm.fid = thol.`room_fid`
+	WHERE thbm.`rent_way` = 1
+	  AND thrm.room_status = 40
+	  AND thol.`to_status` = 40
+	  AND thp.`is_del` = 0
+	  AND tcbm.`is_del` = 0
+	  AND tcbm.is_landlord = 1
+	  <if test="beginTime != null and beginTime != ''">
+	  AND thol.create_date  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	  </if>
+	  <if test="endTime != null and endTime != ''">
+      AND thol.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+      </if>
+      <if test="cityCode != null and cityCode != ''">
+      AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+      </if>
+      ORDER BY thol.create_date DESC
+    </select>
+
+    <!-- 房源审核需求-整租 -->
+    <select id="entireHouseAuditInfo" resultType="com.ziroom.minsu.report.house.vo.HouseAuditVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+   SELECT
+    thbm.`house_sn` AS houseSn,
+    thbm.`house_name` AS houseName,
+    thbm.`house_addr` AS houseAddr,
+    thbm.`lease_price` AS price,
+    thbm.`house_status` AS houseStatus,
+    CASE
+      thbm.house_status
+      WHEN 10 THEN '待发布'
+      WHEN 11 THEN '已发布'
+      WHEN 20 THEN '管家审核通过'
+      WHEN 21 THEN '管家审核未通过'
+      WHEN 30 THEN '品质审核未通过'
+      WHEN 40 THEN '上架'
+      WHEN 41 THEN '下架'
+      WHEN 50 THEN '强制下架'
+      ELSE  '未知'
+      END AS houseStatusName,
+    thbm.`create_date` AS createDate,
+    thbm.`fid`,
+    thbm.landlord_uid,
+    thbm.`phy_fid`,
+    thol.create_date AS onLineDate,
+	 thol.remark,
+	 thp.city_code AS cityCode,
+	 tcbm.real_name AS lanRealName,
+    tcbm.customer_mobile AS lanMobile,
+    thgr.emp_push_code AS empPushCode,
+    thgr.emp_push_name AS empPushName,
+    thgr.emp_guard_code AS empGuardCode,
+    thgr.emp_guard_name AS empGuardName ,
+    thol.create_date AS auditDate,
+    thol.cause,
+    CASE thol.cause
+    WHEN 10 THEN '照片原因'
+    WHEN 11 THEN '房东信息原因'
+    WHEN 12 THEN '房源信息原因'
+    WHEN 13 THEN '房源品质原因'
+    ELSE '未知'
+    END AS causeName
+  FROM
+    minsu_house_db.`t_house_base_msg` thbm
+    INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+      ON thbm.phy_fid = thp.fid
+    LEFT JOIN minsu_house_db.`t_house_operate_log` thol
+      ON thbm.fid = thol.house_base_fid
+    INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm
+    ON thbm.landlord_uid = tcbm.`uid`
+     LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr
+    ON thbm.fid = thgr.`house_fid`
+  WHERE thbm.`rent_way` = 0
+    AND thol.`to_status` = 40
+    <if test="beginTime != null and beginTime != ''">
+	  AND thol.create_date  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	  </if>
+	  <if test="endTime != null and endTime != ''">
+      AND thol.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+      </if>
+      <if test="cityCode != null and cityCode != ''">
+      AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+      </if>
+    AND tcbm.`is_del` = 0
+    AND tcbm.is_landlord = 1
+    AND thp.`is_del` = 0
+  </select>
+
+    <!-- 房源审核需求-分租 -->
+    <select id="subHouseAuditInfo" resultType="com.ziroom.minsu.report.house.vo.HouseAuditVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    SELECT
+	  thrm.`room_sn` AS houseSn,
+	  thrm.`room_name` AS houseName,
+	  thbm.`house_addr` AS houseAddr,
+	  thrm.`room_price` AS price,
+	  thrm.`room_status` AS houseStatus,
+	  CASE
+	    thrm.`room_status`
+	    WHEN 10
+	    THEN '待发布'
+	    WHEN 11
+	    THEN '已发布'
+	    WHEN 20
+	    THEN '管家审核通过'
+	    WHEN 21
+	    THEN '管家审核未通过'
+	    WHEN 30
+	    THEN '品质审核未通过'
+	    WHEN 40
+	    THEN '上架'
+	    WHEN 41
+	    THEN '下架'
+	    WHEN 50
+	    THEN '强制下架'
+	    ELSE '未知'
+	  END AS houseStatusName,
+	  thrm.`create_date` AS createDate,
+	  thrm.`fid`,
+	  thbm.landlord_uid,
+	  thbm.`phy_fid`,
+	  thbm.`fid` AS house_fid,
+	  thol.create_date AS onLineDate,
+	  thp.city_code AS cityCode,
+	  tcbm.real_name AS lanRealName,
+	  tcbm.customer_mobile AS lanMobile,
+	  thgr.emp_push_code AS empPushCode,
+	  thgr.emp_push_name AS empPushName,
+	  thgr.emp_guard_code AS empGuardCode,
+	  thgr.emp_guard_name AS empGuardName,
+	  thol.create_date AS auditDate,
+	  thol.cause,
+	  CASE thol.cause
+	  WHEN 10 THEN '照片原因'
+	  WHEN 11 THEN '房东信息原因'
+	  WHEN 12 THEN '房源信息原因'
+	  WHEN 13 THEN '房源品质原因'
+	  ELSE '未知'
+	  END AS causeName
+	FROM
+	  minsu_house_db.`t_house_room_msg` thrm
+	  LEFT JOIN minsu_house_db.`t_house_base_msg` thbm
+	    ON thrm.`house_base_fid` = thbm.`fid`
+	  INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+	    ON thbm.phy_fid = thp.fid
+	  LEFT JOIN minsu_house_db.`t_house_operate_log` thol
+	    ON thrm.fid = thol.room_fid
+	  INNER JOIN `minsu_customer_db`.`t_customer_base_msg` tcbm
+	    ON thbm.landlord_uid = tcbm.`uid`
+	  LEFT JOIN minsu_house_db.`t_house_guard_rel` thgr
+	    ON thbm.fid = thgr.`house_fid`
+	 WHERE thbm.`rent_way` = 1
+	  AND thol.`from_status` = 20
+	  AND thol.`to_status` = 40
+	  <if test="beginTime != null and beginTime != ''">
+	  AND thol.create_date  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	  </if>
+	  <if test="endTime != null and endTime != ''">
+      AND thol.create_date  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+      </if>
+      <if test="cityCode != null and cityCode != ''">
+      AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+      </if>
+	  AND thp.`is_del` = 0
+	  AND tcbm.`is_del` = 0
+	  AND tcbm.is_landlord = 1
+    </select>
+</mapper>

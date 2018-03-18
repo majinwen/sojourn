@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.regionDataDao" >
+ <resultMap id="BaseItemMap" type="com.ziroom.minsu.report.board.vo.RegionDataItem" >
+    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="target_house_num" property="targetHouseNum" jdbcType="INTEGER" />
+    <result column="issue_house_num" property="issueHouseNum" jdbcType="INTEGER" />
+    <result column="online_house_num" property="onlineHouseNum" jdbcType="INTEGER" />
+    <result column="house_rate" property="houseRate" jdbcType="DOUBLE" />
+    <result column="house_qoq" property="houseQoQ" jdbcType="DOUBLE" />
+    <result column="target_order_num" property="targetOrderNum" jdbcType="INTEGER" />
+    <result column="actual_order_num" property="actualOrderNum" jdbcType="INTEGER" />
+    <result column="order_rate" property="orderRate" jdbcType="DOUBLE" />
+    <result column="order_qoq" property="orderQoQ" jdbcType="DOUBLE" />
+    <result column="target_rent_num" property="targetRentNum" jdbcType="INTEGER" />
+    <result column="rentable_num" property="rentableNum" jdbcType="INTEGER" />
+    <result column="actual_rent_num" property="actualRentNum" jdbcType="INTEGER" />
+    <result column="night_rate" property="nightRate" jdbcType="DOUBLE" />
+    <result column="rent_rate" property="rentRate" jdbcType="DOUBLE" />
+    <result column="rent_qoq" property="rentQoQ" jdbcType="DOUBLE" />
+    <association column="cityCode=city_code" property="totalHouseNum" jdbcType="INTEGER" select="getTotalHouseNum"/>
+ </resultMap>
+ 
+ <!-- 直接关联定时任务表t_city_daily_msg获取数据 -->
+ <select id="findRegionDataItemListFromTask" resultMap="BaseItemMap" parameterType="com.ziroom.minsu.report.board.dto.RegionRequest" >
+  	SELECT
+		t2.code city_code,
+		t2.show_name city_name,
+		t3.target_house_num,
+		t3.target_order_num,
+		t3.target_rent_num,
+		t3.city_code,
+		t4.rentable_num,
+		t4.issue_house_num,
+		t4.online_house_num,
+		t4.actual_order_num,
+		t4.actual_rent_num
+	FROM
+		minsu_base_db.t_city_region_rel t1,
+		minsu_base_db.t_conf_city t2,
+		minsu_report_db.t_city_target t3,
+		(
+			SELECT
+				city_code,
+				IF(SUM(total_up_num) - SUM(lock_num) &lt; 0, 0, SUM(total_up_num) - SUM(lock_num)) rentable_num,
+				SUM(issue_num) issue_house_num,
+				SUM(initial_push_up_num) online_house_num,
+				SUM(pay_order_num) actual_order_num,
+				SUM(room_night_num) actual_rent_num
+			FROM
+				minsu_report_db.t_city_daily_msg
+			WHERE
+				DATE_FORMAT(stat_date, '%Y-%m') = #{targetMonth,jdbcType=VARCHAR}
+			GROUP BY
+				city_code
+		) t4
+	WHERE
+		t1.province_code = t2.pcode
+	AND t2.code = t3.city_code
+	AND t3.city_code = t4.city_code
+	AND t1.is_del = 0
+	AND t2.is_del = 0
+	AND t2.level = 3
+	AND t3.is_del = 0
+  	AND t1.region_fid = #{regionFid,jdbcType=VARCHAR}
+  	AND t3.target_month = #{targetMonth,jdbcType=VARCHAR}
+ </select>
+ 
+ <resultMap id="BaseResultMap" type="com.ziroom.minsu.report.board.vo.RegionDataItem" >
+    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="target_house_num" property="targetHouseNum" jdbcType="INTEGER" />
+    <result column="house_rate" property="houseRate" jdbcType="DOUBLE" />
+    <result column="house_qoq" property="houseQoQ" jdbcType="DOUBLE" />
+    <result column="target_order_num" property="targetOrderNum" jdbcType="INTEGER" />
+    <result column="order_rate" property="orderRate" jdbcType="DOUBLE" />
+    <result column="order_qoq" property="orderQoQ" jdbcType="DOUBLE" />
+    <result column="target_rent_num" property="targetRentNum" jdbcType="INTEGER" />
+    <result column="night_rate" property="nightRate" jdbcType="DOUBLE" />
+    <result column="rent_rate" property="rentRate" jdbcType="DOUBLE" />
+    <result column="rent_qoq" property="rentQoQ" jdbcType="DOUBLE" />
+    <association column="cityCode=city_code" property="totalHouseNum" jdbcType="INTEGER" select="getTotalHouseNum"/>
+    <association column="{cityCode=city_code,startTime=start_time,endTime=end_time}" property="issueHouseNum" jdbcType="INTEGER" select="getIssueHouseNum"/>
+    <association column="{cityCode=city_code,startTime=start_time,endTime=end_time}" property="onlineHouseNum" jdbcType="INTEGER" select="getOnlineHouseNum"/>
+    <association column="{cityCode=city_code,startTime=start_time,endTime=end_time}" property="actualOrderNum" jdbcType="INTEGER" select="getActualOrderNum"/>
+    <association column="{cityCode=city_code,startTime=start_time,endTime=end_time}" property="actualRentNum" jdbcType="INTEGER" select="getActualRentNum"/>
+ </resultMap>
+  
+ <sql id="Base_Column_List" >
+    region_name, city_name, total_house_num, target_house_num, issue_house_num, online_house_num, 
+    house_rate, house_qoq, target_order_num, actual_order_num, order_rate, order_qoq, target_rent_num,
+    actual_rent_num, night_rate, rent_rate, rent_qoq
+ </sql>
+ 
+ <resultMap id="RegionItemMap" type="com.ziroom.minsu.report.board.vo.RegionItem" >
+    <result column="region_fid" property="regionFid" jdbcType="VARCHAR" />
+    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+    <result column="nation_code" property="nationCode" jdbcType="VARCHAR" />
+    <result column="nation_name" property="nationName" jdbcType="VARCHAR" />
+ </resultMap>
+ <select id="findRegionListByNationCode" resultMap="RegionItemMap" parameterType="string" >
+  	SELECT DISTINCT t1.region_fid ,t2.region_name, t3.code nation_code, t3.show_name nation_name
+  	FROM `minsu_base_db`.t_city_region_rel t1, `minsu_base_db`.t_city_region t2, `minsu_base_db`.t_conf_city t3
+  	WHERE t1.region_fid = t2.fid
+  	AND t1.country_code = t3.code
+  	AND t1.is_del = 0
+  	AND t2.is_del = 0
+  	AND t3.is_del = 0
+    AND t1.country_code = #{countryCode,jdbcType=VARCHAR}
+ </select>
+ 
+ <select id="findRegionDataItemList" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.report.board.dto.RegionRequest" >
+  	SELECT 
+  	t2.code city_code, t2.show_name city_name, t3.target_house_num, t3.target_order_num, t3.target_rent_num, t3.city_code, 
+  	CONCAT(t3.target_month, '-01') start_time, DATE_ADD(CONCAT(t3.target_month, '-01'), INTERVAL 1 MONTH) end_time
+  	FROM minsu_base_db.t_city_region_rel t1, minsu_base_db.t_conf_city t2, minsu_report_db.t_city_target t3
+  	WHERE t1.province_code = t2.pcode 
+  	AND t2.code = t3.city_code 
+  	AND t1.is_del = 0 
+  	AND t2.is_del = 0 
+  	AND t2.level = 3
+  	AND t3.is_del = 0
+  	AND t1.region_fid = #{regionFid,jdbcType=VARCHAR}
+  	AND t3.target_month = #{targetMonth,jdbcType=VARCHAR}
+ </select>
+ 
+ <!-- 统计累计房源量:截至查询日当天平台上已有的上架房源数量 -->
+ <select id="getTotalHouseNum" resultType="int" >
+ 	SELECT
+		COUNT(t.id)
+	FROM
+	(
+		SELECT
+			t1.id
+		FROM
+			minsu_house_db.t_house_base_msg t1,
+			minsu_house_db.t_house_phy_msg t2
+		WHERE
+			t1.phy_fid = t2.fid
+		AND	t1.is_del = 0
+		AND t1.rent_way = 0
+		AND t1.house_status = 40
+		AND t2.is_del = 0
+		AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+		
+		UNION ALL
+		
+		SELECT
+			t3.id
+		FROM
+			minsu_house_db.t_house_base_msg t3,
+			minsu_house_db.t_house_room_msg t4,
+			minsu_house_db.t_house_phy_msg t5
+		WHERE
+			t3.fid = t4.house_base_fid
+		AND	t3.phy_fid = t5.fid
+		AND t3.is_del = 0
+		AND t3.rent_way = 1
+		AND t4.is_del = 0
+		AND t4.room_status = 40
+		AND t5.is_del = 0
+		AND t5.city_code = #{cityCode,jdbcType=VARCHAR}
+	) t
+ </select>
+ 
+ <!-- 统计房源发布数量:截至查询日当天平台上已发布的且发布日期是在查询的目标周期中的房源 -->
+ <select id="getIssueHouseNum" resultType="int" >
+ 	SELECT
+		COUNT(t.id)
+	FROM
+	(
+		SELECT
+			t1.id
+		FROM
+			minsu_house_db.t_house_base_msg t1
+		INNER JOIN minsu_house_db.t_house_phy_msg t2
+		INNER JOIN (
+			SELECT
+				t3.house_base_fid,
+				MIN(create_date) create_date
+			FROM
+				(
+					SELECT
+						house_base_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = 11
+					AND room_fid IS NULL
+				) t3
+			GROUP BY
+				t3.house_base_fid
+		) t4
+		WHERE
+			t1.phy_fid = t2.fid
+		AND	t1.fid = t4.house_base_fid
+		AND t1.rent_way = 0
+		AND t1.house_status >= 11
+		AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+		AND t4.create_date &gt;= #{startTime,jdbcType=VARCHAR}
+		AND t4.create_date &lt; #{endTime,jdbcType=VARCHAR}
+		
+		UNION ALL
+		
+		SELECT
+			t5.id
+		FROM
+			minsu_house_db.t_house_base_msg t5
+		INNER JOIN	minsu_house_db.t_house_room_msg t6
+		INNER JOIN	minsu_house_db.t_house_phy_msg t7
+		INNER JOIN (
+			SELECT
+				t8.room_fid,
+				MIN(create_date) create_date
+			FROM
+				(
+					SELECT
+						room_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = 11
+				) t8
+			GROUP BY
+				t8.room_fid
+		) t9
+		WHERE
+			t5.fid = t6.house_base_fid
+		AND	t5.phy_fid = t7.fid
+		AND	t6.fid = t9.room_fid
+		AND t5.rent_way = 1
+		AND t6.room_status >= 11
+		AND t7.city_code = #{cityCode,jdbcType=VARCHAR}
+		AND t9.create_date &gt;= #{startTime,jdbcType=VARCHAR}
+		AND t9.create_date &lt; #{endTime,jdbcType=VARCHAR}
+	) t
+ </select>
+ 
+ <!-- 统计上架数量:截至查询日当天平台上首次上架的且上架日期是在查询的目标周期中的地推房源，整租数量按照套计算，合租数量按照间计算 -->
+ <select id="getOnlineHouseNum" resultType="int" >
+ 	SELECT
+		COUNT(t.id)
+	FROM
+	(
+		SELECT
+			t1.id
+		FROM
+			minsu_house_db.t_house_base_msg t1
+		INNER JOIN minsu_house_db.t_house_phy_msg t2
+		INNER JOIN (
+			SELECT
+				t3.house_base_fid,
+				MIN(create_date) create_date
+			FROM
+				(
+					SELECT
+						house_base_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = 40
+					AND room_fid IS NULL
+				) t3
+			GROUP BY
+				t3.house_base_fid
+		) t4
+		WHERE
+			t1.phy_fid = t2.fid
+		AND	t1.fid = t4.house_base_fid
+		AND t1.rent_way = 0
+		AND t1.house_channel = 3
+		AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+		AND t4.create_date &gt;= #{startTime,jdbcType=VARCHAR}
+		AND t4.create_date &lt; #{endTime,jdbcType=VARCHAR}
+		
+		UNION ALL
+		
+		SELECT
+			t5.id
+		FROM
+			minsu_house_db.t_house_base_msg t5
+		INNER JOIN	minsu_house_db.t_house_room_msg t6
+		INNER JOIN	minsu_house_db.t_house_phy_msg t7
+		INNER JOIN (
+			SELECT
+				t8.room_fid,
+				MIN(create_date) create_date
+			FROM
+				(
+					SELECT
+						room_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = 40
+				) t8
+			GROUP BY
+				t8.room_fid
+		) t9
+		WHERE
+			t5.fid = t6.house_base_fid
+		AND	t5.phy_fid = t7.fid
+		AND	t6.fid = t9.room_fid
+		AND t5.rent_way = 1
+		AND t5.house_channel = 3
+		AND t7.city_code = #{cityCode,jdbcType=VARCHAR}
+		AND t9.create_date &gt;= #{startTime,jdbcType=VARCHAR}
+		AND t9.create_date &lt; #{endTime,jdbcType=VARCHAR}
+	) t
+ </select>
+ 
+ <!-- 统计实际订单数量:截至查询日当天平台上已支付（不管是否已取消）且订单创建日期是在查询的目标周期中的订单数量 -->
+ <select id="getActualOrderNum" resultType="int" >
+ 	SELECT
+		COUNT(id)
+	FROM
+		minsu_order_db.t_order t
+	WHERE
+		t.is_del = 0
+	AND t.pay_status = 1
+	AND t.city_code = #{cityCode,jdbcType=VARCHAR}
+	AND t.create_time &gt;= #{startTime,jdbcType=VARCHAR}
+	AND t.create_time &lt; #{endTime,jdbcType=VARCHAR}
+ </select>
+ 
+ <!-- 统计间夜数量:截至查询日当天平台上在查询的目标周期中已出租的天数 -->
+ <select id="getActualRentNum" resultType="int" >
+ 	SELECT
+		COUNT(t2.id)
+	FROM
+		minsu_order_db.t_order t1, 
+		minsu_order_db.t_base_house_lock t2
+	WHERE
+		t1.order_sn = t2.order_sn
+	AND	t1.is_del = 0
+	AND t2.is_del = 0
+	AND t2.lock_type = 1
+	AND t1.city_code = #{cityCode,jdbcType=VARCHAR}
+	AND t2.lock_time &gt;= #{startTime,jdbcType=VARCHAR}
+	AND t2.lock_time &lt; #{endTime,jdbcType=VARCHAR}
+ </select>
+</mapper>

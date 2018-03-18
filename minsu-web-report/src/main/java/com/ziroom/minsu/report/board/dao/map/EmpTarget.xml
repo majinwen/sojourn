@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.empTargetDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.report.board.entity.EmpTargetEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="target_month" property="targetMonth" jdbcType="TIMESTAMP" />
+    <result column="emp_code" property="empCode" jdbcType="VARCHAR" />
+    <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+    <result column="target_house_num" property="targetHouseNum" jdbcType="INTEGER" />
+    <result column="create_emp_code" property="createEmpCode" jdbcType="VARCHAR" />
+    <result column="create_emp_name" property="createEmpName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, fid, target_month, emp_code, emp_name, target_house_num, create_emp_code, create_emp_name, 
+    create_date, last_modify_date, is_del
+  </sql>
+  
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from t_emp_target
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+  <!-- 月份和员工号查询目标记录 -->
+  <select id="findEmpTargetByMcode" resultMap="BaseResultMap" parameterType="map" >
+    select
+    <include refid="Base_Column_List" />
+    from t_emp_target
+    WHERE target_month=#{targetMonth,jdbcType=VARCHAR}
+    AND emp_code=#{empCode,jdbcType=VARCHAR}
+    limit 1
+  </select>
+
+
+  <insert id="insert" parameterType="com.ziroom.minsu.report.board.entity.EmpTargetEntity" >
+    insert into t_emp_target
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="targetMonth != null" >
+        target_month,
+      </if>
+      <if test="empCode != null" >
+        emp_code,
+      </if>
+      <if test="empName != null" >
+        emp_name,
+      </if>
+      <if test="targetHouseNum != null" >
+        target_house_num,
+      </if>
+      <if test="createEmpCode != null" >
+        create_emp_code,
+      </if>
+      <if test="createEmpName != null" >
+        create_emp_name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="targetMonth != null" >
+        #{targetMonth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="empCode != null" >
+        #{empCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empName != null" >
+        #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="targetHouseNum != null" >
+        #{targetHouseNum,jdbcType=INTEGER},
+      </if>
+      <if test="createEmpCode != null" >
+        #{createEmpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpName != null" >
+        #{createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByFid" parameterType="com.ziroom.minsu.report.board.entity.EmpTargetEntity" >
+    update t_emp_target
+    <set >
+      <if test="targetMonth != null" >
+        target_month = #{targetMonth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="empCode != null" >
+        emp_code = #{empCode,jdbcType=VARCHAR},
+      </if>
+      <if test="empName != null" >
+        emp_name = #{empName,jdbcType=VARCHAR},
+      </if>
+      <if test="targetHouseNum != null" >
+        target_house_num = #{targetHouseNum,jdbcType=INTEGER},
+      </if>
+      <if test="createEmpCode != null" >
+        create_emp_code = #{createEmpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpName != null" >
+        create_emp_name = #{createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

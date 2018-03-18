@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.orderCouponDao" >
+
+
+	<!-- # 订单在不同城市的统计情况 -->
+	<select id="getOrderCouponByCity" resultType="com.ziroom.minsu.report.order.entity.OrderCouponEntity"  parameterType="com.ziroom.minsu.report.order.dto.OrderCouponRequest">
+		SELECT
+			tmp.city_code AS cityCode,
+			SUM(tmp.orderNum) AS orderNum,
+			SUM(tmp.couponNum) AS couponNum,
+			SUM(tmp.rental) AS rentalMoney,
+			SUM(tmp.coupon_money) AS couponMoney
+		FROM
+			(SELECT
+				t.city_code,
+				1 AS orderNum,
+				CASE
+				WHEN (m.coupon_money+m.act_money) > 0 THEN 1
+				ELSE 0
+				END AS couponNum,
+				m.rental_money - m.discount_money AS rental,
+				(m.coupon_money+m.act_money) AS coupon_money
+			FROM
+				minsu_order_db.t_order t
+				INNER JOIN minsu_order_db.t_order_money m ON t.order_sn = m.order_sn
+			WHERE
+				t.city_code IS NOT NULL
+				AND t.city_code != ''
+				AND t.pay_status = 1
+				<if test="starTime != null and starTime != '' ">
+					AND t.create_time <![CDATA[ >= ]]> #{starTime,jdbcType=VARCHAR}
+				</if>
+				<if test="endTime != null and endTime != '' ">
+					AND t.create_time <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+				</if>
+				<if test="cityList != null">
+					<if test="cityList.size > 0">
+						AND t.city_code in
+						<foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+							#{cityCode,jdbcType=VARCHAR}
+						</foreach>
+					</if>
+				</if>
+
+				) tmp
+		GROUP BY tmp.city_code
+	</select>
+</mapper>

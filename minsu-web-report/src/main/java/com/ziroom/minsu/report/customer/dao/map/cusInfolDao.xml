@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.cusInfoDao" >
+
+
+ <sql id="Base_Column_List" >
+ <!-- -->
+ </sql>
+
+    <!-- 房东信息 -->
+    <select id="lanCusInfo" resultType="com.ziroom.minsu.report.house.vo.HouseCommonVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    select 
+	  tcbm.`customer_mobile`,
+	  tcbm.`real_name`,
+	  order_tmp.payOrderNum,
+	  order_tmp.checkInOrderNum,
+	  eva_tmp.evaNum,
+	  house_tmp.houseNum,
+	  eva_score_tmp.sumScore,
+	  guard_tmp.empGuardCode,
+	  guard_tmp.empGuardName,
+	  guard_tmp.empPushCode,
+	  guard_tmp.empPushName 
+	from
+	  `minsu_customer_db`.`t_customer_base_msg` tcbm 
+	  left join 
+	    (SELECT 
+	      tr.landlord_uid,
+	      COUNT(
+	        CASE
+	          WHEN tr.pay_status = 1 
+	          THEN tr.pay_status 
+	        END
+	      ) AS payOrderNum,
+	      COUNT(
+	        CASE
+	          WHEN tr.pay_status = 1 
+	          AND tr.order_status IN (40, 41, 50, 51, 60, 61, 70, 71) 
+	          THEN tr.pay_status 
+	        END
+	      ) AS checkInOrderNum 
+	    FROM
+	      `minsu_order_db`.`t_order` tr 
+	    GROUP BY tr.landlord_uid 
+	    ORDER BY NULL) as order_tmp 
+	    on tcbm.`uid` = order_tmp.landlord_uid 
+	  left join 
+	    (SELECT 
+	      teo.rated_user_uid,
+	      COUNT(teo.fid) as evaNum 
+	    FROM
+	      `minsu_evaluate_db`.`t_evaluate_order` teo 
+	    WHERE teo.eva_user_type = 2 
+	    GROUP BY teo.rated_user_uid 
+	    ORDER BY NULL) as eva_tmp 
+	    on tcbm.`uid` = eva_tmp.rated_user_uid 
+	  left join 
+	    (select 
+	      thbm.`landlord_uid`,
+	      count(thbm.`fid`) as houseNum 
+	    from
+	      `minsu_house_db`.`t_house_base_msg` thbm 
+	    where thbm.`is_del` = 0 
+	    group by thbm.`landlord_uid` 
+	    order by null) as house_tmp 
+	    on tcbm.`uid` = house_tmp.landlord_uid 
+	  left join 
+	    (SELECT 
+	      thbm.landlord_uid,
+	      SUM(
+	        tshe.house_clean_tal + tshe.des_math_tal + tshe.safe_degree_tal + tshe.traf_pos_tal + tshe.cost_perfor_tal
+	      ) AS sumScore 
+	    FROM
+	      `minsu_evaluate_db`.`t_stats_house_eva` tshe 
+	      LEFT JOIN `minsu_house_db`.`t_house_base_msg` thbm 
+	        ON thbm.fid = tshe.house_fid 
+	    WHERE thbm.landlord_uid != "" 
+	      AND thbm.is_del = 0 
+	    GROUP BY thbm.landlord_uid 
+	    ORDER BY NULL) as eva_score_tmp 
+	    on tcbm.`uid` = eva_score_tmp.landlord_uid 
+	  left join 
+	    (select 
+	      thbm.`landlord_uid`,
+	      thgr.`emp_guard_code` as empGuardCode,
+	      thgr.`emp_guard_name` as empGuardName,
+	      thgr.`emp_push_code` AS empPushCode,
+	      thgr.`emp_push_name` AS empPushName 
+	    from
+	      `minsu_house_db`.`t_house_base_msg` thbm 
+	      inner join `minsu_house_db`.`t_house_guard_rel` thgr 
+	        on thbm.`fid` = thgr.`house_fid` 
+	    where thbm.`is_del` = 0 
+	    group by thbm.`landlord_uid` 
+	    ORDER BY NULL) as guard_tmp 
+	    on tcbm.`uid` = guard_tmp.landlord_uid 
+	  where tcbm.`is_landlord` = 1 
+	  <if test="cityCode != null and cityCode != ''">
+	   AND tcbm.city_code=#{cityCode,jdbcType=VARCHAR}
+	  </if> 
+      
+	</select>
+    
+    <!-- 客户信息-->
+    <select id="userCusInfo" resultType="com.ziroom.minsu.report.customer.vo.UserCusInfoVo" parameterType="com.ziroom.minsu.report.house.dto.HouseRequest">
+    SELECT 
+	  tcbm.`customer_mobile` AS cusMobile,
+	  tcbm.`real_name` AS cusRealName,
+	  applay_tmp.applayNum,
+	  applay_tmp.applayOrderNum,
+	  order_succ_tmp.orderSuccNum,
+	  order_succ_tmp.orderDiffNight,
+	  order_succ_tmp.orderRentMoney,
+	  staty_night_tmp.statyNight,
+	  service_tmp.serviceMoney + rent_tmp.lanMoney AS statyNigthRentMoney ,
+	  tcbm.`uid`
+	FROM
+	  `minsu_customer_db`.`t_customer_base_msg` tcbm 
+	  LEFT JOIN 
+	    (SELECT 
+	      COUNT(*) AS applayNum,
+	      SUM(order_tmp.applyOrder) AS applayOrderNum,
+	      order_tmp.user_uid 
+	    FROM
+	      (SELECT 
+	        COUNT(tr.`order_sn`) AS applyOrder,
+	        tr.`start_time`,
+	        tr.`end_time`,
+	        tr.`user_uid`,
+	        DATE_FORMAT(create_time, '%Y-%m-%d') AS days 
+	      FROM
+	        `minsu_order_db`.`t_order` tr 
+	      WHERE tr.`is_del` = 0 
+	       <if test="beginTime != null and beginTime != ''">
+		   AND tr.`create_time`  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		   </if>
+		   <if test="endTime != null and endTime != ''">
+		   AND tr.`create_time`  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+		   </if>
+	      GROUP BY tr.`user_uid`,
+	        days,
+	        tr.`start_time`,
+	        tr.`end_time` 
+	      ORDER BY NULL) AS order_tmp 
+	    GROUP BY order_tmp.user_uid 
+	    ORDER BY NULL) AS applay_tmp 
+	    ON tcbm.uid = applay_tmp.user_uid 
+	  LEFT JOIN 
+	    (SELECT 
+	      COUNT(tr.order_sn) AS orderSuccNum,
+	      COALESCE(
+	        SUM(
+	          DATEDIFF(tr.end_time, tr.start_time)
+	        ),
+	        0
+	      ) AS orderDiffNight,
+	      COALESCE(SUM(tom.rental_money), 0) AS orderRentMoney,
+	      tr.user_uid 
+	    FROM
+	      `minsu_order_db`.`t_order` tr 
+	      INNER JOIN `minsu_order_db`.`t_order_money` tom 
+	        ON tr.order_sn = tom.order_sn 
+	    WHERE tr.pay_status = 1 
+	      AND tr.is_del = 0 
+	      AND tr.order_status IN (20, 40, 41, 50, 51, 60, 61, 70, 71) 
+	    GROUP BY tr.user_uid 
+	    ORDER BY NULL) AS order_succ_tmp 
+	    ON tcbm.uid = order_succ_tmp.user_uid 
+	  LEFT JOIN 
+	    (SELECT 
+	      COUNT(tbhl.fid) AS statyNight,
+	      tr.user_uid 
+	    FROM
+	      `minsu_order_db`.`t_base_house_lock` tbhl 
+	      LEFT JOIN `minsu_order_db`.`t_order` tr 
+	        ON tbhl.order_sn = tr.order_sn 
+	    WHERE tbhl.is_del = 0
+	    
+	    <if test="beginTime != null and beginTime != ''">
+	    AND tbhl.lock_time  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	    </if>
+	    <if test="endTime != null and endTime != ''">
+	    AND tbhl.lock_time  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if> 
+	    GROUP BY tr.user_uid) AS staty_night_tmp 
+	    ON tcbm.uid = staty_night_tmp.user_uid 
+	  LEFT JOIN 
+	    (SELECT 
+	      COALESCE(SUM(tfi.total_fee), 0) AS serviceMoney,
+	      tr.user_uid 
+	    FROM
+	      `minsu_order_db`.`t_finance_income` tfi 
+	      INNER JOIN `minsu_order_db`.`t_order` tr 
+	        ON tfi.order_sn = tr.order_sn 
+	    WHERE tfi.is_del = 0 
+	    AND tfi.income_status != 3 
+	    <if test="beginTime != null and beginTime != ''">
+	    AND tfi.generate_fee_time  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	    </if>
+	    <if test="endTime != null and endTime != ''">
+	    AND tfi.generate_fee_time  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if> 
+	    GROUP BY tr.user_uid 
+	    ORDER BY NULL) AS service_tmp 
+	    ON tcbm.uid = service_tmp.user_uid 
+	  LEFT JOIN 
+	    (SELECT 
+	      COALESCE(SUM(tfpv.total_fee), 0) AS lanMoney,
+	      tr.user_uid 
+	    FROM
+	      `minsu_order_db`.`t_finance_pay_vouchers` tfpv 
+	      INNER JOIN `minsu_order_db`.`t_order` tr 
+	        ON tfpv.order_sn = tr.order_sn 
+	    WHERE tfpv.is_del = 0 
+	      AND tfpv.payment_status != 7 
+	      <if test="beginTime != null and beginTime != ''">
+	      AND tfpv.generate_fee_time  <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	      </if>
+	      <if test="endTime != null and endTime != ''">
+	      AND tfpv.generate_fee_time  <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	      </if> 
+	    GROUP BY tr.user_uid 
+	    ORDER BY NULL) AS rent_tmp 
+	    ON tcbm.uid = rent_tmp.user_uid 
+	    WHERE tcbm.uid IS NOT NULL 
+	  <if test="cityCode != null and cityCode != ''">
+	    AND tcbm.city_code=#{cityCode,jdbcType=VARCHAR}
+	  </if>
+	  ORDER BY order_succ_tmp.orderSuccNum DESC
+  </select>
+    
+</mapper>

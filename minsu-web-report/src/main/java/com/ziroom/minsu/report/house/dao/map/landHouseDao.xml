@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.landHouseDao" >
+
+
+	<!-- 获取房源数量的统计 -->
+	<select id="getHouseNumListByCityCode" resultType="com.ziroom.minsu.report.basedata.entity.CityNumEntity" parameterType="com.ziroom.minsu.report.customer.dto.LandRequest">
+		select
+			ph.city_code AS  cityCode ,count(1) AS num
+		from
+		(
+		select
+		distinct  mi.id,
+				  mi.rent_way,
+				  mi.phy_fid
+		from(
+		SELECT
+			base.fid AS id, base.rent_way,base.landlord_uid,base.phy_fid
+			FROM
+			minsu_house_db.t_house_base_msg base
+			WHERE
+			base.house_status = 40
+			AND base.rent_way = 0
+			UNION ALL
+			SELECT
+			room.house_base_fid AS id,  base1.rent_way,base1.landlord_uid,base1.phy_fid
+			FROM
+			minsu_house_db.t_house_base_msg base1
+			INNER JOIN minsu_house_db.t_house_room_msg room ON room.house_base_fid = base1.fid
+			WHERE
+			room.room_status = 40
+			AND base1.rent_way = 1)mi
+
+		)tmp
+		inner join  t_house_phy_msg ph on  tmp.phy_fid = ph.fid
+		group by ph.city_code
+   </select>
+
+
+	<!-- 获取房源数量的统计 -->
+	<select id="getLandNumListByCityCode" resultType="com.ziroom.minsu.report.basedata.entity.CityNumEntity" parameterType="com.ziroom.minsu.report.customer.dto.LandRequest">
+		select
+		ph.city_code AS  cityCode ,count(1) AS num
+		from
+		(
+		select
+		distinct  mi.id,
+		mi.rent_way,
+		mi.phy_fid
+		from(
+		SELECT
+		base.fid AS id, base.rent_way,base.landlord_uid,base.phy_fid
+		FROM
+		minsu_house_db.t_house_base_msg base
+		WHERE
+		base.house_status = 40
+		AND base.rent_way = 0
+		UNION ALL
+		SELECT
+		room.house_base_fid AS id,  base1.rent_way,base1.landlord_uid,base1.phy_fid
+		FROM
+		minsu_house_db.t_house_base_msg base1
+		INNER JOIN minsu_house_db.t_house_room_msg room ON room.house_base_fid = base1.fid
+		WHERE
+		room.room_status = 40
+		AND base1.rent_way = 1)mi
+
+		)tmp
+		inner join  t_house_phy_msg ph on  tmp.phy_fid = ph.fid
+		group by ph.city_code
+	</select>
+
+	
+</mapper>

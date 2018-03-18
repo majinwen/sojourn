@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.landlordStaticDao" >
+  
+ <select id="landlordStatic" resultType="com.ziroom.minsu.report.customer.vo.LandlordStaticVo" parameterType="map">
+ 
+  
+  SELECT 
+	phy.`city_code` 'cityCode',
+	hbsg.`landlord_uid` 'landlordUid',
+	IFNULL(sjedTmp2.num,0) 'sjedHouseCount',
+	IFNULL(sjingTmp2.num,0) 'sjingHouseCount',
+	IFNULL(pvTmp.num,0) 'pvCount',
+	IFNULL(adviseTmp.num,0) 'adviseCount',
+	IFNULL(bookOrderTmp.num,0) 'bookOrderCount',
+	IFNULL(acptOrderTmp.num,0) 'acptOrderCount',
+	IFNULL(paidOrderTmp.num,0) 'paidOrderCount',
+	IFNULL(bookDaysTmp.num,0) 'bookDays',
+	IFNULL(peopleNumTmp.num,0) 'peopleNum',
+	IFNULL(checkinDaysTmp.num,0) 'checkinDays',
+	IFNULL(paiedMoneyTmp.pay,0) 'paiedMoney',
+	IFNULL(ratedCountTmp.num,0) 'ratedCount',
+	IFNULL(rateCountTmp.num,0) 'rateCount',
+	IFNULL(ratedScoreTmp.score,0) 'ratedScore',
+	IFNULL(rateScoreTmp.score,0) 'rateScore'
+	FROM (
+	    SELECT hbsg1.* FROM `minsu_house_db`.`t_house_base_msg` hbsg1 WHERE NOT EXISTS(SELECT 1 FROM `minsu_house_db`.`t_house_base_msg` hbsg2 WHERE hbsg2.landlord_uid = hbsg1.landlord_uid AND hbsg2.`create_date` <![CDATA[ < ]]> hbsg1.`create_date`) 
+	) hbsg
+	INNER JOIN (SELECT DISTINCT(hlog.house_base_fid) FROM `minsu_house_db`.t_house_operate_log hlog WHERE hlog.to_status = 40 ) hlogTmp ON hbsg.`fid` = hlogTmp.`house_base_fid` 
+	LEFT JOIN  `minsu_house_db`.`t_house_phy_msg` phy ON hbsg.`phy_fid` = phy.`fid`
+	LEFT JOIN `minsu_base_db`.`t_city_region_rel` regionrel ON (regionrel.`province_code`=phy.`province_code` AND regionrel.`country_code`=phy.`nation_code` AND regionrel.`is_del`='0')
+LEFT JOIN (
+	SELECT sjedTmp.landlord_uid ,SUM(sjedTmp.num) 'num' FROM(	
+	SELECT	
+		hmsg.`landlord_uid` , COUNT(DISTINCT(hlog.house_base_fid)) 'num'
+		FROM `minsu_house_db`.t_house_operate_log hlog 
+		INNER JOIN `minsu_house_db`.`t_house_base_msg` hmsg ON hmsg.`fid` = hlog.`house_base_fid`	
+		WHERE hlog.to_status = 40 AND hlog.room_fid IS NULL 
+		GROUP BY hmsg.`landlord_uid`
+	UNION ALL
+	 	SELECT hmsg.`landlord_uid` , COUNT(DISTINCT(hlog.room_fid)) 'num'
+		FROM `minsu_house_db`.t_house_operate_log hlog 
+		INNER JOIN `minsu_house_db`.`t_house_room_msg` room ON room.fid = hlog.`room_fid`
+		LEFT JOIN `minsu_house_db`.`t_house_base_msg` hmsg ON hmsg.`fid` = room.house_base_fid	
+		WHERE hlog.to_status = 40 AND hlog.room_fid IS NOT NULL 
+		GROUP BY hmsg.`landlord_uid`
+	) sjedTmp GROUP BY sjedTmp.landlord_uid 
+
+<!--上过架的房源数量-->
+) sjedTmp2 ON  sjedTmp2.landlord_uid =hbsg.`landlord_uid`
+LEFT JOIN (
+SELECT sjingTmp.landlord_uid ,SUM(sjingTmp.num) 'num' FROM(
+	SELECT hmsg.`landlord_uid`,COUNT(1) 'num' FROM `minsu_house_db`.`t_house_base_msg` hmsg WHERE hmsg.`rent_way`='0' AND hmsg.`house_status`='40' AND hmsg.`is_del`='0' GROUP BY hmsg.`landlord_uid`
+	UNION ALL
+	SELECT hmsg.`landlord_uid`,COUNT(1) 'num'  FROM `minsu_house_db`.`t_house_room_msg` room LEFT JOIN `minsu_house_db`.`t_house_base_msg` hmsg ON hmsg.`fid` = room.house_base_fid	WHERE hmsg.`rent_way`='1' AND room.room_status='40' AND room.is_del='0' GROUP BY hmsg.`landlord_uid`
+) sjingTmp GROUP BY sjingTmp.landlord_uid 
+<!-- 上架状态的房源数量 -->
+) sjingTmp2 ON  sjingTmp2.landlord_uid =hbsg.`landlord_uid`	
+LEFT JOIN (
+	SELECT hmsg.`landlord_uid`,SUM(housestats.house_pv) 'num' FROM `minsu_house_db`.`t_house_statistics_msg` housestats INNER JOIN `minsu_house_db`.`t_house_base_msg` hmsg ON hmsg.`fid` = housestats.house_base_fid  GROUP BY hmsg.`landlord_uid`
+<!-- 累计浏览量 -->
+) pvTmp ON  pvTmp.landlord_uid =hbsg.`landlord_uid`
+LEFT JOIN(
+	SELECT admsgTmp.landlord_uid ,SUM(admsgTmp.num) 'num' FROM(
+	SELECT hmsg.`landlord_uid`,COUNT(1) AS num FROM `minsu_message_db`.`t_msg_house` msgh LEFT JOIN `minsu_message_db`.`t_msg_base` msgb ON msgb.`msg_house_fid`=msgh.`fid`
+		LEFT JOIN `minsu_house_db`.`t_house_base_msg` hmsg ON hmsg.fid=msgh.house_fid
+		WHERE msgb.`msg_sender_type`='3' AND msgb.`is_del`='0'
+		<if test="beginTime != null and beginTime != ''">
+			AND msgb.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND msgb.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+		GROUP BY hmsg.`landlord_uid`
+	UNION ALL (
+		SELECT  msgh.`landlord_uid`,COUNT(1) AS num 
+		FROM `minsu_message_db`.`t_msg_first_advisory` msgf  
+		LEFT JOIN `minsu_message_db`.`t_msg_house` msgh ON msgh.`fid`= msgf.`msg_house_fid`
+		WHERE msgf.`status` !=3 
+		<if test="beginTime != null and beginTime != ''">
+			AND msgf.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND msgf.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+		GROUP BY msgh.`landlord_uid`
+	 ) 	
+	) admsgTmp GROUP BY admsgTmp.landlord_uid 
+<!-- 累计咨询量 -->
+) adviseTmp ON  adviseTmp.landlord_uid =hbsg.`landlord_uid` 
+LEFT JOIN (
+	SELECT od.`landlord_uid` ,COUNT(1) 'num' FROM `minsu_order_db`.`t_order` od 
+	WHERE 1=1 
+		<if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+	GROUP BY od.`landlord_uid` 
+<!-- 累计申请量 -->
+) bookOrderTmp ON  bookOrderTmp.landlord_uid =hbsg.`landlord_uid` 
+LEFT JOIN(
+	SELECT od.`landlord_uid` ,COUNT(1) 'num' FROM `minsu_order_db`.`t_order` od 
+	WHERE od.`order_status` IN ('20','33','40','41','50','51','60','61','70','71','72') 
+		<if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+	GROUP BY od.`landlord_uid`
+<!-- 累计接单量 -->
+)  acptOrderTmp ON  acptOrderTmp.landlord_uid =hbsg.`landlord_uid` 
+LEFT JOIN(
+	SELECT od.`landlord_uid` ,COUNT(1) 'num' FROM `minsu_order_db`.`t_order` od 
+	WHERE od.`pay_status`='1' 
+		<if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+	GROUP BY od.`landlord_uid` 
+<!-- 累计订单量 -->
+) paidOrderTmp ON  paidOrderTmp.landlord_uid =hbsg.`landlord_uid` 
+LEFT JOIN(
+	SELECT od.`landlord_uid` ,SUM(DATEDIFF(od.`end_time`,od.`start_time`))  'num' FROM `minsu_order_db`.`t_order` od 
+	WHERE od.`pay_status`='1' 
+		<if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+	GROUP BY od.`landlord_uid` 
+<!-- 累计预订间夜量 -->
+) bookDaysTmp ON bookDaysTmp.landlord_uid =hbsg.`landlord_uid` 
+LEFT JOIN(
+	SELECT od.`landlord_uid` ,SUM(od.`people_num`) 'num' FROM `minsu_order_db`.`t_order` od 
+	WHERE od.`order_status` <![CDATA[ >= ]]> 40
+		<if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if> 
+	GROUP BY od.`landlord_uid` 
+<!-- 累计入住客户量 -->
+) peopleNumTmp ON peopleNumTmp.landlord_uid =hbsg.`landlord_uid`  
+LEFT JOIN(
+	SELECT od.`landlord_uid` ,SUM(CASE WHEN DATEDIFF(IFNULL(od.`real_end_time`, od.`end_time`),od.`start_time`) <![CDATA[ > ]]>0 THEN DATEDIFF(IFNULL(od.`real_end_time`, od.`end_time`),od.`start_time`) ELSE 0 END ) 'num' FROM `minsu_order_db`.`t_order` od 
+	WHERE od.`pay_status`='1' 
+		<if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+	GROUP BY od.`landlord_uid` 
+<!-- 累计入住间夜 -->
+) checkinDaysTmp ON checkinDaysTmp.landlord_uid =hbsg.`landlord_uid`
+LEFT JOIN(
+	SELECT od.`landlord_uid` ,SUM(ROUND(IFNULL(odm.`rental_money`,0)/100)) AS pay FROM `minsu_order_db`.`t_order` od LEFT JOIN `minsu_order_db`.`t_order_money` odm ON od.`order_sn`=odm.`order_sn` 
+	WHERE od.`is_del`='0' AND od.`pay_status`='1' AND od.`order_status` <![CDATA[ >= ]]>'40' 
+		<if test="beginTime != null and beginTime != ''">
+			AND od.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND od.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+	GROUP BY od.`landlord_uid`
+<!-- 累计房租收益 -->
+) paiedMoneyTmp ON paiedMoneyTmp.landlord_uid =hbsg.`landlord_uid`
+LEFT JOIN(
+	SELECT ev.`rated_user_uid` AS 'landlord_uid',COUNT(1) AS num FROM `minsu_evaluate_db`.`t_evaluate_order` ev 
+	WHERE 1=1 
+	<if test="beginTime != null and beginTime != ''">
+			AND ev.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND ev.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+	GROUP BY ev.`rated_user_uid`
+<!-- 累计收到评价量 -->
+) ratedCountTmp ON ratedCountTmp.landlord_uid =hbsg.`landlord_uid`
+LEFT JOIN(
+	SELECT ev.`eva_user_uid` AS 'landlord_uid' ,COUNT(1) AS num FROM `minsu_evaluate_db`.`t_evaluate_order` ev 
+	WHERE 1=1 
+	<if test="beginTime != null and beginTime != ''">
+			AND ev.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND ev.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+	GROUP BY ev.`eva_user_uid`
+<!-- 累计发出评价量 -->
+)rateCountTmp ON rateCountTmp.landlord_uid =hbsg.`landlord_uid`
+LEFT JOIN(
+	SELECT tod.rated_user_uid AS 'landlord_uid', ROUND(AVG((tev.`house_clean`+tev.`description_match`+tev.`safety_degree`+tev.`traffic_position`+tev.`cost_performance`)/5),2) AS score FROM `minsu_evaluate_db`.`t_tenant_evaluate` tev LEFT JOIN `minsu_evaluate_db`.`t_evaluate_order` tod ON tev.`eva_order_fid` = tod.`fid` 
+	WHERE 1=1  
+	<if test="beginTime != null and beginTime != ''">
+			AND tod.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND tod.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+	GROUP BY tod.rated_user_uid
+<!-- 累计得到评分平均分 -->
+) ratedScoreTmp ON ratedScoreTmp.landlord_uid =hbsg.`landlord_uid`
+LEFT JOIN (	
+	SELECT evaod.eva_user_uid AS 'landlord_uid',ROUND(AVG(ldeva.`landlord_satisfied`),2) AS score FROM `minsu_evaluate_db`.`t_landlord_evaluate` ldeva LEFT JOIN `minsu_evaluate_db`.`t_evaluate_order` evaod ON ldeva.`eva_order_fid`=evaod.`fid` 
+	WHERE 1=1  
+		<if test="beginTime != null and beginTime != ''">
+			AND evaod.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND evaod.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+	GROUP BY evaod.eva_user_uid
+<!-- 累计给出评分平均分 -->
+)rateScoreTmp ON rateScoreTmp.landlord_uid =hbsg.`landlord_uid`
+
+<where>
+	<if test="nationCode != null and nationCode != ''">
+		AND phy.`nation_code` = #{nationCode,jdbcType=VARCHAR}
+	</if>
+	<if test="regionCode != null and regionCode != ''">
+		AND regionrel.`region_fid` = #{regionCode,jdbcType=VARCHAR}
+	</if>
+	<if test="cityCode != null and cityCode != ''">
+		AND phy.`city_code` = #{cityCode,jdbcType=VARCHAR}
+	</if>
+</where>
+
+
+ </select>
+    
+</mapper>

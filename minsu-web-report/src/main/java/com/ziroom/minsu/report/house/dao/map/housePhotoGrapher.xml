@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.housePhotoGrapherDao">
+
+
+    <sql id="Base_Column_List">
+        <!-- -->
+    </sql>
+
+    <!-- 房源摄影-整租 -->
+    <select id="entireHouseGrapherInfo" resultType="com.ziroom.minsu.report.house.vo.HouseGrapherVo"
+            parameterType="com.ziroom.minsu.report.house.dto.HouseGrapherRequest">
+        SELECT
+        thbm.`house_sn` AS houseSn,
+        thbm.`house_name` AS houseName,
+        thbm.`house_addr` AS houseAddr,
+        thbm.`lease_price` AS price,
+        thbm.`house_status` AS houseStatus,
+        CASE
+        thbm.house_status
+        WHEN 10
+        THEN '待发布'
+        WHEN 11
+        THEN '已发布'
+        WHEN 20
+        THEN '管家审核通过'
+        WHEN 21
+        THEN '管家审核未通过'
+        WHEN 30
+        THEN '品质审核未通过'
+        WHEN 40
+        THEN '上架'
+        WHEN 41
+        THEN '下架'
+        WHEN 50
+        THEN '强制下架'
+        ELSE '未知'
+        END AS houseStatusName,
+        thbm.`create_date` AS createDate,
+        thbm.`fid`,
+        thbm.landlord_uid,
+        thbm.`phy_fid`,
+        thp.city_code AS cityCode,
+        thbz.first_deploy_date AS firstDeployDate,
+        thbz.first_up_date AS firstUpDate,
+        tpbo.book_start_time AS bookStartTime,
+        tpbo.door_home_time AS doorHomeTime,
+        tpbo.receive_picture_time AS receivePictureTime,
+        tpbo.photographer_mobile AS photoGrapherPhone,
+        tpbo.photographer_name AS photoGrapherName,
+        thpm.create_date AS uploadPictureTime
+        FROM
+        minsu_house_db.`t_house_base_msg` thbm
+        INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+        ON thbm.phy_fid = thp.fid AND thp.is_del=0
+        LEFT JOIN `minsu_base_db`.`t_city_region_rel` tcrr
+        ON thp.nation_code = tcrr.`country_code` AND thp.`province_code` = tcrr.`province_code` AND tcrr.`is_del`='0'
+        LEFT JOIN `minsu_house_db`.`t_house_biz_msg`  thbz
+        ON thbm.fid = thbz.house_base_fid
+        LEFT JOIN(
+        SELECT
+        tpbo_temp.house_fid,
+        tpbo_temp.book_start_time,
+        tpbo_temp.door_home_time,
+        tpbo_temp.receive_picture_time,
+        tpbo_temp.photographer_mobile,
+        tpbo_temp.photographer_name,
+        tpbo_temp.create_date
+        FROM `minsu_house_db`.`t_photographer_book_order` tpbo_temp) AS tpbo
+        ON thbm.fid = tpbo.house_fid
+
+        LEFT JOIN(
+        SELECT
+        thpm_temp.house_base_fid,
+        MIN(thpm_temp.create_date) create_date
+        FROM `minsu_house_db`.`t_house_pic_msg` thpm_temp
+        WHERE thpm_temp.operate_type = 2 /*摄影师*/
+        AND thpm_temp.audit_status = 1 /*通过审核*/
+        AND thpm_temp.is_del = 0
+        GROUP BY thpm_temp.house_base_fid
+        ) AS thpm
+        ON thbm.fid = thpm.house_base_fid
+
+        WHERE thbm.`rent_way` = 0
+        <if test="nationCode != null and nationCode != ''">
+            AND thp.nation_code=#{nationCode,jdbcType=VARCHAR}
+        </if>
+        <if test="cityCode != null and cityCode != ''">
+            AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+        </if>
+        <if test="houseStatus != null and houseStatus != ''">
+            AND thbm.house_status=#{houseStatus,jdbcType=INTEGER}
+        </if>
+        <if test="deployBeginTime != null and deployBeginTime != ''">
+            AND thbz.first_deploy_date  <![CDATA[ >= ]]> #{deployBeginTime,jdbcType=VARCHAR}
+        </if>
+        <if test="deployEndTime != null and deployEndTime != ''">
+            AND thbz.first_deploy_date  <![CDATA[ < ]]> #{deployEndTime,jdbcType=VARCHAR}
+        </if>
+        <if test="regionFid != null and regionFid != ''">
+            AND tcrr.`region_fid` = #{regionFid,jdbcType=VARCHAR}
+        </if>
+        AND thp.`is_del` = 0
+        AND tcrr.`is_del` = 0
+        ORDER BY tpbo.create_date DESC
+    </select>
+
+
+    <!-- 房源摄影-分租 -->
+    <select id="subHouseGrapherInfo" resultType="com.ziroom.minsu.report.house.vo.HouseGrapherVo"
+            parameterType="com.ziroom.minsu.report.house.dto.HouseGrapherRequest">
+        SELECT
+        rm.`room_sn` AS houseSn,
+        rm.`room_name` AS houseName,
+        thbm.`house_addr` AS houseAddr,
+        rm.`room_price` AS price,
+        rm.`room_status` AS houseStatus,
+        CASE
+        rm.`room_status`
+        WHEN 10
+        THEN '待发布'
+        WHEN 11
+        THEN '已发布'
+        WHEN 20
+        THEN '管家审核通过'
+        WHEN 21
+        THEN '管家审核未通过'
+        WHEN 30
+        THEN '品质审核未通过'
+        WHEN 40
+        THEN '上架'
+        WHEN 41
+        THEN '下架'
+        WHEN 50
+        THEN '强制下架'
+        ELSE '未知'
+        END AS houseStatusName,
+        rm.`create_date` AS createDate,
+        rm.`fid`,
+        thbm.landlord_uid,
+        thbm.`phy_fid`,
+        thp.city_code AS cityCode,
+        thbz.first_deploy_date AS firstDeployDate,
+        thbz.first_up_date AS firstUpDate,
+        tpbo.book_start_time AS bookStartTime,
+        tpbo.door_home_time AS doorHomeTime,
+        tpbo.receive_picture_time AS receivePictureTime,
+        tpbo.photographer_mobile AS photoGrapherPhone,
+        tpbo.photographer_name AS photoGrapherName,
+        thpm.create_date AS uploadPictureTime
+        FROM
+        minsu_house_db.`t_house_base_msg` thbm
+        LEFT JOIN minsu_house_db.`t_house_room_msg` rm ON rm.house_base_fid= thbm.fid
+        INNER JOIN minsu_house_db.`t_house_phy_msg` thp
+        ON thbm.phy_fid = thp.fid
+        LEFT JOIN `minsu_base_db`.`t_city_region_rel` tcrr
+        ON thp.nation_code = tcrr.`country_code` AND thp.`province_code` = tcrr.`province_code` AND tcrr.is_del ='0'
+        LEFT JOIN `minsu_house_db`.`t_house_biz_msg`  thbz
+        ON thbm.fid = thbz.house_base_fid
+        LEFT JOIN(
+        SELECT
+        tpbo_temp.house_sn,
+        tpbo_temp.book_start_time,
+        tpbo_temp.door_home_time,
+        tpbo_temp.receive_picture_time,
+        tpbo_temp.photographer_mobile,
+        tpbo_temp.photographer_name,
+        tpbo_temp.create_date
+        FROM `minsu_house_db`.`t_photographer_book_order` tpbo_temp) AS tpbo
+        ON thbm.house_sn = tpbo.house_sn
+
+        LEFT JOIN(
+        SELECT
+        thpm_temp.house_base_fid,
+        MIN(thpm_temp.create_date) create_date
+        FROM `minsu_house_db`.`t_house_pic_msg` thpm_temp
+        WHERE thpm_temp.operate_type = 2 /*摄影师*/
+        AND thpm_temp.audit_status = 1 /*通过审核*/
+        AND thpm_temp.is_del = 0
+        GROUP BY thpm_temp.house_base_fid
+        ) AS thpm
+        ON thbm.fid = thpm.house_base_fid
+
+        WHERE thbm.`rent_way` = 1
+        <if test="nationCode != null and nationCode != ''">
+            AND thp.nation_code=#{nationCode,jdbcType=VARCHAR}
+        </if>
+        <if test="cityCode != null and cityCode != ''">
+            AND thp.city_code=#{cityCode,jdbcType=VARCHAR}
+        </if>
+        <if test="houseStatus != null and houseStatus != ''">
+            AND rm.`room_status`=#{houseStatus,jdbcType=INTEGER}
+        </if>
+        <if test="deployBeginTime != null and deployBeginTime != ''">
+            AND thbz.first_deploy_date  <![CDATA[ >= ]]> #{deployBeginTime,jdbcType=VARCHAR}
+        </if>
+        <if test="deployEndTime != null and deployEndTime != ''">
+            AND thbz.first_deploy_date  <![CDATA[ < ]]> #{deployEndTime,jdbcType=VARCHAR}
+        </if>
+
+        <if test="regionFid != null and regionFid != ''">
+            AND tcrr.`region_fid` = #{regionFid,jdbcType=VARCHAR}
+        </if>
+        AND thp.`is_del` = 0
+        AND tcrr.`is_del` = 0
+        ORDER BY tpbo.create_date DESC
+    </select>
+
+
+</mapper>

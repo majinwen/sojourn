@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.confCityDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.report.basedata.entity.ConfCityEntity" >
+    
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="show_name" property="showName" jdbcType="VARCHAR" />
+    <result column="hot" property="hot" jdbcType="BIGINT" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="pcode" property="pcode" jdbcType="VARCHAR" />
+    <result column="initial" property="initial" jdbcType="VARCHAR" />
+    <result column="city_status" property="cityStatus" jdbcType="INTEGER" />
+    <result column="city_type" property="cityType" jdbcType="INTEGER" />
+    <result column="radii" property="radii" jdbcType="INTEGER" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+    <result column="create_fid" property="createFid" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+
+
+
+  <resultMap id="RegionMap" type="com.ziroom.minsu.report.basedata.vo.CityRegionVo" >
+
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+    <collection property="cityList"  column="fid"  javaType="arrayList"  select="report.confCityDao.getCityByRegionFid"></collection>
+
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+   
+    tcc.id, tcc.fid, tcc.show_name, tcc.hot, tcc.code, tcc.level, tcc.pcode, tcc.initial, tcc.city_status, tcc.city_type, tcc.radii, 
+    tcc.longitude, tcc.latitude, tcc.create_date, tcc.last_modify_date, tcc.create_fid, tcc.is_del
+  </sql>
+
+  <select id="getOpenCity" resultMap="BaseResultMap" parameterType="map">
+      select
+      <include refid="Base_Column_List" />
+      from minsu_base_db.t_conf_city tcc
+      where tcc.level = 3
+      AND tcc.city_status <![CDATA[ > ]]> 0
+
+
+      AND tcc.is_del = 0
+  </select>
+
+  <!-- 分页获取大区数据 -->
+  <select id="getCityByRegionFid" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+      minsu_base_db.t_city_region_rel rel
+      inner join  minsu_base_db.t_conf_city tcc on  tcc.pcode = rel.province_code  and  tcc.level = 3   AND tcc.city_status <![CDATA[ > ]]> 0
+    WHERE
+    rel.region_fid = #{fid,jdbcType=VARCHAR}
+     AND tcc.is_del = 0
+     and rel.is_del=0
+  </select>
+
+
+
+
+
+  <!-- 分页获取大区数据 -->
+  <select id="getNationRegionCity" resultType="com.ziroom.minsu.report.basedata.vo.NationRegionCityVo"
+          parameterType="com.ziroom.minsu.report.basedata.dto.NationRegionCityRequest">
+
+    SELECT
+        DISTINCT
+        nation.show_name nationName,
+        r.region_name regionName,
+        city.show_name cityName,
+        city.code cityCode
+    FROM
+        minsu_base_db.t_conf_city city
+                INNER JOIN
+        minsu_base_db.t_conf_city province ON city.pcode = province.code
+            INNER JOIN
+        minsu_base_db.t_conf_city nation ON province.pcode = nation.code
+            LEFT JOIN
+        (SELECT DISTINCT
+            province_code, region_name, region.fid
+        FROM
+            minsu_base_db.t_city_region_rel regionRel, minsu_base_db.t_city_region region
+        WHERE
+            regionRel.region_fid = region.fid) r ON r.province_code = province.code
+    where city.level = 3  and   city.city_status  <![CDATA[ > ]]> 0
+
+      <if test="cityCode != null and cityCode != '' ">
+        AND city.code =  #{cityCode,jdbcType=VARCHAR}
+      </if>
+      <if test="regionFid != null and regionFid != '' ">
+        AND r.fid =  #{regionFid,jdbcType=VARCHAR}
+      </if>
+      <if test="nationCode != null and nationCode != '' ">
+        AND nation.code =  #{nationCode,jdbcType=VARCHAR}
+      </if>
+  </select>
+
+
+
+
+  <!-- 分页获取大区数据 -->
+  <select id="getCityRegionBypage" resultMap="RegionMap" parameterType="com.ziroom.minsu.report.basedata.dto.CityRegionRequest">
+    SELECT
+        DISTINCT
+        cr.region_name,
+        cr.fid
+    FROM
+        minsu_base_db.t_city_region cr
+            inner JOIN
+        minsu_base_db.t_city_region_rel crr ON cr.fid = crr.region_fid
+    WHERE
+        crr.country_code = #{nationCode,jdbcType=VARCHAR}
+    and cr.is_del = 0 AND crr.is_del = 0
+  </select>
+
+
+  <!-- 根据城市codeList获取城市名称 -->
+  <select id="getCityByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	SELECT
+  	<include refid="Base_Column_List" />
+  	FROM minsu_base_db.t_conf_city tcc
+  	WHERE tcc.code = #{cityCode,jdbcType=VARCHAR}
+  	AND tcc.is_del = 0
+  </select>
+
+
+  <!--获取子元素-->
+  <select id="getListByPcode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM minsu_base_db.t_conf_city tcc
+    WHERE tcc.pcode = #{pcode,jdbcType=VARCHAR}
+    AND tcc.is_del = 0
+  </select>
+
+
+  <select id="getRegionRelList" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    c.*
+    FROM
+    minsu_base_db.t_city_region_rel t
+    LEFT JOIN minsu_base_db.t_conf_city c
+    ON t.`province_code` = c.`code`
+    WHERE t.region_fid = #{regionFid,jdbcType=VARCHAR}
+    AND t.is_del = 0
+  </select>
+  
+  <!-- 查询所有国家 -->
+  <select id="getNations" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM minsu_base_db.t_conf_city tcc
+    WHERE tcc.level = 1
+    AND tcc.is_del = 0
+  </select>
+
+
+
+  <!-- 查询当前的城市 -->
+  <select id="getNationByCode" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM minsu_base_db.t_conf_city tcc
+    WHERE tcc.level = 1
+    AND tcc.is_del = 0
+    AND tcc.code = #{nationCode,jdbcType=VARCHAR}
+    limit 1
+  </select>
+
+  <!-- 获取大区列表 -->
+  <select id="getAllRegionList" resultType="com.ziroom.minsu.entity.conf.CityRegionEntity">
+       select id, fid, region_name AS regionName , create_date AS createDate, is_del AS isDel 
+       from minsu_base_db.t_city_region
+       where is_del=0
+  </select>
+
+  <!-- 获取所有国家 -->
+  <select id="getAllNationList" resultType="com.ziroom.minsu.entity.base.NationCodeEntity">
+       select id, fid, nation_code as nationCode, province_code AS provinceCode, city_code AS cityCode, nation_name AS nationName,
+              country_code AS countryCode, create_date AS createDate, last_modify_date AS lastModifyDate, create_fid AS createFid, is_del AS isDel
+       from minsu_base_db.t_nation_code
+       where is_del=0
+  </select>
+  
+   <!-- 根据nationCode获取NationName-->
+  <select id="getNationName" parameterType="map" resultType="com.ziroom.minsu.entity.base.NationCodeEntity">
+       select nation_name AS nationName  
+       from minsu_base_db.t_nation_code        
+       where nation_code = #{nationCode} 
+       AND is_del=0
+  </select>
+  
+  <!-- 根据省code获取大区code -->
+	 <select id="getRegionByProvinceCode" parameterType="java.lang.String" resultType="com.ziroom.minsu.entity.conf.CityRegionEntity">
+	       select cr.region_name as regionName
+			from t_city_region cr
+			inner join t_city_region_rel crr
+			on cr.fid=crr.region_fid
+			where crr.province_code=#{provinceCode}
+			and cr.is_del=0 and crr.is_del=0 limit 1
+	 </select>
+</mapper>

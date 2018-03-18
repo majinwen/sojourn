@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.orderHouseDao" >
+
+
+	<!-- 获取当前城市的间夜统计信息 -->
+	<select id="getDayNumListByCityCode" resultType="com.ziroom.minsu.report.basedata.entity.CityNumEntity" parameterType="com.ziroom.minsu.report.order.dto.OrderHouseRequest">
+		select
+			t.city_code AS cityCode,
+			count(1) as num
+		from
+		minsu_order_db.t_order  t
+		inner join minsu_order_db.t_base_house_lock l on t.order_sn = l.order_sn  and l.lock_type = 1  and l.is_del = 0
+		WHERE t.pay_status = 1
+
+		<if test="starTime != null">
+			AND l.lock_time <![CDATA[ >= ]]> #{starTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null and endTime != '' ">
+			AND l.lock_time <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="cityList != null">
+			<if test="cityList.size > 0">
+				AND t.city_code in
+				<foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+					#{cityCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		group by t.city_code
+
+	</select>
+
+
+
+
+	<!-- 获取当前城市的订单评价统计信息 -->
+	<select id="getOrderNumListByCityCode" resultType="com.ziroom.minsu.report.basedata.entity.CityNumEntity" parameterType="com.ziroom.minsu.report.order.dto.OrderHouseRequest">
+		select
+			t.city_code AS cityCode,
+			count(1) as num
+		from
+		 minsu_order_db.t_order  t
+		WHERE t.pay_status = 1
+		<if test="starTime != null">
+			AND t.create_time <![CDATA[ >= ]]> #{starTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null and endTime != '' ">
+			AND t.create_time <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="cityList != null">
+			<if test="cityList.size > 0">
+				AND t.city_code in
+				<foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+					#{cityCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		 group by t.city_code
+
+	</select>
+
+
+
+
+
+	<!-- 获取当前城市的订单评价统计信息 -->
+	<select id="getHouseNumByCityCode" resultType="com.ziroom.minsu.report.house.entity.HouseNumEntity" parameterType="com.ziroom.minsu.report.order.dto.OrderHouseRequest">
+		SELECT
+			city_code AS cityCode,
+			SUM(num) AS num,
+			SUM(zizhuNum) AS zizhuNum,
+			SUM(dituiNum) AS dituiNum
+		FROM
+		(SELECT
+			ph.city_code,
+			1 AS num,
+			CASE
+				WHEN base.house_channel = 2 THEN 1
+				WHEN base.house_channel is null THEN 1
+				ELSE 0
+				END AS zizhuNum,
+			CASE
+				WHEN base.house_channel = 3 THEN 1
+				ELSE 0
+				END AS dituiNum,
+			tmp.create_date
+			FROM
+			minsu_house_db.t_house_base_msg base
+			INNER JOIN minsu_house_db.t_house_phy_msg ph ON base.phy_fid = ph.fid
+			INNER JOIN (
+				SELECT
+					lo.house_base_fid,
+					lo.room_fid,
+					MIN(lo.create_date) AS create_date
+				FROM
+					minsu_house_db.t_house_operate_log lo
+					INNER join  minsu_house_db.t_house_base_msg bb on lo.house_base_fid = bb.fid
+				WHERE
+					to_status = #{toStatus,jdbcType=INTEGER}
+					and ( (bb.rent_way = 1  and lo.room_fid is not null) or (bb.rent_way = 0))
+				GROUP BY lo.house_base_fid , lo.room_fid) tmp ON base.fid = tmp.house_base_fid) t
+
+		WHERE  1 = 1
+
+		<if test="starTime != null">
+			AND t.create_date <![CDATA[ >= ]]> #{starTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null and endTime != '' ">
+			AND t.create_date <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="cityList != null">
+			<if test="cityList.size > 0">
+				AND t.city_code in
+				<foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+					#{cityCode,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+		</if>
+		GROUP BY t.city_code
+   </select> 
+   
+
+	
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="map.houseDayPayOrder" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.report.house.entity.HouseDayPayOrderEntity" >
+    <!--
+     基本map
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="house_fid" property="houseFid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="pay_order_num" property="payOrderNum" jdbcType="INTEGER" />
+    <result column="pay_order_night" property="payOrderNight" jdbcType="INTEGER" />
+    <result column="pay_order_rent" property="payOrderRent" jdbcType="INTEGER" />
+    <result column="pay_order_deposit" property="payOrderDeposit" jdbcType="INTEGER" />
+    <result column="pay_order_service" property="payOrderService" jdbcType="INTEGER" />
+    <result column="pay_order_sum" property="payOrderSum" jdbcType="INTEGER" />
+    <result column="order_advance_day" property="orderAdvanceDay" jdbcType="INTEGER" />
+    <result column="statistics_date" property="statisticsDate" jdbcType="TIMESTAMP" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    <!--
+      基本列
+    -->
+    id, house_fid, room_fid, landlord_uid, rent_way, city_code, city_name, pay_order_num, 
+    pay_order_night, pay_order_rent, pay_order_deposit, pay_order_service, pay_order_sum, 
+    order_advance_day, statistics_date, create_date
+  </sql>
+  
+  <insert id="insertHouseDayPayOrder" parameterType="com.ziroom.minsu.report.house.entity.HouseDayPayOrderEntity" >
+    <!--
+     插入数据
+    -->
+    insert into t_house_day_pay_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="houseFid != null" >
+        house_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+      <if test="payOrderNum != null" >
+        pay_order_num,
+      </if>
+      <if test="payOrderNight != null" >
+        pay_order_night,
+      </if>
+      <if test="payOrderRent != null" >
+        pay_order_rent,
+      </if>
+      <if test="payOrderDeposit != null" >
+        pay_order_deposit,
+      </if>
+      <if test="payOrderService != null" >
+        pay_order_service,
+      </if>
+      <if test="payOrderSum != null" >
+        pay_order_sum,
+      </if>
+      <if test="orderAdvanceDay != null" >
+        order_advance_day,
+      </if>
+      <if test="statisticsDate != null" >
+        statistics_date,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="houseFid != null" >
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordUid != null" >
+        #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="payOrderNum != null" >
+        #{payOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="payOrderNight != null" >
+        #{payOrderNight,jdbcType=INTEGER},
+      </if>
+      <if test="payOrderRent != null" >
+        #{payOrderRent,jdbcType=INTEGER},
+      </if>
+      <if test="payOrderDeposit != null" >
+        #{payOrderDeposit,jdbcType=INTEGER},
+      </if>
+      <if test="payOrderService != null" >
+        #{payOrderService,jdbcType=INTEGER},
+      </if>
+      <if test="payOrderSum != null" >
+        #{payOrderSum,jdbcType=INTEGER},
+      </if>
+      <if test="orderAdvanceDay != null" >
+        #{orderAdvanceDay,jdbcType=INTEGER},
+      </if>
+      <if test="statisticsDate != null" >
+        #{statisticsDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+</mapper>

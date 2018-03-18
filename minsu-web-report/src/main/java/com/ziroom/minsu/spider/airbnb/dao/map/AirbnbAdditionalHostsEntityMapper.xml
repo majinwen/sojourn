@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ziroom.minsu.spider.airbnb.dao.AirbnbAdditionalHostsEntityMapper" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.spider.airbnb.entity.AirbnbAdditionalHostsEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="additional_host_sn" property="additionalHostSn" jdbcType="VARCHAR" />
+    <result column="first_name" property="firstName" jdbcType="VARCHAR" />
+    <result column="last_name" property="lastName" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="birthdate" property="birthdate" jdbcType="TIMESTAMP" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="facebook_id" property="facebookId" jdbcType="VARCHAR" />
+    <result column="affiliate_at" property="affiliateAt" jdbcType="TIMESTAMP" />
+    <result column="initial_ip" property="initialIp" jdbcType="VARCHAR" />
+    <result column="languages" property="languages" jdbcType="INTEGER" />
+    <result column="native_currency" property="nativeCurrency" jdbcType="VARCHAR" />
+    <result column="reviewee_count" property="revieweeCount" jdbcType="INTEGER" />
+    <result column="reviewee_rating" property="revieweeRating" jdbcType="REAL" />
+    <result column="house_sn" property="houseSn" jdbcType="VARCHAR" />
+    <result column="host_sn" property="hostSn" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="last_modify_date" property="lastModifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, additional_host_sn, first_name, last_name, sex, birthdate, country, email, facebook_id, 
+    affiliate_at, initial_ip, languages, native_currency, reviewee_count, reviewee_rating, 
+    house_sn, host_sn, create_date, last_modify_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_airbnb_additional_hosts
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_airbnb_additional_hosts
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ziroom.minsu.spider.airbnb.entity.AirbnbAdditionalHostsEntity" >
+    insert into t_airbnb_additional_hosts (id, additional_host_sn, first_name, 
+      last_name, sex, birthdate, 
+      country, email, facebook_id, 
+      affiliate_at, initial_ip, languages, 
+      native_currency, reviewee_count, reviewee_rating, 
+      house_sn, host_sn, create_date ,last_modify_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{additionalHostSn,jdbcType=VARCHAR}, #{firstName,jdbcType=VARCHAR}, 
+      #{lastName,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{birthdate,jdbcType=TIMESTAMP}, 
+      #{country,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{facebookId,jdbcType=VARCHAR}, 
+      #{affiliateAt,jdbcType=TIMESTAMP}, #{initialIp,jdbcType=VARCHAR}, #{languages,jdbcType=INTEGER}, 
+      #{nativeCurrency,jdbcType=VARCHAR}, #{revieweeCount,jdbcType=INTEGER}, #{revieweeRating,jdbcType=REAL}, 
+      #{houseSn,jdbcType=VARCHAR}, #{hostSn,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{lastModifyDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ziroom.minsu.spider.airbnb.entity.AirbnbAdditionalHostsEntity" >
+    insert into t_airbnb_additional_hosts
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="additionalHostSn != null" >
+        additional_host_sn,
+      </if>
+      <if test="firstName != null" >
+        first_name,
+      </if>
+      <if test="lastName != null" >
+        last_name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="birthdate != null" >
+        birthdate,
+      </if>
+      <if test="country != null" >
+        country,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="facebookId != null" >
+        facebook_id,
+      </if>
+      <if test="affiliateAt != null" >
+        affiliate_at,
+      </if>
+      <if test="initialIp != null" >
+        initial_ip,
+      </if>
+      <if test="languages != null" >
+        languages,
+      </if>
+      <if test="nativeCurrency != null" >
+        native_currency,
+      </if>
+      <if test="revieweeCount != null" >
+        reviewee_count,
+      </if>
+      <if test="revieweeRating != null" >
+        reviewee_rating,
+      </if>
+      <if test="houseSn != null" >
+        house_sn,
+      </if>
+      <if test="hostSn != null" >
+        host_sn,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="additionalHostSn != null" >
+        #{additionalHostSn,jdbcType=VARCHAR},
+      </if>
+      <if test="firstName != null" >
+        #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null" >
+        #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthdate != null" >
+        #{birthdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="facebookId != null" >
+        #{facebookId,jdbcType=VARCHAR},
+      </if>
+      <if test="affiliateAt != null" >
+        #{affiliateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="initialIp != null" >
+        #{initialIp,jdbcType=VARCHAR},
+      </if>
+      <if test="languages != null" >
+        #{languages,jdbcType=INTEGER},
+      </if>
+      <if test="nativeCurrency != null" >
+        #{nativeCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="revieweeCount != null" >
+        #{revieweeCount,jdbcType=INTEGER},
+      </if>
+      <if test="revieweeRating != null" >
+        #{revieweeRating,jdbcType=REAL},
+      </if>
+      <if test="houseSn != null" >
+        #{houseSn,jdbcType=VARCHAR},
+      </if>
+      <if test="hostSn != null" >
+        #{hostSn,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ziroom.minsu.spider.airbnb.entity.AirbnbAdditionalHostsEntity" >
+    update t_airbnb_additional_hosts
+    <set >
+      <if test="additionalHostSn != null" >
+        additional_host_sn = #{additionalHostSn,jdbcType=VARCHAR},
+      </if>
+      <if test="firstName != null" >
+        first_name = #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null" >
+        last_name = #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthdate != null" >
+        birthdate = #{birthdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="facebookId != null" >
+        facebook_id = #{facebookId,jdbcType=VARCHAR},
+      </if>
+      <if test="affiliateAt != null" >
+        affiliate_at = #{affiliateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="initialIp != null" >
+        initial_ip = #{initialIp,jdbcType=VARCHAR},
+      </if>
+      <if test="languages != null" >
+        languages = #{languages,jdbcType=INTEGER},
+      </if>
+      <if test="nativeCurrency != null" >
+        native_currency = #{nativeCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="revieweeCount != null" >
+        reviewee_count = #{revieweeCount,jdbcType=INTEGER},
+      </if>
+      <if test="revieweeRating != null" >
+        reviewee_rating = #{revieweeRating,jdbcType=REAL},
+      </if>
+      <if test="houseSn != null" >
+        house_sn = #{houseSn,jdbcType=VARCHAR},
+      </if>
+      <if test="hostSn != null" >
+        host_sn = #{hostSn,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModifyDate != null" >
+        last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ziroom.minsu.spider.airbnb.entity.AirbnbAdditionalHostsEntity" >
+    update t_airbnb_additional_hosts
+    set additional_host_sn = #{additionalHostSn,jdbcType=VARCHAR},
+      first_name = #{firstName,jdbcType=VARCHAR},
+      last_name = #{lastName,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      birthdate = #{birthdate,jdbcType=TIMESTAMP},
+      country = #{country,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      facebook_id = #{facebookId,jdbcType=VARCHAR},
+      affiliate_at = #{affiliateAt,jdbcType=TIMESTAMP},
+      initial_ip = #{initialIp,jdbcType=VARCHAR},
+      languages = #{languages,jdbcType=INTEGER},
+      native_currency = #{nativeCurrency,jdbcType=VARCHAR},
+      reviewee_count = #{revieweeCount,jdbcType=INTEGER},
+      reviewee_rating = #{revieweeRating,jdbcType=REAL},
+      house_sn = #{houseSn,jdbcType=VARCHAR},
+      host_sn = #{hostSn,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="findByAdditionalHostSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_airbnb_additional_hosts
+    where additional_host_sn = #{additionalHostSn,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findByHouseSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_airbnb_additional_hosts
+    where house_sn = #{houseSn,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findByHostSn" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_airbnb_additional_hosts
+    where host_sn = #{hostSn,jdbcType=VARCHAR}
+  </select>
+  <select id="findAll" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_airbnb_additional_hosts 
+  </select>
+</mapper>

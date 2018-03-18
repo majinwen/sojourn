@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.baseDataDao" >
+
+
+ <resultMap id="BaseResultMap" type="com.ziroom.minsu.report.board.vo.EmpTargetItem" >
+    <!--
+    员工目标列表
+    -->
+    <result column="fid" property="empTargetFid" jdbcType="VARCHAR" />
+    <result column="emp_code" property="empCode" jdbcType="VARCHAR" />
+    <result column="emp_name" property="empName" jdbcType="VARCHAR" />
+    <result column="target_month" property="targetMonth" jdbcType="VARCHAR" />
+    <result column="target_house_num" property="targetHouseNum" jdbcType="INTEGER" />
+  </resultMap>
+
+	<resultMap id="ExcelResultMap" type="com.ziroom.minsu.report.board.vo.EmpTargetItemVo" >
+		<!--
+        员工目标列表
+        -->
+		<result column="fid" property="empTargetFid" jdbcType="VARCHAR" />
+		<result column="emp_code" property="empCode" jdbcType="VARCHAR" />
+		<result column="emp_name" property="empName" jdbcType="VARCHAR" />
+		<result column="target_month" property="targetMonth" jdbcType="VARCHAR" />
+		<result column="target_house_num" property="targetHouseNum" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<!-- 专员map -->
+	<resultMap type="com.ziroom.minsu.report.board.vo.EmpTargetItem" id="pushEmpMap">
+		<result column="emp_code" property="empCode" jdbcType="VARCHAR" />
+    	<result column="emp_name" property="empName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+  
+  <!--专员月份目标列表分页-->
+  <select id="findGaurdAreaByPage" resultMap="BaseResultMap" parameterType="com.ziroom.minsu.report.board.dto.EmpTargetItemRequest" >
+	  SELECT 
+	  tet.`fid`,
+	  tga.emp_code,
+	  tga.emp_name,
+	  tet.`target_month`,
+	  tet.`target_house_num` 
+	FROM
+	  (SELECT 
+	    emp_code,
+	    emp_name 
+	  FROM
+	    `minsu_base_db`.`t_guard_area` 
+	  WHERE is_del = 0 
+	    AND emp_code IS NOT NULL 
+	    AND emp_code != '' 
+	  GROUP BY emp_code,
+	    emp_name) tga 
+	  LEFT JOIN `minsu_report_db`.`t_emp_target` tet 
+	    ON tga.emp_code = tet.`emp_code` 
+	 WHERE 1=1
+	<if test="empCode != null and empCode != ''" >
+     AND tga.emp_code = #{empCode,jdbcType=VARCHAR}
+    </if>
+    <if test="empName != null and empName !=''" >
+    AND tga.emp_name = #{empName,jdbcType=VARCHAR}
+    </if>
+    <if test="targetMonth != null and targetMonth !=''" >
+    AND tet.`target_month` = #{targetMonth,jdbcType=VARCHAR}
+    </if>
+    order by tga.emp_code
+  </select>
+
+	<!--专员月份目标列表分页(用于导出数据)-->
+	<select id="findGaurdAreaForExcel" resultMap="ExcelResultMap" parameterType="com.ziroom.minsu.report.board.dto.EmpTargetItemRequest" >
+		SELECT
+		tet.`fid`,
+		tga.emp_code,
+		tga.emp_name,
+		tet.`target_month`,
+		tet.`target_house_num`
+		FROM
+		(SELECT
+		emp_code,
+		emp_name
+		FROM
+		`minsu_base_db`.`t_guard_area`
+		WHERE is_del = 0
+		AND emp_code IS NOT NULL
+		AND emp_code != ''
+		GROUP BY emp_code,
+		emp_name) tga
+		LEFT JOIN `minsu_report_db`.`t_emp_target` tet
+		ON tga.emp_code = tet.`emp_code`
+		WHERE 1=1
+		<if test="empCode != null and empCode != ''" >
+			AND tga,emp_code = #{empCode,jdbcType=VARCHAR}
+		</if>
+		<if test="empName != null and empName !=''" >
+			AND tga.emp_name = #{empName,jdbcType=VARCHAR}
+		</if>
+		<if test="targetMonth != null and targetMonth !=''" >
+			AND tet.`target_month` = #{targetMonth,jdbcType=VARCHAR}
+		</if>
+		ORDER BY tga.emp_code,tet.`target_month`
+	</select>
+	
+	<!-- 条件查询目标和 -->
+	<select id="findTargetByCondition"  parameterType="map"  resultType="java.util.HashMap">
+		SELECT 
+		  SUM(tct.`target_push_house_num`) targetPush,
+		  SUM(tct.`target_self_house_num`) targetSelf
+		FROM
+		  `minsu_report_db`.`t_city_target` tct 
+		WHERE tct.`target_month`=#{targetMonth,jdbcType=VARCHAR}
+		AND tct.`city_code` IN 
+		  (SELECT 
+		    tcc.`code` 
+		  FROM
+		    `minsu_base_db`.`t_conf_city` tcc 
+		    LEFT JOIN `minsu_base_db`.`t_city_region_rel` tcrr 
+		      ON tcrr.`province_code` = tcc.`pcode` 
+		    LEFT JOIN `minsu_base_db`.`t_city_region` tcr 
+		      ON tcrr.`region_fid` = tcr.fid 
+		  WHERE tcrr.is_del=0
+		  <if test="regionFid != null and regionFid !=''" >
+		  	AND tcr.`fid` = #{regionFid,jdbcType=VARCHAR}
+		  </if>
+		  <if test="countryCode!=null and countryCode!=''">
+		    AND tcrr.country_code=#{countryCode,jdbcType=VARCHAR}
+		  </if>
+		  )
+	  <if test="cityCode!=null and cityCode!=''">
+	  	AND tct.`city_code`=#{cityCode,jdbcType=VARCHAR}
+	  </if>
+	</select>
+	
+	<!-- 国家查询大区 -->
+	<select id="findRegionByCountryCode" parameterType="string" resultType="com.ziroom.minsu.entity.conf.CityRegionEntity">
+		SELECT tcr.`fid` fid,tcr.`region_name` regionName FROM `minsu_base_db`.`t_city_region` tcr
+		LEFT JOIN `minsu_base_db`.`t_city_region_rel` tcrr ON tcr.`fid`=tcrr.`region_fid`
+		WHERE tcrr.`country_code`=#{countryCode,jdbcType=VARCHAR} and tcrr.is_del=0
+		GROUP BY fid
+	</select>
+	
+	<!-- 大区查询开通城市列表 -->
+	<select id="findCityByRegion"  parameterType="string" resultType="com.ziroom.minsu.entity.conf.ConfCityEntity">
+		SELECT 
+		  tcc.`show_name` showName,
+		  tcc.`code` code 
+		FROM
+		  `minsu_base_db`.`t_conf_city` tcc 
+		WHERE tcc.`pcode` IN 
+		  (SELECT 
+		    province_code 
+		  FROM
+		    `minsu_base_db`.`t_city_region_rel` tcrr 
+		  WHERE tcrr.`region_fid` = #{regionFid,jdbcType=VARCHAR} and tcrr.is_del=0) 
+		  AND tcc.`city_status` <![CDATA[ > ]]> 0
+	</select>
+	
+	<!-- 当月房源状态数量查询 -->
+	<select id="getIssueHouseNum" resultType="int"  parameterType="map">
+	 	SELECT
+			COUNT(t.id)
+		FROM
+		(
+			SELECT
+				t1.id
+			FROM
+				minsu_house_db.t_house_base_msg t1
+			INNER JOIN minsu_house_db.t_house_phy_msg t2
+			INNER JOIN (
+				SELECT
+					t3.house_base_fid,
+					MIN(create_date) create_date
+				FROM
+					(
+						SELECT
+							house_base_fid,
+							create_date
+						FROM
+							minsu_house_db.t_house_operate_log
+						WHERE
+							to_status = #{toStatus,jdbcType=INTEGER}
+						AND room_fid IS NULL
+					) t3
+				GROUP BY
+					t3.house_base_fid
+			) t4
+			WHERE
+				t1.phy_fid = t2.fid
+			AND	t1.fid = t4.house_base_fid
+			AND t1.rent_way = 0
+			AND t1.house_status >= 11
+			AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+			AND DATE_FORMAT(t4.create_date,'%Y-%m')=#{targetMonth,jdbcType=VARCHAR}
+			<if test="channel!=null">
+				AND t1.house_channel=#{channel,jdbcType=INTEGER}
+			</if>
+			UNION ALL
+			
+			SELECT
+				t5.id
+			FROM
+				minsu_house_db.t_house_base_msg t5
+			INNER JOIN	minsu_house_db.t_house_room_msg t6
+			INNER JOIN	minsu_house_db.t_house_phy_msg t7
+			INNER JOIN (
+				SELECT
+					t8.room_fid,
+					MIN(create_date) create_date
+				FROM
+					(
+						SELECT
+							room_fid,
+							create_date
+						FROM
+							minsu_house_db.t_house_operate_log
+						WHERE
+							to_status = #{toStatus,jdbcType=INTEGER}
+					) t8
+				GROUP BY
+					t8.room_fid
+			) t9
+			WHERE
+				t5.fid = t6.house_base_fid
+			AND	t5.phy_fid = t7.fid
+			AND	t6.fid = t9.room_fid
+			AND t5.rent_way = 1
+			AND t6.room_status >= 11
+			AND t7.city_code = #{cityCode,jdbcType=VARCHAR}
+			AND DATE_FORMAT(t9.create_date,'%Y-%m')=#{targetMonth,jdbcType=VARCHAR}
+			<if test="channel!=null">
+				AND t5.house_channel=#{channel,jdbcType=INTEGER}
+			</if>
+		) t
+	 </select>
+	 
+	 <!-- 分页查询专员列表 -->
+	 <select id="findPushEmpPage"  parameterType="com.ziroom.minsu.report.board.dto.EmpTargetItemRequest"  resultMap="pushEmpMap">
+		 SELECT 
+		    emp_code,
+		    emp_name 
+		  FROM
+		    `minsu_base_db`.`t_guard_area` 
+		  WHERE is_del = 0 
+		    AND emp_code IS NOT NULL 
+		    AND emp_code != '' 
+		    <if test="empCode != null and empCode != ''" >
+		     AND tga.emp_code = #{empCode,jdbcType=VARCHAR}
+		    </if>
+		    <if test="empName != null and empName !=''" >
+		    AND tga.emp_name = #{empName,jdbcType=VARCHAR}
+		    </if>
+		  GROUP BY emp_code,
+		    emp_name
+	 </select>
+	 
+	  <!-- 查询专员目标 -->
+	 <select id="findEmpTarget"  parameterType="map"  resultMap="BaseResultMap">
+	 	SELECT fid,target_month,target_house_num,emp_code,emp_name FROM minsu_report_db.`t_emp_target` 
+		WHERE emp_code = #{empCode,jdbcType=VARCHAR}
+		<if test="targetMonth!=null  and targetMonth!=''">
+			AND target_month = #{targetMonth,jdbcType=VARCHAR}
+		</if>
+		ORDER BY target_month
+	 </select>
+</mapper>

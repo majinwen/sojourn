@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.houseDayOrderAcceptNumDao" >
+
+
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.report.house.entity.HouseDayOrderAcceptNumEntity" >
+    <!--
+    房源订单日接受量基础map
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fid" property="fid" jdbcType="VARCHAR" />
+    <result column="room_fid" property="roomFid" jdbcType="VARCHAR" />
+    <result column="landlord_uid" property="landlordUid" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="rent_way" property="rentWay" jdbcType="TINYINT" />
+    <result column="lan_accept_order" property="lanAcceptOrder" jdbcType="INTEGER" />
+    <result column="statistics_date" property="statisticsDate" jdbcType="TIMESTAMP" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    <!--
+    房源订单日接受量基础字段
+    -->
+    id, fid, house_fid, room_fid, landlord_uid, city_code, city_name, rent_way, lan_accept_order, 
+    statistics_date, create_date
+  </sql>
+  
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    <!--
+    基础查询
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from t_house_day_order_accept_num
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+
+  <insert id="insertDayOrderAcceptNum" parameterType="com.ziroom.minsu.report.house.entity.HouseDayOrderAcceptNumEntity" >
+    <!--
+      插入房源日订单接受量统计数据
+    -->
+    insert into t_house_day_order_accept_num
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fid != null" >
+        fid,
+      </if>
+      <if test="houseFid != null" >
+        house_fid,
+      </if>
+      <if test="roomFid != null" >
+        room_fid,
+      </if>
+      <if test="landlordUid != null" >
+        landlord_uid,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+      <if test="rentWay != null" >
+        rent_way,
+      </if>
+      <if test="lanAcceptOrder != null" >
+        lan_accept_order,
+      </if>
+      <if test="statisticsDate != null" >
+        statistics_date,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fid != null" >
+        #{fid,jdbcType=VARCHAR},
+      </if>
+      <if test="houseFid != null" >
+        #{houseFid,jdbcType=VARCHAR},
+      </if>
+      <if test="roomFid != null" >
+        #{roomFid,jdbcType=VARCHAR},
+      </if>
+      <if test="landlordUid != null" >
+        #{landlordUid,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="rentWay != null" >
+        #{rentWay,jdbcType=TINYINT},
+      </if>
+      <if test="lanAcceptOrder != null" >
+        #{lanAcceptOrder,jdbcType=INTEGER},
+      </if>
+      <if test="statisticsDate != null" >
+        #{statisticsDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

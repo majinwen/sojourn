@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.orderContactDao" >
+
+
+
+
+
+	<select id="getOrderContactList" resultType="com.ziroom.minsu.report.order.vo.OrderContactVo" parameterType="map">
+		SELECT
+			o.city_code cityCode,
+			o.order_sn orderSn,
+			o.landlord_tel landTel,
+			o.landlord_name landName,
+			o.user_tel userTel,
+			o.user_name userName,
+			house.house_sn houseSn
+		FROM
+			minsu_order_db.t_order o
+			INNER JOIN
+			minsu_order_db.t_order_house_snapshot house ON o.order_sn = house.order_sn
+		<where>
+
+			<if test="cityList != null">
+				<if test="cityList.size > 0">
+					AND o.city_code in
+					<foreach collection="cityList"  item="cityCode" open="(" separator="," close=")">
+						#{cityCode,jdbcType=VARCHAR}
+					</foreach>
+				</if>
+			</if>
+			<if test="createStartTime != null and createStartTime != ''">
+				AND o.create_time>=#{createStartTime,jdbcType=VARCHAR}
+			</if>
+			<if test="createEndTime != null and createEndTime != ''">
+				AND o.create_time<![CDATA[ <= ]]>#{createEndTime,jdbcType=VARCHAR}
+			</if>
+
+		</where>
+			ORDER BY o.id DESC
+	</select>
+
+
+
+
+</mapper>

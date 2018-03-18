@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.cityDailyMsgDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.report.board.entity.CityDailyMsgEntity">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="nation_code" property="nationCode" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="total_up_num" property="totalUpNum" jdbcType="INTEGER" />
+    <result column="lock_num" property="lockNum" jdbcType="INTEGER" />
+    <result column="issue_num" property="issueNum" jdbcType="INTEGER" />
+    <result column="initial_push_up_num" property="initialPushUpNum" jdbcType="INTEGER" />
+    <result column="up_num" property="upNum" jdbcType="INTEGER" />
+    <result column="down_num" property="downNum" jdbcType="INTEGER" />
+    <result column="final_up_num" property="finalUpNum" jdbcType="INTEGER" />
+    <result column="final_down_num" property="finalDownNum" jdbcType="INTEGER" />
+    <result column="book_order_num" property="bookOrderNum" jdbcType="INTEGER" />
+    <result column="pay_order_num" property="payOrderNum" jdbcType="INTEGER" />
+    <result column="room_night_num" property="roomNightNum" jdbcType="INTEGER" />
+    <result column="consult_num" property="consultNum" jdbcType="INTEGER" />
+    <result column="exp_land_num" property="expLandNum" jdbcType="INTEGER" />
+    <result column="non_pro_land_num" property="nonProLandNum" jdbcType="INTEGER" />
+    <result column="pro_land_num" property="proLandNum" jdbcType="INTEGER" />
+    <result column="stat_date" property="statDate" jdbcType="DATE" />
+    <result column="is_del" property="isDel" jdbcType="TINYINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="immediate_book_type_num" property="immediateBookTypeNum" jdbcType="INTEGER" />
+   <!--  <result column="push_issue_num" property="pushIssueNum" jdbcType="INTEGER" />
+    <result column="self_issue_num" property="selfIssueNum" jdbcType="INTEGER" />
+    <result column="initial_self_up_num" property="initialSelfUpNum" jdbcType="INTEGER" /> -->
+   
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, nation_code, province_code, city_code, total_up_num, lock_num, issue_num, initial_push_up_num, 
+    up_num, down_num, final_up_num, final_down_num, book_order_num, pay_order_num, room_night_num, 
+    consult_num, exp_land_num, non_pro_land_num, pro_land_num, stat_date, is_del, create_date,immediate_book_type_num
+  </sql>
+  
+  <!-- 统计城市累计上架房源量:截至查询日当天平台上已有的上架房源数量 -->
+  <select id="getTotalUpNum" resultType="int" >
+ 	SELECT
+		COUNT(t.id)
+	FROM
+	(
+		SELECT
+			t1.id
+		FROM
+			minsu_house_db.t_house_base_msg t1,
+			minsu_house_db.t_house_phy_msg t2
+		WHERE
+			t1.phy_fid = t2.fid
+		AND	t1.is_del = 0
+		AND t1.rent_way = 0
+		AND t1.house_status = 40
+		AND t2.is_del = 0
+		AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+		
+		UNION ALL
+		
+		SELECT
+			t3.id
+		FROM
+			minsu_house_db.t_house_base_msg t3,
+			minsu_house_db.t_house_room_msg t4,
+			minsu_house_db.t_house_phy_msg t5
+		WHERE
+			t3.fid = t4.house_base_fid
+		AND	t3.phy_fid = t5.fid
+		AND t3.is_del = 0
+		AND t3.rent_way = 1
+		AND t4.is_del = 0
+		AND t4.room_status = 40
+		AND t5.is_del = 0
+		AND t5.city_code = #{cityCode,jdbcType=VARCHAR}
+	) t
+  </select>
+  
+  <!-- 统计城市日不可租房源数量:查询日该城市不可出租房源的数量 -->
+  <select id="getLockNum" resultType="int" parameterType="map">
+ 	SELECT
+		COUNT(t.id)
+	FROM
+	(
+		SELECT
+			t3.id
+		FROM
+			minsu_house_db.t_house_phy_msg t1,
+			minsu_house_db.t_house_base_msg t2,
+			minsu_order_db.t_base_house_lock t3
+		WHERE
+			t1.fid = t2.phy_fid
+		AND t2.fid = t3.house_fid
+		AND t1.is_del = 0
+		AND t2.is_del = 0
+		AND t2.rent_way = 0
+		AND t3.is_del = 0
+		AND t3.rent_way = 0
+		AND t3.lock_type = 2
+		AND t1.city_code = #{cityCode,jdbcType=VARCHAR}
+		AND t3.lock_time = #{lockDate,jdbcType=VARCHAR}
+		
+		UNION ALL
+		
+		SELECT
+			t7.id
+		FROM
+			minsu_house_db.t_house_phy_msg t4,
+			minsu_house_db.t_house_base_msg t5,
+			minsu_house_db.t_house_room_msg t6,
+			minsu_order_db.t_base_house_lock t7
+		WHERE
+			t4.fid = t5.phy_fid
+		AND t5.fid = t6.house_base_fid
+		AND t6.fid = t7.room_fid
+		AND t4.is_del = 0
+		AND t5.is_del = 0
+		AND t5.rent_way = 1
+		AND t6.is_del = 0
+		AND t7.is_del = 0
+		AND t7.rent_way = 1
+		AND t7.lock_type = 2
+		AND t4.city_code = #{cityCode,jdbcType=VARCHAR}
+		AND t7.lock_time = #{lockDate,jdbcType=VARCHAR}
+	) t
+  </select>
+  
+  <!-- 统计城市房源日发布数量:查询日当天首次发布的房源数量 -->
+  <select id="getIssueNum" resultType="int" parameterType="map">
+ 	SELECT
+		COUNT(t.id)
+	FROM
+	(
+		SELECT
+			t1.id
+		FROM
+			minsu_house_db.t_house_base_msg t1
+		INNER JOIN minsu_house_db.t_house_phy_msg t2
+		INNER JOIN (
+			SELECT
+				t3.house_base_fid,
+				MIN(create_date) create_date
+			FROM
+				(
+					SELECT
+						house_base_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = 11
+					AND room_fid IS NULL
+				) t3
+			GROUP BY
+				t3.house_base_fid
+		) t4
+		WHERE
+			t1.phy_fid = t2.fid
+		AND	t1.fid = t4.house_base_fid
+		AND t1.is_del = 0
+		AND t1.rent_way = 0
+		AND t2.is_del = 0
+		AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+		AND t4.create_date &gt;= #{statDate,jdbcType=VARCHAR}
+		AND t4.create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+		
+		UNION ALL
+		
+		SELECT
+			t5.id
+		FROM
+			minsu_house_db.t_house_base_msg t5
+		INNER JOIN	minsu_house_db.t_house_room_msg t6
+		INNER JOIN	minsu_house_db.t_house_phy_msg t7
+		INNER JOIN (
+			SELECT
+				t8.room_fid,
+				MIN(create_date) create_date
+			FROM
+				(
+					SELECT
+						room_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = 11
+				) t8
+			GROUP BY
+				t8.room_fid
+		) t9
+		WHERE
+			t5.fid = t6.house_base_fid
+		AND	t5.phy_fid = t7.fid
+		AND	t6.fid = t9.room_fid
+		AND t5.is_del = 0
+		AND t5.rent_way = 1
+		AND t6.is_del = 0
+		AND t7.is_del = 0
+		AND t7.city_code = #{cityCode,jdbcType=VARCHAR}
+		AND t9.create_date &gt;= #{statDate,jdbcType=VARCHAR}
+		AND t9.create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+	) t
+  </select>
+  
+  <!-- 统计城市房源日上架数量:查询日当天首次上架的地推房源数量，整租数量按照套计算，合租数量按照间计算 -->
+  <select id="getInitPushUpNum" resultType="int" >
+ 	SELECT
+		COUNT(t.id)
+	FROM
+	(
+		SELECT
+			t1.id
+		FROM
+			minsu_house_db.t_house_base_msg t1
+		INNER JOIN minsu_house_db.t_house_phy_msg t2
+		INNER JOIN (
+			SELECT
+				t3.house_base_fid,
+				MIN(create_date) create_date
+			FROM
+				(
+					SELECT
+						house_base_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = 40
+					AND room_fid IS NULL
+				) t3
+			GROUP BY
+				t3.house_base_fid
+		) t4
+		WHERE
+			t1.phy_fid = t2.fid
+		AND	t1.fid = t4.house_base_fid
+		AND t1.is_del = 0
+		AND t1.rent_way = 0
+		AND t1.house_channel = 3
+		AND t2.is_del = 0
+		AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+		AND t4.create_date &gt;= #{statDate,jdbcType=VARCHAR}
+		AND t4.create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+		
+		UNION ALL
+		
+		SELECT
+			t5.id
+		FROM
+			minsu_house_db.t_house_base_msg t5
+		INNER JOIN	minsu_house_db.t_house_room_msg t6
+		INNER JOIN	minsu_house_db.t_house_phy_msg t7
+		INNER JOIN (
+			SELECT
+				t8.room_fid,
+				MIN(create_date) create_date
+			FROM
+				(
+					SELECT
+						room_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = 40
+				) t8
+			GROUP BY
+				t8.room_fid
+		) t9
+		WHERE
+			t5.fid = t6.house_base_fid
+		AND	t5.phy_fid = t7.fid
+		AND	t6.fid = t9.room_fid
+		AND t5.is_del = 0
+		AND t5.rent_way = 1
+		AND t5.house_channel = 3
+		AND t6.is_del = 0
+		AND t7.is_del = 0
+		AND t7.city_code = #{cityCode,jdbcType=VARCHAR}
+		AND t9.create_date &gt;= #{statDate,jdbcType=VARCHAR}
+		AND t9.create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+	) t
+  </select>
+  
+  <!-- 统计城市房源日上架数量:查询日当天上架过的房源(多次上架算一次)数量 -->
+  <select id="getUpNum" resultType="int" parameterType="map">
+ 	SELECT
+		COUNT(t.id)
+	FROM
+	(
+		SELECT
+			t1.id
+		FROM
+			minsu_house_db.t_house_base_msg t1
+		INNER JOIN minsu_house_db.t_house_phy_msg t2
+		INNER JOIN (
+			SELECT
+				t3.house_base_fid
+			FROM
+				(
+					SELECT
+						house_base_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = 40
+					AND create_date &gt;= #{statDate,jdbcType=VARCHAR}
+					AND create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+					AND room_fid IS NULL
+				) t3
+			GROUP BY
+				t3.house_base_fid
+		) t4
+		WHERE
+			t1.phy_fid = t2.fid
+		AND	t1.fid = t4.house_base_fid
+		AND t1.is_del = 0
+		AND t1.rent_way = 0
+		AND t2.is_del = 0
+		AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+		
+		UNION ALL
+		
+		SELECT
+			t5.id
+		FROM
+			minsu_house_db.t_house_base_msg t5
+		INNER JOIN	minsu_house_db.t_house_room_msg t6
+		INNER JOIN	minsu_house_db.t_house_phy_msg t7
+		INNER JOIN (
+			SELECT
+				t8.room_fid
+			FROM
+				(
+					SELECT
+						room_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = 40
+					AND create_date &gt;= #{statDate,jdbcType=VARCHAR}
+					AND create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+				) t8
+			GROUP BY
+				t8.room_fid
+		) t9
+		WHERE
+			t5.fid = t6.house_base_fid
+		AND	t5.phy_fid = t7.fid
+		AND	t6.fid = t9.room_fid
+		AND t5.is_del = 0
+		AND t5.rent_way = 1
+		AND t6.is_del = 0
+		AND t7.is_del = 0
+		AND t7.city_code = #{cityCode,jdbcType=VARCHAR}
+	) t
+  </select>
+  
+  <!-- 统计城市房源日上架数量:查询日当天下架过的房源(多次下架算一次)数量 -->
+  <select id="getDownNum" resultType="int" parameterType="map">
+ 	SELECT
+		COUNT(t.id)
+	FROM
+	(
+		SELECT
+			t1.id
+		FROM
+			minsu_house_db.t_house_base_msg t1
+		INNER JOIN minsu_house_db.t_house_phy_msg t2
+		INNER JOIN (
+			SELECT
+				t3.house_base_fid
+			FROM
+				(
+					SELECT
+						house_base_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = 41
+					AND create_date &gt;= #{statDate,jdbcType=VARCHAR}
+					AND create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+					AND room_fid IS NULL
+				) t3
+			GROUP BY
+				t3.house_base_fid
+		) t4
+		WHERE
+			t1.phy_fid = t2.fid
+		AND	t1.fid = t4.house_base_fid
+		AND t1.is_del = 0
+		AND t1.rent_way = 0
+		AND t2.is_del = 0
+		AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+		
+		UNION ALL
+		
+		SELECT
+			t5.id
+		FROM
+			minsu_house_db.t_house_base_msg t5
+		INNER JOIN	minsu_house_db.t_house_room_msg t6
+		INNER JOIN	minsu_house_db.t_house_phy_msg t7
+		INNER JOIN (
+			SELECT
+				t8.room_fid
+			FROM
+				(
+					SELECT
+						room_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = 41
+					AND create_date &gt;= #{statDate,jdbcType=VARCHAR}
+					AND create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+				) t8
+			GROUP BY
+				t8.room_fid
+		) t9
+		WHERE
+			t5.fid = t6.house_base_fid
+		AND	t5.phy_fid = t7.fid
+		AND	t6.fid = t9.room_fid
+		AND t5.is_del = 0
+		AND t5.rent_way = 1
+		AND t6.is_del = 0
+		AND t7.is_del = 0
+		AND t7.city_code = #{cityCode,jdbcType=VARCHAR}
+	) t
+  </select>
+  
+  <!-- 统计城市房源日上架数量:查询日当天最后操作为上架的房源数量 -->
+  <select id="getFinalUpNum" resultType="int" parameterType="map">
+ 	SELECT
+		COUNT(t.id)
+	FROM
+	(
+		SELECT
+			t1.id
+		FROM
+			minsu_house_db.t_house_base_msg t1
+		INNER JOIN minsu_house_db.t_house_phy_msg t2
+		INNER JOIN (
+			SELECT
+				t5.house_base_fid
+			FROM
+				(
+					SELECT
+						t3.house_base_fid,
+						MAX(create_date) create_date
+					FROM
+						(
+							SELECT
+								house_base_fid,
+								create_date
+							FROM
+								minsu_house_db.t_house_operate_log
+							WHERE create_date &gt;= #{statDate,jdbcType=VARCHAR}
+							AND create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+							AND room_fid IS NULL
+						) t3
+					GROUP BY
+						t3.house_base_fid
+				) t4,
+				(
+					SELECT
+						house_base_fid,
+						create_date,
+						to_status
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE create_date &gt;= #{statDate,jdbcType=VARCHAR}
+					AND create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+					AND room_fid IS NULL
+				) t5
+			WHERE
+				t4.house_base_fid = t5.house_base_fid
+			AND t4.create_date = t5.create_date
+			AND t5.to_status = 40
+		) t6
+		WHERE
+			t1.phy_fid = t2.fid
+		AND	t1.fid = t6.house_base_fid
+		AND t1.is_del = 0
+		AND t1.rent_way = 0
+		AND t2.is_del = 0
+		AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+		
+		UNION ALL
+		
+		SELECT
+			t7.id
+		FROM
+			minsu_house_db.t_house_base_msg t7
+		INNER JOIN	minsu_house_db.t_house_room_msg t8
+		INNER JOIN	minsu_house_db.t_house_phy_msg t9
+		INNER JOIN (
+			SELECT
+				t12.room_fid
+			FROM
+				(
+					SELECT
+						t10.room_fid,
+						MAX(create_date) create_date
+					FROM
+						(
+							SELECT
+								room_fid,
+								create_date
+							FROM
+								minsu_house_db.t_house_operate_log
+							WHERE create_date &gt;= #{statDate,jdbcType=VARCHAR}
+							AND create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+						) t10
+					GROUP BY
+						t10.room_fid
+				) t11,
+				(
+					SELECT
+						room_fid,
+						create_date,
+						to_status
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE create_date &gt;= #{statDate,jdbcType=VARCHAR}
+					AND create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+				) t12
+			WHERE
+				t11.room_fid = t12.room_fid
+			AND t11.create_date = t12.create_date
+			AND t12.to_status = 40
+		) t13
+		WHERE
+			t7.fid = t8.house_base_fid
+		AND	t7.phy_fid = t9.fid
+		AND	t8.fid = t13.room_fid
+		AND t7.is_del = 0
+		AND t7.rent_way = 1
+		AND t8.is_del = 0
+		AND t9.is_del = 0
+		AND t9.city_code = #{cityCode,jdbcType=VARCHAR}
+	) t
+  </select>
+  
+  <!-- 统计城市房源日下架数量:查询日当天最后操作为下架的房源数量 -->
+  <select id="getFinalDownNum" resultType="int" parameterType="map">
+ 	SELECT
+		COUNT(t.id)
+	FROM
+	(
+		SELECT
+			t1.id
+		FROM
+			minsu_house_db.t_house_base_msg t1
+		INNER JOIN minsu_house_db.t_house_phy_msg t2
+		INNER JOIN (
+			SELECT
+				t5.house_base_fid
+			FROM
+				(
+					SELECT
+						t3.house_base_fid,
+						MAX(create_date) create_date
+					FROM
+						(
+							SELECT
+								house_base_fid,
+								create_date
+							FROM
+								minsu_house_db.t_house_operate_log
+							WHERE create_date &gt;= #{statDate,jdbcType=VARCHAR}
+							AND create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+							AND room_fid IS NULL
+						) t3
+					GROUP BY
+						t3.house_base_fid
+				) t4,
+				(
+					SELECT
+						house_base_fid,
+						create_date,
+						to_status
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE create_date &gt;= #{statDate,jdbcType=VARCHAR}
+					AND create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+					AND room_fid IS NULL
+				) t5
+			WHERE
+				t4.house_base_fid = t5.house_base_fid
+			AND t4.create_date = t5.create_date
+			AND t5.to_status = 41
+		) t6
+		WHERE
+			t1.phy_fid = t2.fid
+		AND	t1.fid = t6.house_base_fid
+		AND t1.is_del = 0
+		AND t1.rent_way = 0
+		AND t2.is_del = 0
+		AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+		
+		UNION ALL
+		
+		SELECT
+			t7.id
+		FROM
+			minsu_house_db.t_house_base_msg t7
+		INNER JOIN	minsu_house_db.t_house_room_msg t8
+		INNER JOIN	minsu_house_db.t_house_phy_msg t9
+		INNER JOIN (
+			SELECT
+				t12.room_fid
+			FROM
+				(
+					SELECT
+						t10.room_fid,
+						MAX(create_date) create_date
+					FROM
+						(
+							SELECT
+								room_fid,
+								create_date
+							FROM
+								minsu_house_db.t_house_operate_log
+							WHERE create_date &gt;= #{statDate,jdbcType=VARCHAR}
+							AND create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+						) t10
+					GROUP BY
+						t10.room_fid
+				) t11,
+				(
+					SELECT
+						room_fid,
+						create_date,
+						to_status
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE create_date &gt;= #{statDate,jdbcType=VARCHAR}
+					AND create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+				) t12
+			WHERE
+				t11.room_fid = t12.room_fid
+			AND t11.create_date = t12.create_date
+			AND t12.to_status = 41
+		) t13
+		WHERE
+			t7.fid = t8.house_base_fid
+		AND	t7.phy_fid = t9.fid
+		AND	t8.fid = t13.room_fid
+		AND t7.is_del = 0
+		AND t7.rent_way = 1
+		AND t8.is_del = 0
+		AND t9.is_del = 0
+		AND t9.city_code = #{cityCode,jdbcType=VARCHAR}
+	) t
+  </select>
+  
+  <!-- 统计城市日预订订单数量:查询日当天所有生成订单的数量 -->
+  <select id="getBookOrderNum" resultType="int" >
+ 	SELECT
+		COUNT(id)
+	FROM
+		minsu_order_db.t_order t
+	WHERE
+		t.is_del = 0
+	AND t.city_code = #{cityCode,jdbcType=VARCHAR}
+	AND t.create_time &gt;= #{statDate,jdbcType=VARCHAR}
+	AND t.create_time &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+  </select>
+  
+  <!-- 统计城市日支付订单数量:查询日当天已支付订单的数量 -->
+  <select id="getPayOrderNum" resultType="int" parameterType="map">
+ 	SELECT
+		COUNT(id)
+	FROM
+		minsu_order_db.t_order t
+	WHERE
+		t.is_del = 0
+	AND t.pay_status = 1
+	AND t.city_code = #{cityCode,jdbcType=VARCHAR}
+	AND t.create_time &gt;= #{statDate,jdbcType=VARCHAR}
+	AND t.create_time &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+  </select>
+  
+  <!-- 统计城市日间夜数量:查询日当天已出租的天数 -->
+  <select id="getRoomNightNum" resultType="int" parameterType="map">
+ 	SELECT
+		COUNT(t2.id)
+	FROM
+		minsu_order_db.t_order t1, 
+		minsu_order_db.t_base_house_lock t2
+	WHERE
+		t1.order_sn = t2.order_sn
+	AND	t1.is_del = 0
+	AND t2.is_del = 0
+	AND t2.lock_type = 1
+	AND t1.city_code = #{cityCode,jdbcType=VARCHAR}
+	AND t2.lock_time &gt;= #{statDate,jdbcType=VARCHAR}
+	AND t2.lock_time &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+  </select>
+  
+  <!-- 统计城市日咨询量:同一天,同一房东,同一房客,同一房源(间)多次咨询算一条 -->
+  <select id="getConsultNum" resultType="int" parameterType="map">
+  	SELECT
+		COUNT(t.fid)
+	FROM
+	(
+	 	SELECT DISTINCT
+			t1.fid
+		FROM
+			minsu_message_db.t_msg_house t1,
+			minsu_message_db.t_msg_base t2,
+			minsu_house_db.t_house_base_msg t3,
+			minsu_house_db.t_house_phy_msg t4
+		WHERE
+			t1.fid = t2.msg_house_fid
+		AND t2.house_fid = t3.fid
+		AND t3.phy_fid = t4.fid
+		AND t1.is_del = 0
+		AND t1.rent_way = 0
+		AND t2.is_del = 0
+		AND t2.rent_way = 0
+		AND t3.is_del = 0
+		AND t3.rent_way = 0
+		AND t4.is_del = 0
+		AND t2.create_time &gt;= #{statDate,jdbcType=VARCHAR}
+		AND t2.create_time &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+		AND t4.city_code = #{cityCode,jdbcType=VARCHAR}
+		
+		UNION ALL
+		
+		SELECT DISTINCT
+			t5.fid
+		FROM
+			minsu_message_db.t_msg_house t5,
+			minsu_message_db.t_msg_base t6,
+			minsu_house_db.t_house_room_msg t7,
+			minsu_house_db.t_house_base_msg t8,
+			minsu_house_db.t_house_phy_msg t9
+		WHERE
+			t5.fid = t6.msg_house_fid
+		AND t6.house_fid = t7.fid
+		AND t7.house_base_fid = t8.fid
+		AND t8.phy_fid = t9.fid
+		AND t5.is_del = 0
+		AND t5.rent_way = 1
+		AND t6.is_del = 0
+		AND t6.rent_way = 1
+		AND t7.is_del = 0
+		AND t8.is_del = 0
+		AND t8.rent_way = 1
+		AND t9.is_del = 0
+		AND t6.create_time &gt;= #{statDate,jdbcType=VARCHAR}
+		AND t6.create_time &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+		AND t9.city_code = #{cityCode,jdbcType=VARCHAR}
+	) t
+  </select>
+  
+  <!-- 统计城市日体验型房东数量:只拥有1套上架状态房源的房东 -->
+  <select id="getExpLandNum" resultType="int" >
+  	SELECT
+		COUNT(t.landlord_uid)
+	FROM
+		(
+			SELECT
+				t6.landlord_uid,
+				COUNT(t6.fid) house_num
+			FROM
+				(
+					SELECT
+						t1.fid,
+						t1.landlord_uid
+					FROM
+						minsu_house_db.t_house_base_msg t1,
+						minsu_house_db.t_house_phy_msg t2
+					WHERE
+						t1.phy_fid = t2.fid
+					AND t1.is_del = 0
+					AND t1.rent_way = 0
+					AND t1.house_status = 40
+					AND t2.is_del = 0
+					AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+					
+					UNION ALL
+					
+					SELECT DISTINCT
+						t3.fid,
+						t3.landlord_uid
+					FROM
+						minsu_house_db.t_house_base_msg t3,
+						minsu_house_db.t_house_room_msg t4,
+						minsu_house_db.t_house_phy_msg t5
+					WHERE
+						t3.fid = t4.house_base_fid
+					AND t3.phy_fid = t5.fid
+					AND t3.is_del = 0
+					AND t3.rent_way = 1
+					AND t4.is_del = 0
+					AND t4.room_status = 40
+					AND t5.is_del = 0
+					AND t5.city_code = #{cityCode,jdbcType=VARCHAR}
+				) t6
+			GROUP BY
+				t6.landlord_uid
+			HAVING house_num = 1
+		) t
+  </select>
+  
+  <!-- 统计城市日非专业型房东数量:拥有2套至9套上架状态房源的房东 -->
+  <select id="getNonProLandNum" resultType="int" >
+  	SELECT
+		COUNT(t.landlord_uid)
+	FROM
+		(
+			SELECT
+				t6.landlord_uid,
+				COUNT(t6.fid) house_num
+			FROM
+				(
+					SELECT
+						t1.fid,
+						t1.landlord_uid
+					FROM
+						minsu_house_db.t_house_base_msg t1,
+						minsu_house_db.t_house_phy_msg t2
+					WHERE
+						t1.phy_fid = t2.fid
+					AND t1.is_del = 0
+					AND t1.rent_way = 0
+					AND t1.house_status = 40
+					AND t2.is_del = 0
+					AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+					
+					UNION ALL
+					
+					SELECT DISTINCT
+						t3.fid,
+						t3.landlord_uid
+					FROM
+						minsu_house_db.t_house_base_msg t3,
+						minsu_house_db.t_house_room_msg t4,
+						minsu_house_db.t_house_phy_msg t5
+					WHERE
+						t3.fid = t4.house_base_fid
+					AND t3.phy_fid = t5.fid
+					AND t3.is_del = 0
+					AND t3.rent_way = 1
+					AND t4.is_del = 0
+					AND t4.room_status = 40
+					AND t5.is_del = 0
+					AND t5.city_code = #{cityCode,jdbcType=VARCHAR}
+				) t6
+			GROUP BY
+				t6.landlord_uid
+			HAVING house_num BETWEEN 2 AND 9
+		) t
+  </select>
+  
+  <!-- 统计城市日专业型房东数量:拥有大于等于10套上架状态房源的房东 -->
+  <select id="getProLandNum" resultType="int" >
+  	SELECT
+		COUNT(t.landlord_uid)
+	FROM
+		(
+			SELECT
+				t6.landlord_uid,
+				COUNT(t6.fid) house_num
+			FROM
+				(
+					SELECT
+						t1.fid,
+						t1.landlord_uid
+					FROM
+						minsu_house_db.t_house_base_msg t1,
+						minsu_house_db.t_house_phy_msg t2
+					WHERE
+						t1.phy_fid = t2.fid
+					AND t1.is_del = 0
+					AND t1.rent_way = 0
+					AND t1.house_status = 40
+					AND t2.is_del = 0
+					AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+					
+					UNION ALL
+					
+					SELECT DISTINCT
+						t3.fid,
+						t3.landlord_uid
+					FROM
+						minsu_house_db.t_house_base_msg t3,
+						minsu_house_db.t_house_room_msg t4,
+						minsu_house_db.t_house_phy_msg t5
+					WHERE
+						t3.fid = t4.house_base_fid
+					AND t3.phy_fid = t5.fid
+					AND t3.is_del = 0
+					AND t3.rent_way = 1
+					AND t4.is_del = 0
+					AND t4.room_status = 40
+					AND t5.is_del = 0
+					AND t5.city_code = #{cityCode,jdbcType=VARCHAR}
+				) t6
+			GROUP BY
+				t6.landlord_uid
+			HAVING house_num >= 10
+		) t
+  </select>
+  
+  <insert id="insertCityDailyMsg" parameterType="com.ziroom.minsu.report.board.entity.CityDailyMsgEntity" >
+    insert ignore into t_city_daily_msg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="nationCode != null" >
+        nation_code,
+      </if>
+      <if test="provinceCode != null" >
+        province_code,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="totalUpNum != null" >
+        total_up_num,
+      </if>
+      <if test="lockNum != null" >
+        lock_num,
+      </if>
+      <if test="issueNum != null" >
+        issue_num,
+      </if>
+      <if test="initialPushUpNum != null" >
+        initial_push_up_num,
+      </if>
+      <if test="upNum != null" >
+        up_num,
+      </if>
+      <if test="downNum != null" >
+        down_num,
+      </if>
+      <if test="finalUpNum != null" >
+        final_up_num,
+      </if>
+      <if test="finalDownNum != null" >
+        final_down_num,
+      </if>
+      <if test="bookOrderNum != null" >
+        book_order_num,
+      </if>
+      <if test="payOrderNum != null" >
+        pay_order_num,
+      </if>
+      <if test="roomNightNum != null" >
+        room_night_num,
+      </if>
+      <if test="consultNum != null" >
+        consult_num,
+      </if>
+      <if test="expLandNum != null" >
+        exp_land_num,
+      </if>
+      <if test="nonProLandNum != null" >
+        non_pro_land_num,
+      </if>
+      <if test="proLandNum != null" >
+        pro_land_num,
+      </if>
+    <!--   <if test="pushIssueNum != null" >
+        push_issue_num,
+      </if>
+      <if test="selfIssueNum != null" >
+        self_issue_num,
+      </if>
+      <if test="initialSelfUpNum != null" >
+        initial_self_up_num,
+      </if> -->
+      <if test="immediateBookTypeNum != null" >
+        immediate_book_type_num,
+      </if>
+      <if test="statDate != null" >
+        stat_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="nationCode != null" >
+        #{nationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null" >
+        #{provinceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="totalUpNum != null" >
+        #{totalUpNum,jdbcType=INTEGER},
+      </if>
+      <if test="lockNum != null" >
+        #{lockNum,jdbcType=INTEGER},
+      </if>
+      <if test="issueNum != null" >
+        #{issueNum,jdbcType=INTEGER},
+      </if>
+      <if test="initialPushUpNum != null" >
+        #{initialPushUpNum,jdbcType=INTEGER},
+      </if>
+      <if test="upNum != null" >
+        #{upNum,jdbcType=INTEGER},
+      </if>
+      <if test="downNum != null" >
+        #{downNum,jdbcType=INTEGER},
+      </if>
+      <if test="finalUpNum != null" >
+        #{finalUpNum,jdbcType=INTEGER},
+      </if>
+      <if test="finalDownNum != null" >
+        #{finalDownNum,jdbcType=INTEGER},
+      </if>
+      <if test="bookOrderNum != null" >
+        #{bookOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="payOrderNum != null" >
+        #{payOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="roomNightNum != null" >
+        #{roomNightNum,jdbcType=INTEGER},
+      </if>
+      <if test="consultNum != null" >
+        #{consultNum,jdbcType=INTEGER},
+      </if>
+      <if test="expLandNum != null" >
+        #{expLandNum,jdbcType=INTEGER},
+      </if>
+      <if test="nonProLandNum != null" >
+        #{nonProLandNum,jdbcType=INTEGER},
+      </if>
+      <if test="proLandNum != null" >
+        #{proLandNum,jdbcType=INTEGER},
+      </if>
+     <!--  <if test="pushIssueNum != null" >
+        #{pushIssueNum,jdbcType=INTEGER},
+      </if>
+      <if test="selfIssueNum != null" >
+        #{selfIssueNum,jdbcType=INTEGER},
+      </if>
+      <if test="initialSelfUpNum != null" >
+        #{initialSelfUpNum,jdbcType=INTEGER},
+      </if> -->
+       <if test="immediateBookTypeNum != null" >
+        #{immediateBookTypeNum,jdbcType=INTEGER},
+      </if>
+      <if test="statDate != null" >
+        #{statDate,jdbcType=DATE},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 条件查询日房源数量 -->
+  <select id="getHouseDayNumByCondition" parameterType="map"  resultType="int">
+  	SELECT
+		COUNT(t.id)
+	FROM
+	(
+		SELECT
+			t1.id
+		FROM
+			minsu_house_db.t_house_base_msg t1
+		INNER JOIN minsu_house_db.t_house_phy_msg t2
+		INNER JOIN (
+			SELECT
+				t3.house_base_fid,
+				MIN(create_date) create_date
+			FROM
+				(
+					SELECT
+						house_base_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status =  #{toStatus,jdbcType=INTEGER}
+					AND room_fid IS NULL
+				) t3
+			GROUP BY
+				t3.house_base_fid
+		) t4
+		WHERE
+			t1.phy_fid = t2.fid
+		AND	t1.fid = t4.house_base_fid
+		AND t1.rent_way = 0
+		AND t1.house_channel = #{houseChannel,jdbcType=INTEGER}
+		AND t2.city_code = #{cityCode,jdbcType=VARCHAR}
+		AND t4.create_date &gt;= #{statDate,jdbcType=VARCHAR}
+		AND t4.create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+		
+		UNION ALL
+		
+		SELECT
+			t5.id
+		FROM
+			minsu_house_db.t_house_base_msg t5
+		INNER JOIN	minsu_house_db.t_house_room_msg t6
+		INNER JOIN	minsu_house_db.t_house_phy_msg t7
+		INNER JOIN (
+			SELECT
+				t8.room_fid,
+				MIN(create_date) create_date
+			FROM
+				(
+					SELECT
+						room_fid,
+						create_date
+					FROM
+						minsu_house_db.t_house_operate_log
+					WHERE
+						to_status = #{toStatus,jdbcType=INTEGER}
+				) t8
+			GROUP BY
+				t8.room_fid
+		) t9
+		WHERE
+			t5.fid = t6.house_base_fid
+		AND	t5.phy_fid = t7.fid
+		AND	t6.fid = t9.room_fid
+		AND t5.rent_way = 1
+		AND t5.house_channel = #{houseChannel,jdbcType=INTEGER}
+		AND t7.city_code = #{cityCode,jdbcType=VARCHAR}
+		AND t9.create_date &gt;= #{statDate,jdbcType=VARCHAR}
+		AND t9.create_date &lt; DATE_ADD(#{statDate,jdbcType=VARCHAR},INTERVAL 1 DAY)
+	) t
+  </select>
+  
+  
+  <!-- 查询立即预定的房源数 -->
+  <select id="getImmediateBookTypeNumByCityCode" parameterType="map"  resultType="int">
+		SELECT SUM(num) FROM (SELECT COUNT(1) AS num FROM minsu_house_db.`t_house_base_msg` base1
+		INNER JOIN minsu_house_db.`t_house_phy_msg` phy1
+		ON base1.phy_fid = phy1.fid
+		INNER JOIN minsu_house_db.`t_house_base_ext` ext1
+		ON ext1.`house_base_fid`=base1.`fid`
+		AND ext1.order_type=1
+		AND base1.is_del = 0
+		AND base1.rent_way = 0
+		AND base1.house_status = 40
+		AND phy1.is_del = 0
+		AND phy1.city_code = #{cityCode,jdbcType=VARCHAR}
+		UNION
+		SELECT COUNT(1) AS num FROM `minsu_house_db`.`t_house_room_msg`  ro 
+		INNER JOIN `minsu_house_db`.`t_house_room_ext`  ex  ON ro.`fid` = ex.`room_fid`
+		INNER JOIN `minsu_house_db`.`t_house_base_msg` ba ON ( ba.`fid` = ro.`house_base_fid` AND ba.`rent_way` = 1 AND ro.`room_status` = 40)
+		INNER JOIN minsu_house_db.`t_house_phy_msg` phy ON phy.`fid` = ba.`phy_fid`
+		WHERE  1=1 
+		   AND phy.is_del = 0
+		   AND ro.`is_del` = 0 
+		   AND ba.`is_del` = 0
+		   AND  ex.`order_type` = 1
+	       AND phy.city_code = #{cityCode,jdbcType=VARCHAR} ) AS tem
+  </select>
+</mapper>

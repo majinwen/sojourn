@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.orderFollowDao">
+
+    <select id="sumOrderDataStatistics" resultType="com.ziroom.minsu.report.order.vo.OrderFollowVo" parameterType="com.ziroom.minsu.report.order.dto.OrderDataStatisticsRequest">
+        SELECT '' sort, '总计' city,
+        sum(commitPeopleNum) 'commitPeopleNum', sum(commitSucPeopleNum) 'commitSucPeopleNum', sum(commitOrderNum) 'commitOrderNum',
+        sum(payOrderSucNum) 'payOrderSucNum', sum(payOrderSucSelfNum) 'payOrderSucSelfNum', sum(payOrderSucSelfOneNum) 'payOrderSucSelfOneNum'
+        FROM (<include refid="queryOrderDataStatistics"/>) m
+    </select>
+
+    <select id="orderDataStatistics" resultType="com.ziroom.minsu.report.order.vo.OrderFollowVo" parameterType="map">
+        <include refid="queryOrderDataStatistics"/>
+    </select>
+
+    <sql id="queryOrderDataStatistics">
+        SELECT
+        sort, city, commitPeopleNum, commitSucPeopleNum, commitOrderNum, payOrderSucNum, payOrderSucSelfNum, payOrderSucSelfOneNum
+        FROM
+        ( SELECT
+
+        t.id 'sort',
+
+        t.show_name 'city',
+
+        (SELECT COUNT(DISTINCT(user_uid)) FROM minsu_order_db.t_order d WHERE city_code=t.code
+        <include refid="queryCondition"/>
+        ) 'commitPeopleNum',
+
+        (SELECT COUNT(DISTINCT(user_uid)) FROM minsu_order_db.t_order d WHERE pay_status=1 AND city_code=t.code
+        <include refid="queryCondition"/>
+        ) 'commitSucPeopleNum',
+
+        (SELECT COUNT(ID) FROM minsu_order_db.t_order d WHERE city_code=t.code
+        <include refid="queryCondition"/>
+        ) 'commitOrderNum',
+
+        (SELECT COUNT(ID) FROM minsu_order_db.t_order d WHERE pay_status=1 AND city_code=t.code
+        <include refid="queryCondition"/>
+        ) 'payOrderSucNum',
+
+        (SELECT COUNT(d.id) FROM minsu_order_db.t_order d
+        LEFT JOIN minsu_order_db.t_order_follow b ON d.order_sn=b.order_sn
+        INNER JOIN minsu_order_db.t_order_pay c ON d.order_sn=c.order_sn
+        WHERE (b.create_time IS NULL OR b.create_time>c.create_time) AND d.city_code=t.code
+        <include refid="queryCondition"/>
+        ) 'payOrderSucSelfNum',
+
+        (SELECT COUNT(d.id) FROM
+        (SELECT a.user_uid, a.start_time, a.end_time FROM minsu_order_db.t_order a
+        GROUP BY a.user_uid, a.start_time, a.end_time
+        HAVING COUNT(user_uid)=1
+        ) c, minsu_order_db.t_order d
+        LEFT JOIN minsu_order_db.t_order_follow e ON d.order_sn=e.order_sn
+        INNER JOIN minsu_order_db.t_order_pay f ON d.order_sn=f.order_sn
+        WHERE c.user_uid=d.user_uid AND c.start_time=d.start_time AND c.end_time=d.end_time
+        AND (e.create_time IS NULL OR e.create_time>f.create_time) AND d.city_code=t.code
+        <include refid="queryCondition"/>
+        ) 'payOrderSucSelfOneNum'
+
+        FROM minsu_base_db.t_conf_city t
+
+        WHERE LEVEL=3
+        <if test="nation != null and nation != '' ">
+            AND t.pcode = #{nation,jdbcType=VARCHAR}
+        </if>
+        <if test="city != null and city != '' ">
+            AND t.code = #{city,jdbcType=VARCHAR}
+        </if>
+        ORDER BY sort
+        ) t
+        HAVING (commitPeopleNum + commitSucPeopleNum + commitOrderNum + payOrderSucNum + payOrderSucSelfNum + payOrderSucSelfOneNum) >= 1
+    </sql>
+
+    <sql id="queryCondition">
+        <if test="startTime != null and startTime != '' ">
+            AND d.create_time <![CDATA[ >= ]]> #{startTime,jdbcType=VARCHAR}
+        </if>
+        <if test="endTime != null and endTime != '' ">
+            AND d.create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+
+    <select id="followOrderStatusNum" resultType="com.ziroom.minsu.report.order.vo.OrderFollowNumVo" parameterType="map">
+        SELECT order_status orderStatus, COUNT(id) num FROM
+        (
+        SELECT a.* FROM minsu_order_db.t_order_follow a, minsu_order_db.t_order b
+        WHERE a.order_sn=b.order_sn
+        <if test="nation != null and nation != '' ">
+            AND b.nation_code = #{nation,jdbcType=VARCHAR}
+        </if>
+        <if test="city != null and city != '' ">
+            AND b.city_code = #{city,jdbcType=VARCHAR}
+        </if>
+        <if test="startTime != null and startTime != '' ">
+            AND b.create_time <![CDATA[ >= ]]> #{startTime,jdbcType=VARCHAR}
+        </if>
+        <if test="endTime != null and endTime != '' ">
+            AND b.create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+        </if>
+        ) t
+        GROUP BY order_status
+        ORDER BY order_status
+    </select>
+
+
+
+
+    <select id="getOrderFollowQuery" resultType="com.ziroom.minsu.report.order.vo.OrderFollowQueryVo" parameterType="com.ziroom.minsu.report.order.dto.OrderFollowQueryRequest">
+        SELECT a.order_sn orderSn, a.nation_code nationCode,a.city_code cityCode, a.user_name userName, a.user_tel userTel, a.landlord_name landlordName, a.landlord_tel landlordTel,
+        g.emp_push_name empPushName, g.emp_guard_name empGuardName,
+        a.create_time createTime, a.start_time startTime, a.end_time endTime, a.pay_status payStatus, (e.pay_money + e.coupon_money) orderMoney, e.real_money realMoney,
+        a.order_status orderStatus, b.order_status followOrderStatus,
+        (SELECT GROUP_CONCAT(create_name) FROM minsu_order_db.t_order_follow_log WHERE order_sn=a.order_sn ORDER BY id) followPeople
+        FROM minsu_order_db.t_order a
+        INNER JOIN minsu_order_db.t_order_follow b ON a.order_sn=b.order_sn
+<!--         LEFT JOIN minsu_base_db.t_conf_city c ON a.nation_code=c.code
+        LEFT JOIN minsu_base_db.t_conf_city d ON a.city_code=d.code -->
+        LEFT JOIN minsu_order_db.t_order_money e ON a.order_sn = e.order_sn
+        INNER JOIN minsu_order_db.t_order_house_snapshot f ON a.order_sn=f.order_sn
+        LEFT JOIN minsu_house_db.t_house_guard_rel g ON f.house_fid=g.house_fid
+
+        <where>
+        <if test="orderSn != null and orderSn != '' ">
+            AND a.order_sn = #{orderSn,jdbcType=VARCHAR}
+        </if>
+        <if test="houseName != null and houseName != '' ">
+            AND f.house_name LIKE CONCAT(#{houseName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="cityCode != null and cityCode != '' ">
+            AND a.city_code = #{cityCode,jdbcType=VARCHAR}
+        </if>
+        <if test="userName != null and userName != '' ">
+            AND a.user_name = #{userName,jdbcType=VARCHAR}
+        </if>
+        <if test="userTel != null and userTel != '' ">
+            AND a.user_tel = #{userTel,jdbcType=VARCHAR}
+        </if>
+        <if test="orderStatus != null and orderStatus != '' ">
+            AND a.order_status = #{orderStatus,jdbcType=INTEGER}
+        </if>
+        <if test="payStatus != null">
+            AND a.pay_status = #{payStatus,jdbcType=INTEGER}
+        </if>
+        <if test="createStartTime != null and createStartTime != '' ">
+            AND a.create_time >= #{createStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="createEndTime != null and createEndTime != '' ">
+            AND a.create_time <![CDATA[ <= ]]> #{createEndTime,jdbcType=VARCHAR}
+        </if>
+        <if test="checkInStartTime != null and checkInStartTime != '' ">
+            AND a.start_time >= #{checkInStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="checkInEndTime != null and checkInEndTime != '' ">
+            AND a.start_time <![CDATA[ <= ]]> #{checkInEndTime,jdbcType=VARCHAR}
+        </if>
+        <if test="checkOutStartTime != null and checkOutStartTime != '' ">
+            AND a.end_time >= #{checkOutStartTime,jdbcType=VARCHAR}
+        </if>
+        <if test="checkOutEndTime != null and checkOutEndTime != '' ">
+            AND a.end_time <![CDATA[ <= ]]> #{checkOutEndTime,jdbcType=VARCHAR}
+        </if>
+
+        <if test="empPushName != null and empPushName != '' ">
+            AND g.emp_push_name = #{empPushName,jdbcType=VARCHAR}
+        </if>
+        <if test="empGuardName != null and empGuardName != '' ">
+            AND g.emp_guard_name = #{empGuardName,jdbcType=VARCHAR}
+        </if>
+        </where>
+
+    </select>
+    
+    <!-- sql优化 -->
+    <select id="orderDataStatisticsNew" resultType="com.ziroom.minsu.report.order.vo.OrderFollowVo" parameterType="map">
+    	SELECT t.`show_name` city,temp_0.commitPeopleNum,temp_0.commitSucPeopleNum,temp_0.commitOrderNum,temp_0.payOrderSucNum,temp_0.payOrderSucSelfNum,IFNULL(temp_1.payOrderSucSelfOneNum,0) payOrderSucSelfOneNum FROM 
+		(SELECT torder.city_code,COUNT(DISTINCT(torder.user_uid)) commitPeopleNum,COUNT(DISTINCT (IF(torder.pay_status=1,torder.user_uid,NULL))) commitSucPeopleNum,
+		COUNT(DISTINCT(torder.id)) commitOrderNum,COUNT(DISTINCT(IF(torder.pay_status=1,torder.`id`,NULL))) payOrderSucNum,
+		COUNT(DISTINCT (IF((tof.id IS NULL OR tof.`create_time`>top.`create_time`) AND torder.`pay_status`=1,torder.`id`,NULL))) payOrderSucSelfNum
+		FROM minsu_order_db.t_order torder
+		LEFT JOIN minsu_order_db.t_order_follow tof ON torder.`order_sn`=tof.`order_sn`
+		LEFT JOIN minsu_order_db.t_order_pay top ON torder.`order_sn`=top.`order_sn`
+		WHERE torder.city_code !=''
+		<if test="startTime != null and startTime != '' ">
+            AND torder.create_time <![CDATA[ >= ]]> #{startTime,jdbcType=VARCHAR}
+        </if>
+        <if test="endTime != null and endTime != '' ">
+            AND torder.create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+        </if>
+		GROUP BY torder.city_code) temp_0
+		LEFT JOIN 
+		(SELECT d.city_code,COUNT(DISTINCT d.id) payOrderSucSelfOneNum FROM minsu_order_db.t_order d
+		LEFT JOIN 
+		(SELECT a.user_uid,MIN(a.create_time) createDate FROM minsu_order_db.t_order a
+		GROUP BY a.user_uid) temp_o
+		ON d.user_uid=temp_o.user_uid
+		LEFT JOIN minsu_order_db.t_order_follow e ON d.order_sn=e.order_sn
+		LEFT JOIN minsu_order_db.t_order_pay f ON d.order_sn=f.order_sn
+		WHERE temp_o.createDate=d.create_time AND (e.create_time IS NULL OR e.create_time>f.create_time) AND d.city_code!='' AND d.pay_status=1
+		<if test="startTime != null and startTime != '' ">
+            AND d.create_time <![CDATA[ >= ]]> #{startTime,jdbcType=VARCHAR}
+        </if>
+        <if test="endTime != null and endTime != '' ">
+            AND d.create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+        </if>
+		GROUP BY d.city_code) temp_1 ON temp_0.city_code=temp_1.city_code
+		LEFT JOIN minsu_base_db.t_conf_city t ON t.code=temp_0.city_code
+		<where>
+			<if test="city != null and city != '' ">
+            	AND temp_0.city_code = #{city,jdbcType=VARCHAR}
+        	</if>
+		</where>
+    </select>
+    
+    <!-- sql优化 -->
+    <select id="sumOrderDataStatisticsNew" resultType="com.ziroom.minsu.report.order.vo.OrderFollowVo" parameterType="com.ziroom.minsu.report.order.dto.OrderDataStatisticsRequest">
+    	SELECT
+		SUM(temp.commitPeopleNum) commitPeopleNum,
+		SUM(temp.commitSucPeopleNum) commitSucPeopleNum,
+		SUM(temp.commitOrderNum) commitOrderNum,
+		SUM(temp.payOrderSucNum) payOrderSucNum,
+		SUM(temp.payOrderSucSelfNum) payOrderSucSelfNum,
+		SUM(temp.payOrderSucSelfOneNum) payOrderSucSelfOneNum
+		FROM (SELECT t.`show_name`,temp_0.commitPeopleNum,temp_0.commitSucPeopleNum,temp_0.commitOrderNum,temp_0.payOrderSucNum,temp_0.payOrderSucSelfNum,IFNULL(temp_1.payOrderSucSelfOneNum,0) payOrderSucSelfOneNum  FROM 
+		(SELECT torder.city_code,COUNT(DISTINCT(torder.user_uid)) commitPeopleNum,COUNT(DISTINCT (IF(torder.pay_status=1,torder.user_uid,NULL))) commitSucPeopleNum,
+		COUNT(DISTINCT(torder.id)) commitOrderNum,COUNT(DISTINCT(IF(torder.pay_status=1,torder.`id`,NULL)))payOrderSucNum,
+		COUNT(DISTINCT (IF((tof.id IS NULL OR tof.`create_time`>top.`create_time`) AND torder.`pay_status`=1,torder.`id`,NULL))) payOrderSucSelfNum
+		FROM minsu_order_db.t_order torder
+		LEFT JOIN minsu_order_db.t_order_follow tof ON torder.`order_sn`=tof.`order_sn`
+		LEFT JOIN minsu_order_db.t_order_pay top ON torder.`order_sn`=top.`order_sn`
+		WHERE torder.city_code !=''
+	    <if test="startTime != null and startTime != '' ">
+            AND torder.create_time <![CDATA[ >= ]]> #{startTime,jdbcType=VARCHAR}
+        </if>
+        <if test="endTime != null and endTime != '' ">
+            AND torder.create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+        </if>
+		GROUP BY torder.city_code) temp_0
+		LEFT JOIN 
+		(SELECT d.city_code,COUNT(DISTINCT d.id) payOrderSucSelfOneNum FROM minsu_order_db.t_order d
+		LEFT JOIN 
+		(SELECT a.user_uid,MIN(a.create_time) createDate FROM minsu_order_db.t_order a
+		GROUP BY a.user_uid) temp_o
+		ON d.user_uid=temp_o.user_uid
+		LEFT JOIN minsu_order_db.t_order_follow e ON d.order_sn=e.order_sn
+		LEFT JOIN minsu_order_db.t_order_pay f ON d.order_sn=f.order_sn
+		WHERE temp_o.createDate=d.create_time AND (e.create_time IS NULL OR e.create_time>f.create_time) AND d.city_code!='' AND d.pay_status=1
+	    <if test="startTime != null and startTime != '' ">
+            AND d.create_time <![CDATA[ >= ]]> #{startTime,jdbcType=VARCHAR}
+        </if>
+        <if test="endTime != null and endTime != '' ">
+            AND d.create_time <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+        </if>
+		GROUP BY d.city_code) temp_1 ON temp_0.city_code=temp_1.city_code
+		LEFT JOIN minsu_base_db.t_conf_city t ON t.code=temp_0.city_code
+		<where>
+			<if test="city != null and city != '' ">
+            	AND temp_0.city_code = #{city,jdbcType=VARCHAR}
+        	</if>
+		</where>
+		) temp
+    </select>
+</mapper>

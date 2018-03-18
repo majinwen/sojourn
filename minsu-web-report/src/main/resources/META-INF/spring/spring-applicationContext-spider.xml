@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd ">
+
+   
+	<!-- 数据源配置 -->
+	<!-- cat监控 -->
+    <bean id="stat-filter" class="com.ziroom.platform.tesla.druid.filter.CatStatFilter" />
+    <!-- 数据源配置 -->
+    <bean id="minsuReport.spider.druid" abstract="true">
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${druid.initialSize}"/>
+        <property name="minIdle" value="${druid.minIdle}"/>
+        <property name="maxActive" value="${druid.maxActive}"/>
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${druid.maxWait}"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}" />
+
+        <property name="testWhileIdle" value="${druid.testWhileIdle}" />
+        <property name="testOnBorrow" value="${druid.testOnBorrow}" />
+        <property name="testOnReturn" value="${druid.testOnReturn}" />
+
+        <!-- log4j 或者 slf4j, 根据具体项目所用的log依赖选择 -->
+        <property name="filters" value="slf4j"/>
+        <property name="proxyFilters">
+            <list>
+                <ref bean="stat-filter" />
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="minsuReport.spider.datasource.S" parent="minsuReport.spider.druid"
+          class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${druid.jdbc.mysql.driverClassName}"/>
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${jdbc.minsuReport.spider.url.slave}"/>
+        <property name="username" value="${jdbc.minsuReport.spider.username.slave}"/>
+        <property name="password" value="${jdbc.minsuReport.spider.password.slave}"/>
+        <property name="validationQuery" value="${druid.mysql.validationQuery}" />
+    </bean>
+
+    
+     <bean id="minsuReport.spider.sqlSessionFactory.S" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="minsuReport.spider.datasource.S"/>
+    	<property name="mapperLocations" value="classpath*:com/ziroom/minsu/spider/**/map/*.xml"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+    </bean>
+    
+     <!-- 配置扫描器 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描me.gacl.dao这个包以及它的子包下的所有映射接口类 -->
+        <property name="basePackage" value="com.ziroom.minsu.spider.**.dao" />
+        <property name="sqlSessionFactoryBeanName" value="minsuReport.spider.sqlSessionFactory.S" />
+    </bean>
+
+	<!-- 配置Spring的事务管理器 -->
+    <bean id="minsuReport.spider.transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="minsuReport.spider.datasource.S" />
+    </bean>
+    
+        <!-- 拦截器方式配置事物 -->
+    <tx:advice id="minsuReport.spider.transactionAdvice" transaction-manager="minsuReport.spider.transactionManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED" />
+            <tx:method name="append*" propagation="REQUIRED" />
+            <tx:method name="insert*" propagation="REQUIRED" />
+            <tx:method name="save*" propagation="REQUIRED" />
+            <tx:method name="update*" propagation="REQUIRED" />
+            <tx:method name="modify*" propagation="REQUIRED" />
+            <tx:method name="edit*" propagation="REQUIRED" />
+            <tx:method name="delete*" propagation="REQUIRED" />
+            <tx:method name="remove*" propagation="REQUIRED" />
+            <tx:method name="repair" propagation="REQUIRED" />
+            <tx:method name="delAndRepair" propagation="REQUIRED" />
+
+            <tx:method name="get*" propagation="SUPPORTS" />
+            <tx:method name="find*" propagation="SUPPORTS" />
+            <tx:method name="load*" propagation="SUPPORTS" />
+            <tx:method name="search*" propagation="SUPPORTS" />
+            <tx:method name="datagrid*" propagation="SUPPORTS" />
+
+            <tx:method name="*" propagation="SUPPORTS" />
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="minsuReport.spider.transactionPointcut" expression="execution(* com.ziroom.minsu.spider..sevice..*Impl.*(..))" />
+        <aop:advisor pointcut-ref="minsuReport.spider.transactionPointcut" advice-ref="minsuReport.spider.transactionAdvice" />
+    </aop:config>
+    
+    <!-- 配置druid监控spring jdbc -->
+    <bean id="minsuReport.spider.druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor">
+    </bean>
+    <bean id="minsuReport.spider.druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">
+        <property name="patterns">
+            <list>
+                <value>com.ziroom.minsu.spider..sevice.*</value>
+            </list>
+        </property>
+    </bean>
+    <aop:config>
+        <aop:advisor advice-ref="minsuReport.spider.druid-stat-interceptor" pointcut-ref="minsuReport.spider.druid-stat-pointcut" />
+    </aop:config>
+	
+</beans>
+ 

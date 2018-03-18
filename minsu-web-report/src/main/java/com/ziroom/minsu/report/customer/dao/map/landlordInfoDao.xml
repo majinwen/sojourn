@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.landlordInfoDao" >
+	
+
+    <!-- 房东统计信息报表 -->
+    <select id="LandlordList" resultType="com.ziroom.minsu.report.customer.vo.UserLandlordInfoVo" parameterType="com.ziroom.minsu.report.customer.dto.LandlordRequest">
+SELECT
+		t1.landlord_uid AS landlordUID,
+		t2.real_name AS landlordName,
+		t2.customer_mobile AS landlordTel,
+		(CASE t2.customer_sex WHEN 1 THEN '女' WHEN 2 THEN '男' ELSE '-' END) AS landlordSex,
+		(CASE WHEN t2.id_type = 1 THEN YEAR(NOW()) - SUBSTRING(t2.id_no, 7, 4)  ELSE NULL  END) AS landlordAge,
+		(CASE  WHEN t3.`house_num` = 1 THEN '体验型' WHEN t3.`house_num` BETWEEN 2 AND 9 THEN '非专业型' WHEN t3.`house_num` >= 10 THEN '专业型' ELSE '-' END) AS landlordNature,
+		(CASE t5.`role_code` WHEN 1  THEN '是'  ELSE '否'  END) AS isAngelLandlord,
+		(CASE t6.`is_life` WHEN 1 THEN '是'  ELSE '否' END) AS isLife,
+		t6.start_time AS startTime,
+		t6.end_time AS endTime,
+		t7.pub_num AS pubNum,
+		t7.groud_num AS groudNum,
+		t7.under_num AS underNum,
+                o1.city_code AS cityCode,
+                o1.nation_code AS nationCode,
+		t10.`region_name` AS regionName,
+		o1.`first_deploy_date` AS firstGroudTime,
+		(CASE WHEN t2.id_type = 1 THEN t2.id_no  ELSE NULL  END) AS idCardNo
+		FROM
+			
+			(SELECT DISTINCT(oper.uid) AS landlord_uid
+			FROM  `minsu_customer_db`.`t_customer_oper_history` oper
+			LEFT JOIN `minsu_customer_db`.`t_customer_base_msg` base
+			ON base.uid = oper.uid
+			WHERE oper.audit_after_status=1
+			<if test="beginTime != null and beginTime != ''">
+					AND oper.`create_time` >= #{beginTime,jdbcType=VARCHAR}
+				</if>
+				<if test="endTime != null and endTime != ''">
+					AND oper.`create_time` <![CDATA[ <= ]]> #{endTime,jdbcType=VARCHAR}
+				</if>
+			) t1
+		LEFT JOIN  minsu_customer_db.`t_customer_base_msg` t2
+		ON t1.landlord_uid = t2.uid
+		LEFT JOIN minsu_customer_db.`t_landlord_behavior` t3
+		ON t1.landlord_uid = t3.`landlord_uid`
+		LEFT JOIN minsu_customer_db.`t_customer_resource` t5
+		ON t1.landlord_uid = t5.`uid`
+		LEFT JOIN minsu_customer_db.`t_customer_role` t6
+		ON t5.`role_code` = t6.`role_code`
+		LEFT JOIN
+		(
+			SELECT landlord_uid,
+			SUM(pub_num) AS pub_num,
+			SUM(groud_num) AS groud_num,
+			SUM(under_num) AS under_num
+			FROM(
+				SELECT thbm.landlord_uid,
+				SUM(CASE thbm.house_status WHEN 11  THEN 1  ELSE 0  END) AS pub_num,
+				SUM(CASE thbm.house_status WHEN 40  THEN 1  ELSE 0 END) AS groud_num,
+				SUM(CASE thbm.house_status WHEN 41 OR 51 THEN 1 ELSE 0 END) AS under_num
+				FROM
+				minsu_house_db.`t_house_base_msg` thbm
+				WHERE thbm.`rent_way` = 0 AND thbm.`is_del` = 0
+				GROUP BY thbm.landlord_uid
+				UNION ALL
+				SELECT thbm.landlord_uid,
+				SUM(CASE room.room_status WHEN 11  THEN 1  ELSE 0  END) AS pub_num,
+				SUM(CASE room.room_status WHEN 40  THEN 1  ELSE 0 END) AS groud_num,
+				SUM(CASE room.room_status WHEN 41 OR 51 THEN 1 ELSE 0 END) AS under_num
+				FROM
+				minsu_house_db.`t_house_room_msg` room
+				LEFT JOIN `minsu_house_db`.`t_house_base_msg` thbm ON thbm.`fid` = room.house_base_fid
+				WHERE thbm.`rent_way` = 1 AND thbm.`is_del` = 0
+				GROUP BY thbm.landlord_uid
+			) temp
+			GROUP BY landlord_uid
+		) t7
+		ON t1.landlord_uid = t7.landlord_uid		
+		LEFT JOIN
+		(
+		       SELECT m2.uid, m2.first_deploy_date, m2.house_base_fid, phy.`nation_code`,  phy.`province_code`, phy.`city_code` FROM
+		            (
+				    SELECT m.uid, m.first_deploy_date,m1.house_base_fid FROM
+				    (
+					    SELECT DISTINCT(o.uid), MIN(o.last_deploy_date) AS first_deploy_date FROM (
+						    SELECT cb.uid, biz.house_base_fid, biz.id, biz.last_deploy_date FROM `minsu_house_db`.t_house_biz_msg biz
+						    LEFT JOIN 
+						    `minsu_house_db`.`t_house_base_msg` hb
+						    ON biz.house_base_fid=hb.fid
+						    LEFT JOIN `minsu_customer_db`.`t_customer_base_msg` cb
+						    ON hb.landlord_uid=cb.uid
+						    WHERE  cb.`is_del`=0 AND cb.is_del=0 AND cb.`is_landlord`=1
+					    ) AS o GROUP BY o.uid
+				    ) m
+				    LEFT JOIN 
+				    (
+				                    SELECT m3.uid,m4.house_base_fid FROM (
+							    SELECT DISTINCT(o.uid) AS uid, MIN(o.id) AS id FROM (
+								    SELECT cb.uid, biz.house_base_fid, biz.id, biz.last_deploy_date FROM `minsu_house_db`.t_house_biz_msg biz
+								    LEFT JOIN 
+								    `minsu_house_db`.`t_house_base_msg` hb
+								    ON biz.house_base_fid=hb.fid
+								    LEFT JOIN `minsu_customer_db`.`t_customer_base_msg` cb
+								    ON hb.landlord_uid=cb.uid
+								    WHERE  cb.`is_del`=0 AND cb.is_del=0 AND cb.`is_landlord`=1
+							    ) AS o GROUP BY o.uid
+				                    ) AS m3 
+				                    LEFT JOIN
+				                    ( 
+							    SELECT cb.uid, biz.house_base_fid, biz.id, biz.last_deploy_date FROM `minsu_house_db`.t_house_biz_msg biz
+							    LEFT JOIN 
+							    `minsu_house_db`.`t_house_base_msg` hb
+							    ON biz.house_base_fid=hb.fid
+							    LEFT JOIN `minsu_customer_db`.`t_customer_base_msg` cb
+							    ON hb.landlord_uid=cb.uid
+							    WHERE  cb.`is_del`=0 AND cb.is_del=0 AND cb.`is_landlord`=1
+						    ) AS m4
+						    ON m3.id =m4.id
+				    ) m1
+				    ON m.uid = m1.uid 
+			    ) AS m2
+		    LEFT JOIN `minsu_house_db`.`t_house_base_msg` base
+		    ON base.fid=m2.house_base_fid
+		    LEFT JOIN `minsu_house_db`.t_house_phy_msg phy
+		    ON phy.`fid`=base.phy_fid
+			    
+                 ) AS o1
+                 ON t1.landlord_uid=o1.uid
+                 LEFT JOIN minsu_base_db.t_city_region_rel t9
+		 ON o1.`province_code` = t9.`province_code` AND t9.`is_del`='0'
+		 LEFT JOIN minsu_base_db.`t_city_region` t10
+		 ON t9.`region_fid` = t10.`fid` AND t10.`is_del`='0'
+		 <where>
+			<if test="nationCode != null and nationCode != ''">
+				AND o1.`nation_code` = #{nationCode,jdbcType=VARCHAR}
+			</if>
+			<if test="regionCode != null and regionCode != ''">
+				AND t9.`region_fid` = #{regionCode,jdbcType=VARCHAR}
+			</if>
+			<if test="cityCode != null and cityCode != ''">
+				AND o1.`city_code` = #{cityCode,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+    
+    
+    
+</mapper>

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.orderDao" >
+
+
+    <sql id="Base_Column_List" >
+    <!-- -->
+     tr.order_sn AS orderSn,tr.city_code AS cityCode,tr.landlord_name AS landlordName,tr.user_name AS userName,tm.sum_money AS sumMoney,tm.rental_money AS rentalMoney,tm.lan_comm_money AS lanCommMoney,tm.user_comm_money AS userCommMoney,tm.real_lan_money AS realLanMoney,tm.real_user_money AS realUserMoney 
+    </sql>
+
+    <!-- 获取数据库的信息 -->
+    <select id="findTest" resultType="java.lang.String"  parameterType="java.lang.String">
+        SELECT
+          order_sn
+        FROM minsu_order_db.t_order
+    </select>
+
+
+    <!-- 获取数据库的信息 -->
+    <!-- <select id="getPageInfo" resultType="com.ziroom.minsu.report.afi.entity.OrderEntity"  parameterType="com.ziroom.minsu.report.afi.dto.OrderRequest">
+        SELECT
+        order_sn as name
+        FROM t_order
+
+    </select> -->
+
+   <!-- 计算订单的数量 -->
+    <select id="countOrderNum" resultType="java.lang.Long"  parameterType="map">
+        SELECT COUNT(*)
+        FROM minsu_order_db.t_order
+        WHERE pay_status=1 
+        AND is_del=0
+    </select>
+
+    <!-- 计算订单的数量 -->
+    <select id="getPageInfo" resultType="com.ziroom.minsu.report.order.vo.OrderEntity" parameterType="com.ziroom.minsu.report.order.dto.OrderRequest">
+       SELECT <include refid="Base_Column_List" />
+       FROM minsu_order_db.t_order tr
+       LEFT JOIN minsu_order_db.t_order_money tm
+       ON tr.order_sn=tm.order_sn
+       WHERE tr.pay_status=1
+       AND tr.is_del=0
+      <!--   AND tr.create_time <![CDATA[ >= ]]> #{limitTime,jdbcType=TIMESTAMP} -->
+    </select>
+
+	<!-- # 订单的城市分布 -->
+	<select id="getOrderCityCountInfo" resultType="com.ziroom.minsu.report.order.vo.OrderCountVo" parameterType="map">
+		SELECT
+			city_code as cityCode,
+			COUNT(1) as orderNum
+		from  minsu_order_db.t_order
+		where pay_status = 1 and city_code is not null and  city_code != ''  and  is_del = 0
+		<if test="beginTime != null and beginTime != '' ">
+			AND create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != '' ">
+			AND create_time <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+		</if>
+		group by  city_code
+	</select>
+
+
+
+    <!-- # 在一定时间内 分城市 统计信息 -->
+     <select id="orderStaticsInfo" resultType="com.ziroom.minsu.report.order.vo.OrderStaticsVo" parameterType="map">
+        SELECT COUNT(tr.fid) AS orderNum,COALESCE(SUM(DATEDIFF(tr.end_time,tr.start_time)),0) AS diffDay,
+		COALESCE(SUM(tm.rental_money)/100,0) AS rentalMoney,COALESCE(SUM(tm.deposit_money)/100,0) AS depositMoney,
+		COALESCE(SUM(tm.lan_comm_money+tm.user_comm_money)/100,0) AS serviceMoney ,COALESCE(SUM(tm.need_pay)/100,0) AS needMoney
+		FROM minsu_order_db.`t_order_money` tm
+		LEFT JOIN minsu_order_db.`t_order` tr
+		ON tr.`order_sn` = tm.order_sn
+		WHERE tr.`pay_status` = 1 
+		<if test="beginTime != null and beginTime != '' ">
+	    AND tr.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	    </if>
+		<if test="endTime != null and endTime != '' ">
+	    AND tr.`create_time` <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+		<if test="cityCode != null and cityCode != '' ">
+	    AND tr.`city_code` = #{cityCode,jdbcType=VARCHAR}
+	    </if>
+		AND tr.`is_del` = 0
+	</select>
+
+
+	<!-- # 入住间夜 统计信息 -->
+	<select id="stayNightInfo" resultType="java.lang.Long"  parameterType="map">
+		SELECT COUNT(th.fid) FROM minsu_order_db.`t_base_house_lock` th
+		LEFT JOIN minsu_order_db.`t_order` tr
+		ON th.order_sn = tr.`order_sn`
+		WHERE th.lock_type = 1
+		AND th.is_del = 0
+		<if test="beginTime != null and beginTime != '' ">
+	    AND th.lock_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	    </if>
+		<if test="endTime != null and endTime != '' ">
+	    AND th.lock_time <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+		<if test="cityCode != null and cityCode != '' ">
+	    AND tr.`city_code` = #{cityCode,jdbcType=VARCHAR}
+	    </if>
+   </select> 
+   
+   <!-- # 入住间夜 money统计信息 -->
+	<select id="stayNightMoneyInfo" resultType="java.lang.Double"  parameterType="map">
+		SELECT COALESCE(SUM(tf.total_fee)/100,0) FROM minsu_order_db.`t_finance_income` tf
+		LEFT JOIN minsu_order_db.`t_order` tr
+		ON tf.order_sn = tr.`order_sn`
+		WHERE  tf.income_status != 3
+		AND tf.is_del = 0
+		AND tf.income_type in(1,3,6)
+		<if test="beginTime != null and beginTime != '' ">
+	    AND tf.generate_fee_time <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	    </if>
+		<if test="endTime != null and endTime != '' ">
+	    AND tf.generate_fee_time <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+		<if test="cityCode != null and cityCode != '' ">
+	    AND tr.`city_code` = #{cityCode,jdbcType=VARCHAR}
+	    </if>
+   </select> 
+	<!-- # 完成订单 并且可评价 -->
+	<select id="accomplishOrderNumInfo" resultType="java.lang.Long"  parameterType="map">
+		SELECT COUNT(tr.fid) FROM minsu_order_db.`t_order` tr
+		LEFT JOIN minsu_order_db.`t_order_log` tl
+		ON tr.`order_sn` = tl.order_sn
+		WHERE tr.`pay_status` = 1 
+		AND tr.`order_status` IN(70,71)
+		AND tl.to_status IN(70,71)
+		AND tr.`is_del` = 0
+		<if test="beginTime != null and beginTime != '' ">
+	    AND tl.create_date <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	    </if>
+		<if test="endTime != null and endTime != '' ">
+	    AND tl.create_date <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+		<if test="cityCode != null and cityCode != '' ">
+	    AND tr.`city_code` = #{cityCode,jdbcType=VARCHAR}
+	    </if>
+	</select>
+	
+	<!-- #房东评价量 房客评价量 -->
+	<select id="lanUserEvaOrderNumInfo" resultType="java.lang.Long"  parameterType="map">
+		SELECT COUNT(DISTINCT(tr.order_sn)) FROM `minsu_order_db`.`t_order` tr
+		LEFT JOIN minsu_order_db.`t_order_log` tl
+		ON tr.`order_sn` = tl.order_sn
+		INNER JOIN `minsu_evaluate_db`.`t_evaluate_order` teo
+		ON tr.order_sn = teo.order_sn
+		WHERE tr.`pay_status` = 1 
+		AND tr.`is_del` = 0
+		AND tr.`order_status` IN(70,71)
+		AND tl.to_status IN(70,71)
+		
+		<if test="evaUserType != null and evaUserType != '' ">
+	    AND teo.eva_user_type = #{evaUserType,jdbcType=INTEGER}
+	    </if>
+		
+		<if test="beginTime != null and beginTime != '' ">
+	    AND tl.create_date <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	    </if>
+		<if test="endTime != null and endTime != '' ">
+	    AND tl.create_date <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+		<if test="cityCode != null and cityCode != '' ">
+	    AND tr.`city_code` = #{cityCode,jdbcType=VARCHAR}
+	    </if>
+	 </select>
+	
+	
+	<!-- #房客总评分 -->
+	<select id="sumUserScoreInfo" resultType="java.lang.Long"  parameterType="map">
+		SELECT COALESCE(SUM(tle.landlord_satisfied),0) FROM `minsu_evaluate_db`.`t_landlord_evaluate` tle
+		LEFT JOIN `minsu_evaluate_db`.`t_evaluate_order` teo
+		ON tle.eva_order_fid = teo.fid
+		INNER JOIN (
+		SELECT tr.order_sn FROM `minsu_order_db`.`t_order` tr
+		LEFT JOIN minsu_order_db.`t_order_log` tl
+		ON tr.`order_sn` = tl.order_sn
+		WHERE tr.`order_status` IN(70,71)
+		AND tl.to_status IN(70,71)
+		AND tr.`is_del` = 0
+		<if test="beginTime != null and beginTime != '' ">
+	    AND tl.create_date <![CDATA[ >= ]]> #{beginTime,jdbcType=VARCHAR}
+	    </if>
+		<if test="endTime != null and endTime != '' ">
+	    AND tl.create_date <![CDATA[ < ]]> #{endTime,jdbcType=VARCHAR}
+	    </if>
+		<if test="cityCode != null and cityCode != '' ">
+	    AND tr.`city_code` = #{cityCode,jdbcType=VARCHAR}
+		</if>
+		) AS tmp
+		ON teo.order_sn = tmp.order_sn
+		WHERE teo.eva_user_type = 1
+	</select>
+	
+
+	
+	<!-- 订单日创建量 -->
+	<select id="createOrderDayNum"  parameterType="map"  resultType="com.ziroom.minsu.report.house.entity.HouseDayOrderNumEntity">
+		SELECT th.house_fid AS houseFid,th.room_fid AS roomFid,th.rent_way AS rentWay ,tor.city_code AS cityCode ,COUNT(*) AS orderCreateNum,tor.landlord_uid AS landlordFid,tc.show_name AS cityName
+		FROM minsu_order_db.t_order_house_snapshot th
+		LEFT JOIN minsu_order_db.t_order tor ON th.order_sn=tor.order_sn
+		LEFT JOIN minsu_base_db.t_conf_city tc ON tor.city_code=tc.code
+		WHERE tor.is_del=0
+		<if test="beginTime != null ">
+		    AND tor.create_time <![CDATA[ >= ]]> #{beginTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null ">
+		    AND tor.create_time <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP} 
+		</if>   
+		GROUP BY th.house_fid,th.room_fid,th.rent_way,tor.city_code,tor.landlord_uid,tc.show_name
+	</select>
+	
+	
+	<!-- 订单支付订单量  整租 -->
+	<select id="getHouseDayOrderNum"  parameterType="map"  resultType="com.ziroom.minsu.report.house.entity.HouseDayPayOrderEntity">
+		SELECT 
+		tr.`landlord_uid`,
+		tr.`city_code`,
+		tcc.`show_name`,
+		tohs.`rent_way`,
+		tohs.`house_fid`,
+		tohs.`room_fid`,
+		SUM(tom.`deposit_money`),
+		SUM(tom.`sum_money`),
+		SUM(tom.`rental_money`),
+		SUM(tom.`lan_comm_money`),
+		SUM(tom.`user_comm_money`),
+		SUM(DATEDIFF(tr.`end_time`,tr.`start_time`)) AS payOrderNight,
+		SUM(DATEDIFF(tr.`start_time`,NOW())) AS orderAdvanceDay,
+		COUNT(tr.order_sn)
+		FROM `minsu_order_db`.`t_order` tr
+		LEFT JOIN `minsu_order_db`.`t_order_house_snapshot` tohs
+		ON tr.`order_sn` = tohs.`order_sn`
+		LEFT JOIN `minsu_order_db`.`t_order_money` tom
+		ON tr.`order_sn` = tom.`order_sn`
+		LEFT JOIN `minsu_base_db`.`t_conf_city` tcc
+		ON tr.`city_code` = tcc.`code`
+		
+		WHERE tr.`pay_status` = 1
+		
+		AND tr.`order_status` = 20
+		AND tr.`is_del` = 0
+		<if test="beginTime != null ">
+		    AND tr.`create_time` <![CDATA[ >= ]]> #{beginTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null ">
+		    AND tr.`create_time` <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP} 
+		</if>   
+		GROUP BY tohs.`house_fid`,tohs.`room_fid`,tohs.`rent_way`,
+		tr.`city_code`,tcc.`show_name`,tr.`landlord_uid`
+	</select>
+	
+	<!-- 房源订单日接受量 -->
+	<select id="orderDayAcceptNum"  parameterType="map"  resultType="com.ziroom.minsu.report.house.entity.HouseDayOrderAcceptNumEntity">
+		SELECT th.house_fid AS houseFid,th.room_fid AS roomFid,th.rent_way AS rentWay ,tor.city_code AS cityCode ,COUNT(*) AS lanAcceptOrder,tor.landlord_uid AS landlordUid,tc.show_name AS cityName
+		FROM minsu_order_db.t_order_house_snapshot th
+		LEFT JOIN minsu_order_db.t_order tor ON th.order_sn=tor.order_sn
+		LEFT JOIN minsu_base_db.t_conf_city tc ON tor.city_code=tc.code
+		LEFT JOIN minsu_order_db.t_order_log olog ON th.order_sn=olog.order_sn
+		WHERE tor.is_del=0
+		AND olog.from_status=#{fromStatus,jdbcType=INTEGER}
+		AND olog.to_status=#{toStatus,jdbcType=INTEGER}
+		<if test="beginTime != null ">
+		    AND olog.`create_date` <![CDATA[ >= ]]> #{beginTime,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endTime != null ">
+		    AND olog.`create_date` <![CDATA[ < ]]> #{endTime,jdbcType=TIMESTAMP} 
+		</if>  
+		GROUP BY th.house_fid,th.room_fid,th.rent_way,tor.city_code,tor.landlord_uid,tc.show_name
+	</select>
+	
+</mapper>

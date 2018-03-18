@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="report.cityTargetLogDao" >
+  <resultMap id="BaseResultMap" type="com.ziroom.minsu.report.board.entity.CityTargetLogEntity" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="target_fid" property="targetFid" jdbcType="VARCHAR" />
+    <result column="target_house_num" property="targetHouseNum" jdbcType="INTEGER" />
+    <result column="target_push_house_num" property="targetPushHouseNum" jdbcType="INTEGER" />
+    <result column="target_self_house_num" property="targetSelfHouseNum" jdbcType="INTEGER" />
+    <result column="target_order_num" property="targetOrderNum" jdbcType="INTEGER" />
+    <result column="target_rent_num" property="targetRentNum" jdbcType="INTEGER" />
+    <result column="create_emp_code" property="createEmpCode" jdbcType="VARCHAR" />
+    <result column="create_emp_name" property="createEmpName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, target_fid, target_house_num, target_push_house_num, target_self_house_num, target_order_num, 
+    target_rent_num, create_emp_code, create_emp_name, create_date
+  </sql>
+
+  <select id="selectLog" resultMap="BaseResultMap" parameterType="string" >
+    select
+    <include refid="Base_Column_List" />
+    from t_city_target_log
+    where target_fid = #{targetFid,jdbcType=VARCHAR}
+  </select>
+
+  <insert id="insert" parameterType="com.ziroom.minsu.report.board.entity.CityTargetLogEntity" >
+    insert into t_city_target_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="targetFid != null" >
+        target_fid,
+      </if>
+      <if test="targetHouseNum != null" >
+        target_house_num,
+      </if>
+      <if test="targetPushHouseNum != null" >
+        target_push_house_num,
+      </if>
+      <if test="targetSelfHouseNum != null" >
+        target_self_house_num,
+      </if>
+      <if test="targetOrderNum != null" >
+        target_order_num,
+      </if>
+      <if test="targetRentNum != null" >
+        target_rent_num,
+      </if>
+      <if test="createEmpCode != null" >
+        create_emp_code,
+      </if>
+      <if test="createEmpName != null" >
+        create_emp_name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="targetFid != null" >
+        #{targetFid,jdbcType=VARCHAR},
+      </if>
+      <if test="targetHouseNum != null" >
+        #{targetHouseNum,jdbcType=INTEGER},
+      </if>
+      <if test="targetPushHouseNum != null" >
+        #{targetPushHouseNum,jdbcType=INTEGER},
+      </if>
+      <if test="targetSelfHouseNum != null" >
+        #{targetSelfHouseNum,jdbcType=INTEGER},
+      </if>
+      <if test="targetOrderNum != null" >
+        #{targetOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="targetRentNum != null" >
+        #{targetRentNum,jdbcType=INTEGER},
+      </if>
+      <if test="createEmpCode != null" >
+        #{createEmpCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createEmpName != null" >
+        #{createEmpName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>
